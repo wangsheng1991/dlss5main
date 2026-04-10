@@ -407,7 +407,7 @@ export default function Dashboard() {
                       {t('dashboard.clear')}
                     </button>
                     <button
-                      onClick={() => handleUpload(false)}
+                      onClick={() => handleUpload()}
                       className="flex-1 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-container transition-colors"
                     >
                       {mode === 'meme' ? t('dashboard.generate') : t('dashboard.upscale')}
