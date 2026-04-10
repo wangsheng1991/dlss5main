@@ -261,7 +261,14 @@ export default function Dashboard() {
           const s = await fetch(`${GPU_API}/v1/task/${job_id}`, {
             headers: { 'X-API-Key': API_KEY }
           });
+
+          if (!s.ok) {
+            const errText = await s.text();
+            throw new Error(`Task poll failed (${s.status}): ${errText}`);
+          }
+
           const job = await s.json();
+          console.log('[SeedVR2 poll]', job);
 
           if (job.status === 'done') {
             cdnUrl = job.output_url; // 直接是 CDN URL
@@ -270,7 +277,7 @@ export default function Dashboard() {
           if (job.status === 'failed') {
             throw new Error(job.error || 'Upscaling failed');
           }
-          setPollingStatus(`Processing... status: ${job.status}`);
+          setPollingStatus(`Processing... status: ${job.status ?? 'unknown'}`);
         }
       }
 
