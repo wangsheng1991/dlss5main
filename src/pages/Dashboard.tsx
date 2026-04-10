@@ -389,7 +389,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col min-h-[600px] lg:min-h-[750px]">
+        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col">
           {error && (
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3 text-red-400">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -408,11 +408,11 @@ export default function Dashboard() {
               />
               
               {previewUrl ? (
-                <div className="flex flex-col items-center gap-6 w-full h-full flex-1">
-                  <div className="w-full flex-1 min-h-[500px] lg:min-h-[750px] rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-highest flex items-center justify-center p-3">
+                <div className="flex flex-col items-center gap-6 w-full flex-1">
+                  <div className="w-full min-h-[300px] lg:min-h-[400px] rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-highest flex items-center justify-center p-3">
                     <img src={previewUrl} alt="Preview" className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
                   </div>
-                  <div className="flex gap-4 w-full max-w-md mt-auto">
+                  <div className="flex gap-4 w-full mt-auto">
                     <button 
                       onClick={() => { setSelectedFile(null); setPreviewUrl(null); }}
                       className="flex-1 py-3 rounded-lg border border-outline-variant/20 text-white hover:bg-surface-highest transition-colors"
@@ -429,11 +429,11 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="w-full flex flex-col items-center gap-8">
-                  <div 
+                  <div
                     onClick={() => fileInputRef.current?.click()}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={handleDrop}
-                    className="w-full max-w-3xl min-h-[300px] lg:min-h-[400px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
+                    className="w-full min-h-[200px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
                   >
                     <UploadCloud className="w-12 h-12 text-zinc-500 mb-4" />
                     <h2 className="text-xl font-headline font-semibold text-white mb-2">Drag & Drop or Click to Upload</h2>
@@ -483,7 +483,7 @@ export default function Dashboard() {
 
           {isDone && resultUrl && originalUrl && (
             <div className="flex-1 flex flex-col">
-              <div className="flex-1 bg-surface-highest rounded-xl overflow-hidden relative group min-h-[500px] lg:min-h-[750px] p-3">
+              <div className="w-full flex-1 min-h-[300px] lg:min-h-[400px] rounded-xl overflow-hidden relative group p-3">
                 <ImageSlider highRes={resultUrl} lowRes={originalUrl} />
               </div>
               <div className="p-4 flex justify-between items-center border-t border-outline-variant/20 mt-4">
