@@ -328,33 +328,35 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm text-white mb-2">
-                  {mode === 'meme' ? 'Meme Prompt (RTX On)' : 'Enhancement Prompt'}
-                </label>
-                <textarea 
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full bg-surface-lowest border border-outline-variant/20 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-primary h-24 resize-none"
-                  placeholder={mode === 'meme' ? "e.g. hyper-realistic 4k, highly detailed..." : "e.g. make it more realistic"}
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm text-white mb-2">Inference Steps ({steps})</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[4, 8, 16].map(val => (
-                    <button 
-                      key={val}
-                      onClick={() => setSteps(val)}
-                      className={`py-2 rounded border text-sm transition-colors ${steps === val ? 'bg-primary/20 text-primary border-primary font-bold' : 'bg-surface-highest text-white border-outline-variant/20 hover:border-primary'}`}
-                    >
-                      {val}
-                    </button>
-                  ))}
+              {mode === 'meme' && (
+                <div>
+                  <label className="block text-sm text-white mb-2">Meme Prompt (RTX On)</label>
+                  <textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    className="w-full bg-surface-lowest border border-outline-variant/20 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-primary h-24 resize-none"
+                    placeholder="e.g. hyper-realistic 4k, highly detailed..."
+                  />
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-2">Higher steps = better quality but slower.</p>
-              </div>
+              )}
+
+              {mode === 'meme' && (
+                <div>
+                  <label className="block text-sm text-white mb-2">Inference Steps ({steps})</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[4, 8, 16].map(val => (
+                      <button
+                        key={val}
+                        onClick={() => setSteps(val)}
+                        className={`py-2 rounded border text-sm transition-colors ${steps === val ? 'bg-primary/20 text-primary border-primary font-bold' : 'bg-surface-highest text-white border-outline-variant/20 hover:border-primary'}`}
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-zinc-500 mt-2">Higher steps = better quality but slower.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
