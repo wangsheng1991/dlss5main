@@ -8,6 +8,8 @@ import { useAuth } from '../contexts/AuthContext';
 const LANGUAGES = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
   { code: 'zh-CN', label: '中文', flag: '🇨🇳' },
+  { code: 'ja', label: '日本語', flag: '🇯🇵' },
+  { code: 'ko', label: '한국어', flag: '🇰🇷' },
 ];
 
 export default function Navbar() {
