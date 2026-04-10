@@ -389,7 +389,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col">
+        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col flex-1">
           {error && (
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3 text-red-400">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -482,8 +482,8 @@ export default function Dashboard() {
           )}
 
           {isDone && resultUrl && originalUrl && (
-            <div className="flex flex-col">
-              <div className="w-full flex items-center justify-center p-3">
+            <div className="flex flex-col flex-1">
+              <div className="w-full flex-1 flex items-center justify-center p-3">
                 <ImageSlider highRes={resultUrl} lowRes={originalUrl} />
               </div>
               <div className="p-4 flex justify-between items-center border-t border-outline-variant/20 mt-4">
