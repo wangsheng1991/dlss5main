@@ -207,7 +207,8 @@
     "errorGoogleFailed": "Google 注册失败"
   },
   "footer": {
-    "systemsOperational": "所有系统运行正常"
+    "systemsOperational": "所有系统运行正常",
+    "trademarkDisclaimer": "这是一个独立工具。不隶属于或受 NVIDIA Corporation 支持或认可。DLSS 是 NVIDIA Corporation 的注册商标。"
   },
   "language": {
     "switch": "语言",

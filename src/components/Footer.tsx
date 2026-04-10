@@ -15,6 +15,9 @@ export default function Footer() {
             <p className="text-zinc-600 text-[10px] font-medium uppercase tracking-widest">
               © 2024 {t('home.footerSystems')}
             </p>
+            <p className="text-zinc-600 text-[9px] mt-3 leading-relaxed max-w-xs">
+              {t('footer.trademarkDisclaimer')}
+            </p>
           </div>
 
           <div>

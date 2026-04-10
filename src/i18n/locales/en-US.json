@@ -207,7 +207,8 @@
     "errorGoogleFailed": "Failed to register with Google"
   },
   "footer": {
-    "systemsOperational": "All Systems Operational"
+    "systemsOperational": "All Systems Operational",
+    "trademarkDisclaimer": "This is an independent tool. Not affiliated with or endorsed by NVIDIA Corporation. DLSS is a registered trademark of NVIDIA Corporation."
   },
   "language": {
     "switch": "Language",
