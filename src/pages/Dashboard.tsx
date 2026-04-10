@@ -409,8 +409,8 @@ export default function Dashboard() {
               
               {previewUrl ? (
                 <div className="flex flex-col items-center gap-6 w-full h-full flex-1">
-                  <div className="w-full flex-1 min-h-[500px] lg:min-h-[750px] rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-highest flex items-center justify-center p-0">
-                    <img src={previewUrl} alt="Preview" className="w-full h-full object-contain rounded-lg shadow-2xl" />
+                  <div className="w-full h-full rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-highest flex items-center justify-center p-3">
+                    <img src={previewUrl} alt="Preview" className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
                   </div>
                   <div className="flex gap-4 w-full max-w-md mt-auto">
                     <button 
@@ -483,7 +483,7 @@ export default function Dashboard() {
 
           {isDone && resultUrl && originalUrl && (
             <div className="flex-1 flex flex-col">
-              <div className="flex-1 bg-surface-highest rounded-xl overflow-hidden relative group min-h-[500px] lg:min-h-[650px] shadow-2xl">
+              <div className="w-full h-full bg-surface-highest rounded-xl overflow-hidden relative group p-3 shadow-2xl">
                 <ImageSlider highRes={resultUrl} lowRes={originalUrl} />
               </div>
               <div className="p-4 flex justify-between items-center border-t border-outline-variant/20 mt-4">
