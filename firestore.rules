@@ -1,0 +1,168 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (matches Auth UID)
+    // Fields:
+    //   - name: string (optional)
+    //   - email: string (required, valid email)
+    //   - image: string (optional, valid URL)
+    //   - tier: string (required, 'free' or 'pro')
+    //   - createdAt: string (required, ISO 8601 date string)
+    //   - updatedAt: string (optional, ISO 8601 date string)
+    //
+    // Collection: daily_usage
+    // Document ID: {userId}_{YYYY-MM-DD}
+    // Fields:
+    //   - userId: string (required, matches Auth UID)
+    //   - usageDate: string (required, YYYY-MM-DD)
+    //   - usesCount: number (required, >= 0)
+    //   - refusedCount: number (optional, >= 0)
+    //   - createdAt: string (required)
+    //   - updatedAt: string (optional)
+    //
+    // Collection: credits
+    // Document ID: auto-generated
+    // Fields:
+    //   - userId: string (required, matches Auth UID)
+    //   - transactionType: string (required, 'grant', 'purchase', 'consume')
+    //   - credits: number (required)
+    //   - remainingCredits: number (required, >= 0)
+    //   - status: string (required, 'active', 'expired')
+    //   - createdAt: string (required)
+    //
+    // Collection: subscriptions
+    // Document ID: auto-generated
+    // Fields:
+    //   - userId: string (required, matches Auth UID)
+    //   - tier: string (required, 'free', 'pro')
+    //   - status: string (required, 'active', 'cancelled', 'expired')
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    function isPositiveOrZero(field) {
+      return request.resource.data[field] is number && request.resource.data[field] >= 0;
+    }
+
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser() {
+      let data = request.resource.data;
+      return hasRequiredFields(['email', 'tier', 'createdAt', 'credits']) &&
+             isValidEmail(data.email) &&
+             data.tier in ['free', 'pro'] &&
+             isValidDateString(data.createdAt) &&
+             data.credits is number &&
+             (!('name' in data) || data.name is string) &&
+             (!('updatedAt' in data) || isValidDateString(data.updatedAt));
+    }
+
+    function isValidDailyUsage() {
+      let data = request.resource.data;
+      return hasRequiredFields(['userId', 'usageDate', 'usesCount', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.usageDate is string && data.usageDate.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             isPositiveOrZero('usesCount') &&
+             isValidDateString(data.createdAt) &&
+             (!('refusedCount' in data) || isPositiveOrZero('refusedCount')) &&
+             (!('updatedAt' in data) || isValidDateString(data.updatedAt));
+    }
+
+    function isValidCredit() {
+      let data = request.resource.data;
+      return hasRequiredFields(['userId', 'transactionType', 'credits', 'remainingCredits', 'status', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.transactionType in ['grant', 'purchase', 'consume'] &&
+             data.credits is number &&
+             isPositiveOrZero('remainingCredits') &&
+             data.status in ['active', 'expired'] &&
+             isValidDateString(data.createdAt);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      // Allow user to create their own profile. They can only create a 'free' tier profile.
+      allow create: if isOwner(userId) && isValidUser() && request.resource.data.tier == 'free';
+      // Allow user to update their own profile, but cannot change tier or createdAt, and can only decrease credits (or keep them same)
+      allow update: if isOwner(userId) && 
+                    isValidUser() && 
+                    areImmutableFieldsUnchanged(['tier', 'createdAt']) &&
+                    (request.resource.data.credits <= resource.data.credits || !('credits' in resource.data));
+    }
+
+    match /daily_usage/{usageId} {
+      // Document ID must be {userId}_{YYYY-MM-DD}
+      allow read: if isAuthenticated() && usageId.split('_')[0] == request.auth.uid;
+      
+      allow create: if isAuthenticated() && 
+                    usageId.split('_')[0] == request.auth.uid &&
+                    isValidDailyUsage();
+                    
+      allow update: if isAuthenticated() && 
+                    usageId.split('_')[0] == request.auth.uid &&
+                    isValidDailyUsage() &&
+                    areImmutableFieldsUnchanged(['userId', 'usageDate', 'createdAt']);
+    }
+
+    match /credits/{creditId} {
+      allow read: if isDocOwner();
+      // For prototype: allow users to create a 'grant' transaction for signup bonus (e.g. 10 credits)
+      allow create: if isAuthenticated() && 
+                    isValidCredit() && 
+                    request.resource.data.transactionType == 'grant' &&
+                    request.resource.data.credits <= 10; // Limit signup bonus to 10
+      // Users shouldn't update credits directly
+      allow update: if false;
+    }
+
+    match /subscriptions/{subscriptionId} {
+      allow read: if isDocOwner();
+      // Subscriptions are managed by backend (Stripe webhook), users cannot write
+      allow write: if false;
+    }
+  }
+}

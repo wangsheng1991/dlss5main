@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "User's display name" },
+        "email": { "type": "string", "format": "email", "description": "User's email address" },
+        "image": { "type": "string", "format": "uri", "description": "User's avatar URL" },
+        "tier": { "type": "string", "enum": ["free", "pro"], "description": "User's subscription tier" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" }
+      },
+      "required": ["email", "tier", "createdAt"]
+    },
+    "DailyUsage": {
+      "title": "Daily Usage",
+      "description": "Tracks daily generation limits per user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Reference to the user ID" },
+        "usageDate": { "type": "string", "description": "Date string in YYYY-MM-DD format" },
+        "usesCount": { "type": "number", "description": "Number of successful generations today" },
+        "refusedCount": { "type": "number", "description": "Number of refused generations today" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "usageDate", "usesCount", "createdAt"]
+    },
+    "Credit": {
+      "title": "Credit Transaction",
+      "description": "User credit balance and transaction history",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string", "format": "email" },
+        "transactionType": { "type": "string", "enum": ["grant", "purchase", "consume"] },
+        "credits": { "type": "number", "description": "Amount of credits involved in this transaction" },
+        "remainingCredits": { "type": "number", "description": "Remaining balance after transaction" },
+        "status": { "type": "string", "enum": ["active", "expired"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "transactionType", "credits", "remainingCredits", "status", "createdAt"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "User subscription details",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "tier": { "type": "string", "enum": ["free", "pro"] },
+        "status": { "type": "string", "enum": ["active", "cancelled", "expired"] },
+        "stripeSubscriptionId": { "type": "string" },
+        "currentPeriodStart": { "type": "string", "format": "date-time" },
+        "currentPeriodEnd": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "tier", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles. Document ID is the Firebase Auth UID."
+    },
+    "/daily_usage/{usageId}": {
+      "schema": { "$ref": "#/entities/DailyUsage" },
+      "description": "Stores daily usage records. Document ID format: {userId}_{YYYY-MM-DD}."
+    },
+    "/credits/{creditId}": {
+      "schema": { "$ref": "#/entities/Credit" },
+      "description": "Stores credit transactions."
+    },
+    "/subscriptions/{subscriptionId}": {
+      "schema": { "$ref": "#/entities/Subscription" },
+      "description": "Stores subscription status."
+    }
+  }
+}

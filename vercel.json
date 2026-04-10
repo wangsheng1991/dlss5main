@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/api/gpu/:match*", "destination": "https://gpu-api.alphanetplus.com/:match*" },
+    { "source": "/api/oss/:match*", "destination": "https://oss.alphanetplus.com/:match*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
