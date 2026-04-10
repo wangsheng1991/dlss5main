@@ -49,6 +49,7 @@ export default function Dashboard() {
   const [mode, setMode] = useState<'meme' | 'upscale'>('meme');
   const [prompt, setPrompt] = useState("make it more realistic, high resolution, highly detailed");
   const [steps, setSteps] = useState(4);
+  const [scale, setScale] = useState(4);
 
   const [guestUsage, setGuestUsage] = useState({ date: new Date().toISOString().split('T')[0], count: 0 });
   const [pollingStatus, setPollingStatus] = useState('');
@@ -244,7 +245,7 @@ export default function Dashboard() {
             'Content-Type': 'application/json',
             'X-API-Key': API_KEY
           },
-          body: JSON.stringify({ image_url: imageUrl })
+          body: JSON.stringify({ image_url: imageUrl, scale })
         });
 
         if (!submitRes.ok) {
@@ -355,6 +356,23 @@ export default function Dashboard() {
                     ))}
                   </div>
                   <p className="text-[10px] text-zinc-500 mt-2">Higher steps = better quality but slower.</p>
+                </div>
+              )}
+
+              {mode === 'upscale' && (
+                <div>
+                  <label className="block text-sm text-white mb-2">Upscale Scale</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[2, 4].map(val => (
+                      <button
+                        key={val}
+                        onClick={() => setScale(val)}
+                        className={`py-2 rounded border text-sm transition-colors ${scale === val ? 'bg-primary/20 text-primary border-primary font-bold' : 'bg-surface-highest text-white border-outline-variant/20 hover:border-primary'}`}
+                      >
+                        {val}x
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
