@@ -47,7 +47,7 @@ export default function Dashboard() {
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
 
   const [mode, setMode] = useState<'meme' | 'upscale'>('meme');
-  const [prompt, setPrompt] = useState("hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style");
+  const [prompt, setPrompt] = useState("make it more realistic, high resolution, highly detailed");
   const [steps, setSteps] = useState(4);
 
   const [guestUsage, setGuestUsage] = useState({ date: new Date().toISOString().split('T')[0], count: 0 });
@@ -109,9 +109,9 @@ export default function Dashboard() {
   const handleModeChange = (newMode: 'meme' | 'upscale') => {
     setMode(newMode);
     if (newMode === 'meme') {
-      setPrompt("hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style");
-    } else {
       setPrompt("make it more realistic, high resolution, highly detailed");
+    } else {
+      setPrompt("hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style");
     }
   };
 
