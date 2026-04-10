@@ -304,7 +304,7 @@ export default function Dashboard() {
             {mode === 'meme' ? 'DLSS 5 Meme Generator' : 'AI Super Resolution'}
           </h1>
           <p className="text-zinc-400 text-sm">
-            {mode === 'meme' ? 'Turn any image into a hyper-realistic DLSS 5 meme' : 'Upscale and enhance your images with AI'}
+            {mode === 'meme' ? 'Turn any image into DLSS5-style enhancement (Not official NVIDIA DLSS)' : 'Upscale and enhance your images with AI'}
           </p>
         </div>
         <div className="flex items-center gap-4">
