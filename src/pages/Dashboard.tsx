@@ -253,7 +253,10 @@ export default function Dashboard() {
           throw new Error(`API Error: ${submitRes.status} ${errText}`);
         }
 
-        const { job_id } = await submitRes.json();
+        const submitData = await submitRes.json();
+        console.log('[SeedVR2 submit]', submitData);
+        const job_id = submitData.job_id;
+        if (!job_id) throw new Error(`No job_id returned: ${JSON.stringify(submitData)}`);
         setPollingStatus('Job queued, polling status...');
 
         while (true) {
