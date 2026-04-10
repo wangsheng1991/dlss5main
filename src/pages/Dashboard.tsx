@@ -389,7 +389,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col flex-1 min-h-0">
+        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col min-h-[70vh] lg:min-h-[80vh]">
           {error && (
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3 text-red-400">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -410,7 +410,7 @@ export default function Dashboard() {
               {previewUrl ? (
                 <div className="flex flex-col items-center gap-6 w-full h-auto">
                   <div className="w-full flex items-center justify-center p-3">
-                    <img src={previewUrl} alt="Preview" className="max-w-full max-h-[70vh] lg:max-h-[80vh] object-contain rounded-lg shadow-2xl" />
+                    <img src={previewUrl} alt="Preview" className="w-full h-full max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
                   </div>
                   <div className="flex gap-4 w-full max-w-md mt-auto">
                     <button 
@@ -482,8 +482,8 @@ export default function Dashboard() {
           )}
 
           {isDone && resultUrl && originalUrl && (
-            <div className="flex flex-col flex-1 min-h-0">
-              <div className="w-full flex-1 flex items-center justify-center p-3 min-h-0">
+            <div className="flex flex-col flex-1 w-full h-full">
+              <div className="w-full flex-1 flex items-center justify-center p-3">
                 <ImageSlider highRes={resultUrl} lowRes={originalUrl} />
               </div>
               <div className="p-4 flex justify-between items-center border-t border-outline-variant/20 mt-4">
