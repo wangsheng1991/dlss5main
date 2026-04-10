@@ -433,7 +433,7 @@ export default function Dashboard() {
                     onClick={() => fileInputRef.current?.click()}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={handleDrop}
-                    className="w-full min-h-[200px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
+                    className="w-full max-w-3xl min-h-[300px] lg:min-h-[400px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
                   >
                     <UploadCloud className="w-12 h-12 text-zinc-500 mb-4" />
                     <h2 className="text-xl font-headline font-semibold text-white mb-2">Drag & Drop or Click to Upload</h2>
