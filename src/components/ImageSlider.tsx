@@ -24,7 +24,7 @@ export default function ImageSlider({ highRes, lowRes }: { highRes: string, lowR
     >
       <img src={highRes} alt="High Resolution" className="absolute inset-0 w-full h-full object-cover pointer-events-none" referrerPolicy="no-referrer" loading="lazy" />
       <div className="absolute inset-y-0 left-0 overflow-hidden border-r-2 border-primary z-10" style={{ width: `${sliderPos}%` }}>
-        <img src={lowRes} alt="Low Resolution" className="absolute inset-y-0 left-0 h-full w-[200%] max-w-none object-cover grayscale pointer-events-none" style={{ width: `${100 / (sliderPos / 100)}%` }} referrerPolicy="no-referrer" loading="lazy" />
+        <img src={lowRes} alt="Low Resolution" className="absolute inset-y-0 left-0 h-full w-[200%] max-w-none object-cover pointer-events-none" style={{ width: `${100 / (sliderPos / 100)}%` }} referrerPolicy="no-referrer" loading="lazy" />
       </div>
       <div className="absolute bottom-4 left-4 z-20 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest text-white pointer-events-none">Input</div>
       <div className="absolute bottom-4 right-4 z-20 bg-nvidia-green text-black px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest pointer-events-none">Output</div>
