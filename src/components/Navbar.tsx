@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Database, LogOut, User as UserIcon, Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { user, profile, logout } = useAuth();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
@@ -40,9 +42,9 @@ export default function Navbar() {
           <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline" to="/">DLSS 5</Link>
           {!isAuthPage && (
             <div className="hidden md:flex gap-6 items-center">
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">Models</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">API Docs</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">Enterprise</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>
             </div>
           )}
         </div>
@@ -51,14 +53,14 @@ export default function Navbar() {
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-surface rounded-lg">
               <Database className="w-4 h-4 text-nvidia-green" />
               <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                {user ? (profile?.tier === 'pro' ? 'Unlimited' : `${profile?.credits || 0} Credits`) : `Guest: ${Math.max(0, 3 - guestUses)}/3`}
+                {user ? (profile?.tier === 'pro' ? t('navbar.unlimited') : t('navbar.credits', { count: profile?.credits || 0 })) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
               </span>
             </div>
           )}
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-2 rounded-lg text-sm">Dashboard</Link>
+                <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-2 rounded-lg text-sm">{t('navbar.dashboard')}</Link>
                 <div className="flex items-center gap-3 pl-4 border-l border-outline-variant/20">
                   {profile?.image ? (
                     <img src={profile.image} alt="Avatar" className="w-8 h-8 rounded-full border border-outline-variant/20" referrerPolicy="no-referrer" />
@@ -74,8 +76,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-2 rounded-lg text-sm">Login</Link>
-                <Link to="/register" className="bg-primary-container text-white font-bold px-5 py-2 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black">Register</Link>
+                <Link to="/login" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-2 rounded-lg text-sm">{t('navbar.login')}</Link>
+                <Link to="/register" className="bg-primary-container text-white font-bold px-5 py-2 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black">{t('navbar.register')}</Link>
               </>
             )}
           </div>
@@ -95,9 +97,9 @@ export default function Navbar() {
         <div className="md:hidden absolute top-16 left-0 w-full bg-[#0e0e0e] border-b border-outline-variant/10 flex flex-col p-4 gap-4 shadow-2xl">
           {!isAuthPage && (
             <div className="flex flex-col gap-4 pb-4 border-b border-outline-variant/10">
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">Models</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">API Docs</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">Enterprise</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>
             </div>
           )}
           
@@ -106,14 +108,14 @@ export default function Navbar() {
               <div className="flex items-center gap-2 px-3 py-2 bg-surface rounded-lg w-fit">
                 <Database className="w-4 h-4 text-nvidia-green" />
                 <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                  {user ? (profile?.tier === 'pro' ? 'Unlimited' : `${profile?.credits || 0} Credits`) : `Guest: ${Math.max(0, 3 - guestUses)}/3`}
+                  {user ? (profile?.tier === 'pro' ? t('navbar.unlimited') : t('navbar.credits', { count: profile?.credits || 0 })) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
                 </span>
               </div>
             )}
             
             {user ? (
               <>
-                <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100">Dashboard</Link>
+                <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100">{t('navbar.dashboard')}</Link>
                 <div className="flex items-center justify-between pt-4 border-t border-outline-variant/10">
                   <div className="flex items-center gap-3">
                     {profile?.image ? (
@@ -132,8 +134,8 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex flex-col gap-3">
-                <Link to="/login" className="text-center text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-3 rounded-lg text-sm border border-outline-variant/20">Login</Link>
-                <Link to="/register" className="text-center bg-primary-container text-white font-bold px-5 py-3 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black">Register</Link>
+                <Link to="/login" className="text-center text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-3 rounded-lg text-sm border border-outline-variant/20">{t('navbar.login')}</Link>
+                <Link to="/register" className="text-center bg-primary-container text-white font-bold px-5 py-3 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black">{t('navbar.register')}</Link>
               </div>
             )}
           </div>

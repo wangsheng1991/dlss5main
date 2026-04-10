@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
 export default function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { signInWithGoogle } = useAuth();
   const [name, setName] = useState('');
@@ -24,7 +26,7 @@ export default function Register() {
       }
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Failed to create account');
+      setError(t('register.errorRegisterFailed'));
     } finally {
       setLoading(false);
     }
@@ -37,7 +39,7 @@ export default function Register() {
       await signInWithGoogle();
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Failed to register with Google');
+      setError(t('register.errorGoogleFailed'));
     } finally {
       setLoading(false);
     }
@@ -48,8 +50,8 @@ export default function Register() {
       <div className="bg-surface-low p-8 rounded-xl border border-outline-variant/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-container"></div>
         
-        <h1 className="text-3xl font-headline font-bold text-white mb-2">Create Account</h1>
-        <p className="text-zinc-400 text-sm mb-8">Join the Neural Monolith network.</p>
+        <h1 className="text-3xl font-headline font-bold text-white mb-2">{t('register.title')}</h1>
+        <p className="text-zinc-400 text-sm mb-8">{t('register.subtitle')}</p>
         
         {error && <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm mb-6">{error}</div>}
 
@@ -64,40 +66,40 @@ export default function Register() {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
           </svg>
-          Continue with Google
+          {t('register.continueGoogle')}
         </button>
 
         <div className="flex items-center gap-4 mb-6">
           <div className="flex-1 h-px bg-outline-variant/20"></div>
-          <span className="text-xs text-zinc-500 uppercase tracking-widest">Or email</span>
+          <span className="text-xs text-zinc-500 uppercase tracking-widest">{t('register.orEmail')}</span>
           <div className="flex-1 h-px bg-outline-variant/20"></div>
         </div>
 
         <form onSubmit={handleEmailRegister} className="space-y-5">
           <div>
-            <label className="block text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">Full Name</label>
-            <input 
-              type="text" 
+            <label className="block text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">{t('register.nameLabel')}</label>
+            <input
+              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-surface-lowest border-b-2 border-transparent focus:border-primary px-4 py-3 text-white outline-none transition-colors"
-              placeholder="Ada Lovelace"
+              placeholder={t('register.namePlaceholder')}
               required
             />
           </div>
           <div>
-            <label className="block text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">Email Address</label>
-            <input 
-              type="email" 
+            <label className="block text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">{t('register.emailLabel')}</label>
+            <input
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-surface-lowest border-b-2 border-transparent focus:border-primary px-4 py-3 text-white outline-none transition-colors"
-              placeholder="engineer@monolith.ai"
+              placeholder={t('register.emailPlaceholder')}
               required
             />
           </div>
           <div>
-            <label className="block text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">Password</label>
+            <label className="block text-xs font-label uppercase tracking-widest text-zinc-500 mb-2">{t('register.passwordLabel')}</label>
             <input 
               type="password" 
               value={password}
@@ -113,12 +115,12 @@ export default function Register() {
             disabled={loading}
             className="w-full bg-primary-container text-white font-bold py-3 rounded-lg mt-4 hover:bg-primary hover:text-black transition-all duration-300 disabled:opacity-50"
           >
-            {loading ? 'Provisioning...' : 'Provision Access'}
+            {loading ? t('register.provisioning') : t('register.provisionAccess')}
           </button>
         </form>
         
         <div className="mt-8 text-center text-sm text-zinc-500">
-          Already have an account? <Link to="/login" className="text-primary hover:underline">Login</Link>
+          {t('register.hasAccount')} <Link to="/login" className="text-primary hover:underline">{t('register.loginLink')}</Link>
         </div>
       </div>
     </main>

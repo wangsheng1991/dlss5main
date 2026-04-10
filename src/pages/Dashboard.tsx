@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { UploadCloud, Image as ImageIcon, Download, RefreshCw, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
@@ -10,30 +11,16 @@ const OSS_BASE = "/api/oss";
 const GPU_API = "/api/gpu";
 const CDN_BASE = "https://mtdsosscdn.oppein.com";
 
-const SAMPLES = [
-  {
-    name: "Low-res Game Asset",
-    url: "https://gpu-admin.alphanetplus.com/test-images/test_sr.png",
-    prompt: "hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style"
-  },
-  {
-    name: "Cyberpunk City",
-    url: "https://picsum.photos/seed/cyberpunk/800/600",
-    prompt: "neon lit cyberpunk city street, 8k resolution, ray tracing, ultra detailed"
-  },
-  {
-    name: "Fantasy Landscape",
-    url: "https://picsum.photos/seed/fantasy/800/600",
-    prompt: "epic fantasy landscape, majestic mountains, glowing magic, unreal engine 5 render"
-  },
-  {
-    name: "Vintage Car",
-    url: "https://picsum.photos/seed/vintagecar/800/500",
-    prompt: "classic vintage car, photorealistic, studio lighting, 8k, highly detailed"
-  }
+const SAMPLES_RAW = [
+  { key: 'lowResGameAsset', url: "https://gpu-admin.alphanetplus.com/test-images/test_sr.png", prompt: "hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style" },
+  { key: 'cyberpunkCity', url: "https://picsum.photos/seed/cyberpunk/800/600", prompt: "neon lit cyberpunk city street, 8k resolution, ray tracing, ultra detailed" },
+  { key: 'fantasyLandscape', url: "https://picsum.photos/seed/fantasy/800/600", prompt: "epic fantasy landscape, majestic mountains, glowing magic, unreal engine 5 render" },
+  { key: 'vintageCar', url: "https://picsum.photos/seed/vintagecar/800/500", prompt: "classic vintage car, photorealistic, studio lighting, 8k, highly detailed" }
 ];
 
 export default function Dashboard() {
+  const { t } = useTranslation();
+  const SAMPLES = SAMPLES_RAW.map(s => ({ ...s, name: t(`dashboard.${s.key}`) }));
   const { user, profile } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDone, setIsDone] = useState(false);
@@ -71,7 +58,7 @@ export default function Dashboard() {
   const checkLimits = async () => {
     if (!user) {
       if (guestUsage.count >= 3) {
-        throw new Error("Guest limit reached (3/3). Please login to continue.");
+        throw new Error(t('dashboard.guestLimitReached'));
       }
       return true;
     }
@@ -84,7 +71,7 @@ export default function Dashboard() {
     if (userSnap.exists()) {
       const userData = userSnap.data();
       if ((userData.credits || 0) <= 0) {
-        throw new Error("Insufficient credits. Please upgrade to Pro or purchase more credits.");
+        throw new Error(t('dashboard.insufficientCredits'));
       }
     }
     return true;
@@ -122,11 +109,11 @@ export default function Dashboard() {
   const validateFile = (file: File) => {
     const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!validTypes.includes(file.type)) {
-      setError("Invalid file type. Please upload a JPG, PNG, or WEBP image.");
+      setError(t('dashboard.errorUpload', { error: 'Invalid file type' }));
       return false;
     }
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      setError("File is too large. Maximum size is 5MB.");
+      setError(t('dashboard.errorUpload', { error: 'File too large' }));
       return false;
     }
     return true;
@@ -189,14 +176,14 @@ export default function Dashboard() {
         try {
           uploadData = JSON.parse(uploadText);
         } catch (e) {
-          throw new Error(`Upload API returned invalid response: ${uploadText.substring(0, 100)}`);
+          throw new Error(t('dashboard.errorInvalidResponse'));
         }
         
-        if (!uploadData.success) throw new Error(uploadData.error || 'Upload failed');
+        if (!uploadData.success) throw new Error(t('dashboard.errorUpload', { error: uploadData.error || 'Unknown' }));
         imageUrl = `oss://${ossKey}`;
         currentOriginal = URL.createObjectURL(selectedFile);
       } else {
-        throw new Error("Please select an image first.");
+        throw new Error(t('dashboard.errorNoImage'));
       }
 
       let cdnUrl = '';
@@ -220,7 +207,7 @@ export default function Dashboard() {
 
         if (!fluxRes.ok) {
           const errText = await fluxRes.text();
-          throw new Error(`API Error: ${fluxRes.status} ${errText}`);
+          throw new Error(t('dashboard.errorApi', { status: fluxRes.status, error: errText }));
         }
 
         const fluxText = await fluxRes.text();
@@ -228,17 +215,17 @@ export default function Dashboard() {
         try {
           fluxData = JSON.parse(fluxText);
         } catch (e) {
-          throw new Error(`GPU API returned invalid response: ${fluxText.substring(0, 100)}`);
+          throw new Error(t('dashboard.errorInvalidResponse'));
         }
 
-        if (!fluxData.success) throw new Error(fluxData.error || 'Enhancement failed');
+        if (!fluxData.success) throw new Error(t('dashboard.errorEnhancementFailed', { error: fluxData.error || 'Unknown' }));
 
         const enhancedOss = fluxData.enhanced;
         cdnUrl = `${CDN_BASE}/${enhancedOss.replace('oss://', '')}`;
 
       } else {
         // SeedVR2 超分 — 异步 Job 轮询
-        setPollingStatus('Submitting job...');
+        setPollingStatus(t('dashboard.submitting'));
         const submitRes = await fetch(`${GPU_API}/v1/seedvr2/upscale`, {
           method: 'POST',
           headers: {
@@ -250,14 +237,14 @@ export default function Dashboard() {
 
         if (!submitRes.ok) {
           const errText = await submitRes.text();
-          throw new Error(`API Error: ${submitRes.status} ${errText}`);
+          throw new Error(t('dashboard.errorApi', { status: submitRes.status, error: errText }));
         }
 
         const submitData = await submitRes.json();
         console.log('[SeedVR2 submit]', submitData);
         const job_id = submitData.job_id;
-        if (!job_id) throw new Error(`No job_id returned: ${JSON.stringify(submitData)}`);
-        setPollingStatus('Job queued, polling status...');
+        if (!job_id) throw new Error(t('dashboard.errorNoJobId'));
+        setPollingStatus(t('dashboard.jobQueued'));
 
         while (true) {
           await new Promise(resolve => setTimeout(resolve, 5000));
@@ -267,7 +254,7 @@ export default function Dashboard() {
 
           if (!s.ok) {
             const errText = await s.text();
-            throw new Error(`Task poll failed (${s.status}): ${errText}`);
+            throw new Error(t('dashboard.errorPollFailed', { status: s.status, error: errText }));
           }
 
           const job = await s.json();
@@ -278,9 +265,9 @@ export default function Dashboard() {
             break;
           }
           if (job.status === 'failed') {
-            throw new Error(job.error || 'Upscaling failed');
+            throw new Error(t('dashboard.errorUpscaleFailed', { error: job.error || 'Unknown' }));
           }
-          setPollingStatus(`Processing... status: ${job.status ?? 'unknown'}`);
+          setPollingStatus(t('dashboard.processing', { status: job.status ?? 'unknown' }));
         }
       }
 
@@ -301,16 +288,16 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-headline font-bold text-white">
-            {mode === 'meme' ? 'DLSS 5 Meme Generator' : 'AI Super Resolution'}
+            {mode === 'meme' ? t('dashboard.title') : t('dashboard.titleUpscale')}
           </h1>
           <p className="text-zinc-400 text-sm">
-            {mode === 'meme' ? 'Turn any image into DLSS5-style enhancement (Not official NVIDIA DLSS)' : 'Upscale and enhance your images with AI'}
+            {mode === 'meme' ? `${t('dashboard.subtitle')} ${t('dashboard.notOfficialDlss')}` : t('dashboard.subtitleUpscale')}
           </p>
         </div>
         <div className="flex items-center gap-4">
           <div className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 flex items-center gap-2">
             <div className="w-2 h-2 bg-nvidia-green rounded-full animate-pulse"></div>
-            <span className="text-xs font-label uppercase tracking-widest text-zinc-400">API Connected</span>
+            <span className="text-xs font-label uppercase tracking-widest text-zinc-400">{t('dashboard.apiConnected')}</span>
           </div>
         </div>
       </div>
@@ -318,42 +305,42 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-4">
           <div className="bg-surface-low p-6 rounded-xl border border-outline-variant/20">
-            <h3 className="text-xs font-label uppercase tracking-widest text-zinc-500 mb-4">Generation Settings</h3>
-            
+            <h3 className="text-xs font-label uppercase tracking-widest text-zinc-500 mb-4">{t('dashboard.generationSettings')}</h3>
+
             <div className="space-y-6">
               <div>
-                <label className="block text-sm text-white mb-2">Processing Mode</label>
+                <label className="block text-sm text-white mb-2">{t('dashboard.processingMode')}</label>
                 <div className="flex bg-surface-highest rounded-lg p-1 border border-outline-variant/20">
                   <button
                     onClick={() => handleModeChange('meme')}
                     className={`flex-1 py-2 text-sm rounded-md transition-colors ${mode === 'meme' ? 'bg-primary text-black font-bold' : 'text-zinc-400 hover:text-white'}`}
                   >
-                    DLSS 5 Meme
+                    {t('dashboard.dlssMeme')}
                   </button>
                   <button
                     onClick={() => handleModeChange('upscale')}
                     className={`flex-1 py-2 text-sm rounded-md transition-colors ${mode === 'upscale' ? 'bg-primary text-black font-bold' : 'text-zinc-400 hover:text-white'}`}
                   >
-                    Super Resolution
+                    {t('dashboard.superResolution')}
                   </button>
                 </div>
               </div>
 
               {mode === 'meme' && (
                 <div>
-                  <label className="block text-sm text-white mb-2">Meme Prompt (RTX On)</label>
+                  <label className="block text-sm text-white mb-2">{t('dashboard.memePrompt')}</label>
                   <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     className="w-full bg-surface-lowest border border-outline-variant/20 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-primary h-24 resize-none"
-                    placeholder="e.g. hyper-realistic 4k, highly detailed..."
+                    placeholder={t('dashboard.promptPlaceholder')}
                   />
                 </div>
               )}
 
               {mode === 'meme' && (
                 <div>
-                  <label className="block text-sm text-white mb-2">Inference Steps ({steps})</label>
+                  <label className="block text-sm text-white mb-2">{t('dashboard.inferenceSteps')} ({steps})</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[4, 8, 16].map(val => (
                       <button
@@ -365,13 +352,13 @@ export default function Dashboard() {
                       </button>
                     ))}
                   </div>
-                  <p className="text-[10px] text-zinc-500 mt-2">Higher steps = better quality but slower.</p>
+                  <p className="text-[10px] text-zinc-500 mt-2">{t('dashboard.inferenceHint')}</p>
                 </div>
               )}
 
               {mode === 'upscale' && (
                 <div>
-                  <label className="block text-sm text-white mb-2">Upscale Scale</label>
+                  <label className="block text-sm text-white mb-2">{t('dashboard.upscaleScale')}</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[2, 4].map(val => (
                       <button
@@ -417,31 +404,31 @@ export default function Dashboard() {
                       onClick={() => { setSelectedFile(null); setPreviewUrl(null); }}
                       className="flex-1 py-3 rounded-lg border border-outline-variant/20 text-white hover:bg-surface-highest transition-colors"
                     >
-                      Clear
+                      {t('dashboard.clear')}
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleUpload(false)}
                       className="flex-1 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-container transition-colors"
                     >
-                      {mode === 'meme' ? 'Generate DLSS 5 Meme' : 'Upscale Image'}
+                      {mode === 'meme' ? t('dashboard.generate') : t('dashboard.upscale')}
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="w-full flex flex-col items-center gap-8">
-                  <div 
+                  <div
                     onClick={() => fileInputRef.current?.click()}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={handleDrop}
                     className="w-full max-w-3xl min-h-[300px] lg:min-h-[400px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
                   >
                     <UploadCloud className="w-12 h-12 text-zinc-500 mb-4" />
-                    <h2 className="text-xl font-headline font-semibold text-white mb-2">Drag & Drop or Click to Upload</h2>
-                    <p className="text-zinc-500 text-sm">Supports JPG, PNG, WEBP (Max 5MB)</p>
+                    <h2 className="text-xl font-headline font-semibold text-white mb-2">{t('dashboard.uploadAreaTitle')}</h2>
+                    <p className="text-zinc-500 text-sm">{t('dashboard.uploadAreaHint')}</p>
                   </div>
 
                   <div className="w-full max-w-3xl">
-                    <h3 className="text-sm font-label uppercase tracking-widest text-zinc-500 mb-4 text-center">Or try these examples</h3>
+                    <h3 className="text-sm font-label uppercase tracking-widest text-zinc-500 mb-4 text-center">{t('dashboard.orTryExamples')}</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {SAMPLES.map((sample, idx) => (
                         <button
@@ -473,10 +460,10 @@ export default function Dashboard() {
               </div>
               <h2 className="text-xl font-headline font-semibold text-white mb-2 flex items-center gap-2">
                 <RefreshCw className="w-5 h-5 animate-spin text-primary" />
-                {mode === 'meme' ? 'Generating DLSS 5 Meme...' : 'Upscaling Image...'}
+                {mode === 'meme' ? t('dashboard.generatingDlss') : t('dashboard.upscaling')}
               </h2>
               <p className="text-zinc-500 text-sm">
-                {pollingStatus || (mode === 'meme' ? 'This may take 15-30 seconds depending on steps.' : 'SeedVR2 processing, please wait...')}
+                {pollingStatus || (mode === 'meme' ? t('dashboard.dlssProcessing') : t('dashboard.dlssProcessing'))}
               </p>
             </div>
           )}
@@ -488,11 +475,11 @@ export default function Dashboard() {
               </div>
               <div className="p-4 flex justify-between items-center border-t border-outline-variant/20 mt-4">
                 <div className="text-sm text-zinc-400">
-                  {mode === 'meme' ? 'Meme Generation Complete' : 'Upscaling Complete'} • DLSS 5
+                  {mode === 'meme' ? t('dashboard.memeComplete') : t('dashboard.upscaleComplete')} • {t('dashboard.dlssLabel')}
                 </div>
                 <div className="flex gap-3">
                   <button onClick={() => { setIsDone(false); setSelectedFile(null); setPreviewUrl(null); }} className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors">
-                    New Image
+                    {t('dashboard.newImage')}
                   </button>
                   <a 
                     href={resultUrl} 
@@ -500,7 +487,7 @@ export default function Dashboard() {
                     rel="noreferrer"
                     className="px-4 py-2 bg-primary text-black text-sm font-bold rounded hover:bg-primary-container transition-colors flex items-center gap-2"
                   >
-                    <Download className="w-4 h-4" /> Download
+                    <Download className="w-4 h-4" /> {t('dashboard.download')}
                   </a>
                 </div>
               </div>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  UploadCloud, Cpu, Sparkles, 
+import {
+  UploadCloud, Cpu, Sparkles,
   Gauge, Zap, ShieldCheck, Shield, ChevronDown
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 
@@ -31,6 +32,7 @@ const COMMUNITY_EXAMPLES = [
 ];
 
 export default function Home() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const structuredData = {
@@ -38,7 +40,7 @@ export default function Home() {
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        "name": "DLSS 5 Neural Monolith",
+        "name": "DLSS 5 Neural Super-Resolution (Non-Official)",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "Web",
         "offers": {
@@ -46,33 +48,41 @@ export default function Home() {
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "High-Resolution AI Image Upscaling powered by Neural Super-Resolution and Tensor Cores."
+        "description": "AI image upscaling tool inspired by NVIDIA DLSS 5 technology. Neural Super-Resolution for 4X image enhancement using Tensor Cores. Non-official showcase."
       },
       {
         "@type": "FAQPage",
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "How to upscale images with AI using DLSS 5?",
+            "name": t('home.faqHowToUpscale'),
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Upscaling images with DLSS 5 is simple: just drag and drop your JPG or PNG file into our web interface. Our neural network will process the image on NVIDIA H100 GPUs and return a high-resolution version in seconds."
+              "text": t('home.faqHowToUpscaleAns')
             }
           },
           {
             "@type": "Question",
-            "name": "Can I use DLSS 5 for photos and professional work?",
+            "name": t('home.faqProfessional'),
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes, DLSS 5 is specifically engineered for professional photo upscaling. Unlike generic AI, our Neural Super-Resolution model preserves architectural lines, skin textures, and intricate patterns without introducing artifacts."
+              "text": t('home.faqProfessionalAns')
             }
           },
           {
             "@type": "Question",
-            "name": "What is Neural Super-Resolution?",
+            "name": t('home.faqNeuralSr'),
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Neural Super-Resolution is a deep learning technique that predicts high-resolution pixels based on patterns learned from millions of high-quality images. It creates new data to fill in gaps that standard scaling methods simply ignore."
+              "text": t('home.faqNeuralSrAns')
+            }
+          },
+          {
+            "@type": "Question",
+            "name": t('home.faqApi'),
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": t('home.faqApiAns')
             }
           }
         ]
@@ -82,20 +92,20 @@ export default function Home() {
 
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
-      <SEO 
-        title="DLSS 5 | High-Resolution AI Image Upscaling"
-        description="Elevate your visual content with industry-leading Neural Super-Resolution. Leverage NVIDIA Tensor Core performance for instant inference and 4X image upscaling."
+      <SEO
+        title="NVIDIA DLSS 5 (Non-Official) | AI Image Upscaling & Super Resolution"
+        description="Experience NVIDIA DLSS 5-style AI image upscaling. Neural Super-Resolution powered by NVIDIA Tensor Cores for instant 4X upscaling. Not official NVIDIA product."
         structuredData={structuredData}
       />
       <section className="text-center mb-16 relative">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
         
         <h1 className="text-5xl md:text-7xl font-headline font-bold tracking-tight text-white mb-6 leading-[1.1]">
-          High-Resolution <br/> <span className="text-nvidia-green">AI Image Upscaling</span>
+          {t('home.title').split(' ').slice(0, 2).join(' ')} <br/> <span className="text-nvidia-green">{t('home.title').split(' ').slice(2).join(' ')}</span>
         </h1>
         <p className="text-on-surface-variant text-lg max-w-2xl mx-auto font-light leading-relaxed mb-12">
-          Elevate your visual content with industry-leading <span className="text-on-surface font-medium">Neural Super-Resolution</span>. <br/>
-          Leverage NVIDIA Tensor Core performance for instant inference.
+          {t('home.subtitle').split('.')[0]}. <br/>
+          {t('home.subtitle').split('.').slice(1).join('.').trim()}
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
@@ -108,15 +118,15 @@ export default function Home() {
                 <div className="w-16 h-16 bg-surface-high rounded-full flex items-center justify-center mb-6">
                   <UploadCloud className="w-8 h-8 text-primary" />
                 </div>
-                <h2 className="text-xl font-headline font-semibold text-white mb-2">Drag & Drop or Click to Upload</h2>
-                <p className="text-zinc-500 text-sm mb-6 font-label">Supports JPG, PNG, WEBP (Max 2MB)</p>
+                <h2 className="text-xl font-headline font-semibold text-white mb-2">{t('dashboard.uploadAreaTitle')}</h2>
+                <p className="text-zinc-500 text-sm mb-6 font-label">{t('home.uploadHint')}</p>
                 <button className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-primary transition-all duration-300">
-                  Select Image
+                  {t('home.uploadButton')}
                 </button>
               </div>
               <div className="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-zinc-500 font-label">
-                <span>Optimized for Professional Workflows</span>
-                <span className="text-nvidia-green">Instant Inference Active</span>
+                <span>{t('home.faqProfessionalWorkflows')}</span>
+                <span className="text-nvidia-green">{t('home.instantInference')}</span>
               </div>
             </div>
           </div>
@@ -146,8 +156,8 @@ export default function Home() {
       {/* Featured Showcase Section */}
       <section className="mt-32">
         <div className="mb-12 text-center">
-          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">Featured Showcase</span>
-          <h2 className="text-4xl font-headline font-bold text-white mb-6">Stunning Transformations</h2>
+          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('home.featuredShowcase')}</span>
+          <h2 className="text-4xl font-headline font-bold text-white mb-6">{t('home.transformations')}</h2>
           <p className="text-zinc-400 max-w-2xl mx-auto leading-relaxed">
             Experience the power of Neural Super-Resolution. Drag the slider to compare the original low-resolution input with our AI-enhanced output.
           </p>
@@ -162,9 +172,9 @@ export default function Home() {
               />
             </div>
             <div className="p-6">
-              <h3 className="text-lg font-headline font-bold text-white mb-2">Portrait & Skin Textures</h3>
+              <h3 className="text-lg font-headline font-bold text-white mb-2">{t('home.portraitTextures')}</h3>
               <p className="text-sm text-zinc-500 leading-relaxed">
-                Restores micro-details like pores and hair strands naturally, avoiding the "plastic smoothing" effect common in traditional upscalers.
+                {t('home.portraitDesc')}
               </p>
             </div>
           </div>
@@ -177,9 +187,9 @@ export default function Home() {
               />
             </div>
             <div className="p-6">
-              <h3 className="text-lg font-headline font-bold text-white mb-2">Architectural Geometry</h3>
+              <h3 className="text-lg font-headline font-bold text-white mb-2">{t('home.architecturalGeometry')}</h3>
               <p className="text-sm text-zinc-500 leading-relaxed">
-                Reconstructs straight lines, sharp edges, and complex geometric patterns perfectly without introducing aliasing or artifacts.
+                {t('home.archDesc')}
               </p>
             </div>
           </div>
@@ -192,9 +202,9 @@ export default function Home() {
               />
             </div>
             <div className="p-6">
-              <h3 className="text-lg font-headline font-bold text-white mb-2">Macro Textures</h3>
+              <h3 className="text-lg font-headline font-bold text-white mb-2">{t('home.macroTextures')}</h3>
               <p className="text-sm text-zinc-500 leading-relaxed">
-                Enhances complex organic patterns, fabric weaves, and intricate surface details with stunning generative precision.
+                {t('home.macroDesc')}
               </p>
             </div>
           </div>
@@ -205,15 +215,15 @@ export default function Home() {
             onClick={() => navigate('/dashboard')}
             className="bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
           >
-            Try It With Your Own Image
+            {t('home.tryIt')}
           </button>
         </div>
       </section>
 
       <section className="mt-32">
         <div className="mb-12">
-          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">Performance Metrics</span>
-          <h2 className="text-4xl font-headline font-bold text-white mb-6">DLSS 5 vs. Standard Upscaling</h2>
+          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('home.performanceMetrics')}</span>
+          <h2 className="text-4xl font-headline font-bold text-white mb-6">{t('home.dlssVsStandard')}</h2>
           <p className="text-zinc-400 max-w-2xl leading-relaxed">Our proprietary neural engine outperforms traditional methods by reconstructing missing data using trained AI models rather than simple pixel stretching.</p>
         </div>
         
@@ -223,30 +233,30 @@ export default function Home() {
               <thead>
                 <tr className="bg-surface-high border-b border-outline-variant/20">
                   <th className="px-6 py-4 text-xs font-label uppercase tracking-widest text-primary">Feature</th>
-                  <th className="px-6 py-4 text-xs font-label uppercase tracking-widest text-zinc-400">Bicubic Scaling</th>
-                  <th className="px-6 py-4 text-xs font-label uppercase tracking-widest text-white">DLSS 5 Neural</th>
+                  <th className="px-6 py-4 text-xs font-label uppercase tracking-widest text-zinc-400">{t('home.bicubicScaling')}</th>
+                  <th className="px-6 py-4 text-xs font-label uppercase tracking-widest text-white">{t('home.dlssNeural')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/10">
                 <tr>
-                  <td className="px-6 py-5 text-sm font-medium text-white">Edge Preservation</td>
-                  <td className="px-6 py-5 text-sm text-zinc-500">Blurred / Aliased</td>
-                  <td className="px-6 py-5 text-sm text-primary font-semibold">Ultra-Sharp (Vectorized)</td>
+                  <td className="px-6 py-5 text-sm font-medium text-white">{t('home.edgePreservation')}</td>
+                  <td className="px-6 py-5 text-sm text-zinc-500">{t('home.edgeBlurred')}</td>
+                  <td className="px-6 py-5 text-sm text-primary font-semibold">{t('home.edgeSharp')}</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-5 text-sm font-medium text-white">Noise Handling</td>
-                  <td className="px-6 py-5 text-sm text-zinc-500">Amplified Noise</td>
-                  <td className="px-6 py-5 text-sm text-primary font-semibold">Intelligent Denoising</td>
+                  <td className="px-6 py-5 text-sm font-medium text-white">{t('home.noiseHandling')}</td>
+                  <td className="px-6 py-5 text-sm text-zinc-500">{t('home.noiseAmplified')}</td>
+                  <td className="px-6 py-5 text-sm text-primary font-semibold">{t('home.noiseDenoise')}</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-5 text-sm font-medium text-white">Texture Detail</td>
-                  <td className="px-6 py-5 text-sm text-zinc-500">Lost Detail</td>
-                  <td className="px-6 py-5 text-sm text-primary font-semibold">Generative Reconstruction</td>
+                  <td className="px-6 py-5 text-sm font-medium text-white">{t('home.textureDetail')}</td>
+                  <td className="px-6 py-5 text-sm text-zinc-500">{t('home.textureLost')}</td>
+                  <td className="px-6 py-5 text-sm text-primary font-semibold">{t('home.textureReconstruct')}</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-5 text-sm font-medium text-white">Processing Hardware</td>
-                  <td className="px-6 py-5 text-sm text-zinc-500">CPU Standard</td>
-                  <td className="px-6 py-5 text-sm text-primary font-semibold">NVIDIA Tensor Cores</td>
+                  <td className="px-6 py-5 text-sm font-medium text-white">{t('home.hardware')}</td>
+                  <td className="px-6 py-5 text-sm text-zinc-500">{t('home.hardwareCpu')}</td>
+                  <td className="px-6 py-5 text-sm text-primary font-semibold">{t('home.hardwareGpu')}</td>
                 </tr>
               </tbody>
             </table>
@@ -257,8 +267,8 @@ export default function Home() {
       <section className="mt-32">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
           <div className="max-w-xl">
-            <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">Engineered Performance</span>
-            <h2 className="text-4xl font-headline font-bold text-white">The Neural Monolith Architecture.</h2>
+            <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('home.engineeredPerformance')}</span>
+            <h2 className="text-4xl font-headline font-bold text-white">{t('home.neuralMonolith')}</h2>
           </div>
           <div className="text-zinc-500 font-label text-sm uppercase tracking-widest border-l border-zinc-800 pl-6 h-12 flex items-center">
             001 // SYSTEM OVERVIEW
@@ -273,8 +283,8 @@ export default function Home() {
             <div className="w-10 h-10 bg-nvidia-green/10 rounded flex items-center justify-center mb-6">
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
-            <h3 className="text-xl font-headline font-bold text-white mb-4">Recursive Upscaling</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">Multi-pass neural filtering that identifies textures and edge cases to restore lost data with sub-pixel precision for high-resolution results.</p>
+            <h3 className="text-xl font-headline font-bold text-white mb-4">{t('home.recursiveUpscaling')}</h3>
+            <p className="text-zinc-500 text-sm leading-relaxed">{t('home.recursiveDesc')}</p>
           </div>
           
           <div className="bg-surface-lowest p-8 rounded-xl relative group overflow-hidden border border-outline-variant/5 hover:border-primary/20 transition-colors">
@@ -284,8 +294,8 @@ export default function Home() {
             <div className="w-10 h-10 bg-nvidia-green/10 rounded flex items-center justify-center mb-6">
               <Zap className="w-5 h-5 text-primary" />
             </div>
-            <h3 className="text-xl font-headline font-bold text-white mb-4">Tensor Core Performance</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">Powered by globally distributed H100 clusters, providing NVIDIA-accelerated performance for near-instant upscaling in any browser.</p>
+            <h3 className="text-xl font-headline font-bold text-white mb-4">{t('home.tensorPerformance')}</h3>
+            <p className="text-zinc-500 text-sm leading-relaxed">{t('home.tensorDesc')}</p>
           </div>
           
           <div className="bg-surface-lowest p-8 rounded-xl relative group overflow-hidden border border-outline-variant/5 hover:border-primary/20 transition-colors">
@@ -295,14 +305,14 @@ export default function Home() {
             <div className="w-10 h-10 bg-nvidia-green/10 rounded flex items-center justify-center mb-6">
               <Shield className="w-5 h-5 text-primary" />
             </div>
-            <h3 className="text-xl font-headline font-bold text-white mb-4">E2E Data Privacy</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">Your images are processed in volatile memory and never stored. Professional privacy for your valuable visual assets.</p>
+            <h3 className="text-xl font-headline font-bold text-white mb-4">{t('home.dataPrivacy')}</h3>
+            <p className="text-zinc-500 text-sm leading-relaxed">{t('home.privacyDesc')}</p>
           </div>
         </div>
       </section>
 
       <section className="mt-32">
-        <h3 className="text-center text-zinc-500 font-label uppercase tracking-[0.3em] mb-12 text-xs">Upscaled by Community</h3>
+        <h3 className="text-center text-zinc-500 font-label uppercase tracking-[0.3em] mb-12 text-xs">{t('home.communityUpscaled')}</h3>
         
         <div className="relative">
           <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 max-h-[800px] overflow-hidden">
@@ -333,52 +343,52 @@ export default function Home() {
               className="pointer-events-auto bg-surface-high text-white px-8 py-3 rounded-full font-bold hover:bg-primary hover:text-black transition-all duration-300 border border-outline-variant/20 shadow-2xl flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
-              Join the Community
+              {t('home.joinCommunity')}
             </button>
           </div>
         </div>
       </section>
 
       <section className="mt-32 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-headline font-bold text-white mb-12 text-center">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-headline font-bold text-white mb-12 text-center">{t('home.faq')}</h2>
         <div className="space-y-4">
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">How to upscale images with AI using DLSS 5?</span>
+              <span className="text-white font-medium">{t('home.faqHowToUpscale')}</span>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
-              Upscaling images with DLSS 5 is simple: just drag and drop your JPG or PNG file into our web interface. Our neural network will process the image on NVIDIA H100 GPUs and return a high-resolution version in seconds.
+              {t('home.faqHowToUpscaleAns')}
             </div>
           </details>
-          
+
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">Can I use DLSS 5 for photos and professional work?</span>
+              <span className="text-white font-medium">{t('home.faqProfessional')}</span>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
-              Yes, DLSS 5 is specifically engineered for professional photo upscaling. Unlike generic AI, our Neural Super-Resolution model preserves architectural lines, skin textures, and intricate patterns without introducing artifacts.
+              {t('home.faqProfessionalAns')}
             </div>
           </details>
-          
+
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">What is Neural Super-Resolution?</span>
+              <span className="text-white font-medium">{t('home.faqNeuralSr')}</span>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
-              Neural Super-Resolution is a deep learning technique that predicts high-resolution pixels based on patterns learned from millions of high-quality images. It creates new data to fill in gaps that standard scaling methods simply ignore.
+              {t('home.faqNeuralSrAns')}
             </div>
           </details>
-          
+
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">Is there an API for developers?</span>
+              <span className="text-white font-medium">{t('home.faqApi')}</span>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
-              Absolutely. We offer robust API documentation for integrating DLSS 5 high-resolution AI upscaling into your own applications, CMS, or automated pipelines.
+              {t('home.faqApiAns')}
             </div>
           </details>
         </div>
