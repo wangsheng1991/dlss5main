@@ -51,6 +51,7 @@ export default function Dashboard() {
   const [steps, setSteps] = useState(4);
 
   const [guestUsage, setGuestUsage] = useState({ date: new Date().toISOString().split('T')[0], count: 0 });
+  const [pollingStatus, setPollingStatus] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -160,6 +161,7 @@ export default function Dashboard() {
       setIsProcessing(true);
       setError(null);
       setIsDone(false);
+      setPollingStatus('');
 
       await checkLimits();
 
@@ -196,38 +198,80 @@ export default function Dashboard() {
         throw new Error("Please select an image first.");
       }
 
-      const fluxRes = await fetch(`${GPU_API}/v1/flux2/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': API_KEY
-        },
-        body: JSON.stringify({
-          image: imageUrl,
-          prompt: prompt,
-          seed: Number(import.meta.env.VITE_DEFAULT_SEED) || 42,
-          num_inference_steps: steps,
-          output_format: "oss"
-        })
-      });
+      let cdnUrl = '';
 
-      if (!fluxRes.ok) {
-         const errText = await fluxRes.text();
-         throw new Error(`API Error: ${fluxRes.status} ${errText}`);
+      if (mode === 'meme') {
+        // DLSS 5 — 同步接口
+        const fluxRes = await fetch(`${GPU_API}/v1/flux2/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': API_KEY
+          },
+          body: JSON.stringify({
+            image: imageUrl,
+            prompt: prompt,
+            seed: Number(import.meta.env.VITE_DEFAULT_SEED) || 42,
+            num_inference_steps: steps,
+            output_format: "oss"
+          })
+        });
+
+        if (!fluxRes.ok) {
+          const errText = await fluxRes.text();
+          throw new Error(`API Error: ${fluxRes.status} ${errText}`);
+        }
+
+        const fluxText = await fluxRes.text();
+        let fluxData;
+        try {
+          fluxData = JSON.parse(fluxText);
+        } catch (e) {
+          throw new Error(`GPU API returned invalid response: ${fluxText.substring(0, 100)}`);
+        }
+
+        if (!fluxData.success) throw new Error(fluxData.error || 'Enhancement failed');
+
+        const enhancedOss = fluxData.enhanced;
+        cdnUrl = `${CDN_BASE}/${enhancedOss.replace('oss://', '')}`;
+
+      } else {
+        // SeedVR2 超分 — 异步 Job 轮询
+        setPollingStatus('Submitting job...');
+        const submitRes = await fetch(`${GPU_API}/v1/seedvr2/upscale`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': API_KEY
+          },
+          body: JSON.stringify({ image_url: imageUrl })
+        });
+
+        if (!submitRes.ok) {
+          const errText = await submitRes.text();
+          throw new Error(`API Error: ${submitRes.status} ${errText}`);
+        }
+
+        const { job_id } = await submitRes.json();
+        setPollingStatus('Job queued, polling status...');
+
+        while (true) {
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          const s = await fetch(`${GPU_API}/v1/task/${job_id}`, {
+            headers: { 'X-API-Key': API_KEY }
+          });
+          const job = await s.json();
+
+          if (job.status === 'done') {
+            cdnUrl = job.output_url; // 直接是 CDN URL
+            break;
+          }
+          if (job.status === 'failed') {
+            throw new Error(job.error || 'Upscaling failed');
+          }
+          setPollingStatus(`Processing... status: ${job.status}`);
+        }
       }
-
-      const fluxText = await fluxRes.text();
-      let fluxData;
-      try {
-        fluxData = JSON.parse(fluxText);
-      } catch (e) {
-        throw new Error(`GPU API returned invalid response: ${fluxText.substring(0, 100)}`);
-      }
-      
-      if (!fluxData.success) throw new Error(fluxData.error || 'Enhancement failed');
-
-      const enhancedOss = fluxData.enhanced;
-      const cdnUrl = `${CDN_BASE}/${enhancedOss.replace('oss://', '')}`;
 
       await updateUsage();
 
@@ -401,7 +445,9 @@ export default function Dashboard() {
                 <RefreshCw className="w-5 h-5 animate-spin text-primary" />
                 {mode === 'meme' ? 'Generating DLSS 5 Meme...' : 'Upscaling Image...'}
               </h2>
-              <p className="text-zinc-500 text-sm">This may take 15-30 seconds depending on steps.</p>
+              <p className="text-zinc-500 text-sm">
+                {pollingStatus || (mode === 'meme' ? 'This may take 15-30 seconds depending on steps.' : 'SeedVR2 processing, please wait...')}
+              </p>
             </div>
           )}
 
