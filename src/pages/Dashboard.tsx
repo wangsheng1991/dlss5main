@@ -408,11 +408,11 @@ export default function Dashboard() {
               />
               
               {previewUrl ? (
-                <div className="flex flex-col items-center gap-6 w-full flex-1">
-                  <div className="w-full min-h-[300px] lg:min-h-[400px] rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-highest flex items-center justify-center p-3">
-                    <img src={previewUrl} alt="Preview" className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
+                <div className="flex flex-col items-center gap-6 w-full h-full flex-1">
+                  <div className="w-full flex-1 min-h-[500px] lg:min-h-[650px] rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-highest flex items-center justify-center p-4">
+                    <img src={previewUrl} alt="Preview" className="max-w-full max-h-[600px] lg:max-h-[750px] object-contain rounded-lg shadow-2xl" />
                   </div>
-                  <div className="flex gap-4 w-full mt-auto">
+                  <div className="flex gap-4 w-full max-w-md mt-auto">
                     <button 
                       onClick={() => { setSelectedFile(null); setPreviewUrl(null); }}
                       className="flex-1 py-3 rounded-lg border border-outline-variant/20 text-white hover:bg-surface-highest transition-colors"
