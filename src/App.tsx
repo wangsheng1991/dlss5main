@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Models from './pages/Models';
 import Docs from './pages/Docs';
 import Enterprise from './pages/Enterprise';
+import Blog from './pages/Blog';
 import { AuthProvider } from './contexts/AuthContext';
 
 export default function App() {
@@ -27,6 +28,8 @@ export default function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/models" element={<Models />} />
                 <Route path="/docs" element={<Docs />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<Blog />} />
                 <Route path="/enterprise" element={<Enterprise />} />
               </Routes>
             </div>

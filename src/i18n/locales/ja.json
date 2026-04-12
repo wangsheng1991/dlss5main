@@ -8,7 +8,8 @@
     "dashboard": "ダッシュボード",
     "guestCredits": "ゲスト: {{count}}/3",
     "unlimited": "無制限",
-    "credits": "{{count}} クレジット"
+    "credits": "{{count}} クレジット",
+    "blog": "ブログ"
   },
   "home": {
     "title": "高解像度 AI 画像超解像度アップスケーリング",

@@ -8,7 +8,8 @@
     "dashboard": "대시보드",
     "guestCredits": "게스트: {{count}}/3",
     "unlimited": "무제한",
-    "credits": "{{count}} 크레딧"
+    "credits": "{{count}} 크레딧",
+    "blog": "블로그"
   },
   "home": {
     "title": "고해상도 AI 이미지 업스케일링",
