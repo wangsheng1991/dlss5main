@@ -248,7 +248,7 @@ export default function Dashboard() {
 
         while (true) {
           await new Promise(resolve => setTimeout(resolve, 5000));
-          const s = await fetch(`${GPU_API}/v1/task/${job_id}`, {
+          const s = await fetch(`${GPU_API}/v1/seedvr2/status/${job_id}`, {
             headers: { 'X-API-Key': API_KEY }
           });
 
