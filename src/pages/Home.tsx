@@ -93,8 +93,9 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="NVIDIA DLSS 5 (Non-Official) | AI Image Upscaling & Super Resolution"
-        description="Experience NVIDIA DLSS 5-style AI image upscaling. Neural Super-Resolution powered by NVIDIA Tensor Cores for instant 4X upscaling. Not official NVIDIA product."
+        title="DLSS 5 NVIDIA — AI Image Upscaling & Super Resolution (RTX 5090, 5080 Supported)"
+        description="Free AI image upscaler powered by NVIDIA DLSS 5 neural super-resolution. Supports RTX 5090, 4080, 4070. 4X upscaling in seconds. No GPU required — try now and see if your RTX card made the cut."
+        canonical="/"
         structuredData={structuredData}
       />
       <section className="text-center mb-16 relative">
@@ -354,7 +355,7 @@ export default function Home() {
         <div className="space-y-4">
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">{t('home.faqHowToUpscale')}</span>
+              <h3 className="text-white font-medium text-base">{t('home.faqHowToUpscale')}</h3>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
@@ -364,7 +365,7 @@ export default function Home() {
 
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">{t('home.faqProfessional')}</span>
+              <h3 className="text-white font-medium text-base">{t('home.faqProfessional')}</h3>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
@@ -374,7 +375,7 @@ export default function Home() {
 
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">{t('home.faqNeuralSr')}</span>
+              <h3 className="text-white font-medium text-base">{t('home.faqNeuralSr')}</h3>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
@@ -384,7 +385,7 @@ export default function Home() {
 
           <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
             <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
-              <span className="text-white font-medium">{t('home.faqApi')}</span>
+              <h3 className="text-white font-medium text-base">{t('home.faqApi')}</h3>
               <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">

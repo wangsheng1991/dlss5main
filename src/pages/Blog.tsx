@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import { ARTICLES } from '../content/articles/types';
+import SEO from '../components/SEO';
 
 export default function Blog() {
   const { t, i18n } = useTranslation();
@@ -13,6 +14,11 @@ export default function Blog() {
   if (!slug) {
     return (
       <main className="pt-32 pb-24 px-6 max-w-[1200px] mx-auto">
+        <SEO
+          title="DLSS 5 Blog — NVIDIA AI Image Upscaling Guides & Comparisons"
+          description="In-depth articles about DLSS 5 neural rendering, FSR4 comparisons, RTX support list, and AI image upscaling. Expert guides for gaming and professional workflows."
+          canonical="/blog"
+        />
         <div className="mb-12">
           <h1 className="text-4xl font-headline font-bold text-white mb-4">DLSS 5 Blog</h1>
           <p className="text-zinc-400">
@@ -210,6 +216,11 @@ export default function Blog() {
 
   return (
     <main className="pt-32 pb-24 px-6 max-w-[900px] mx-auto">
+      <SEO
+        title={`${title} — DLSS 5 Blog`}
+        description={activeLang === 'cn' ? article.title_cn : article.title_en}
+        canonical={`/blog/${slug}`}
+      />
       {/* Language Toggle */}
       <div className="flex items-center gap-4 mb-8">
         <Link

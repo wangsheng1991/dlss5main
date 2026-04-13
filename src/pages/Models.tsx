@@ -21,11 +21,11 @@ export default function Models() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {MODELS_DATA.map((model, i) => (
-          <div key={i} className="bg-surface-low p-8 rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors">
-            <div className="text-xs font-label uppercase tracking-widest text-primary mb-2">{t(`models.${model.typeKey}`)}</div>
-            <h3 className="text-2xl font-headline font-bold text-white mb-4">{t(`models.${model.key}`)}</h3>
+          <article key={i} className="bg-surface-low p-8 rounded-xl border border-outline-variant/20 hover:border-primary/30 transition-colors">
+            <h3 className="text-xs font-label uppercase tracking-widest text-primary mb-2">{t(`models.${model.typeKey}`)}</h3>
+            <h4 className="text-2xl font-headline font-bold text-white mb-4">{t(`models.${model.key}`)}</h4>
             <p className="text-zinc-400 text-sm leading-relaxed">{t(`models.${model.key}Desc`)}</p>
-          </div>
+          </article>
         ))}
       </div>
     </main>
