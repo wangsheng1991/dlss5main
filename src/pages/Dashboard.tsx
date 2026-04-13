@@ -232,7 +232,7 @@ export default function Dashboard() {
             'Content-Type': 'application/json',
             'X-API-Key': API_KEY
           },
-          body: JSON.stringify({ image_url: imageUrl, scale })
+          body: JSON.stringify({ image_url: imageUrl })
         });
 
         if (!submitRes.ok) {
