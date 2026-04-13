@@ -155,13 +155,14 @@ export default function Dashboard() {
 
       let imageUrl = "";
       let currentOriginal = "";
+      let ossKey = "";
 
       if (selectedSampleUrl) {
         imageUrl = selectedSampleUrl;
         currentOriginal = selectedSampleUrl;
       } else if (selectedFile) {
         const ext = selectedFile.name.split('.').pop() || 'jpg';
-        const ossKey = `dlss/input/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+        ossKey = `dlss/input/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
         const formData = new FormData();
         formData.append('file', selectedFile);
 
@@ -232,7 +233,7 @@ export default function Dashboard() {
             'Content-Type': 'application/json',
             'X-API-Key': API_KEY
           },
-          body: JSON.stringify({ image_url: imageUrl })
+          body: JSON.stringify(ossKey ? { oss_key: ossKey } : { image_url: imageUrl })
         });
 
         if (!submitRes.ok) {
