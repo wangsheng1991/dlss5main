@@ -373,7 +373,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col min-h-[70vh] lg:min-h-[80vh]">
+        <div className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 flex flex-col min-h-[400px] lg:min-h-[500px]">
           {error && (
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3 text-red-400">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
