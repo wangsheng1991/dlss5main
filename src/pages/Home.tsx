@@ -9,26 +9,26 @@ import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 
 const COMMUNITY_EXAMPLES = [
-  "https://picsum.photos/seed/dlss1/600/800",
-  "https://picsum.photos/seed/dlss2/600/400",
-  "https://picsum.photos/seed/dlss3/600/600",
-  "https://picsum.photos/seed/dlss4/600/900",
-  "https://picsum.photos/seed/dlss5/600/500",
-  "https://picsum.photos/seed/dlss6/600/700",
-  "https://picsum.photos/seed/dlss7/600/450",
-  "https://picsum.photos/seed/dlss8/600/850",
-  "https://picsum.photos/seed/dlss9/600/550",
-  "https://picsum.photos/seed/dlss10/600/750",
-  "https://picsum.photos/seed/dlss11/600/400",
-  "https://picsum.photos/seed/dlss12/600/800",
-  "https://picsum.photos/seed/dlss13/600/600",
-  "https://picsum.photos/seed/dlss14/600/900",
-  "https://picsum.photos/seed/dlss15/600/500",
-  "https://picsum.photos/seed/dlss16/600/700",
-  "https://picsum.photos/seed/dlss17/600/450",
-  "https://picsum.photos/seed/dlss18/600/850",
-  "https://picsum.photos/seed/dlss19/600/550",
-  "https://picsum.photos/seed/dlss20/600/750",
+  "https://picsum.photos/seed/upscale1/600/800",
+  "https://picsum.photos/seed/upscale2/600/400",
+  "https://picsum.photos/seed/upscale3/600/600",
+  "https://picsum.photos/seed/upscale4/600/900",
+  "https://picsum.photos/seed/upscale5/600/500",
+  "https://picsum.photos/seed/upscale6/600/700",
+  "https://picsum.photos/seed/upscale7/600/450",
+  "https://picsum.photos/seed/upscale8/600/850",
+  "https://picsum.photos/seed/upscale9/600/550",
+  "https://picsum.photos/seed/upscale10/600/750",
+  "https://picsum.photos/seed/upscale11/600/400",
+  "https://picsum.photos/seed/upscale12/600/800",
+  "https://picsum.photos/seed/upscale13/600/600",
+  "https://picsum.photos/seed/upscale14/600/900",
+  "https://picsum.photos/seed/upscale15/600/500",
+  "https://picsum.photos/seed/upscale16/600/700",
+  "https://picsum.photos/seed/upscale17/600/450",
+  "https://picsum.photos/seed/upscale18/600/850",
+  "https://picsum.photos/seed/upscale19/600/550",
+  "https://picsum.photos/seed/upscale20/600/750",
 ];
 
 export default function Home() {
@@ -48,7 +48,7 @@ export default function Home() {
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "AI image upscaling tool inspired by NVIDIA DLSS 5 technology. Neural Super-Resolution for 4X image enhancement using Tensor Cores. Non-official showcase."
+        "description": "Free AI image upscaling tool powered by NVIDIA DLSS 5 neural super-resolution. Supports RTX 5090, 4080, 4070. 4X upscaling via Tensor Cores. Non-official NVIDIA showcase."
       },
       {
         "@type": "FAQPage",
@@ -93,8 +93,8 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 NVIDIA — AI Image Upscaling & Super Resolution (RTX 5090, 5080 Supported)"
-        description="Free AI image upscaler powered by NVIDIA DLSS 5 neural super-resolution. Supports RTX 5090, 4080, 4070. 4X upscaling in seconds. No GPU required — try now and see if your RTX card made the cut."
+        title="DLSS 5 NVIDIA — AI Image Upscaling & Super Resolution"
+        description="Free AI upscaler powered by NVIDIA DLSS 5 neural super-resolution. Supports RTX 5090, 4080, 4070. 4X upscaling in seconds. No GPU required — see if your RTX is supported."
         canonical="/"
         structuredData={structuredData}
       />
