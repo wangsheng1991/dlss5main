@@ -127,6 +127,7 @@
     "errorUpscaleFailed": "アップスケール失敗: {{error}}",
     "guestLimitReached": "ゲスト制限に達しました（3/3）。ログインして続行してください。",
     "insufficientCredits": "クレジット不足。Pro にアップグレードするか、より多くのクレジットを購入してください。",
+    "creditDeducted": "残り {{count}} クレジット",
     "step4": "4",
     "step8": "8",
     "step16": "16",

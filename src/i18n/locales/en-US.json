@@ -127,6 +127,7 @@
     "errorUpscaleFailed": "Upscaling failed: {{error}}",
     "guestLimitReached": "Guest limit reached (3/3). Please login to continue.",
     "insufficientCredits": "Insufficient credits. Please upgrade to Pro or purchase more credits.",
+    "creditDeducted": "{{count}} credits remaining",
     "step4": "4",
     "step8": "8",
     "step16": "16",

@@ -127,6 +127,7 @@
     "errorUpscaleFailed": "超分辨率失败：{{error}}",
     "guestLimitReached": "游客次数已用完（3/3）。请登录后继续。",
     "insufficientCredits": "积分不足。请升级到 Pro 或购买更多积分。",
+    "creditDeducted": "剩余 {{count}} 积分",
     "step4": "4",
     "step8": "8",
     "step16": "16",

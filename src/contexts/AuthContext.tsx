@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp, increment } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
 
 interface UserProfile {
@@ -25,6 +25,7 @@ interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  deductCredit: (amount?: number) => Promise<number>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -122,8 +123,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const deductCredit = async (amount: number = 1): Promise<number> => {
+    if (!user) return 0;
+    const userRef = doc(db, 'users', user.uid);
+    await updateDoc(userRef, { credits: increment(-amount) });
+    const updatedSnap = await getDoc(userRef);
+    return (updatedSnap.data()?.credits ?? 0);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, profile, loading, signInWithGoogle, logout, deductCredit }}>
       {children}
     </AuthContext.Provider>
   );

@@ -127,6 +127,7 @@
     "errorUpscaleFailed": "업스케일링 실패: {{error}}",
     "guestLimitReached": "게스트 한도에 도달했습니다 (3/3). 로그인하여 계속하세요.",
     "insufficientCredits": "크레딧 부족. Pro로 업그레이드하거나 더 많은 크레딧을 구매하세요.",
+    "creditDeducted": "남은 크레딧: {{count}}",
     "step4": "4",
     "step8": "8",
     "step16": "16",

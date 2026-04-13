@@ -3,7 +3,7 @@ import { UploadCloud, Image as ImageIcon, Download, RefreshCw, AlertCircle } fro
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
-import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 const API_KEY = import.meta.env.VITE_API_KEY as string;
@@ -40,6 +40,7 @@ export default function Dashboard() {
 
   const [guestUsage, setGuestUsage] = useState({ date: new Date().toISOString().split('T')[0], count: 0 });
   const [pollingStatus, setPollingStatus] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -65,33 +66,24 @@ export default function Dashboard() {
 
     if (profile?.tier === 'pro') return true;
 
-    const userRef = doc(db, 'users', user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      const userData = userSnap.data();
-      if ((userData.credits || 0) <= 0) {
-        throw new Error(t('dashboard.insufficientCredits'));
-      }
+    if ((profile?.credits ?? 0) <= 0) {
+      throw new Error(t('dashboard.insufficientCredits'));
     }
     return true;
   };
 
-  const updateUsage = async () => {
+  const updateUsage = async (): Promise<number> => {
     if (!user) {
       const newUsage = { ...guestUsage, count: guestUsage.count + 1 };
       setGuestUsage(newUsage);
       localStorage.setItem('dlss_guest_usage', JSON.stringify(newUsage));
       window.dispatchEvent(new Event('guestUsageUpdated'));
-      return;
+      return 0;
     }
 
-    if (profile?.tier === 'pro') return;
+    if (profile?.tier === 'pro') return -1;
 
-    const userRef = doc(db, 'users', user.uid);
-    await updateDoc(userRef, {
-      credits: increment(-1)
-    });
+    return await deductCredit(1);
   };
 
   // Update prompt when mode changes
@@ -148,6 +140,7 @@ export default function Dashboard() {
     try {
       setIsProcessing(true);
       setError(null);
+      setSuccessMsg('');
       setIsDone(false);
       setPollingStatus('');
 
@@ -272,7 +265,10 @@ export default function Dashboard() {
         }
       }
 
-      await updateUsage();
+      const remaining = await updateUsage();
+      if (remaining > 0) {
+        setSuccessMsg(t('dashboard.creditDeducted', { count: remaining }));
+      }
 
       setResultUrl(cdnUrl);
       setOriginalUrl(currentOriginal);
@@ -382,6 +378,12 @@ export default function Dashboard() {
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3 text-red-400">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <div className="text-sm">{error}</div>
+            </div>
+          )}
+
+          {successMsg && (
+            <div className="mb-4 p-3 bg-nvidia-green/10 border border-nvidia-green/20 rounded-lg text-nvidia-green text-sm">
+              {successMsg}
             </div>
           )}
 
