@@ -58,6 +58,7 @@ export default function Navbar() {
           {!isAuthPage && (
             <div className="hidden md:flex gap-6 items-center">
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/blog">{t('navbar.blog')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>
@@ -140,6 +141,7 @@ export default function Navbar() {
           {!isAuthPage && (
             <div className="flex flex-col gap-4 pb-4 border-b border-outline-variant/10">
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/about">{t('navbar.about')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/blog">{t('navbar.blog')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>
