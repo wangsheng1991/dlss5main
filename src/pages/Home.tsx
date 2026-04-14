@@ -32,8 +32,9 @@ const COMMUNITY_EXAMPLES = [
 ];
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const isZh = i18n.language.startsWith('zh');
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -48,7 +49,20 @@ export default function Home() {
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "Free AI image upscaling tool powered by NVIDIA DLSS 5 neural super-resolution. Supports RTX 5090, 4080, 4070. 4X upscaling via Tensor Cores. Non-official NVIDIA showcase."
+        "description": "Free online DLSS image upscaler powered by AI neural super-resolution. Upscale, sharpen and enhance any image to 4K quality. No GPU required. Non-official NVIDIA DLSS showcase."
+      },
+      {
+        "@type": "WebApplication",
+        "name": "Free DLSS Image Upscaler Online",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "All",
+        "description": "Looking for a powerful DLSS image upscaler? Instantly upscale and enhance any image using AI-powered neural super-resolution. Free to use — no GPU or installation required.",
+        "browserRequirements": "Requires a modern web browser. Works on all operating systems.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
       },
       {
         "@type": "FAQPage",
@@ -93,8 +107,8 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 NVIDIA — AI Image Upscaling & Super Resolution"
-        description="Free AI upscaler powered by NVIDIA DLSS 5 neural super-resolution. Supports RTX 5090, 4080, 4070. 4X upscaling in seconds. No GPU required — see if your RTX is supported."
+        title="Free DLSS Image Upscaler Online | AI Resolution Enhancer"
+        description="Looking for a DLSS image upscaler? Instantly upscale, sharpen and enhance any image with AI-powered DLSS neural super-resolution. Free, no GPU required. Try now."
         canonical="/"
         structuredData={structuredData}
       />
@@ -150,6 +164,48 @@ export default function Home() {
                 <div className="text-xl font-headline font-bold text-white">Ada-5.0</div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="mt-20 mb-16">
+        <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-10 text-center">
+          {isZh ? '如何使用 DLSS 图像放大器' : 'How to Use Our DLSS Image Upscaler'}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
+            <div className="w-12 h-12 bg-nvidia-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-nvidia-green font-headline font-bold text-xl">1</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">
+              {isZh ? '上传图片' : 'Upload Image'}
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              {isZh ? '选择或拖放任意 JPG、PNG、WEBP 图片（最大 5MB）' : 'Select or drag & drop any JPG, PNG, WEBP image (up to 5MB)'}
+            </p>
+          </div>
+          <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
+            <div className="w-12 h-12 bg-nvidia-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-nvidia-green font-headline font-bold text-xl">2</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">
+              {isZh ? '选择放大倍数' : 'Choose Upscale Factor'}
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              {isZh ? '选择 2× 或 4× 放大倍数，点击"超分辨率图片"' : 'Select 2× or 4× upscale factor, click "Upscale Image"'}
+            </p>
+          </div>
+          <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
+            <div className="w-12 h-12 bg-nvidia-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-nvidia-green font-headline font-bold text-xl">3</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">
+              {isZh ? '下载增强结果' : 'Download Enhanced Result'}
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              {isZh ? '几秒后即可下载 AI 增强后的高分辨率图片' : 'AI-enhanced high-resolution image ready in seconds — download instantly'}
+            </p>
           </div>
         </div>
       </section>

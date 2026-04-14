@@ -85,8 +85,8 @@
     "instantInference": "インスタント推論有効"
   },
   "dashboard": {
-    "title": "DLSS 5 スタイル增强ジェネレーター",
-    "titleUpscale": "AI 超级解像度",
+    "title": "DLSS 画像アップスケーラー — AI 対応",
+    "titleUpscale": "AI 画像アップスケーラー",
     "subtitle": "任意の画像を DLSS5 スタイル增强に変換",
     "subtitleUpscale": "AI で画像をアップスケールして強化",
     "notOfficialDlss": "（非公式 NVIDIA DLSS）",

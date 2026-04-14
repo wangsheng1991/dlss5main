@@ -85,8 +85,8 @@
     "instantInference": "즉각 추론 활성화됨"
   },
   "dashboard": {
-    "title": "DLSS 5 스타일 증강 생성기",
-    "titleUpscale": "AI 초해상도",
+    "title": "무료 DLSS 이미지 업스케일러 — AI 지원",
+    "titleUpscale": "AI 이미지 업스케일러",
     "subtitle": "모든 이미지를 DLSS5 스타일 증강으로 변환",
     "subtitleUpscale": "AI로 이미지 업스케일링 및 향상",
     "notOfficialDlss": "(비공식 NVIDIA DLSS)",

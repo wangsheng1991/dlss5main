@@ -85,8 +85,8 @@
     "instantInference": "Instant Inference Active"
   },
   "dashboard": {
-    "title": "DLSS 5 Meme Generator",
-    "titleUpscale": "AI Super Resolution",
+    "title": "Free DLSS Image Upscaler — AI Powered",
+    "titleUpscale": "AI Image Upscaler",
     "subtitle": "Turn any image into DLSS5-style enhancement",
     "subtitleUpscale": "Upscale and enhance your images with AI",
     "notOfficialDlss": "(Not official NVIDIA DLSS)",

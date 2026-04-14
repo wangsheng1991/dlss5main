@@ -85,8 +85,8 @@
     "instantInference": "即时推理已激活"
   },
   "dashboard": {
-    "title": "DLSS 5 风格增强生成器",
-    "titleUpscale": "AI 超分辨率",
+    "title": "免费 DLSS 图像放大器 — AI 驱动",
+    "titleUpscale": "AI 图像放大器",
     "subtitle": "将任何图片转换为 DLSS5 风格增强",
     "subtitleUpscale": "使用 AI 升级和增强您的图片",
     "notOfficialDlss": "（非官方 NVIDIA DLSS 产品）",
