@@ -6,12 +6,14 @@ import enUS from './locales/en-US.json';
 import zhCN from './locales/zh-CN.json';
 import ja from './locales/ja.json';
 import ko from './locales/ko.json';
+import ru from './locales/ru.json';
 
 const resources = {
   'en-US': { translation: enUS },
   'zh-CN': { translation: zhCN },
   'ja': { translation: ja },
   'ko': { translation: ko },
+  'ru': { translation: ru },
 };
 
 i18n
@@ -20,7 +22,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'en-US',
-    supportedLngs: ['en-US', 'zh-CN', 'ja', 'ko'],
+    supportedLngs: ['en-US', 'zh-CN', 'ja', 'ko', 'ru'],
     interpolation: {
       escapeValue: false,
     },

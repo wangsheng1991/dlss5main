@@ -4,12 +4,13 @@
     "docs": "API 문서",
     "enterprise": "엔터프라이즈",
     "login": "로그인",
-    "register": "注册",
+    "register": "등록",
     "dashboard": "대시보드",
     "guestCredits": "게스트: {{count}}/3",
     "unlimited": "무제한",
     "credits": "{{count}} 크레딧",
-    "blog": "블로그"
+    "blog": "블로그",
+    "about": "소개"
   },
   "home": {
     "title": "고해상도 AI 이미지 업스케일링",
@@ -74,7 +75,7 @@
     "bicubicScaling": "바이큐빅 스케일링",
     "dlssNeural": "DLSS 5 신경",
     "faqHowToUpscale": "DLSS 5로 AI를 사용하여 이미지를 업스케일링하는 방법은?",
-    "faqHowToUpscaleAns": "DLSS 5로 업스케일링은 간단합니다. JPG 또는 PNG 파일을 웹 인터페이스에ドラッグ 앤 드롭하기만 하면 됩니다. 신경망이 NVIDIA H100 GPU에서 이미지를 처리하고 몇 초 내에 고해상도 버전을 반환합니다.",
+    "faqHowToUpscaleAns": "DLSS 5로 업스케일링은 간단합니다. JPG 또는 PNG 파일을 웹 인터페이스에 드래그 앤 드롭하기만 하면 됩니다. 신경망이 NVIDIA H100 GPU에서 이미지를 처리하고 몇 초 내에 고해상도 버전을 반환합니다.",
     "faqProfessional": "DLSS 5를 사진 및 전문 작업에 사용할 수 있나요?",
     "faqProfessionalAns": "물론입니다. DLSS 5는 전문 사진 업스케일링을 위해 설계되었습니다. 범용 AI와 달리 당사의 신경 초해상도 모델은 아티팩트 없이 건축 선, 피부 텍스처, 복잡한 패턴을 보존합니다.",
     "faqNeuralSr": "신경 초해상도가 무엇인가요?",
@@ -218,6 +219,7 @@
     "en": "English",
     "zh": "中文",
     "ja": "日本語",
-    "ko": "한국어"
+    "ko": "한국어",
+    "ru": "Русский"
   }
 }

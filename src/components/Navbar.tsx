@@ -10,6 +10,7 @@ const LANGUAGES = [
   { code: 'zh-CN', label: '中文', flag: '🇨🇳' },
   { code: 'ja', label: '日本語', flag: '🇯🇵' },
   { code: 'ko', label: '한국어', flag: '🇰🇷' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
 ];
 
 export default function Navbar() {
