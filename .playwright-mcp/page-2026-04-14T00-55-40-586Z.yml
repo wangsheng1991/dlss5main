@@ -1,0 +1,118 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "DLSS 5" [ref=e7] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e8]:
+          - link "模型" [ref=e9] [cursor=pointer]:
+            - /url: /models
+          - link "博客" [ref=e10] [cursor=pointer]:
+            - /url: /blog
+          - link "API 文档" [ref=e11] [cursor=pointer]:
+            - /url: /docs
+          - link "企业版" [ref=e12] [cursor=pointer]:
+            - /url: /enterprise
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - img [ref=e15]
+          - generic [ref=e19]: "游客: 3/3"
+        - button "🇨🇳 中文" [ref=e21]:
+          - img [ref=e22]
+          - generic [ref=e25]: 🇨🇳 中文
+          - img [ref=e26]
+        - generic [ref=e28]:
+          - link "登录" [ref=e29] [cursor=pointer]:
+            - /url: /login
+          - link "注册" [ref=e30] [cursor=pointer]:
+            - /url: /register
+  - main [ref=e32]:
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - heading "AI 超分辨率" [level=1] [ref=e148]
+        - paragraph [ref=e36]: 使用 AI 升级和增强您的图片
+      - generic [ref=e40]: API 已连接
+    - generic [ref=e41]:
+      - generic [ref=e43]:
+        - heading "生成设置" [level=3] [ref=e44]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: 处理模式
+            - generic [ref=e48]:
+              - button "DLSS 5 风格" [ref=e49]
+              - button "超分辨率" [ref=e50]
+          - generic [ref=e149]:
+            - generic [ref=e150]: 放大倍数
+            - generic [ref=e151]:
+              - button "2x" [ref=e152]
+              - button "4x" [ref=e153]
+      - generic [ref=e157]:
+        - heading "正在超分辨率处理..." [level=2] [ref=e160]:
+          - img [ref=e161]
+          - text: 正在超分辨率处理...
+        - paragraph [ref=e166]: "处理中... 状态: pending"
+  - contentinfo [ref=e89]:
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e93]: DLSS 5
+          - paragraph [ref=e94]: 推进 NVIDIA DLSS 5 神经超分辨率与高分辨率 AI 图像增强的边界，为更清晰的数字未来而奋斗。
+          - paragraph [ref=e95]: © 2024 神经单体系统 | NVIDIA TENSOR CORE 驱动
+          - paragraph [ref=e96]: 这是一个独立工具。不隶属于或受 NVIDIA Corporation 支持或认可。DLSS 是 NVIDIA Corporation 的注册商标。
+        - generic [ref=e97]:
+          - heading "平台" [level=4] [ref=e98]
+          - list [ref=e99]:
+            - listitem [ref=e100]:
+              - link "模型" [ref=e101] [cursor=pointer]:
+                - /url: /models
+            - listitem [ref=e102]:
+              - link "价格" [ref=e103] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e104]:
+              - link "企业版" [ref=e105] [cursor=pointer]:
+                - /url: /enterprise
+            - listitem [ref=e106]:
+              - link "API 文档" [ref=e107] [cursor=pointer]:
+                - /url: /docs
+        - generic [ref=e108]:
+          - heading "资源" [level=4] [ref=e109]
+          - list [ref=e110]:
+            - listitem [ref=e111]:
+              - link "博客" [ref=e112] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e113]:
+              - link "文档" [ref=e114] [cursor=pointer]:
+                - /url: /docs
+            - listitem [ref=e115]:
+              - link "帮助中心" [ref=e116] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e117]:
+              - link "Github" [ref=e118] [cursor=pointer]:
+                - /url: /dashboard
+        - generic [ref=e119]:
+          - heading "法律" [level=4] [ref=e120]
+          - list [ref=e121]:
+            - listitem [ref=e122]:
+              - link "隐私政策" [ref=e123] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e124]:
+              - link "服务条款" [ref=e125] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e126]:
+              - link "安全" [ref=e127] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e128]:
+              - link "联系我们" [ref=e129] [cursor=pointer]:
+                - /url: /dashboard
+      - generic [ref=e130]:
+        - generic [ref=e131]:
+          - link [ref=e132] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e133]
+          - link [ref=e135] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e136]
+          - link [ref=e142] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e143]
+        - generic [ref=e147]: 所有系统运行正常

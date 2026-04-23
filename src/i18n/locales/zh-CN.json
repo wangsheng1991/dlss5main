@@ -138,7 +138,12 @@
     "cyberpunkCity": "赛博朋克城市",
     "fantasyLandscape": "奇幻风景",
     "vintageCar": "复古汽车",
-    "submitting": "正在提交任务..."
+    "submitting": "正在提交任务...",
+    "dailyCheckIn": "每日签到",
+    "checkInReward": "领取 5 免费积分",
+    "claimCredits": "领取 +5 积分",
+    "checkedIn": "今日已签到",
+    "creditsEarned": "积分已到账！"
   },
   "models": {
     "architecture": "架构",

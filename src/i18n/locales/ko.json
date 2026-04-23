@@ -139,7 +139,12 @@
     "cyberpunkCity": "사이버펑크 도시",
     "fantasyLandscape": "판타지 풍경",
     "vintageCar": "빈티지 자동차",
-    "submitting": "작업 제출 중..."
+    "submitting": "작업 제출 중...",
+    "dailyCheckIn": "일일 체크인",
+    "checkInReward": "5 무료 크레딧 받기",
+    "claimCredits": "+5 크레딧 받기",
+    "checkedIn": "오늘 체크인 완료",
+    "creditsEarned": "크레딧 적립!"
   },
   "models": {
     "architecture": "아키텍처",

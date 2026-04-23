@@ -17,6 +17,7 @@ interface UserProfile {
   name?: string;
   image?: string;
   credits: number;
+  lastCheckIn?: string; // date string YYYY-MM-DD
 }
 
 interface AuthContextType {
@@ -26,6 +27,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   deductCredit: (amount?: number) => Promise<number>;
+  dailyCheckIn: () => Promise<{ success: boolean; message: string; credits?: number }>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -131,8 +133,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return (updatedSnap.data()?.credits ?? 0);
   };
 
+  const dailyCheckIn = async (): Promise<{ success: boolean; message: string; credits?: number }> => {
+    if (!user) return { success: false, message: 'Not logged in' };
+    const userRef = doc(db, 'users', user.uid);
+    const today = new Date().toISOString().split('T')[0];
+
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) return { success: false, message: 'User not found' };
+
+    const lastCheckIn = snap.data().lastCheckIn;
+    if (lastCheckIn === today) {
+      return { success: false, message: 'Already checked in today' };
+    }
+
+    await updateDoc(userRef, {
+      credits: increment(5),
+      lastCheckIn: today
+    });
+
+    const updatedSnap = await getDoc(userRef);
+    return { success: true, message: 'Check-in successful! +5 credits', credits: updatedSnap.data()?.credits };
+  };
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithGoogle, logout, deductCredit }}>
+    <AuthContext.Provider value={{ user, profile, loading, signInWithGoogle, logout, deductCredit, dailyCheckIn }}>
       {children}
     </AuthContext.Provider>
   );

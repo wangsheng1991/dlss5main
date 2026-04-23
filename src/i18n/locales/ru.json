@@ -138,7 +138,12 @@
     "cyberpunkCity": "Киберпанк город",
     "fantasyLandscape": "Фэнтези пейзаж",
     "vintageCar": "Винтажный автомобиль",
-    "submitting": "Отправка задания..."
+    "submitting": "Отправка задания...",
+    "dailyCheckIn": "Ежедневная регистрация",
+    "checkInReward": "Получить 5 бесплатных кредитов",
+    "claimCredits": "Получить +5 кредитов",
+    "checkedIn": "Зарегистрирован сегодня",
+    "creditsEarned": "Кредиты зачислены!"
   },
   "models": {
     "architecture": "Архитектура",

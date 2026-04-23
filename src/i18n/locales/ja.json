@@ -138,7 +138,12 @@
     "cyberpunkCity": "サイバーパンク都市",
     "fantasyLandscape": "ファンタジー風景",
     "vintageCar": "ヴィンテージカー",
-    "submitting": "ジョブを送信中..."
+    "submitting": "ジョブを送信中...",
+    "dailyCheckIn": "デイリーサインイン",
+    "checkInReward": "5クレジット無料取得",
+    "claimCredits": "+5 クレジットを受け取る",
+    "checkedIn": "本日サインイン済み",
+    "creditsEarned": "クレジット到手！"
   },
   "models": {
     "architecture": "アーキテクチャ",

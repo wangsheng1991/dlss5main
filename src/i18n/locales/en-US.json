@@ -138,7 +138,12 @@
     "cyberpunkCity": "Cyberpunk City",
     "fantasyLandscape": "Fantasy Landscape",
     "vintageCar": "Vintage Car",
-    "submitting": "Submitting job..."
+    "submitting": "Submitting job...",
+    "dailyCheckIn": "Daily Check-in",
+    "checkInReward": "Claim 5 free credits",
+    "claimCredits": "Claim +5 Credits",
+    "checkedIn": "Checked in today",
+    "creditsEarned": "credits earned!"
   },
   "models": {
     "architecture": "Architecture",
