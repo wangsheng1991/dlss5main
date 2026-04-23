@@ -143,7 +143,9 @@
     "checkInReward": "5クレジット無料取得",
     "claimCredits": "+5 クレジットを受け取る",
     "checkedIn": "本日サインイン済み",
-    "creditsEarned": "クレジット到手！"
+    "creditsEarned": "クレジット到手！",
+    "alreadyCheckedIn": "今日はすでにサインイン済みです",
+    "checkingIn": "サインイン中..."
   },
   "models": {
     "architecture": "アーキテクチャ",

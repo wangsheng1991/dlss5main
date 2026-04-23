@@ -143,7 +143,9 @@
     "checkInReward": "Получить 5 бесплатных кредитов",
     "claimCredits": "Получить +5 кредитов",
     "checkedIn": "Зарегистрирован сегодня",
-    "creditsEarned": "Кредиты зачислены!"
+    "creditsEarned": "Кредиты зачислены!",
+    "alreadyCheckedIn": "Вы уже регистрировались сегодня",
+    "checkingIn": "Регистрация..."
   },
   "models": {
     "architecture": "Архитектура",

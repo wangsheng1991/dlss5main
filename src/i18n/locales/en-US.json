@@ -143,7 +143,9 @@
     "checkInReward": "Claim 5 free credits",
     "claimCredits": "Claim +5 Credits",
     "checkedIn": "Checked in today",
-    "creditsEarned": "credits earned!"
+    "creditsEarned": "credits earned!",
+    "alreadyCheckedIn": "Already checked in today",
+    "checkingIn": "Checking in..."
   },
   "models": {
     "architecture": "Architecture",

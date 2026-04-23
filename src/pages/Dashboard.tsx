@@ -26,6 +26,7 @@ export default function Dashboard() {
   const [isDone, setIsDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkInDone, setCheckInDone] = useState(false);
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedSampleUrl, setSelectedSampleUrl] = useState<string | null>(null);
@@ -57,20 +58,23 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (profile?.lastCheckIn) {
-      const today = new Date().toISOString().split('T')[0];
-      setCheckInDone(profile.lastCheckIn === today);
-    }
-  }, [profile]);
+  // Derive checkInDone synchronously from profile to avoid flicker
+  const todayStr = new Date().toISOString().split('T')[0];
+  const isCheckedIn = profile?.lastCheckIn === todayStr;
 
   const handleCheckIn = async () => {
-    const result = await dailyCheckIn();
-    if (result.success) {
-      setCheckInDone(true);
-      setSuccessMsg(`+5 ${t('dashboard.creditsEarned')}`);
-    } else {
-      setError(result.message);
+    setError(null);
+    setIsCheckingIn(true);
+    try {
+      const result = await dailyCheckIn();
+      if (result.success) {
+        setCheckInDone(true);
+        setSuccessMsg(`+5 ${t('dashboard.creditsEarned')}`);
+      } else {
+        setError(t('dashboard.alreadyCheckedIn'));
+      }
+    } finally {
+      setIsCheckingIn(false);
     }
   };
 
@@ -319,26 +323,32 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-4">
-          {user && (
-            <div className={`p-5 rounded-xl border ${checkInDone ? 'bg-surface-low border-outline-variant/20' : 'bg-gradient-to-br from-nvidia-green/10 to-primary/5 border-nvidia-green/30'}`}>
+          {user && profile?.tier !== 'pro' && (
+            <div className={`p-5 rounded-xl border ${isCheckedIn ? 'bg-surface-low border-outline-variant/20' : 'bg-gradient-to-br from-nvidia-green/10 to-primary/5 border-nvidia-green/30'}`}>
               <div className="flex items-center gap-3 mb-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${checkInDone ? 'bg-nvidia-green/20' : 'bg-nvidia-green/20'}`}>
-                  <Gift className={`w-5 h-5 ${checkInDone ? 'text-zinc-500' : 'text-nvidia-green'}`} />
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-nvidia-green/20">
+                  <Gift className={`w-5 h-5 ${isCheckedIn ? 'text-zinc-500' : 'text-nvidia-green'}`} />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">{t('dashboard.dailyCheckIn')}</h3>
-                  <p className="text-xs text-zinc-400">{checkInDone ? t('dashboard.checkedIn') : t('dashboard.checkInReward')}</p>
+                  <p className="text-xs text-zinc-400">{isCheckedIn ? t('dashboard.checkedIn') : t('dashboard.checkInReward')}</p>
                 </div>
               </div>
-              {!checkInDone && (
+              {!isCheckedIn && (
                 <button
                   onClick={handleCheckIn}
-                  className="w-full py-2.5 rounded-lg bg-nvidia-green text-black font-bold text-sm hover:bg-nvidia-green/90 transition-colors"
+                  disabled={isCheckingIn}
+                  className="w-full py-2.5 rounded-lg bg-nvidia-green text-black font-bold text-sm hover:bg-nvidia-green/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {t('dashboard.claimCredits')}
+                  {isCheckingIn ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      {t('dashboard.checkingIn')}
+                    </>
+                  ) : t('dashboard.claimCredits')}
                 </button>
               )}
-              {checkInDone && (
+              {isCheckedIn && (
                 <div className="w-full py-2.5 rounded-lg bg-surface-highest text-zinc-500 font-bold text-sm text-center cursor-default">
                   {t('dashboard.checkedIn')}
                 </div>

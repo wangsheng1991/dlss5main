@@ -143,7 +143,9 @@
     "checkInReward": "领取 5 免费积分",
     "claimCredits": "领取 +5 积分",
     "checkedIn": "今日已签到",
-    "creditsEarned": "积分已到账！"
+    "creditsEarned": "积分已到账！",
+    "alreadyCheckedIn": "今日已签到，明天再来吧",
+    "checkingIn": "签到中..."
   },
   "models": {
     "architecture": "架构",
