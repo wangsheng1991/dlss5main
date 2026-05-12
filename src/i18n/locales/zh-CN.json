@@ -9,7 +9,8 @@
     "guestCredits": "游客: {{count}}/3",
     "unlimited": "无限",
     "credits": "{{count}} 积分",
-    "blog": "博客"
+    "blog": "博客",
+    "about": "关于"
   },
   "home": {
     "title": "高分辨率 AI 图像超分辨率增强",

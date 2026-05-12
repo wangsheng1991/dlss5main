@@ -9,7 +9,8 @@
     "guestCredits": "Guest: {{count}}/3",
     "unlimited": "Unlimited",
     "credits": "{{count}} Credits",
-    "blog": "Blog"
+    "blog": "Blog",
+    "about": "About"
   },
   "home": {
     "title": "High-Resolution AI Image Upscaling",
