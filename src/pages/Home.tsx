@@ -107,8 +107,8 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="Free DLSS Image Upscaler Online | AI Resolution Enhancer"
-        description="Looking for a DLSS image upscaler? Instantly upscale, sharpen and enhance any image with AI-powered DLSS neural super-resolution. Free, no GPU required. Try now."
+        title="DLSS Image Upscaler — Free AI Tool to Upscale & Enhance Images to 4K"
+        description="Looking for a DLSS image upscaler? Instantly upscale any image to 4K, remove blur, and sharpen details with AI-powered neural super-resolution. Free, no GPU or installation required. Try online now."
         canonical="/"
         structuredData={structuredData}
       />

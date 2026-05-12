@@ -10,7 +10,8 @@
     "unlimited": "Unlimited",
     "credits": "{{count}} Credits",
     "blog": "Blog",
-    "about": "About"
+    "about": "About",
+    "download": "Download"
   },
   "home": {
     "title": "High-Resolution AI Image Upscaling",

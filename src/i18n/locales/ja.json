@@ -9,7 +9,9 @@
     "guestCredits": "ゲスト: {{count}}/3",
     "unlimited": "無制限",
     "credits": "{{count}} クレジット",
-    "blog": "ブログ"
+    "blog": "ブログ",
+    "about": "について",
+    "download": "ダウンロード"
   },
   "home": {
     "title": "高解像度 AI 画像超解像度アップスケーリング",

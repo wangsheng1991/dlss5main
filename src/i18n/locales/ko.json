@@ -10,7 +10,8 @@
     "unlimited": "무제한",
     "credits": "{{count}} 크레딧",
     "blog": "블로그",
-    "about": "소개"
+    "about": "소개",
+    "download": "다운로드"
   },
   "home": {
     "title": "고해상도 AI 이미지 업스케일링",
