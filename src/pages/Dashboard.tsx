@@ -12,8 +12,8 @@ const GPU_API = "/api/gpu";
 const CDN_BASE = "https://mtdsosscdn.oppein.com";
 
 const SAMPLES_RAW = [
-  { key: 'example1', url: "/examples/sample1.jpg", prompt: "hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style" },
-  { key: 'example2', url: "/examples/sample2.jpg", prompt: "hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style" },
+  { key: 'example1', url: "https://www.dlss5nvidia.com/examples/sample1.jpg", prompt: "hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style" },
+  { key: 'example2', url: "https://www.dlss5nvidia.com/examples/sample2.jpg", prompt: "hyper-realistic 4k, highly detailed, cinematic lighting, masterpiece, RTX on, DLSS 5 style" },
   { key: 'fantasyLandscape', url: "https://picsum.photos/seed/fantasy/800/600", prompt: "epic fantasy landscape, majestic mountains, glowing magic, unreal engine 5 render" },
   { key: 'vintageCar', url: "https://picsum.photos/seed/vintagecar/800/500", prompt: "classic vintage car, photorealistic, studio lighting, 8k, highly detailed" }
 ];
