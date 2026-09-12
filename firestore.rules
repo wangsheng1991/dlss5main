@@ -150,11 +150,14 @@ service cloud.firestore {
 
     match /credits/{creditId} {
       allow read: if isDocOwner();
-      // For prototype: allow users to create a 'grant' transaction for signup bonus (e.g. 10 credits)
+      // Signup credit is a one-time, fixed transaction. All other credit writes belong to the server.
       allow create: if isAuthenticated() && 
-                    isValidCredit() && 
+                    creditId == request.auth.uid + '_signup' &&
+                    !exists(/databases/$(database)/documents/credits/$(creditId)) &&
+                    isValidCredit() &&
                     request.resource.data.transactionType == 'grant' &&
-                    request.resource.data.credits <= 10; // Limit signup bonus to 10
+                    request.resource.data.credits == 10 &&
+                    request.resource.data.remainingCredits == 10;
       // Users shouldn't update credits directly
       allow update: if false;
     }
