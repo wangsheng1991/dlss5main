@@ -231,6 +231,9 @@ export default function Dashboard() {
 
         if (!fluxRes.ok) {
           const errText = await fluxRes.text();
+          if (fluxRes.status === 401) throw new Error('Please sign in to generate images.');
+          if (fluxRes.status === 402) throw new Error(t('dashboard.insufficientCredits'));
+          if (fluxRes.status === 409) throw new Error('Your quota changed. Please try again.');
           throw new Error(t('dashboard.errorApi', { status: fluxRes.status, error: errText }));
         }
 
