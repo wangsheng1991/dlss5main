@@ -254,7 +254,7 @@ export default function Dashboard() {
             'Content-Type': 'application/json',
             'X-API-Key': API_KEY
           },
-          body: JSON.stringify(ossKey ? { oss_key: ossKey } : { image_url: imageUrl })
+          body: JSON.stringify(ossKey ? { oss_key: ossKey, scale } : { image_url: imageUrl, scale })
         });
 
         if (!submitRes.ok) {

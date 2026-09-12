@@ -10,9 +10,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Lightweight token validation without shipping a Firebase service-account key.
   const firebaseApiKey = process.env.FIREBASE_WEB_API_KEY;
   if (!firebaseApiKey) return res.status(503).json({ error: 'Authentication is not configured' });
-  const tokenResponse = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(firebaseApiKey)}`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }),
-  });
+  let tokenResponse: Response;
+  try {
+    tokenResponse = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(firebaseApiKey)}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }),
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch (error) {
+    console.error('Firebase token validation unavailable', error);
+    return res.status(503).json({ error: 'Authentication service unavailable' });
+  }
   if (!tokenResponse.ok) return res.status(401).json({ error: 'Invalid authentication token' });
   const key = process.env.FAL_API_KEY || process.env.FAL_KEY;
   if (!key) return res.status(503).json({ error: 'FAL_API_KEY is not configured' });
