@@ -13,6 +13,7 @@ import Enterprise from './pages/Enterprise';
 import Blog from './pages/Blog';
 import About from './pages/About';
 import Download from './pages/Download';
+import Pricing from './pages/Pricing';
 import { AuthProvider } from './contexts/AuthContext';
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/download" element={<Download />} />
                 <Route path="/enterprise" element={<Enterprise />} />
+                <Route path="/pricing" element={<Pricing />} />
               </Routes>
             </div>
             <Footer />

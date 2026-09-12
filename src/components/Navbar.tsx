@@ -67,6 +67,7 @@ export default function Navbar() {
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/download">{t('navbar.download')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/pricing">Pricing</Link>
             </div>
           )}
         </div>
