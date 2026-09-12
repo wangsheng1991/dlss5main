@@ -21,7 +21,7 @@ const SAMPLES_RAW = [
 export default function Dashboard() {
   const { t } = useTranslation();
   const SAMPLES = SAMPLES_RAW.map(s => ({ ...s, name: t(`dashboard.${s.key}`) }));
-  const { user, profile, deductCredit, dailyCheckIn } = useAuth();
+  const { user, profile, dailyCheckIn } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -101,7 +101,8 @@ export default function Dashboard() {
       return 0;
     }
 
-    return await deductCredit(1);
+    // Authenticated generation is debited atomically by the server-side FAL proxy.
+    return -1;
   };
 
   // Update prompt when mode changes
