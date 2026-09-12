@@ -171,7 +171,7 @@ export default function Dashboard() {
       if (selectedSampleUrl) {
         imageUrl = selectedSampleUrl;
         currentOriginal = selectedSampleUrl;
-      } else if (selectedFile) {
+      } else if (selectedFile && mode === 'upscale') {
         const ext = selectedFile.name.split('.').pop() || 'jpg';
         ossKey = `dlss/input/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
         const formData = new FormData();
@@ -194,8 +194,10 @@ export default function Dashboard() {
         if (!uploadData.success) throw new Error(t('dashboard.errorUpload', { error: uploadData.error || 'Unknown' }));
         imageUrl = `oss://${ossKey}`;
         currentOriginal = URL.createObjectURL(selectedFile);
-      } else {
+      } else if (!selectedFile) {
         throw new Error(t('dashboard.errorNoImage'));
+      } else {
+        currentOriginal = URL.createObjectURL(selectedFile);
       }
 
       let cdnUrl = '';
