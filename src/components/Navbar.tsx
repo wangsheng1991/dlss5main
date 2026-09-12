@@ -75,7 +75,7 @@ export default function Navbar() {
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-surface rounded-lg">
               <Database className="w-4 h-4 text-nvidia-green" />
               <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                {user ? (profile?.tier === 'pro' ? t('navbar.unlimited') : t('navbar.credits', { count: profile?.credits || 0 })) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
+                {user ? t('navbar.credits', { count: profile?.credits || 0 }) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
               </span>
             </div>
           )}
@@ -159,7 +159,7 @@ export default function Navbar() {
               <div className="flex items-center gap-2 px-3 py-2 bg-surface rounded-lg w-fit">
                 <Database className="w-4 h-4 text-nvidia-green" />
                 <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                  {user ? (profile?.tier === 'pro' ? t('navbar.unlimited') : t('navbar.credits', { count: profile?.credits || 0 })) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
+                {user ? t('navbar.credits', { count: profile?.credits || 0 }) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
                 </span>
               </div>
             )}

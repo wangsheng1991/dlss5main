@@ -12,7 +12,7 @@ import { auth, db, googleProvider } from '../lib/firebase';
 
 interface UserProfile {
   email: string;
-  tier: 'free' | 'pro';
+  tier: 'free' | 'pro' | 'team';
   createdAt: string;
   name?: string;
   image?: string;

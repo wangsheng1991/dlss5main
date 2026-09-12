@@ -86,8 +86,6 @@ export default function Dashboard() {
       return true;
     }
 
-    if (profile?.tier === 'pro') return true;
-
     if ((profile?.credits ?? 0) <= 0) {
       throw new Error(t('dashboard.insufficientCredits'));
     }
@@ -102,8 +100,6 @@ export default function Dashboard() {
       window.dispatchEvent(new Event('guestUsageUpdated'));
       return 0;
     }
-
-    if (profile?.tier === 'pro') return -1;
 
     return await deductCredit(1);
   };

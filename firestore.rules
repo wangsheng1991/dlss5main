@@ -90,7 +90,7 @@ service cloud.firestore {
       let data = request.resource.data;
       return hasRequiredFields(['email', 'tier', 'createdAt', 'credits']) &&
              isValidEmail(data.email) &&
-             data.tier in ['free', 'pro'] &&
+             data.tier in ['free', 'pro', 'team'] &&
              isValidDateString(data.createdAt) &&
              data.credits is number &&
              (!('name' in data) || data.name is string) &&
