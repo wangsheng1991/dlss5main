@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, ExternalLink, Github, AlertTriangle, Cpu, ShieldCheck, Monitor, ChevronDown } from 'lucide-react';
+import { Download as DownloadIcon, ExternalLink, Github, AlertTriangle, Cpu, ShieldCheck, Monitor, ChevronDown } from 'lucide-react';
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
 
@@ -92,7 +92,7 @@ export default function Download() {
       {/* Hero */}
       <section className="text-center mb-16">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-nvidia-green/10 border border-nvidia-green/20 rounded-full text-nvidia-green text-sm font-label uppercase tracking-widest mb-6">
-          <Download className="w-4 h-4" />
+          <DownloadIcon className="w-4 h-4" />
           {isZh ? '下载指南' : 'Download Guide'}
         </div>
         <h1 className="text-4xl md:text-5xl font-headline font-bold text-white mb-6 leading-tight">
@@ -138,7 +138,7 @@ export default function Download() {
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-nvidia-green/20 rounded-lg flex items-center justify-center">
-                <Download className="w-5 h-5 text-nvidia-green" />
+                <DownloadIcon className="w-5 h-5 text-nvidia-green" />
               </div>
               <div>
                 <h3 className="text-white font-bold group-hover:text-nvidia-green transition-colors">

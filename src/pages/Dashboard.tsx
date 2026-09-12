@@ -205,19 +205,25 @@ export default function Dashboard() {
       let cdnUrl = '';
 
       if (mode === 'meme') {
-        // DLSS 5 — 同步接口
-        const fluxRes = await fetch(`${GPU_API}/v1/flux2/generate`, {
+        // GPT Image 2 via our server-side FAL proxy (quality is fixed to low).
+        let falImage = imageUrl;
+        if (selectedFile) {
+          falImage = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result));
+            reader.onerror = () => reject(new Error('Unable to read image'));
+            reader.readAsDataURL(selectedFile);
+          });
+        }
+        const fluxRes = await fetch('/api/fal/generate', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-API-Key': API_KEY
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            image: imageUrl,
-            prompt: prompt,
-            seed: Number(import.meta.env.VITE_DEFAULT_SEED) || 42,
-            num_inference_steps: steps,
-            output_format: "oss"
+            image_url: falImage,
+            prompt,
+            image_size: 'auto'
           })
         });
 
@@ -236,8 +242,7 @@ export default function Dashboard() {
 
         if (!fluxData.success) throw new Error(t('dashboard.errorEnhancementFailed', { error: fluxData.error || 'Unknown' }));
 
-        const enhancedOss = fluxData.enhanced;
-        cdnUrl = `${CDN_BASE}/${enhancedOss.replace('oss://', '')}`;
+        cdnUrl = fluxData.image_url;
 
       } else {
         // SeedVR2 超分 — 异步 Job 轮询
