@@ -4,6 +4,16 @@ import { fal } from '@fal-ai/client';
 /** Server-side proxy for GPT Image 2. Never expose FAL_KEY to the browser. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  const authHeader = req.headers.authorization || '';
+  const idToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  if (!idToken) return res.status(401).json({ error: 'Authentication required' });
+  // Lightweight token validation without shipping a Firebase service-account key.
+  const firebaseApiKey = process.env.FIREBASE_WEB_API_KEY;
+  if (!firebaseApiKey) return res.status(503).json({ error: 'Authentication is not configured' });
+  const tokenResponse = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(firebaseApiKey)}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }),
+  });
+  if (!tokenResponse.ok) return res.status(401).json({ error: 'Invalid authentication token' });
   const key = process.env.FAL_API_KEY || process.env.FAL_KEY;
   if (!key) return res.status(503).json({ error: 'FAL_API_KEY is not configured' });
   const { prompt, image_urls, image_url, image_size = 'auto' } = req.body || {};

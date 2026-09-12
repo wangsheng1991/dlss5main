@@ -215,10 +215,13 @@ export default function Dashboard() {
             reader.readAsDataURL(selectedFile);
           });
         }
+        if (!user) throw new Error('Please sign in before generating an image.');
+        const idToken = await user.getIdToken();
         const fluxRes = await fetch('/api/fal/generate', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
           },
           body: JSON.stringify({
             image_url: falImage,
