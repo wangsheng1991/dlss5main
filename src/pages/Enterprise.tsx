@@ -1,12 +1,14 @@
 import React from 'react';
 import { Shield, Server, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 
 export default function Enterprise() {
   const { t } = useTranslation();
 
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto min-h-[80vh]">
+      <SEO title="Enterprise AI Image Upscaling | Private Neural Rendering API" description="Deploy private AI image upscaling for production workflows with dedicated capacity, on premise options, and custom neural rendering support." keywords={['enterprise ai upscaling', 'private image upscaling api', 'on premise neural rendering', 'custom image enhancement model']} canonical="/enterprise" />
       <div className="text-center mb-16">
         <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('enterprise.scale')}</span>
         <h1 className="text-5xl font-headline font-bold text-white mb-6">{t('enterprise.title')}</h1>

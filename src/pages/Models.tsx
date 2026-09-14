@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 
 const MODELS_DATA = [
   { key: 'ada50', typeKey: 'generalPurpose' },
@@ -13,6 +14,7 @@ export default function Models() {
 
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto min-h-[80vh]">
+      <SEO title="AI Upscaling Models | DLSS 5 Neural Super Resolution" description="Compare AI image upscaling and neural super resolution models for portraits, cinematic art, documents, and high speed enhancement." keywords={['ai upscaling models', 'neural super resolution', 'dlss model comparison', 'image enhancement model', '4k upscaling model']} canonical="/models" />
       <div className="mb-12">
         <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('models.architecture')}</span>
         <h1 className="text-4xl font-headline font-bold text-white mb-6">{t('models.title')}</h1>

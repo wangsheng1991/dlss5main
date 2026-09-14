@@ -17,6 +17,7 @@ export default function Blog() {
         <SEO
           title="DLSS 5 Blog — NVIDIA AI Image Upscaling Guides & Comparisons"
           description="In-depth articles about DLSS 5 neural rendering, FSR4 comparisons, RTX support list, and AI image upscaling. Expert guides for gaming and professional workflows."
+          keywords={['dlss 5 news', 'dlss 4.5 vs fsr 4', 'nvidia rtx upscaling', 'ai image upscaling guide', 'crimson desert dlss']}
           canonical="/blog"
         />
         <div className="mb-12">
@@ -219,6 +220,7 @@ export default function Blog() {
       <SEO
         title={`${title} — DLSS 5 Blog`}
         description={activeLang === 'cn' ? article.title_cn : article.title_en}
+        keywords={activeLang === 'cn' ? article.target_keywords_cn : article.target_keywords_en}
         canonical={`/blog/${slug}`}
       />
       {/* Language Toggle */}

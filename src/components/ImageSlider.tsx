@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ChevronsLeftRight } from 'lucide-react';
 
-export default function ImageSlider({ highRes, lowRes }: { highRes: string, lowRes: string }) {
+export default function ImageSlider({ highRes, lowRes, alt = 'AI upscaled image comparison' }: { highRes: string, lowRes: string, alt?: string }) {
   const [sliderPos, setSliderPos] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -23,9 +23,9 @@ export default function ImageSlider({ highRes, lowRes }: { highRes: string, lowR
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
     >
-      <img src={highRes} alt="High Resolution" className="w-full h-auto object-contain pointer-events-none" referrerPolicy="no-referrer" loading="lazy" />
+      <img src={highRes} alt={`${alt} — enhanced`} className="w-full h-auto object-contain pointer-events-none" referrerPolicy="no-referrer" loading="lazy" />
       <div className="absolute inset-y-0 left-0 overflow-hidden border-r-2 border-primary z-10" style={{ width: `${sliderPos}%` }}>
-        <img src={lowRes} alt="Low Resolution" className="absolute inset-y-0 left-0 h-auto w-[200%] max-w-none object-contain pointer-events-none" style={{ width: `${100 / (sliderPos / 100)}%` }} referrerPolicy="no-referrer" loading="lazy" />
+      <img src={lowRes} alt={`${alt} — original`} className="absolute inset-y-0 left-0 h-auto w-[200%] max-w-none object-contain pointer-events-none" style={{ width: `${100 / (sliderPos / 100)}%` }} referrerPolicy="no-referrer" loading="lazy" />
       </div>
       <div className="absolute bottom-4 left-4 z-20 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest text-white pointer-events-none">Input</div>
       <div className="absolute bottom-4 right-4 z-20 bg-nvidia-green text-black px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest pointer-events-none">Output</div>

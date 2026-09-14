@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 
 export default function Docs() {
   const { t } = useTranslation();
 
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto min-h-[80vh]">
+      <SEO title="AI Image Upscaling API Docs | DLSS 5 Developer API" description="Integrate AI image upscaling and neural super resolution into your product with the DLSS 5 developer API documentation." keywords={['ai upscaling api', 'image enhancement api', 'dlss api', 'neural super resolution api']} canonical="/docs" />
       <div className="mb-12">
         <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('docs.developers')}</span>
         <h1 className="text-4xl font-headline font-bold text-white mb-6">{t('docs.title')}</h1>
