@@ -5,6 +5,7 @@ import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { apiUrl } from '../lib/api';
 
 const API_KEY = import.meta.env.VITE_API_KEY as string;
 const OSS_BASE = "/api/oss";
@@ -216,7 +217,7 @@ export default function Dashboard() {
         }
         if (!user) throw new Error('Please sign in before generating an image.');
         const idToken = await user.getIdToken();
-        const fluxRes = await fetch('/api/fal/generate', {
+        const fluxRes = await fetch(apiUrl('/api/fal/generate'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
