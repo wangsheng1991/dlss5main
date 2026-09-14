@@ -109,6 +109,7 @@ export default function Home() {
       <SEO
         title="DLSS Image Upscaler — Free AI Tool to Upscale & Enhance Images to 4K"
         description="Looking for a DLSS image upscaler? Instantly upscale any image to 4K, remove blur, and sharpen details with AI-powered neural super-resolution. Free, no GPU or installation required. Try online now."
+        keywords={['dlss image upscaler', 'nvidia dlss 5', 'dlss 5 nvidia', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
         structuredData={structuredData}
       />
@@ -226,6 +227,7 @@ export default function Home() {
               <ImageSlider 
                 highRes="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1024&q=100"
                 lowRes="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=10&blur=10"
+                alt="Portrait detail enhanced with AI super resolution"
               />
             </div>
             <div className="p-6">
@@ -241,6 +243,7 @@ export default function Home() {
               <ImageSlider 
                 highRes="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1024&q=100"
                 lowRes="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=256&q=10&blur=10"
+                alt="Architectural geometry enhanced with AI upscaling"
               />
             </div>
             <div className="p-6">
@@ -256,6 +259,7 @@ export default function Home() {
               <ImageSlider 
                 highRes="https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=1024&q=100"
                 lowRes="https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=256&q=10&blur=10"
+                alt="Fine texture enhanced with neural super resolution"
               />
             </div>
             <div className="p-6">

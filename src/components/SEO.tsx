@@ -8,6 +8,7 @@ interface SEOProps {
   type?: string;
   name?: string;
   image?: string;
+  keywords?: string[];
   structuredData?: object;
 }
 
@@ -16,19 +17,22 @@ const BASE_URL = 'https://www.dlss5nvidia.com';
 export default function SEO({
   title,
   description,
+  keywords = [],
   canonical,
   type = 'website',
   name = 'DLSS 5 Neural Monolith',
   image = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAgMs1RSg3O_1Sa3p30fgI3YUHwQQfFs07kGZMGKyFyoEQm-OV9Q80s9L_VAjq6PPIL4xtaTqR0T9Spv2YqokmfgYPWeEDIaoQr-b_cWhfmnIgq8aEqqG60kty-pmpK8FVMaWQnJO_alw5WYwG3TGhDdxNpx_ZwZgY2ckp1k1TV_tLi7iFmt5rkfCNyQR5qc2MSI7WWxfd4pus_zzslLB6bpO80SJcRC5MWqi1CClqIJAQIYCs8gvSG8VE1od87qiiz6z58h1Ej7OY',
   structuredData
 }: SEOProps) {
-  const pageUrl = canonical ? `${BASE_URL}${canonical}` : BASE_URL;
+  const pageUrl = canonical?.startsWith('http') ? canonical : `${BASE_URL}${canonical || '/'}`;
 
   return (
     <Helmet>
       {/* Standard metadata tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
+      {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+      <meta name="robots" content="index,follow,max-image-preview:large" />
 
       {/* Open Graph / Facebook tags */}
       <meta property="og:type" content={type} />
