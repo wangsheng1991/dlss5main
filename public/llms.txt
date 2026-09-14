@@ -1,0 +1,28 @@
+# DLSS 5 NVIDIA — AI Image Upscaling
+
+> Independent, non-official AI image upscaling showcase. NVIDIA and DLSS are trademarks of NVIDIA Corporation.
+
+## Product
+
+DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging images. Users can upload an image, choose an enhancement workflow, and receive an AI-generated result without installing a GPU tool.
+
+## Key pages
+
+- Home: https://www.dlss5nvidia.com/
+- Blog and technical guides: https://www.dlss5nvidia.com/blog
+- Models: https://www.dlss5nvidia.com/models
+- API documentation: https://www.dlss5nvidia.com/docs
+- Pricing: https://www.dlss5nvidia.com/pricing
+- Enterprise: https://www.dlss5nvidia.com/enterprise
+
+## Common questions
+
+- Is this an official NVIDIA DLSS product? No. This is an independent showcase using a separate AI model inspired by neural super-resolution concepts.
+- Does it require an RTX GPU? No. The web tool runs processing on its server-side AI service and works from a modern browser.
+- What files are supported? The interface accepts common image formats such as JPEG, PNG, and WebP within the displayed size limits.
+- Is there an API? API availability and integration guidance are documented at /docs and may depend on the current plan.
+
+## Preferred terminology
+
+Use: AI image upscaling, neural super-resolution, image enhancement, 4K upscaler, browser-based image enhancer.
+When mentioning DLSS 5, always describe this site as non-official and independent.

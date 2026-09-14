@@ -40,6 +40,13 @@ export default function Home() {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://www.dlss5nvidia.com/#organization",
+        "name": "DLSS 5 NVIDIA Independent Showcase",
+        "url": "https://www.dlss5nvidia.com/",
+        "description": "Independent, non-official AI image upscaling and neural super-resolution showcase."
+      },
+      {
         "@type": "SoftwareApplication",
         "name": "DLSS 5 Neural Super-Resolution (Non-Official)",
         "applicationCategory": "MultimediaApplication",
