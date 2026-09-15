@@ -53,34 +53,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userRef = doc(db, 'users', currentUser.uid);
         const userSnap = await getDoc(userRef);
         
+        // Profile creation and signup credits are server-owned and idempotent.
+        // Never grant or mutate credits from the browser.
+        const idToken = await currentUser.getIdToken();
+        const bootstrap = await fetch('/api/me/bootstrap', { method: 'POST', headers: { Authorization: `Bearer ${idToken}` } });
+        if (!bootstrap.ok) throw new Error('Unable to initialize your account. Please try again.');
+        const data = (await bootstrap.json()) as Partial<UserProfile>;
         if (!userSnap.exists()) {
-          // Create new user profile
-          const newProfile: UserProfile = {
-            email: currentUser.email || '',
-            tier: 'free',
-            createdAt: new Date().toISOString(),
-            name: currentUser.displayName || undefined,
-            image: currentUser.photoURL || undefined,
-            credits: 10,
-          };
-          await setDoc(userRef, newProfile);
-          
-          // Grant signup bonus
-          const creditRef = doc(db, 'credits', `${currentUser.uid}_signup`);
-          await setDoc(creditRef, {
-            userId: currentUser.uid,
-            transactionType: 'grant',
-            credits: 10,
-            remainingCredits: 10,
-            status: 'active',
-            createdAt: new Date().toISOString()
-          });
-        } else {
-          // Handle existing users who might not have credits field
-          const data = userSnap.data();
-          if (data.credits === undefined) {
-            await updateDoc(userRef, { credits: 10 });
-          }
+          // The server response is authoritative; snapshot listener will hydrate the full profile.
+          setProfile({ email: currentUser.email || '', tier: data.tier || 'free', createdAt: new Date().toISOString(), name: currentUser.displayName || undefined, image: currentUser.photoURL || undefined, credits: data.credits ?? 0 });
         }
 
         // Listen for profile changes (e.g., credits deduction)

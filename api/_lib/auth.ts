@@ -10,10 +10,11 @@ export async function requireUser(req: VercelRequest) {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }), signal: AbortSignal.timeout(10000),
   });
   if (!response.ok) throw Object.assign(new Error('Invalid authentication token'), { status: 401 });
-  const data = await response.json() as { users?: Array<{ localId?: string }> };
-  const uid = data.users?.[0]?.localId;
+  const data = await response.json() as { users?: Array<{ localId?: string; email?: string; displayName?: string }> };
+  const account = data.users?.[0];
+  const uid = account?.localId;
   if (!uid) throw Object.assign(new Error('Invalid authentication token'), { status: 401 });
-  return { uid, idToken };
+  return { uid, idToken, email: account?.email || '', displayName: account?.displayName || '' };
 }
 
 export function fail(res: { status: (n: number) => { json: (v: unknown) => unknown } }, error: unknown) {
