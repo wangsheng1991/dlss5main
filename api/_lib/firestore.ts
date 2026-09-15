@@ -18,6 +18,10 @@ export async function getOperation(id: string, token: string) {
   const f = j.fields || {};
   return Object.fromEntries(Object.entries(f).map(([k, v]) => [k, v.stringValue ?? v.integerValue ?? v.booleanValue])) as Record<string, string | number | boolean>;
 }
+export async function updateOperation(id: string, token: string, data: Record<string, string | number | boolean>) {
+  const r = await fetch(`${base()}/image_operations/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fields(data) }), signal: AbortSignal.timeout(10000) });
+  if (!r.ok) throw Object.assign(new Error('Unable to update image operation'), { status: 503 });
+}
 export async function reserveCredit(uid: string, token: string) {
   const url = `${base()}/users/${encodeURIComponent(uid)}`;
   const current = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(10000) });
