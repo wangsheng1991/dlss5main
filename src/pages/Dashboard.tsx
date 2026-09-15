@@ -205,50 +205,33 @@ export default function Dashboard() {
       let cdnUrl = '';
 
       if (mode === 'meme') {
-        // GPT Image 2 via our server-side FAL proxy (quality is fixed to low).
-        let falImage = imageUrl;
-        if (selectedFile) {
-          falImage = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(String(reader.result));
-            reader.onerror = () => reject(new Error('Unable to read image'));
-            reader.readAsDataURL(selectedFile);
-          });
-        }
         if (!user) throw new Error('Please sign in before generating an image.');
         const idToken = await user.getIdToken();
-        const fluxRes = await fetch(apiUrl('/api/fal/generate'), {
+        const inputFile = selectedFile || await (await fetch(selectedSampleUrl || imageUrl)).blob().then((blob) => new File([blob], 'sample.jpg', { type: blob.type || 'image/jpeg' }));
+        const ticketRes = await fetch(apiUrl('/api/image-edit/upload'), {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          },
-          body: JSON.stringify({
-            image_url: falImage,
-            prompt,
-            image_size: 'auto'
-          })
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
+          body: JSON.stringify({ fileName: inputFile.name, contentType: inputFile.type, size: inputFile.size })
         });
-
-        if (!fluxRes.ok) {
-          const errText = await fluxRes.text();
-          if (fluxRes.status === 401) throw new Error('Please sign in to generate images.');
-          if (fluxRes.status === 402) throw new Error(t('dashboard.insufficientCredits'));
-          if (fluxRes.status === 409) throw new Error('Your quota changed. Please try again.');
-          throw new Error(t('dashboard.errorApi', { status: fluxRes.status, error: errText }));
+        if (!ticketRes.ok) throw new Error(t('dashboard.errorApi', { status: ticketRes.status, error: await ticketRes.text() }));
+        const ticket = await ticketRes.json();
+        const put = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: inputFile });
+        if (!put.ok) throw new Error(t('dashboard.errorUpload', { error: String(put.status) }));
+        const idempotencyKey = crypto.randomUUID();
+        const jobRes = await fetch(apiUrl('/api/image-edit/jobs'), { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}`, 'Idempotency-Key': idempotencyKey }, body: JSON.stringify({ prompt, image_ids: [ticket.file_id], width: 1024, height: 1024, output_format: 'webp' }) });
+        if (!jobRes.ok) throw new Error(t('dashboard.errorApi', { status: jobRes.status, error: await jobRes.text() }));
+        const { jobId } = await jobRes.json();
+        setPollingStatus(t('dashboard.jobQueued'));
+        for (let attempt = 0; attempt < 120; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          const stateRes = await fetch(apiUrl(`/api/image-edit/jobs/${encodeURIComponent(jobId)}`), { headers: { Authorization: `Bearer ${idToken}` } });
+          if (!stateRes.ok) throw new Error(t('dashboard.errorPollFailed', { status: stateRes.status, error: await stateRes.text() }));
+          const state = await stateRes.json();
+          if (state.status === 'SUCCEEDED') { cdnUrl = state.result?.images?.[0]?.url || ''; break; }
+          if (state.status === 'FAILED') throw new Error(t('dashboard.errorEnhancementFailed', { error: 'AlphaNet task failed' }));
+          setPollingStatus(t('dashboard.processing', { status: state.status }));
         }
-
-        const fluxText = await fluxRes.text();
-        let fluxData;
-        try {
-          fluxData = JSON.parse(fluxText);
-        } catch (e) {
-          throw new Error(t('dashboard.errorInvalidResponse'));
-        }
-
-        if (!fluxData.success) throw new Error(t('dashboard.errorEnhancementFailed', { error: fluxData.error || 'Unknown' }));
-
-        cdnUrl = fluxData.image_url;
+        if (!cdnUrl) throw new Error(t('dashboard.errorPollFailed', { status: 408, error: 'Generation timed out' }));
 
       } else {
         // SeedVR2 超分 — 异步 Job 轮询
