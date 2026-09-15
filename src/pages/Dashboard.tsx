@@ -281,10 +281,8 @@ export default function Dashboard() {
         }
       }
 
-      const remaining = await updateUsage();
-      if (remaining > 0) {
-        setSuccessMsg(t('dashboard.creditDeducted', { count: remaining }));
-      }
+      // Credits are reserved and settled by the server-side generation API.
+      setSuccessMsg(t('dashboard.generationComplete'));
 
       setResultUrl(cdnUrl);
       setOriginalUrl(currentOriginal);

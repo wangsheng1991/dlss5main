@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { randomUUID } from 'node:crypto';
 import { alphaNet } from '../_lib/alphanet';
 import { fail, requireUser } from '../_lib/auth';
-import { createOperation } from '../_lib/firestore';
+import { createOperation, reserveCredit, refundCredit } from '../_lib/firestore';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -13,7 +13,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!Array.isArray(image_ids) || image_ids.length < 1 || image_ids.length > 16 || image_ids.some((id) => typeof id !== 'string')) return res.status(400).json({ error: 'image_ids are required' });
     const idempotencyKey = req.headers['idempotency-key'];
     if (typeof idempotencyKey !== 'string' || !idempotencyKey || idempotencyKey.length > 128) return res.status(400).json({ error: 'Idempotency-Key is required' });
-    const accepted = await alphaNet.submit({ prompt: prompt.trim(), image_ids, width, height, seed, num_inference_steps, output_format }, idempotencyKey);
+    await reserveCredit(uid, idToken);
+    let accepted;
+    try { accepted = await alphaNet.submit({ prompt: prompt.trim(), image_ids, width, height, seed, num_inference_steps, output_format }, idempotencyKey); } catch (error) {
+      const status = (error as { status?: number }).status;
+      if (status !== 409) { try { await refundCredit(uid, idToken); } catch (refundError) { console.error('Credit refund reconciliation required', refundError); } }
+      throw error;
+    }
     try { await createOperation(accepted.task_id, idToken, { uid, idempotencyKey, status: 'QUEUED', imageId: image_ids[0], createdAt: new Date().toISOString() }); } catch (error) { if ((error as { status?: number }).status !== 409) throw error; }
     return res.status(202).json({ jobId: accepted.task_id, status: 'QUEUED' });
   } catch (error) { return fail(res, error); }

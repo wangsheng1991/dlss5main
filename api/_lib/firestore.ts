@@ -18,3 +18,23 @@ export async function getOperation(id: string, token: string) {
   const f = j.fields || {};
   return Object.fromEntries(Object.entries(f).map(([k, v]) => [k, v.stringValue ?? v.integerValue ?? v.booleanValue])) as Record<string, string | number | boolean>;
 }
+export async function reserveCredit(uid: string, token: string) {
+  const url = `${base()}/users/${encodeURIComponent(uid)}`;
+  const current = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(10000) });
+  if (!current.ok) throw Object.assign(new Error('Unable to read account quota'), { status: 403 });
+  const doc = await current.json() as { updateTime?: string; fields?: { credits?: Value } };
+  const credits = Number(doc.fields?.credits?.integerValue ?? 0);
+  if (!doc.updateTime || !Number.isSafeInteger(credits) || credits < 1) throw Object.assign(new Error('Insufficient credits'), { status: 402 });
+  const updated = await fetch(url, { method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: { credits: { integerValue: String(credits - 1) } }, currentDocument: { updateTime: doc.updateTime } }), signal: AbortSignal.timeout(10000) });
+  if (!updated.ok) throw Object.assign(new Error('Quota changed; please retry'), { status: 409 });
+}
+export async function refundCredit(uid: string, token: string) {
+  const url = `${base()}/users/${encodeURIComponent(uid)}`;
+  const current = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(10000) });
+  if (!current.ok) throw new Error('Unable to read account for refund');
+  const doc = await current.json() as { updateTime?: string; fields?: { credits?: Value } };
+  const credits = Number(doc.fields?.credits?.integerValue ?? 0);
+  if (!doc.updateTime || !Number.isSafeInteger(credits)) throw new Error('Invalid account quota');
+  const updated = await fetch(url, { method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: { credits: { integerValue: String(credits + 1) } }, currentDocument: { updateTime: doc.updateTime } }), signal: AbortSignal.timeout(10000) });
+  if (!updated.ok) throw new Error('Credit refund requires reconciliation');
+}
