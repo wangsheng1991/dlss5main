@@ -79,6 +79,10 @@ export class JobStore {
     if (!snapshot.exists || snapshot.data()!.uid !== uid) throw new ApiError(404, 'job_not_found', 'Job not found');
     return snapshot.data() as Job;
   }
+  async list(uid: string, limit = 20) {
+    const snapshot = await this.db.collection('image_operations').where('uid', '==', uid).orderBy('createdAt', 'desc').limit(Math.min(Math.max(limit, 1), 50)).get();
+    return snapshot.docs.map(doc => { const job = doc.data() as Job; let input: Record<string, unknown> = {}; try { input = JSON.parse(job.inputJson); } catch {} return { id: doc.id, status: job.status, createdAt: job.createdAt, completedAt: job.completedAt, errorCode: job.errorCode, prompt: typeof input.prompt === 'string' ? input.prompt : '' }; });
+  }
   async accepted(id: string, leaseOwner: string, taskId?: string) {
     const ref = this.db.doc(`image_operations/${id}`);
     await this.db.runTransaction(async tx => {
