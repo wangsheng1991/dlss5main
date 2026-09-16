@@ -80,7 +80,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(200).json({ received: true, handled: false, reason: 'ignored_event' });
     }
   } catch (error) {
-    // A non-2xx makes Stripe retry the delivery.
+    const status = (error as { status?: number }).status;
+    // A deleted or unknown account is permanent: acknowledge it, log it, and stop Stripe retrying.
+    if (status === 403 || status === 404) {
+      console.warn('Stripe webhook skipped', { type: event.type, reason: (error as Error).message });
+      return res.status(200).json({ received: true, handled: false, reason: 'account_missing' });
+    }
+    // Anything else may be transient, so a non-2xx makes Stripe retry the delivery.
     console.error('Stripe webhook processing failed', { type: event.type, message: (error as Error).message });
     return res.status(500).json({ error: 'Webhook processing failed' });
   }
