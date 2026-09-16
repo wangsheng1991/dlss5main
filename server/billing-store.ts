@@ -61,6 +61,11 @@ export class BillingStore {
     await this.db.doc(`users/${uid}`).set({ subscriptionStatus: status, updatedAt: new Date().toISOString() }, { merge: true });
   }
 
+  /** Plan change without a charge (Stripe created no proration invoice): keep the credits as they are. */
+  async setPlan(uid: string, plan: PurchasablePlanId) {
+    await this.db.doc(`users/${uid}`).set({ tier: plan, quotaMonth: month(), updatedAt: new Date().toISOString() }, { merge: true });
+  }
+
   /**
    * Records a refund, dispute or failed payment once per Stripe object. Credits are clawed back
    * only when the caller passes a positive `credits` (a full refund of the granted period).

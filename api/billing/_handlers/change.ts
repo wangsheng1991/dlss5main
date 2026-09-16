@@ -28,20 +28,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     const item = current.items.data[0];
     if (!item) return res.status(409).json({ error: 'This subscription has no billable item', code: 'subscription_empty' });
-    await client.subscriptions.update(account.subscriptionId, {
+    const before = typeof current.latest_invoice === 'string' ? current.latest_invoice : current.latest_invoice?.id || '';
+    const updated = await client.subscriptions.update(account.subscriptionId, {
       items: [{ id: item.id, price }],
       proration_behavior: 'always_invoice',
       metadata: { uid: user.uid, plan },
       expand: ['latest_invoice'],
     });
-    const updated = await client.subscriptions.retrieve(account.subscriptionId);
     const updatedItem = updated.items.data[0];
     if (!updatedItem) throw new Error('Subscription update returned no item');
-    // A plan change is identified by its proration invoice, so switching twice in one period grants twice.
-    const invoice = typeof updated.latest_invoice === 'object' && updated.latest_invoice ? updated.latest_invoice : null;
-    if (!invoice || invoice.status !== 'paid') {
+    let invoice = typeof updated.latest_invoice === 'object' ? updated.latest_invoice : updated.latest_invoice ? await client.invoices.retrieve(updated.latest_invoice) : null;
+    // Stripe charges the proration asynchronously, so give it a moment before answering.
+    for (let attempt = 0; invoice && invoice.status !== 'paid' && attempt < 4; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      invoice = await client.invoices.retrieve(invoice.id);
+    }
+    // Only the invoice this change created may grant, and it is keyed by its own id, so a second
+    // switch in the same period grants again while a retried webhook cannot.
+    if (!invoice || invoice.id === before || invoice.billing_reason !== 'subscription_update') {
+      await store.setPlan(user.uid, plan);
+      return res.status(200).json({ status: 'active', tier: plan, credits: account.credits, applied: false, prorated: true });
+    }
+    if (invoice.status !== 'paid') {
       // Not settled yet: `invoice.paid` grants the new allowance once Stripe collects it.
-      return res.status(202).json({ status: invoice?.status || 'pending', tier: account.tier, credits: account.credits, applied: false });
+      return res.status(202).json({ status: invoice.status, tier: plan, credits: account.credits, applied: false });
     }
     const granted = await store.grantPayment({
       uid: user.uid,

@@ -9,7 +9,7 @@
  */
 import { readFileSync } from 'node:fs';
 
-const EVENTS = ['checkout.session.completed', 'invoice.paid', 'customer.subscription.updated', 'customer.subscription.deleted'];
+const EVENTS = ['checkout.session.completed', 'invoice.paid', 'invoice.payment_failed', 'charge.refunded', 'charge.dispute.created', 'customer.subscription.updated', 'customer.subscription.deleted'];
 
 function fromEnvFile(path, name) {
   try {
@@ -45,6 +45,13 @@ const existing = await api('webhook_endpoints?limit=100');
 const match = (existing.data || []).find((endpoint) => endpoint.url === url);
 if (match) {
   console.log(`Webhook endpoint already registered: ${match.id}`);
+  const missing = EVENTS.filter((event) => !match.enabled_events.includes(event));
+  if (missing.length) {
+    const payload = new URLSearchParams();
+    for (const event of EVENTS) payload.append('enabled_events[]', event);
+    await api(`webhook_endpoints/${match.id}`, { method: 'POST', body: payload });
+    console.log(`Subscribed to the missing events: ${missing.join(', ')}`);
+  }
   console.log('Its signing secret is only shown once at creation. Roll it in the dashboard');
   console.log('(Developers → Webhooks → your endpoint → Roll secret) if you need STRIPE_WEBHOOK_SECRET again.');
 } else {
