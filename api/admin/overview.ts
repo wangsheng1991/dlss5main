@@ -17,7 +17,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!auth.ok) return res.status(401).json({ error: 'Invalid authentication token' });
     const account = (await auth.json() as { users?: Array<{ email?: string }> }).users?.[0];
     if (!account?.email || !admins.includes(account.email.toLowerCase())) return res.status(403).json({ error: 'Admin access required' });
-    return res.status(200).json({ plans, services: { fal: Boolean(process.env.FAL_API_KEY), firebase: Boolean(process.env.FIREBASE_PROJECT_ID), billing: false }, generatedAt: new Date().toISOString() });
+    return res.status(200).json({
+      plans,
+      services: {
+        alphaNet: Boolean(process.env.ALPHANET_API_KEY && process.env.ALPHANET_BASE_URL),
+        firebase: Boolean(process.env.FIREBASE_PROJECT_ID),
+        billing: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
+      },
+      generatedAt: new Date().toISOString(),
+    });
   } catch (error) {
     console.error('Admin overview failed', error);
     return res.status(503).json({ error: 'Admin service unavailable' });
