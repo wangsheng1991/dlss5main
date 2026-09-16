@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/api/gpu/:match*", "destination": "https://gpu-api.alphanetplus.com/:match*" },
     { "source": "/api/oss/:match*", "destination": "https://oss.alphanetplus.com/:match*" },
+    { "source": "/api/image-edit/jobs/:id", "destination": "/api/image-edit/jobs/[id]" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
