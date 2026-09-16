@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { alphaNet } from '../_lib/alphanet';
-import { fail, requireUser } from '../_lib/auth';
-import { JobStore } from '../../server/job-store';
-import { database } from '../../server/admin';
+import { alphaNet } from '../_lib/alphanet.js';
+import { fail, requireUser } from '../_lib/auth.js';
+import { JobStore } from '../../server/job-store.js';
+import { database } from '../../server/admin.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

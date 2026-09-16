@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fail, requireUser } from '../_lib/auth';
-import { database } from '../../server/admin';
-import { JobStore } from '../../server/job-store';
+import { fail, requireUser } from '../_lib/auth.js';
+import { database } from '../../server/admin.js';
+import { JobStore } from '../../server/job-store.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

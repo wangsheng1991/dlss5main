@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { Firestore } from 'firebase-admin/firestore';
-import { ApiError } from './errors';
-import { PLANS } from '../src/config/plans';
+import { ApiError } from './errors.js';
+import { PLANS } from '../src/config/plans.js';
 export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEEDED' | 'FAILED';
 export type Job = {
   uid: string; inputJson: string; fingerprint: string; providerKey: string;
