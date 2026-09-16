@@ -35,9 +35,19 @@ double-grant. `GET /api/billing/orders` lists the account's own orders.
    `invoice.paid`, `customer.subscription.updated`, `customer.subscription.deleted`.
 4. Redeploy, then confirm `curl -s https://www.dlss5nvidia.com/api/health` reports `"billing": true`.
 
-Prices come from `src/config/plans.ts` as inline monthly prices, so no product setup is required.
-To use dashboard-managed prices instead, set `STRIPE_PRICE_PRO` / `STRIPE_PRICE_TEAM` to recurring
-price ids.
+Prices come from `src/config/plans.ts` as inline monthly prices, so no product setup is required —
+but Stripe creates a new product for every checkout that uses them. Before charging real customers,
+create one recurring price per plan in the dashboard and point `STRIPE_PRICE_PRO` /
+`STRIPE_PRICE_TEAM` at them, so reporting stays clean.
+
+## Verified in sandbox (2026-09-16)
+
+Real test-mode payments were completed through the hosted checkout for both `http://localhost` and
+`https://www.dlss5nvidia.com` with card `4242 4242 4242 4242`, and the credits arrived once per
+period: locally through the success redirect, in production through the delivered `invoice.paid`
+webhook (`pending_webhooks: 0`). Duplicate deliveries, forged signatures, malformed session ids,
+unauthenticated checkout calls and events for deleted accounts were all rejected or ignored as
+designed. The temporary accounts, subscriptions and customers used for this were deleted afterwards.
 
 ## Full sandbox run (card 4242 4242 4242 4242, any future expiry, any CVC)
 
