@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../contexts/AuthContext';
 
-type Plan = { name: string; monthlyCredits: number; dailyGenerationLimit: number; maxConcurrentJobs: number; priceUsd: number; purchasable: boolean };
+type Plan = { name: string; monthlyCredits: number; dailyGenerationLimit: number; maxConcurrentJobs: number; priceUsd: number; purchasable: boolean; currency?: string };
 type PlanId = 'free' | 'pro' | 'team';
 
 export default function Pricing() {
@@ -21,15 +21,23 @@ export default function Pricing() {
     }).catch(() => setPlans(null));
   }, []);
   const current = (profile?.tier || 'free') as PlanId;
-  const upgrade = async (id: string) => {
+  const subscribed = current !== 'free';
+  const post = async (path: string, body?: unknown) => {
+    const token = await user!.getIdToken();
+    const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: body ? JSON.stringify(body) : undefined });
+    return { ok: response.ok, data: await response.json().catch(() => ({})) as { url?: string; code?: string; error?: string } };
+  };
+  const choose = async (id: PlanId) => {
     if (!user) return;
     setBusy(id); setError('');
     try {
-      const token = await user.getIdToken();
-      const response = await fetch('/api/billing/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ plan: id }) });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable right now. Please try again.');
-      window.location.assign(data.url);
+      // Existing subscribers switch the subscription (prorated); everyone else opens checkout.
+      const change = subscribed ? await post('/api/billing/change', { plan: id }) : { ok: false, data: { code: 'no_subscription' } };
+      if (change.ok) return window.location.assign('/dashboard?plan=changed');
+      if (change.data.code !== 'no_subscription') throw new Error(change.data.error || 'Could not change your plan.');
+      const checkout = await post('/api/billing/checkout', { plan: id });
+      if (!checkout.ok || !checkout.data.url) throw new Error(checkout.data.error || 'Checkout is unavailable right now. Please try again.');
+      window.location.assign(checkout.data.url);
     } catch (cause) {
       setError((cause as Error).message);
       setBusy('');
@@ -48,7 +56,7 @@ export default function Pricing() {
       {id === 'free' ? <Link to="/register" className="block text-center mt-8 py-3 rounded-lg bg-primary-container text-white font-bold hover:bg-primary hover:text-black">Start free</Link>
         : current === id ? <span className="block text-center mt-8 py-3 rounded-lg border border-outline-variant/30 text-zinc-400">Active</span>
         : !user ? <Link to="/login" className="block text-center mt-8 py-3 rounded-lg bg-primary text-black font-bold">Sign in to subscribe</Link>
-        : billingEnabled ? <button onClick={() => void upgrade(id)} disabled={busy === id} className="w-full mt-8 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening checkout…' : `Subscribe to ${p.name}`}</button>
+        : billingEnabled ? <button onClick={() => void choose(id)} disabled={busy === id} className="w-full mt-8 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `${subscribed ? 'Switch to' : 'Subscribe to'} ${p.name}`}</button>
         : <a href={mailto(id)} className="block text-center mt-8 py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-black">Apply by email</a>}
     </article>)}</div>}
     <p className="text-center text-xs text-zinc-500 mt-10">Subscriptions renew monthly and can be cancelled any time; unused credits do not roll over. Questions? <a href={`mailto:${contact}`} className="text-primary underline">{contact}</a></p>

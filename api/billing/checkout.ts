@@ -23,7 +23,12 @@ async function checkout(req: VercelRequest, res: VercelResponse) {
   if (!isPurchasablePlan(plan)) return res.status(400).json({ error: 'Choose a paid plan: pro or team' });
   const catalog = PLANS[plan];
   const store = new BillingStore(database());
-  const existing = await store.customer(user.uid).catch(() => '');
+  const account = await store.account(user.uid);
+  // A second subscription would compete for the same allowance; existing buyers change plan instead.
+  if (account.subscriptionId && ['active', 'trialing', 'past_due'].includes(account.subscriptionStatus)) {
+    return res.status(409).json({ error: 'You already have a subscription — change your plan instead', code: 'subscription_exists' });
+  }
+  const existing = account.customerId;
   const price = priceIdFor(plan);
   const origin = siteOrigin(req);
   const session = await stripe().checkout.sessions.create({

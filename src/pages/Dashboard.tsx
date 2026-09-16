@@ -19,6 +19,11 @@ export default function Dashboard() {
   useEffect(() => {
     const url = new URL(window.location.href);
     const sessionId = url.searchParams.get('session_id') || '';
+    if (url.searchParams.get('plan') === 'changed') {
+      setBillingNotice('Plan changed — your new monthly allowance is active.');
+      url.searchParams.delete('plan');
+      window.history.replaceState({}, '', url);
+    }
     if (!user || url.searchParams.get('checkout') !== 'success' || !sessionId) return;
     let active = true;
     user.getIdToken()
@@ -42,6 +47,19 @@ export default function Dashboard() {
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > 20 * 1024 * 1024) { setFileError('Choose a JPEG, PNG or WebP image up to 20 MiB.'); return; }
     setFileError(''); setFile(candidate);
   };
+  const openPortal = async () => {
+    if (!user) return;
+    setBillingNotice('Opening the billing portal…');
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch('/api/billing/portal', { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.url) throw new Error(data.error || 'The billing portal is unavailable right now.');
+      window.location.assign(data.url);
+    } catch (cause) {
+      setBillingNotice((cause as Error).message);
+    }
+  };
   const result = generation.operation?.outputUrl;
   const locked = generation.busy || generation.pending || !!result;
   return <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
@@ -50,6 +68,7 @@ export default function Dashboard() {
       <div className="flex flex-wrap items-center gap-3">
         <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'} credits` : 'Sign in to generate'}</span>
         {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? 'Change plan' : 'Upgrade'}</Link>}
+        {user && profile?.tier && profile.tier !== 'free' && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">Manage billing</button>}
       </div>
     </div>
     {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}

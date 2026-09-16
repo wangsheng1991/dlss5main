@@ -13,6 +13,26 @@ export function stripe() {
 /** Optional pre-created sandbox/live price; without it checkout uses an inline monthly price. */
 export const priceIdFor = (plan: PurchasablePlanId) => process.env[`STRIPE_PRICE_${plan.toUpperCase()}`] || '';
 
+/** Switching an existing subscription between plans needs a real price, not inline price data. */
+export function requirePriceId(plan: PurchasablePlanId) {
+  const id = priceIdFor(plan);
+  if (!id) throw new ApiError(503, 'billing_not_configured', `Set STRIPE_PRICE_${plan.toUpperCase()} before changing plans`);
+  return id;
+}
+
+/** What Stripe actually charges for a plan, so the site never advertises a price it does not charge. */
+export async function planPricing(plan: PurchasablePlanId, fallbackUsd: number) {
+  const id = priceIdFor(plan);
+  if (!id) return { priceId: '', amount: fallbackUsd * 100, currency: 'usd' };
+  try {
+    const price = await stripe().prices.retrieve(id);
+    return { priceId: id, amount: price.unit_amount ?? fallbackUsd * 100, currency: price.currency || 'usd' };
+  } catch (error) {
+    console.warn('Falling back to the catalog price', { plan, message: (error as Error).message });
+    return { priceId: id, amount: fallbackUsd * 100, currency: 'usd' };
+  }
+}
+
 /** Public origin used for Stripe redirects, so previews and production never cross hosts. */
 export function siteOrigin(req: VercelRequest) {
   const configured = (process.env.PUBLIC_SITE_URL || '').trim().replace(/\/$/, '');

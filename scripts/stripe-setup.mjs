@@ -60,4 +60,21 @@ if (match) {
 console.log('\nRequired environment (local .env.local and Vercel production):');
 console.log(`STRIPE_SECRET_KEY=<the ${mode} secret key you used>`);
 console.log('STRIPE_WEBHOOK_SECRET=<the whsec_... value above, or the existing endpoint secret>');
+
+// Recurring monthly prices matching src/config/plans.ts, so checkout and plan changes share them.
+const PLANS = [{ plan: 'pro', product: 'DLSS 5 Pro', description: '500 credits per month', usd: 19 }, { plan: 'team', product: 'DLSS 5 Team', description: '2000 credits per month', usd: 79 }];
+const products = await api('products?limit=100&active=true');
+for (const entry of PLANS) {
+  let product = (products.data || []).find((item) => item.name === entry.product);
+  if (!product) product = await api('products', { method: 'POST', body: new URLSearchParams({ name: entry.product, description: entry.description }) });
+  const prices = await api(`prices?limit=100&product=${product.id}&active=true`);
+  let price = (prices.data || []).find((item) => item.unit_amount === entry.usd * 100 && item.currency === 'usd' && item.recurring?.interval === 'month');
+  if (!price) {
+    const payload = new URLSearchParams({ product: product.id, currency: 'usd', unit_amount: String(entry.usd * 100) });
+    payload.set('recurring[interval]', 'month');
+    price = await api('prices', { method: 'POST', body: payload });
+  }
+  console.log(`STRIPE_PRICE_${entry.plan.toUpperCase()}=${price.id}   # $${entry.usd}/month`);
+}
+
 console.log('\nThen check the deployment: curl -s https://<host>/api/health   → "billing": true');

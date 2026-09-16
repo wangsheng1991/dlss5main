@@ -17,7 +17,7 @@ export type SubscriptionPayment = {
    * so a retried or duplicated delivery can never grant the same period twice.
    */
   periodKey: string;
-  kind: 'subscription' | 'renewal';
+  kind: 'subscription' | 'renewal' | 'change';
   amountTotal: number;
   currency: string;
   customerId?: string;
@@ -25,8 +25,10 @@ export type SubscriptionPayment = {
   periodEnd?: number;
 };
 
+export type BillingOrderKind = 'subscription' | 'renewal' | 'change' | 'cancellation' | 'refund' | 'dispute' | 'payment_failed';
+
 export type BillingOrder = {
-  uid: string; plan: string; kind: 'subscription' | 'renewal' | 'cancellation';
+  uid: string; plan: string; kind: BillingOrderKind;
   periodKey: string; credits: number; amountTotal: number; currency: string;
   customerId?: string; subscriptionId?: string; createdAt: number;
 };
@@ -40,9 +42,55 @@ export class BillingStore {
     return {
       tier: planOf(data.tier),
       credits: count(data.credits),
+      subscriptionId: typeof data.stripeSubscriptionId === 'string' ? data.stripeSubscriptionId : '',
+      customerId: typeof data.stripeCustomerId === 'string' ? data.stripeCustomerId : '',
       subscriptionStatus: typeof data.subscriptionStatus === 'string' ? data.subscriptionStatus : '',
       currentPeriodEnd: Number.isSafeInteger(data.currentPeriodEnd) ? Number(data.currentPeriodEnd) : 0,
     };
+  }
+
+  /** Account bound to a Stripe customer or subscription, used by events that carry no metadata. */
+  async byField(field: 'stripeCustomerId' | 'stripeSubscriptionId', value: string) {
+    if (!value) return '';
+    const snapshot = await this.db.collection('users').where(field, '==', value).limit(1).get();
+    return snapshot.docs[0]?.id || '';
+  }
+
+  /** Only the fields the public billing view exposes are ever written here. */
+  async setStatus(uid: string, status: string) {
+    await this.db.doc(`users/${uid}`).set({ subscriptionStatus: status, updatedAt: new Date().toISOString() }, { merge: true });
+  }
+
+  /**
+   * Records a refund, dispute or failed payment once per Stripe object. Credits are clawed back
+   * only when the caller passes a positive `credits` (a full refund of the granted period).
+   */
+  async recordAdjustment(input: { uid: string; kind: BillingOrderKind; key: string; credits?: number; amountTotal: number; currency: string; customerId?: string; subscriptionId?: string }) {
+    const ref = this.db.doc(`billing_orders/${orderId(input.key)}`);
+    const userRef = this.db.doc(`users/${input.uid}`);
+    return this.db.runTransaction(async (tx) => {
+      const [previous, user] = await Promise.all([tx.get(ref), tx.get(userRef)]);
+      if (previous.exists) return { recorded: false, credits: count(user.data()?.credits) };
+      if (!user.exists) throw new ApiError(404, 'account_missing', 'Account is not initialized');
+      const account = user.data()!;
+      const deduction = Math.min(count(account.credits), Math.max(0, Math.floor(input.credits || 0)));
+      const after = count(account.credits) - deduction;
+      tx.set(ref, {
+        uid: input.uid, plan: planOf(account.tier), kind: input.kind, periodKey: input.key,
+        credits: -deduction, amountTotal: input.amountTotal, currency: input.currency, createdAt: Date.now(),
+        ...(input.customerId ? { customerId: input.customerId } : {}),
+        ...(input.subscriptionId ? { subscriptionId: input.subscriptionId } : {}),
+      });
+      tx.create(this.db.doc(`credit_ledger/billing_${orderId(input.key)}`), { uid: input.uid, kind: input.kind, units: -deduction, createdAt: Date.now() });
+      if (deduction) tx.update(userRef, { credits: after, updatedAt: new Date().toISOString() });
+      return { recorded: true, credits: after };
+    });
+  }
+
+  /** Most recent paid period, so a refund claws back the credits that period actually granted. */
+  async latestGrant(uid: string) {
+    const snapshot = await this.db.collection('billing_orders').where('uid', '==', uid).orderBy('createdAt', 'desc').limit(10).get();
+    return snapshot.docs.map((doc) => doc.data() as BillingOrder).find((order) => order.kind === 'subscription' || order.kind === 'renewal' || order.kind === 'change') || null;
   }
 
   /** Stripe customer already bound to this account, so repeat purchases reuse one customer. */
