@@ -12,9 +12,11 @@ export default function Dashboard() {
   const [preview, setPreview] = useState('');
   const [fileError, setFileError] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
+  const [history, setHistory] = useState<Array<{ id: string; status: string; prompt: string; createdAt: number }>>([]);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => { if (!file) { setPreview(''); return; } const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }, [file]);
   useEffect(() => { setFile(null); }, [user?.uid]);
+  useEffect(() => { let active = true; if (!user) { setHistory([]); return; } user.getIdToken().then(token => fetch('/api/image-edit/history', { headers: { Authorization: `Bearer ${token}` } })).then(r => r.ok ? r.json() : null).then(data => { if (active && data?.jobs) setHistory(data.jobs); }).catch(() => {}); return () => { active = false; }; }, [user?.uid]);
   const choose = (candidate?: File) => {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > 20 * 1024 * 1024) { setFileError('Choose a JPEG, PNG or WebP image up to 20 MiB.'); return; }
@@ -27,6 +29,7 @@ export default function Dashboard() {
       <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Edit a photo with a prompt. Independent AI image editing; not NVIDIA DLSS game rendering.</p></div>
       <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.credits ?? '—'} credits` : 'Sign in to generate'}</span>
     </div>
+    {user && history.length > 0 && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5"><h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Recent generations</h2><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{history.map(job => <div key={job.id} className="rounded-lg border border-outline-variant/20 p-3"><div className="flex justify-between gap-2 text-xs"><span className="text-zinc-300">{job.status}</span><span className="text-zinc-500">{new Date(job.createdAt).toLocaleDateString()}</span></div><p className="text-sm text-zinc-400 mt-2 line-clamp-2">{job.prompt || 'Image edit'}</p></div>)}</div></section>}
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
