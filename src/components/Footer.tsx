@@ -13,7 +13,7 @@ export default function Footer() {
             <span className="text-nvidia-green font-black text-2xl font-headline mb-4 block">DLSS 5</span>
             <p className="text-zinc-500 text-sm max-w-xs mb-6">{t('home.footerTagline')}</p>
             <p className="text-zinc-600 text-[10px] font-medium uppercase tracking-widest">
-              © 2024 {t('home.footerSystems')}
+              © {new Date().getFullYear()} {t('home.footerSystems')}
             </p>
             <p className="text-zinc-600 text-[9px] mt-3 leading-relaxed max-w-xs">
               {t('footer.trademarkDisclaimer')}
