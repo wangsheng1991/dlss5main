@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fail, requireUser } from '../_lib/auth.js';
-import { siteOrigin, stripe } from '../_lib/stripe.js';
-import { database } from '../../server/admin.js';
-import { BillingStore } from '../../server/billing-store.js';
+import { fail, requireUser } from '../../_lib/auth.js';
+import { siteOrigin, stripe } from '../../_lib/stripe.js';
+import { database } from '../../../server/admin.js';
+import { BillingStore } from '../../../server/billing-store.js';
 
 /** Opens the Stripe customer portal so the buyer can cancel, switch plans or update the card. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

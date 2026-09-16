@@ -20,7 +20,7 @@ export default function Dashboard() {
     const url = new URL(window.location.href);
     const sessionId = url.searchParams.get('session_id') || '';
     if (url.searchParams.get('plan') === 'changed') {
-      setBillingNotice('Plan changed — your new monthly allowance is active.');
+      setBillingNotice('Plan changed — your new allowance appears as soon as Stripe confirms the proration.');
       url.searchParams.delete('plan');
       window.history.replaceState({}, '', url);
     }

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { planPricing } from '../_lib/stripe.js';
-import { PAID_PLANS, PLANS } from '../../src/config/plans.js';
+import { planPricing } from '../../_lib/stripe.js';
+import { PAID_PLANS, PLANS } from '../../../src/config/plans.js';
 
 /** Advertised price always comes from the Stripe price that checkout actually charges. */
 async function catalog() {

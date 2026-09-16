@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fail, requireUser } from '../_lib/auth.js';
-import { database } from '../../server/admin.js';
-import { BillingStore } from '../../server/billing-store.js';
+import { fail, requireUser } from '../../_lib/auth.js';
+import { database } from '../../../server/admin.js';
+import { BillingStore } from '../../../server/billing-store.js';
 
 /** Billing state and purchased orders of the signed-in account only. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

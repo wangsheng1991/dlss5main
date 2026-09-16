@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fail, requireUser } from '../_lib/auth.js';
-import { requirePriceId, stripe } from '../_lib/stripe.js';
-import { database } from '../../server/admin.js';
-import { BillingStore } from '../../server/billing-store.js';
-import { isPurchasablePlan } from '../../src/config/plans.js';
+import { fail, requireUser } from '../../_lib/auth.js';
+import { requirePriceId, stripe } from '../../_lib/stripe.js';
+import { database } from '../../../server/admin.js';
+import { BillingStore } from '../../../server/billing-store.js';
+import { isPurchasablePlan } from '../../../src/config/plans.js';
 
 /**
  * Switches an existing subscription between plans with Stripe proration, then grants the new plan's
@@ -32,17 +32,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       items: [{ id: item.id, price }],
       proration_behavior: 'always_invoice',
       metadata: { uid: user.uid, plan },
+      expand: ['latest_invoice'],
     });
     const updated = await client.subscriptions.retrieve(account.subscriptionId);
     const updatedItem = updated.items.data[0];
     if (!updatedItem) throw new Error('Subscription update returned no item');
+    // A plan change is identified by its proration invoice, so switching twice in one period grants twice.
+    const invoice = typeof updated.latest_invoice === 'object' && updated.latest_invoice ? updated.latest_invoice : null;
+    if (!invoice || invoice.status !== 'paid') {
+      // Not settled yet: `invoice.paid` grants the new allowance once Stripe collects it.
+      return res.status(202).json({ status: invoice?.status || 'pending', tier: account.tier, credits: account.credits, applied: false });
+    }
     const granted = await store.grantPayment({
       uid: user.uid,
       plan,
-      periodKey: `sub:${updated.id}:${updatedItem.current_period_start}`,
+      periodKey: `invoice:${invoice.id}`,
       kind: 'change',
-      amountTotal: Math.max(0, updatedItem.price.unit_amount || 0),
-      currency: updatedItem.price.currency || 'usd',
+      amountTotal: invoice.total ?? 0,
+      currency: invoice.currency || 'usd',
       customerId: account.customerId,
       subscriptionId: updated.id,
       periodEnd: updatedItem.current_period_end,

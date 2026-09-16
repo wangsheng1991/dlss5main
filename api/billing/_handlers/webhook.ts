@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type Stripe from 'stripe';
-import { rawBody, stripe } from '../_lib/stripe.js';
-import { database } from '../../server/admin.js';
-import { BillingStore } from '../../server/billing-store.js';
-import { isPurchasablePlan } from '../../src/config/plans.js';
+import { rawBody, stripe } from '../../_lib/stripe.js';
+import { database } from '../../../server/admin.js';
+import { BillingStore } from '../../../server/billing-store.js';
+import { isPurchasablePlan } from '../../../src/config/plans.js';
 
 const idOf = (value: string | { id: string } | null | undefined) => (typeof value === 'string' ? value : value?.id || '');
 const periodStartOf = (subscription: Stripe.Subscription | null) => subscription?.items?.data?.[0]?.current_period_start;
@@ -37,10 +37,13 @@ async function onInvoicePaid(invoice: Stripe.Invoice) {
   const reason = invoice.billing_reason;
   const kind: 'subscription' | 'renewal' | 'change' =
     reason === 'subscription_create' ? 'subscription' : reason === 'subscription_cycle' ? 'renewal' : 'change';
+  // A plan change is keyed by its proration invoice (several changes can happen in one period);
+  // first payments and renewals are keyed by the period, which the checkout confirmation shares.
+  const periodKey = kind === 'change' ? `invoice:${invoice.id}` : `sub:${subscriptionId}:${periodStart}`;
   const result = await store.grantPayment({
     uid,
     plan,
-    periodKey: `sub:${subscriptionId}:${periodStart}`,
+    periodKey,
     kind,
     amountTotal: invoice.amount_paid ?? 0,
     currency: invoice.currency || 'usd',
