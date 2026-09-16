@@ -5,6 +5,11 @@ import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
 import { useGeneration } from '../features/generation/useGeneration';
 
+const EXAMPLES = [
+  { src: '/examples/sample1.jpg', name: 'Kitchen render', prompt: 'Make it look like a real photo of this kitchen, keeping the layout identical.' },
+  { src: '/examples/sample2.jpg', name: 'Bedroom render', prompt: 'Turn this render into a photorealistic photo with soft morning light.' },
+];
+
 export default function Dashboard() {
   const { user, profile } = useAuth();
   const generation = useGeneration(user);
@@ -46,6 +51,19 @@ export default function Dashboard() {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > 20 * 1024 * 1024) { setFileError('Choose a JPEG, PNG or WebP image up to 20 MiB.'); return; }
     setFileError(''); setFile(candidate);
+  };
+  // Example thumbnails ship in public/examples; load them as a File so they follow the same path as an upload.
+  const loadExample = async (example: typeof EXAMPLES[number]) => {
+    setFileError('');
+    try {
+      const response = await fetch(example.src);
+      if (!response.ok) throw new Error('unavailable');
+      const blob = await response.blob();
+      setPrompt(example.prompt);
+      choose(new File([blob], example.src.split('/').pop() || 'example.jpg', { type: blob.type || 'image/jpeg' }));
+    } catch {
+      setFileError('That example could not be loaded. Choose your own image instead.');
+    }
   };
   const openPortal = async () => {
     if (!user) return;
@@ -90,6 +108,7 @@ export default function Dashboard() {
         {!generation.busy && !generation.pending && !result && <div className="flex-1 flex flex-col gap-5 justify-center">
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} className="sr-only"/>
           {preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">JPEG, PNG or WebP · up to 20 MiB</span></button>}
+          {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{EXAMPLES.map(example => <button key={example.src} type="button" onClick={() => void loadExample(example)} className="relative aspect-video rounded-lg overflow-hidden border border-outline-variant/20 hover:border-primary transition-all group"><img src={example.src} alt={example.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{example.name}</span></button>)}</div></div>}
           {file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}</span><button onClick={() => { setFile(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!user || !prompt.trim()} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : 'Generate · 1 credit'}</button></div>}
         </div>}
       </section>
