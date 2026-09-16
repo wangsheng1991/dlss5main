@@ -13,7 +13,27 @@ export default function Dashboard() {
   const [fileError, setFileError] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
   const [history, setHistory] = useState<Array<{ id: string; status: string; prompt: string; createdAt: number }>>([]);
+  const [billingNotice, setBillingNotice] = useState('');
   const input = useRef<HTMLInputElement>(null);
+  // Stripe returns buyers here with the checkout session; the server confirms it and grants credits.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const sessionId = url.searchParams.get('session_id') || '';
+    if (!user || url.searchParams.get('checkout') !== 'success' || !sessionId) return;
+    let active = true;
+    user.getIdToken()
+      .then((token) => fetch(`/api/billing/checkout?session_id=${encodeURIComponent(sessionId)}`, { headers: { Authorization: `Bearer ${token}` } }))
+      .then((r) => r.json())
+      .then((data) => {
+        if (!active) return;
+        setBillingNotice(data.status === 'active'
+          ? `Payment confirmed — ${data.tier} plan active with ${data.credits} credits.`
+          : 'Payment received. Access is still being confirmed; refresh in a moment.');
+      })
+      .catch(() => { if (active) setBillingNotice('We could not confirm this payment yet. Refresh in a moment or contact support.'); })
+      .finally(() => { url.searchParams.delete('checkout'); url.searchParams.delete('session_id'); window.history.replaceState({}, '', url); });
+    return () => { active = false; };
+  }, [user]);
   useEffect(() => { if (!file) { setPreview(''); return; } const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }, [file]);
   useEffect(() => { setFile(null); }, [user?.uid]);
   useEffect(() => { let active = true; if (!user) { setHistory([]); return; } user.getIdToken().then(token => fetch('/api/image-edit/history', { headers: { Authorization: `Bearer ${token}` } })).then(r => r.ok ? r.json() : null).then(data => { if (active && data?.jobs) setHistory(data.jobs); }).catch(() => {}); return () => { active = false; }; }, [user?.uid]);
@@ -27,8 +47,12 @@ export default function Dashboard() {
   return <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
       <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Edit a photo with a prompt. Independent AI image editing; not NVIDIA DLSS game rendering.</p></div>
-      <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.credits ?? '—'} credits` : 'Sign in to generate'}</span>
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'} credits` : 'Sign in to generate'}</span>
+        {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? 'Change plan' : 'Upgrade'}</Link>}
+      </div>
     </div>
+    {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}
     {user && history.length > 0 && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5"><h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Recent generations</h2><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{history.map(job => <div key={job.id} className="rounded-lg border border-outline-variant/20 p-3"><div className="flex justify-between gap-2 text-xs"><span className="text-zinc-300">{job.status}</span><span className="text-zinc-500">{new Date(job.createdAt).toLocaleDateString()}</span></div><p className="text-sm text-zinc-400 mt-2 line-clamp-2">{job.prompt || 'Image edit'}</p></div>)}</div></section>}
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
