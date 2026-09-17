@@ -12,9 +12,18 @@ nothing here justifies advertising "true super resolution".
 
 - Client: `alphaNetSuperRes` in `api/_lib/alphanet.ts`, key from `ALPHANET_SUPERRES_API_KEY`
   (reported as `superResKey` by `GET /api/health`; it does not affect the health status).
-- Status: key not delivered yet, so the instance is present but unused. Coding is possible without it;
-  only the live run is blocked. `shared_env/alphanet/acceptance-superres.mjs` runs the §2 checklist the
-  moment the key exists.
+- Status 2026-09-17: the second key has **not** been delivered, so both instances exist but only one lane
+  is live. The user-visible "HD enhance" mode is implemented and deployed on top of this contract:
+  `mode: 'enhance'` in `api/image-edit/jobs.ts` asks for a larger target size and the server picks the
+  lane — `alphaNetSuperRes` when `ALPHANET_SUPERRES_API_KEY` is set, otherwise it falls back to the
+  original `alphaNet` instance, so the feature works today on the production cluster and moves to the
+  expansion cluster the moment the key is configured. Nothing else changes: same base URL, model, paths.
+  `shared_env/alphanet/acceptance-superres.mjs` runs the §2 checklist once the key exists.
+- Measured by us (not in the brief): `width`/`height` must be multiples of 16 and **at most 1536**
+  (2048 → 422 `Input should be less than or equal to 1536`), so `src/config/enhance.ts` caps every
+  requested size at `ENHANCE_MAX_EDGE = 1536`; a 1536×1008 request came back 1536×1008 WebP
+  (200264 B). One real job queued ~287 s in that window, so the app's poll budget is 10 minutes.
+  Treat the result format as whatever `content_type` says rather than assuming PNG.
 - Traps that already cost us a change: PNG results are not a bug (do not name downloads after
   `output_format`), and `image_ids` is capped at 4.
 
