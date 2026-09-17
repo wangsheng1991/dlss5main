@@ -44,6 +44,8 @@ for (const doc of eligible) {
   const outcome = await db.runTransaction(async (tx) => {
     const [user, entry] = await Promise.all([tx.get(doc.ref), tx.get(ledger)]);
     if (entry.exists) return 'already';
+    // A dry run must not write: the grant only happens when the script is told to apply.
+    if (!apply) return 'would grant';
     const account = user.data() || {};
     tx.update(doc.ref, { bonusCredits: (Number(account.bonusCredits) || 0) + PROMO.credits });
     tx.create(ledger, { uid, kind: 'promo', promo: PROMO.id, units: PROMO.credits, backfill: true, createdAt: Date.now() });
