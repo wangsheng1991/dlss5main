@@ -61,7 +61,7 @@ export default function Dashboard() {
   const [shareNotice, setShareNotice] = useState('');
   const input = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
-  // Stripe returns buyers here with the checkout session; the server confirms it and grants credits.
+  // Stripe and PayPal both return buyers here; the server confirms the purchase and grants credits.
   useEffect(() => {
     const url = new URL(window.location.href);
     const sessionId = url.searchParams.get('session_id') || '';
@@ -70,7 +70,25 @@ export default function Dashboard() {
       url.searchParams.delete('plan');
       window.history.replaceState({}, '', url);
     }
-    if (!user || url.searchParams.get('checkout') !== 'success' || !sessionId) return;
+    if (!user) return;
+    // PayPal's return carries no subscription id of its own: the account bound at checkout is the one
+    // the server confirms, which also covers a buyer who approves on PayPal and lands back here.
+    if (url.searchParams.get('paypal') === 'success') {
+      let active = true;
+      user.getIdToken()
+        .then((token) => fetch('/api/billing/paypal-confirm', { headers: { Authorization: `Bearer ${token}` } }))
+        .then((r) => r.json())
+        .then((data) => {
+          if (!active) return;
+          setBillingNotice(data.status === 'active'
+            ? `Payment confirmed — ${data.tier} plan active with ${data.credits} credits.`
+            : 'PayPal is still confirming this subscription — your credits appear as soon as it does.');
+        })
+        .catch(() => { if (active) setBillingNotice('We could not confirm this payment yet. Refresh in a moment or contact support.'); })
+        .finally(() => { url.searchParams.delete('paypal'); window.history.replaceState({}, '', url); });
+      return () => { active = false; };
+    }
+    if (url.searchParams.get('checkout') !== 'success' || !sessionId) return;
     let active = true;
     user.getIdToken()
       .then((token) => fetch(`/api/billing/checkout?session_id=${encodeURIComponent(sessionId)}`, { headers: { Authorization: `Bearer ${token}` } }))

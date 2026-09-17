@@ -8,9 +8,14 @@ const count = (value: unknown) => (Number.isSafeInteger(value) && Number(value) 
 /** Firestore document ids cannot contain a slash and must stay well below 1500 bytes. */
 export const orderId = (key: string) => key.replace(/[^A-Za-z0-9_.:-]/g, '_').slice(0, 900);
 
+/** Which provider charges the subscription; each one stores its own binding fields. */
+export type PaymentProvider = 'stripe' | 'paypal';
+
 export type SubscriptionPayment = {
   uid: string;
   plan: PurchasablePlanId;
+  /** Defaults to Stripe so existing call sites stay unchanged. */
+  provider?: PaymentProvider;
   /**
    * Identifies exactly one subscription period (`sub:<subscription id>:<period start>`).
    * Both the checkout confirmation and the `invoice.paid` webhook derive the same key,
@@ -39,21 +44,62 @@ export class BillingStore {
   /** Billing view of one account, safe to return to its owner. */
   async account(uid: string) {
     const data = (await this.db.doc(`users/${uid}`).get()).data() || {};
+    const stripeSubscriptionId = typeof data.stripeSubscriptionId === 'string' ? data.stripeSubscriptionId : '';
+    const paypalSubscriptionId = typeof data.paypalSubscriptionId === 'string' ? data.paypalSubscriptionId : '';
     return {
       tier: planOf(data.tier),
       credits: count(data.credits),
-      subscriptionId: typeof data.stripeSubscriptionId === 'string' ? data.stripeSubscriptionId : '',
+      // `subscriptionId` is the id of whichever provider charges this account, so callers that only
+      // need "is this account subscribed" do not have to care which one it is.
+      subscriptionId: stripeSubscriptionId || paypalSubscriptionId,
+      provider: (stripeSubscriptionId ? 'stripe' : paypalSubscriptionId ? 'paypal' : '') as PaymentProvider | '',
       customerId: typeof data.stripeCustomerId === 'string' ? data.stripeCustomerId : '',
+      paypalPayerId: typeof data.paypalPayerId === 'string' ? data.paypalPayerId : '',
       subscriptionStatus: typeof data.subscriptionStatus === 'string' ? data.subscriptionStatus : '',
       currentPeriodEnd: Number.isSafeInteger(data.currentPeriodEnd) ? Number(data.currentPeriodEnd) : 0,
     };
   }
 
-  /** Account bound to a Stripe customer or subscription, used by events that carry no metadata. */
-  async byField(field: 'stripeCustomerId' | 'stripeSubscriptionId', value: string) {
+  /** Account bound to a provider customer or subscription, used by events that carry no metadata. */
+  async byField(field: 'stripeCustomerId' | 'stripeSubscriptionId' | 'paypalSubscriptionId', value: string) {
     if (!value) return '';
     const snapshot = await this.db.collection('users').where(field, '==', value).limit(1).get();
     return snapshot.docs[0]?.id || '';
+  }
+
+  /**
+   * Binds a PayPal subscription to its account before PayPal reports it as paid, because approval
+   * happens on PayPal's site and the webhook that follows only carries the subscription id.
+   */
+  async bindPaypalSubscription(uid: string, subscriptionId: string, status: string) {
+    await this.db.doc(`users/${uid}`).set(
+      { paypalSubscriptionId: subscriptionId, paypalSubscriptionStatus: status, updatedAt: new Date().toISOString() },
+      { merge: true },
+    );
+  }
+
+  /**
+   * PayPal charges from a billing plan object created once per environment, so the ids of the
+   * product and of each plan are remembered instead of being recreated on every checkout.
+   */
+  async paypalProductId(environment: string) {
+    const data = (await this.db.doc('billing_config/paypal').get()).data();
+    const value = data?.environments?.[environment]?.productId;
+    return typeof value === 'string' ? value : '';
+  }
+
+  async setPaypalProductId(environment: string, productId: string) {
+    await this.db.doc('billing_config/paypal').set({ environments: { [environment]: { productId } } }, { merge: true });
+  }
+
+  async paypalPlanId(environment: string, plan: PurchasablePlanId) {
+    const data = (await this.db.doc('billing_config/paypal').get()).data();
+    const value = data?.environments?.[environment]?.plans?.[plan];
+    return typeof value === 'string' ? value : '';
+  }
+
+  async setPaypalPlanId(environment: string, plan: PurchasablePlanId, planId: string) {
+    await this.db.doc('billing_config/paypal').set({ environments: { [environment]: { plans: { [plan]: planId } } } }, { merge: true });
   }
 
   /** Only the fields the public billing view exposes are ever written here. */
@@ -125,6 +171,7 @@ export class BillingStore {
         ...(input.periodEnd ? { periodEnd: input.periodEnd } : {}),
       };
       tx.set(orderRef, order);
+      const provider = input.provider || 'stripe';
       tx.update(userRef, {
         tier: input.plan,
         credits,
@@ -132,8 +179,12 @@ export class BillingStore {
         quotaDay: day(),
         dayUsed: 0,
         subscriptionStatus: 'active',
-        ...(input.customerId ? { stripeCustomerId: input.customerId } : {}),
-        ...(input.subscriptionId ? { stripeSubscriptionId: input.subscriptionId } : {}),
+        // Each provider keeps its own binding, so a PayPal purchase can never be mistaken for a
+        // Stripe customer (and the Stripe portal keeps working for Stripe buyers).
+        ...(input.customerId ? (provider === 'paypal' ? { paypalPayerId: input.customerId } : { stripeCustomerId: input.customerId }) : {}),
+        ...(input.subscriptionId ? (provider === 'paypal'
+          ? { paypalSubscriptionId: input.subscriptionId, paypalSubscriptionStatus: 'active' }
+          : { stripeSubscriptionId: input.subscriptionId }) : {}),
         ...(input.periodEnd ? { currentPeriodEnd: input.periodEnd } : {}),
         updatedAt: new Date().toISOString(),
       });
@@ -144,22 +195,24 @@ export class BillingStore {
     });
   }
 
-  /** Subscription renewal, cancellation or status change pushed by Stripe. */
-  async syncSubscription(subscriptionId: string, status: string, periodEnd?: number) {
-    const snapshot = await this.db.collection('users').where('stripeSubscriptionId', '==', subscriptionId).limit(1).get();
+  /** Subscription renewal, cancellation or status change pushed by a payment provider. */
+  async syncSubscription(subscriptionId: string, status: string, periodEnd?: number, provider: PaymentProvider = 'stripe') {
+    const field = provider === 'paypal' ? 'paypalSubscriptionId' : 'stripeSubscriptionId';
+    const snapshot = await this.db.collection('users').where(field, '==', subscriptionId).limit(1).get();
     const user = snapshot.docs[0];
     if (!user) return { updated: false, uid: '' };
     const account = user.data();
     const canceled = status === 'canceled' || status === 'unpaid' || status === 'incomplete_expired';
+    const providerStatus = provider === 'paypal' ? { paypalSubscriptionStatus: status } : {};
     if (canceled) {
       await this.db.doc(`billing_orders/${orderId(`cancel:${subscriptionId}`)}`).set({
         uid: user.id, plan: planOf(account.tier), kind: 'cancellation', periodKey: `cancel:${subscriptionId}`,
         credits: 0, amountTotal: 0, currency: 'usd', subscriptionId, createdAt: Date.now(),
       });
-      await user.ref.update({ tier: 'free', subscriptionStatus: status, ...(periodEnd ? { currentPeriodEnd: periodEnd } : {}), updatedAt: new Date().toISOString() });
+      await user.ref.update({ tier: 'free', subscriptionStatus: status, ...providerStatus, ...(periodEnd ? { currentPeriodEnd: periodEnd } : {}), updatedAt: new Date().toISOString() });
       return { updated: true, uid: user.id };
     }
-    await user.ref.update({ subscriptionStatus: status, ...(periodEnd ? { currentPeriodEnd: periodEnd } : {}), updatedAt: new Date().toISOString() });
+    await user.ref.update({ subscriptionStatus: status, ...providerStatus, ...(periodEnd ? { currentPeriodEnd: periodEnd } : {}), updatedAt: new Date().toISOString() });
     return { updated: true, uid: user.id };
   }
 

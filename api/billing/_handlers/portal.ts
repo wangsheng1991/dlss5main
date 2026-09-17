@@ -9,8 +9,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     const user = await requireUser(req);
-    const customer = await new BillingStore(database()).customer(user.uid);
-    if (!customer) return res.status(409).json({ error: 'No billing account yet — subscribe to a plan first', code: 'no_customer' });
+    const store = new BillingStore(database());
+    const customer = await store.customer(user.uid);
+    if (!customer) {
+      // A PayPal buyer has no Stripe customer: send them to PayPal instead of a dead end.
+      const account = await store.account(user.uid);
+      if (account.provider === 'paypal') {
+        return res.status(409).json({ error: 'This subscription is billed by PayPal — manage or cancel it in your PayPal account', code: 'paypal_subscription' });
+      }
+      return res.status(409).json({ error: 'No billing account yet — subscribe to a plan first', code: 'no_customer' });
+    }
     const session = await stripe().billingPortal.sessions.create({ customer, return_url: `${siteOrigin(req)}/dashboard` });
     return res.status(200).json({ url: session.url });
   } catch (error) {

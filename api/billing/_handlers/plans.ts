@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { planPricing } from '../../_lib/stripe.js';
+import { paypalConfigured, paypalEnvironment } from '../../_lib/paypal.js';
 import { PAID_PLANS, PLANS } from '../../../src/config/plans.js';
 
 /** Advertised price always comes from the Stripe price that checkout actually charges. */
@@ -21,6 +22,9 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     membershipContact: process.env.MEMBERSHIP_CONTACT_EMAIL || 'support@dlss5nvidia.com',
     // Sandbox and production both report whether checkout is live, so the UI never offers a dead button.
     billingEnabled: configured,
+    // PayPal is offered next to card checkout while the Stripe keys are still test keys; the
+    // environment tells the pricing page to label a sandbox purchase as such.
+    paypal: { enabled: paypalConfigured(), environment: paypalEnvironment() },
     plans,
   });
 }
