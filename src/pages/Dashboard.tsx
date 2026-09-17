@@ -185,7 +185,7 @@ export default function Dashboard() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p role="status" className="text-nvidia-green text-sm">Example ready{sampleRun.state.run.cached ? ' · served from cache' : ''}</p>
             <div className="flex flex-wrap gap-3">
-              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.webp`} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download example result</a>
+              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.${sampleRun.state.run.extension}`} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download example result</a>
               <button onClick={() => { sampleRun.reset(); setSelectedSample(null); }} className="px-4 py-3 border border-outline-variant/30 rounded-lg text-white">Try another example</button>
               <Link to="/login" className="px-4 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10">Sign in to use your own image</Link>
             </div>

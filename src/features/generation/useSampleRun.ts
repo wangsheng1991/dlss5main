@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SAMPLES, type SampleId } from '../../config/samples';
 
-export interface SampleRunResult { sample: SampleId; prompt: string; input: string; result: string; cached: boolean }
+export interface SampleRunResult { sample: SampleId; prompt: string; input: string; result: string; cached: boolean; extension: string }
 export type SampleRunState = { status: 'idle' } | { status: 'running'; sample: SampleId }
   | { status: 'ready'; run: SampleRunResult } | { status: 'error'; sample?: SampleId; message: string };
 
@@ -28,7 +28,7 @@ export function useSampleRun() {
       }
       const data = await response.json().catch(() => ({}));
       if (response.ok && data.status === 'SUCCEEDED') {
-        setState({ status: 'ready', run: { sample, prompt: data.prompt || SAMPLES[sample].prompt, input: data.input || SAMPLES[sample].src, result: data.result, cached: !!data.cached } });
+        setState({ status: 'ready', run: { sample, prompt: data.prompt || SAMPLES[sample].prompt, input: data.input || SAMPLES[sample].src, result: data.result, cached: !!data.cached, extension: typeof data.extension === 'string' && data.extension ? data.extension : 'webp' } });
         return;
       }
       if (response.status === 429) {

@@ -31,6 +31,10 @@ async function serve(req: VercelRequest, res: VercelResponse, sampleId: string, 
   return res.status(200).send(cached.buffer);
 }
 
+/** The provider decides the result format (it answers PNG even when webp is requested), so the
+ *  client names its download after the bytes that are actually cached rather than the request. */
+const extensionOf = (contentType: string) => contentType === 'image/png' ? 'png' : contentType === 'image/webp' ? 'webp' : 'jpg';
+
 /** True when the bytes really are an image, so a rewrite that serves HTML cannot be mistaken for one. */
 function isImage(contentType: string | null, buffer: Buffer) {
   const head = buffer.subarray(0, 12);
@@ -85,13 +89,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     await store.countGuest(clientIp(req));
     const sample = SAMPLES[sampleId];
-    const payload = { status: 'SUCCEEDED', sample: sampleId, prompt: sample.prompt, input: sample.src, result: `/api/image-edit/samples?sample=${sampleId}` };
-    if (await store.read(sampleId)) return res.status(200).json({ ...payload, cached: true });
+    const cached = await store.read(sampleId);
+    const payload = {
+      status: 'SUCCEEDED', sample: sampleId, prompt: sample.prompt, input: sample.src,
+      result: `/api/image-edit/samples?sample=${sampleId}`,
+      // The bytes come back as whatever the provider produced, so tell the client how to name them.
+      contentType: cached?.contentType || '',
+      extension: cached ? extensionOf(cached.contentType) : '',
+    };
+    if (cached) return res.status(200).json({ ...payload, cached: true });
 
     if (!(await store.claimWarm(sampleId))) return res.status(202).json({ status: 'WARMING', sample: sampleId });
     try {
       const saved = await warm(req, sampleId, store);
-      return res.status(200).json({ ...payload, cached: false, width: saved.width, height: saved.height });
+      return res.status(200).json({ ...payload, cached: false, width: saved.width, height: saved.height, contentType: saved.contentType, extension: extensionOf(saved.contentType) });
     } catch (error) {
       await store.releaseWarm(sampleId).catch(() => {});
       throw error;

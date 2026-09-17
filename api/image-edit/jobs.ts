@@ -10,7 +10,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { uid } = await requireUser(req);
     const { prompt, image_ids, width = 1024, height = 1024, seed = 42, num_inference_steps = 4, output_format = 'webp' } = req.body || {};
     if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > 4000) return res.status(400).json({ error: 'prompt is required' });
-    if (!Array.isArray(image_ids) || image_ids.length < 1 || image_ids.length > 16 || image_ids.some((id) => typeof id !== 'string')) return res.status(400).json({ error: 'image_ids are required' });
+    // AlphaNet accepts 1–4 input images per task; the prototype only ever sends one.
+    if (!Array.isArray(image_ids) || image_ids.length < 1 || image_ids.length > 4 || image_ids.some((id) => typeof id !== 'string')) return res.status(400).json({ error: 'image_ids are required' });
     const idempotencyKey = req.headers['idempotency-key'];
     if (typeof idempotencyKey !== 'string' || !idempotencyKey || idempotencyKey.length > 128) return res.status(400).json({ error: 'Idempotency-Key is required' });
     const store = new JobStore(database());
