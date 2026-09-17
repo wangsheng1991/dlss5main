@@ -6,7 +6,6 @@
     "login": "Masuk",
     "register": "Daftar",
     "dashboard": "Dasbor",
-    "guestCredits": "Tamu: {{count}}/3",
     "unlimited": "Tak Terbatas",
     "credits": "{{count}} Kredit",
     "blog": "Blog",

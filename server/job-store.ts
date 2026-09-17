@@ -2,13 +2,17 @@ import { createHash, randomUUID } from 'node:crypto';
 import type { Firestore } from 'firebase-admin/firestore';
 import { ApiError } from './errors.js';
 import { PLANS } from '../src/config/plans.js';
+import type { ResultMeta } from './result-store.js';
 export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEEDED' | 'FAILED';
 export type Job = {
   uid: string; inputJson: string; fingerprint: string; providerKey: string;
   status: JobStatus; providerTaskId?: string; leaseUntil: number; leaseOwner: string;
   settled: boolean; refunded: boolean; createdAt: number; completedAt?: number;
-  quotaDay: string; quotaMonth: string; errorCode?: string;
+  quotaDay: string; quotaMonth: string; errorCode?: string; result?: ResultMeta;
 };
+
+/** Daily sign-in allowance: enough for a couple of generations, small enough not to replace a plan. */
+export const CHECK_IN_CREDITS = 5;
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 const day = () => new Date().toISOString().slice(0, 10);
 const month = () => day().slice(0, 7);
@@ -81,7 +85,25 @@ export class JobStore {
   }
   async list(uid: string, limit = 20) {
     const snapshot = await this.db.collection('image_operations').where('uid', '==', uid).orderBy('createdAt', 'desc').limit(Math.min(Math.max(limit, 1), 50)).get();
-    return snapshot.docs.map(doc => { const job = doc.data() as Job; let input: Record<string, unknown> = {}; try { input = JSON.parse(job.inputJson); } catch {} return { id: doc.id, status: job.status, createdAt: job.createdAt, completedAt: job.completedAt, errorCode: job.errorCode, prompt: typeof input.prompt === 'string' ? input.prompt : '' }; });
+    return snapshot.docs.map(doc => { const job = doc.data() as Job; let input: Record<string, unknown> = {}; try { input = JSON.parse(job.inputJson); } catch {} return { id: doc.id, status: job.status, createdAt: job.createdAt, completedAt: job.completedAt, errorCode: job.errorCode, prompt: typeof input.prompt === 'string' ? input.prompt : '', saved: !!job.result?.stored, width: job.result?.width || 0, height: job.result?.height || 0 }; });
+  }
+  /** Keeps the durable result metadata on the job so history can render it without reading the image. */
+  async attachResult(id: string, result: ResultMeta) {
+    await this.db.doc(`image_operations/${id}`).update({ result });
+  }
+  /** Grants the daily sign-in allowance once per UTC day; the ledger id makes retries idempotent. */
+  async checkIn(uid: string) {
+    const ref = this.db.doc(`users/${uid}`), today = day();
+    return this.db.runTransaction(async tx => {
+      const snapshot = await tx.get(ref);
+      if (!snapshot.exists) throw new ApiError(403, 'account_missing', 'Account is not initialized');
+      const account = snapshot.data()!;
+      if (account.lastCheckIn === today) throw new ApiError(409, 'already_checked_in', 'Already checked in today');
+      const credits = count(account.credits) + CHECK_IN_CREDITS;
+      tx.update(ref, { credits, lastCheckIn: today });
+      tx.set(this.db.doc(`credit_ledger/${hash(`${uid}:checkin:${today}`)}`), { uid, kind: 'checkin', units: CHECK_IN_CREDITS, day: today, createdAt: Date.now() });
+      return { credits, lastCheckIn: today, awarded: CHECK_IN_CREDITS };
+    });
   }
   async accepted(id: string, leaseOwner: string, taskId?: string) {
     const ref = this.db.doc(`image_operations/${id}`);

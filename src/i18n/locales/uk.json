@@ -6,7 +6,6 @@
     "login": "Вхід",
     "register": "Реєстрація",
     "dashboard": "Панель",
-    "guestCredits": "Гість: {{count}}/3",
     "unlimited": "Безліміт",
     "credits": "{{count}} кредитів",
     "blog": "Блог",

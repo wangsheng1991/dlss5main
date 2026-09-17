@@ -6,7 +6,6 @@
     "login": "ログイン",
     "register": "登録",
     "dashboard": "ダッシュボード",
-    "guestCredits": "ゲスト: {{count}}/3",
     "unlimited": "無制限",
     "credits": "{{count}} クレジット",
     "blog": "ブログ",

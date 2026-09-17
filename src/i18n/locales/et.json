@@ -6,7 +6,6 @@
     "login": "Logi sisse",
     "register": "Registreeru",
     "dashboard": "Töölaud",
-    "guestCredits": "Külaline: {{count}}/3",
     "unlimited": "Piiramatu",
     "credits": "{{count}} krediiti",
     "blog": "Blogi",

@@ -6,7 +6,6 @@
     "login": "登录",
     "register": "注册",
     "dashboard": "工作台",
-    "guestCredits": "游客: {{count}}/3",
     "unlimited": "无限",
     "credits": "{{count}} 积分",
     "blog": "博客",

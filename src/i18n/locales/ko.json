@@ -6,7 +6,6 @@
     "login": "로그인",
     "register": "등록",
     "dashboard": "대시보드",
-    "guestCredits": "게스트: {{count}}/3",
     "unlimited": "무제한",
     "credits": "{{count}} 크레딧",
     "blog": "블로그",

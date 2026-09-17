@@ -21,7 +21,6 @@ export default function Navbar() {
   const location = useLocation();
   const { user, profile, logout } = useAuth();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
-  const [guestUses, setGuestUses] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
@@ -30,24 +29,6 @@ export default function Navbar() {
     i18n.changeLanguage(code);
     setIsLangOpen(false);
   };
-
-  useEffect(() => {
-    const updateGuestUses = () => {
-      const stored = localStorage.getItem('dlss_guest_usage');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.date === new Date().toISOString().split('T')[0]) {
-          setGuestUses(parsed.count);
-        } else {
-          setGuestUses(0);
-        }
-      }
-    };
-
-    updateGuestUses();
-    window.addEventListener('guestUsageUpdated', updateGuestUses);
-    return () => window.removeEventListener('guestUsageUpdated', updateGuestUses);
-  }, []);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -75,9 +56,15 @@ export default function Navbar() {
           {!isAuthPage && (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-surface rounded-lg">
               <Database className="w-4 h-4 text-nvidia-green" />
-              <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                {user ? t('navbar.credits', { count: profile?.credits || 0 }) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
-              </span>
+              {user ? (
+                <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
+                  {t('navbar.credits', { count: profile?.credits || 0 })}
+                </span>
+              ) : (
+                <Link to="/login" className="text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">
+                  {t('navbar.login')}
+                </Link>
+              )}
             </div>
           )}
           {/* Language Switcher */}
@@ -159,9 +146,15 @@ export default function Navbar() {
             {!isAuthPage && (
               <div className="flex items-center gap-2 px-3 py-2 bg-surface rounded-lg w-fit">
                 <Database className="w-4 h-4 text-nvidia-green" />
-                <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                {user ? t('navbar.credits', { count: profile?.credits || 0 }) : t('navbar.guestCredits', { count: Math.max(0, 3 - guestUses) })}
-                </span>
+                {user ? (
+                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
+                    {t('navbar.credits', { count: profile?.credits || 0 })}
+                  </span>
+                ) : (
+                  <Link to="/login" className="text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">
+                    {t('navbar.login')}
+                  </Link>
+                )}
               </div>
             )}
 

@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet } from '../../_lib/alphanet.js';
 import { fail, requireUser } from '../../_lib/auth.js';
 import { JobStore } from '../../../server/job-store.js';
+import { ResultStore } from '../../../server/result-store.js';
 import { database } from '../../../server/admin.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -15,6 +16,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const task = await alphaNet.poll(operation.providerTaskId);
     const status = task.status === 'SUCCESS' ? 'SUCCEEDED' : task.status === 'FAILURE' ? 'FAILED' : 'RUNNING';
     if (status === 'SUCCEEDED' || status === 'FAILED') await store.settle(uid, operationId, status, task.error || '');
+    // History must outlive the provider's signed link, so the result is copied once it survives settling.
+    const image = task.result?.images?.[0];
+    if (status === 'SUCCEEDED' && image?.url && !operation.result) {
+      try {
+        const meta = await new ResultStore(database()).save(uid, operationId, image);
+        await store.attachResult(operationId, meta);
+      } catch { /* the live provider link still serves this response */ }
+    }
     return res.status(200).json({ jobId: operationId, status, progress: task.progress, result: task.result, error: task.error });
   } catch (error) { return fail(res, error); }
 }

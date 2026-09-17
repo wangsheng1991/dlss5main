@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { UploadCloud, Download, RefreshCw, AlertCircle } from 'lucide-react';
+import { UploadCloud, Download, RefreshCw, AlertCircle, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
 import { useGeneration } from '../features/generation/useGeneration';
@@ -10,14 +11,44 @@ const EXAMPLES = [
   { src: '/examples/sample2.jpg', name: 'Bedroom render', prompt: 'Turn this render into a photorealistic photo with soft morning light.' },
 ];
 
+type HistoryJob = { id: string; status: string; prompt: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
+
+/** Results are owner-only, so the image is fetched with the ID token instead of a plain <img src>. */
+function HistoryResult({ jobId, token, alt }: { jobId: string; token: string; alt: string }) {
+  const [url, setUrl] = useState('');
+  const [state, setState] = useState<'loading' | 'ready' | 'expired'>('loading');
+  useEffect(() => {
+    let active = true, objectUrl = '';
+    setState('loading');
+    fetch(`/api/image-edit/results/${encodeURIComponent(jobId)}`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(async (response) => {
+        if (!active) return;
+        if (!response.ok) { setState('expired'); return; }
+        objectUrl = URL.createObjectURL(await response.blob());
+        setUrl(objectUrl);
+        setState('ready');
+      })
+      .catch(() => { if (active) setState('expired'); });
+    return () => { active = false; if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [jobId, token]);
+  if (state === 'loading') return <div className="aspect-video rounded-lg bg-surface-lowest border border-outline-variant/20 flex items-center justify-center"><RefreshCw className="w-4 h-4 animate-spin text-zinc-500"/></div>;
+  if (state === 'expired') return <div className="aspect-video rounded-lg bg-surface-lowest border border-outline-variant/20 flex items-center justify-center text-xs text-zinc-500 px-3 text-center">Result no longer available</div>;
+  return <a href={url} target="_blank" rel="noreferrer" className="block aspect-video rounded-lg overflow-hidden border border-outline-variant/20 hover:border-primary transition-colors"><img src={url} alt={alt} className="w-full h-full object-cover"/></a>;
+}
+
 export default function Dashboard() {
-  const { user, profile } = useAuth();
+  const { t } = useTranslation();
+  const { user, profile, dailyCheckIn } = useAuth();
   const generation = useGeneration(user);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState('');
   const [fileError, setFileError] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
-  const [history, setHistory] = useState<Array<{ id: string; status: string; prompt: string; createdAt: number }>>([]);
+  const [history, setHistory] = useState<HistoryJob[]>([]);
+  const [historyToken, setHistoryToken] = useState('');
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const [checkingIn, setCheckingIn] = useState(false);
+  const [checkInNotice, setCheckInNotice] = useState('');
   const [billingNotice, setBillingNotice] = useState('');
   const input = useRef<HTMLInputElement>(null);
   // Stripe returns buyers here with the checkout session; the server confirms it and grants credits.
@@ -46,7 +77,28 @@ export default function Dashboard() {
   }, [user]);
   useEffect(() => { if (!file) { setPreview(''); return; } const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }, [file]);
   useEffect(() => { setFile(null); }, [user?.uid]);
-  useEffect(() => { let active = true; if (!user) { setHistory([]); return; } user.getIdToken().then(token => fetch('/api/image-edit/history', { headers: { Authorization: `Bearer ${token}` } })).then(r => r.ok ? r.json() : null).then(data => { if (active && data?.jobs) setHistory(data.jobs); }).catch(() => {}); return () => { active = false; }; }, [user?.uid]);
+  useEffect(() => {
+    let active = true;
+    if (!user) { setHistory([]); setHistoryToken(''); return; }
+    user.getIdToken().then(async (token) => {
+      if (!active) return;
+      setHistoryToken(token);
+      const response = await fetch('/api/image-edit/history', { headers: { Authorization: `Bearer ${token}` } });
+      const data = response.ok ? await response.json() : null;
+      if (active && data?.jobs) setHistory(data.jobs);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [user?.uid, historyVersion]);
+  // A finished generation belongs in the history immediately.
+  useEffect(() => { if (generation.operation?.status === 'SUCCEEDED') setHistoryVersion(v => v + 1); }, [generation.operation?.status, generation.operation?.jobId]);
+  const checkIn = async () => {
+    setCheckingIn(true); setCheckInNotice('');
+    const outcome = await dailyCheckIn();
+    setCheckInNotice(outcome.success
+      ? `${outcome.message} ${t('dashboard.creditsEarned')}`
+      : outcome.code === 'already_checked_in' ? t('dashboard.alreadyCheckedIn') : outcome.message);
+    setCheckingIn(false);
+  };
   const choose = (candidate?: File) => {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > 20 * 1024 * 1024) { setFileError('Choose a JPEG, PNG or WebP image up to 20 MiB.'); return; }
@@ -90,12 +142,32 @@ export default function Dashboard() {
       </div>
     </div>
     {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}
-    {user && history.length > 0 && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5"><h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Recent generations</h2><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{history.map(job => <div key={job.id} className="rounded-lg border border-outline-variant/20 p-3"><div className="flex justify-between gap-2 text-xs"><span className="text-zinc-300">{job.status}</span><span className="text-zinc-500">{new Date(job.createdAt).toLocaleDateString()}</span></div><p className="text-sm text-zinc-400 mt-2 line-clamp-2">{job.prompt || 'Image edit'}</p></div>)}</div></section>}
+    {user && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
+      <h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Your generations</h2>
+      {history.length === 0
+        ? <p className="text-sm text-zinc-500">Your images stay here after you close the page. Sign in on another device to see the same history.</p>
+        : <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{history.map(job => <article key={job.id} className="rounded-lg border border-outline-variant/20 p-3 flex flex-col gap-3">
+          {job.status === 'SUCCEEDED' && historyToken
+            ? <HistoryResult jobId={job.id} token={historyToken} alt={job.prompt || 'Generated image'}/>
+            : <div className="aspect-video rounded-lg bg-surface-lowest border border-outline-variant/20 flex items-center justify-center px-3 text-center text-xs text-zinc-500">{job.status === 'FAILED' ? `Failed${job.errorCode ? ` · ${job.errorCode}` : ''} · credit refunded` : job.status.toLowerCase()}</div>}
+          <div className="flex-1">
+            <div className="flex justify-between gap-2 text-xs"><span className={job.status === 'SUCCEEDED' ? 'text-nvidia-green' : job.status === 'FAILED' ? 'text-red-300' : 'text-zinc-300'}>{job.status}</span><span className="text-zinc-500">{new Date(job.completedAt || job.createdAt).toLocaleString()}</span></div>
+            <p className="text-sm text-zinc-400 mt-2 line-clamp-2">{job.prompt || 'Image edit'}</p>
+            {job.width ? <p className="text-xs text-zinc-600 mt-1">{job.width} × {job.height}{job.saved ? '' : ' · copy not kept'}</p> : null}
+          </div>
+        </article>)}</div>}
+    </section>}
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
         <div><div className="bg-primary/15 border border-primary/30 rounded-lg p-3 text-primary font-semibold">Image editing</div><p className="text-xs text-zinc-400 mt-2">True 2× / 4× super resolution is not available with this model.</p></div>
         <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">Describe your edit</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">Describe lighting, colors or objects to change. Results may alter details.</p></div>
+        {user && <div>
+          <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
+          <button type="button" onClick={() => void checkIn()} disabled={checkingIn || profile?.lastCheckIn === new Date().toISOString().slice(0, 10) || !user} className="w-full px-4 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"><Gift className="w-4 h-4"/>{profile?.lastCheckIn === new Date().toISOString().slice(0, 10) ? t('dashboard.checkedIn') : checkingIn ? t('dashboard.checkingIn') : t('dashboard.claimCredits')}</button>
+          <p className="text-xs text-zinc-400 mt-2">{t('dashboard.checkInReward')}</p>
+          {checkInNotice && <p role="status" className="text-xs text-nvidia-green mt-2">{checkInNotice}</p>}
+        </div>}
         <div className="text-sm text-zinc-400 space-y-2"><p>Output: 1024 × 1024 · WebP</p><p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p><Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
       </section>
       <section aria-label="Image workspace" className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">

@@ -6,7 +6,6 @@
     "login": "Login",
     "register": "Register",
     "dashboard": "Dashboard",
-    "guestCredits": "Guest: {{count}}/3",
     "unlimited": "Unlimited",
     "credits": "{{count}} Credits",
     "blog": "Blog",

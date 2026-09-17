@@ -18,6 +18,6 @@ export async function requireUser(req: VercelRequest) {
 }
 
 export function fail(res: { status: (n: number) => { json: (v: unknown) => unknown } }, error: unknown) {
-  const e = error as { status?: number; message?: string };
-  return res.status(e.status || 500).json({ error: e.message || 'Request failed' });
+  const e = error as { status?: number; code?: string; message?: string };
+  return res.status(e.status || 500).json({ error: e.message || 'Request failed', ...(e.code ? { code: e.code } : {}) });
 }

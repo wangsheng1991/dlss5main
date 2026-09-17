@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp, increment } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
 
 interface UserProfile {
@@ -26,8 +26,7 @@ interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
-  deductCredit: (amount?: number) => Promise<number>;
-  dailyCheckIn: () => Promise<{ success: boolean; message: string; credits?: number }>;
+  dailyCheckIn: () => Promise<{ success: boolean; message: string; credits?: number; code?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -106,38 +105,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const deductCredit = async (amount: number = 1): Promise<number> => {
-    if (!user) return 0;
-    const userRef = doc(db, 'users', user.uid);
-    await updateDoc(userRef, { credits: increment(-amount) });
-    const updatedSnap = await getDoc(userRef);
-    return (updatedSnap.data()?.credits ?? 0);
-  };
-
-  const dailyCheckIn = async (): Promise<{ success: boolean; message: string; credits?: number }> => {
+  // Credits are server-owned: the browser only asks for the daily allowance and reads the balance.
+  const dailyCheckIn = async (): Promise<{ success: boolean; message: string; credits?: number; code?: string }> => {
     if (!user) return { success: false, message: 'Not logged in' };
-    const userRef = doc(db, 'users', user.uid);
-    const today = new Date().toISOString().split('T')[0];
-
-    const snap = await getDoc(userRef);
-    if (!snap.exists()) return { success: false, message: 'User not found' };
-
-    const lastCheckIn = snap.data().lastCheckIn;
-    if (lastCheckIn === today) {
-      return { success: false, message: 'Already checked in today' };
+    try {
+      const response = await fetch('/api/me/checkin', { method: 'POST', headers: { Authorization: `Bearer ${await user.getIdToken()}` } });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) return { success: false, message: typeof data.error === 'string' ? data.error : 'Check-in failed. Try again later.', code: typeof data.code === 'string' ? data.code : undefined };
+      return { success: true, message: `+${data.awarded ?? 5}`, credits: data.credits };
+    } catch {
+      return { success: false, message: 'Check-in failed. Check your connection.' };
     }
-
-    await updateDoc(userRef, {
-      credits: increment(5),
-      lastCheckIn: today
-    });
-
-    const updatedSnap = await getDoc(userRef);
-    return { success: true, message: 'Check-in successful! +5 credits', credits: updatedSnap.data()?.credits };
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithGoogle, logout, deductCredit, dailyCheckIn }}>
+    <AuthContext.Provider value={{ user, profile, loading, signInWithGoogle, logout, dailyCheckIn }}>
       {children}
     </AuthContext.Provider>
   );
