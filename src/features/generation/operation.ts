@@ -1,5 +1,10 @@
 export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEEDED' | 'FAILED';
-export interface GenerationBody { prompt: string; image_ids: string[]; width: number; height: number; output_format: string }
+export interface GenerationBody {
+  prompt: string; image_ids: string[]; width: number; height: number; output_format: string;
+  /** `edit` (default) sends the caller's prompt; `enhance` lets the server own prompt and output size. */
+  mode?: 'edit' | 'enhance';
+  factor?: number; source_width?: number; source_height?: number;
+}
 export interface SavedOperation { version: 1; userId: string; key: string; body: GenerationBody; jobId?: string; createdAt: string; status?: JobStatus; outputUrl?: string }
 const storageKey = (uid: string) => `dlss:operation:${uid}`;
 export function readOperation(uid: string): SavedOperation | null {

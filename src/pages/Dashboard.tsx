@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
 import { SAMPLES, SAMPLE_IDS, type SampleId } from '../config/samples';
+import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, type EnhanceFactor } from '../config/enhance';
 import { useGeneration } from '../features/generation/useGeneration';
 import { useSampleRun } from '../features/generation/useSampleRun';
 
@@ -43,6 +44,9 @@ export default function Dashboard() {
   const [preview, setPreview] = useState('');
   const [fileError, setFileError] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
+  const [mode, setMode] = useState<'edit' | 'enhance'>('edit');
+  const [factor, setFactor] = useState<EnhanceFactor>(2);
+  const [sourceSize, setSourceSize] = useState<{ width: number; height: number } | null>(null);
   const [history, setHistory] = useState<HistoryJob[]>([]);
   const [historyToken, setHistoryToken] = useState('');
   const [historyVersion, setHistoryVersion] = useState(0);
@@ -101,7 +105,13 @@ export default function Dashboard() {
   const choose = (candidate?: File) => {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > 20 * 1024 * 1024) { setFileError('Choose a JPEG, PNG or WebP image up to 20 MiB.'); return; }
-    setFileError(''); setFile(candidate);
+    setFileError(''); setFile(candidate); setSourceSize(null);
+    // Enhancement is sized from the original pixels, so measure the file as soon as it is picked.
+    const url = URL.createObjectURL(candidate);
+    const image = new Image();
+    image.onload = () => { URL.revokeObjectURL(url); setSourceSize({ width: image.naturalWidth, height: image.naturalHeight }); };
+    image.onerror = () => { URL.revokeObjectURL(url); setSourceSize(null); };
+    image.src = url;
   };
   /**
    * Signed in: an example becomes the input File and runs like an upload.
@@ -137,6 +147,7 @@ export default function Dashboard() {
   };
   const result = generation.operation?.outputUrl;
   const locked = generation.busy || generation.pending || !!result;
+  const enhance = mode === 'enhance' && sourceSize ? enhanceOutput(sourceSize.width, sourceSize.height, factor) : null;
   return <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
       <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Edit a photo with a prompt. Independent AI image editing; not NVIDIA DLSS game rendering.</p></div>
@@ -165,15 +176,27 @@ export default function Dashboard() {
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
-        <div><div className="bg-primary/15 border border-primary/30 rounded-lg p-3 text-primary font-semibold">Image editing</div><p className="text-xs text-zinc-400 mt-2">True 2× / 4× super resolution is not available with this model.</p></div>
-        <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">Describe your edit</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
+        <div><div className="grid grid-cols-2 gap-2">
+          <button type="button" onClick={() => setMode('edit')} disabled={locked} className={mode === 'edit' ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>Image editing</button>
+          <button type="button" onClick={() => setMode('enhance')} disabled={locked} className={mode === 'enhance' ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>HD enhance</button>
+        </div>
+          {mode === 'enhance' ? <div className="mt-3">
+            <div className="grid grid-cols-2 gap-2">{ENHANCE_FACTORS.map(value => <button key={value} type="button" onClick={() => setFactor(value)} disabled={locked} className={factor === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value}×</button>)}</div>
+            <p className="text-xs text-zinc-400 mt-2">{enhance
+              ? <>Output <span className="text-white">{enhance.width} × {enhance.height}</span>{enhance.clamped ? ` · ${factor}× capped by the model's ${ENHANCE_MAX_EDGE} px edge, ${enhance.factor}× achieved` : ` · ${factor}× the ${sourceSize?.width} × ${sourceSize?.height} original`}</>
+              : 'Pick an image first — the output size follows its pixels.'}</p>
+            <p className="text-xs text-zinc-500 mt-2">The model re-renders detail at the larger size, so this is AI enhancement rather than a pixel-exact upscale. The instruction is fixed by the server.</p>
+          </div> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
+        {mode === 'edit'
+          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">Describe your edit</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
+          : <div><p className="text-sm text-white mb-2">Enhancement instruction</p><p className="text-xs text-zinc-400">Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
           <button type="button" onClick={() => void checkIn()} disabled={checkingIn || !profile || profile.lastCheckIn === new Date().toISOString().slice(0, 10)} className="w-full px-4 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"><Gift className="w-4 h-4"/>{profile?.lastCheckIn === new Date().toISOString().slice(0, 10) ? t('dashboard.checkedIn') : checkingIn ? t('dashboard.checkingIn') : t('dashboard.claimCredits')}</button>
           <p className="text-xs text-zinc-400 mt-2">{t('dashboard.checkInReward')}</p>
           {checkInNotice && <p role="status" className="text-xs text-nvidia-green mt-2">{checkInNotice}</p>}
         </div>}
-        <div className="text-sm text-zinc-400 space-y-2"><p>Output: 1024 × 1024 · WebP</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
+        <div className="text-sm text-zinc-400 space-y-2"><p>{mode === 'enhance' ? `Output: ${enhance ? `${enhance.width} × ${enhance.height}` : 'follows your image'} · up to ${ENHANCE_MAX_EDGE} px per edge` : 'Output: 1024 × 1024 · WebP'}</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
       </section>
       <section aria-label="Image workspace" className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
@@ -200,7 +223,7 @@ export default function Dashboard() {
           {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">JPEG, PNG or WebP · up to 20 MiB</span></button>)}
           {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
           {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{SAMPLE_IDS.map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}</span><button onClick={() => { setFile(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || !prompt.trim()} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : 'Generate · 1 credit'}</button></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || (mode === 'edit' && !prompt.trim()) || (mode === 'enhance' && !sourceSize)} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
