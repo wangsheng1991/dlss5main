@@ -79,7 +79,8 @@ export default function Dashboard() {
     return () => { active = false; };
   }, [user]);
   useEffect(() => { if (!file) { setPreview(''); return; } const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }, [file]);
-  useEffect(() => { setFile(null); }, [user?.uid]);
+  // A different account must not inherit the previous one's image, so drop the file and its measured size together.
+  useEffect(() => { setFile(null); setSourceSize(null); }, [user?.uid]);
   useEffect(() => {
     let active = true;
     if (!user) { setHistory([]); setHistoryToken(''); return; }
