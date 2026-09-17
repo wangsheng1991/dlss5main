@@ -6,6 +6,9 @@ export default function handler(_req: VercelRequest, res: VercelResponse) {
     firebaseAuth: Boolean(process.env.FIREBASE_WEB_API_KEY),
     quotaBackend: Boolean(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_DATABASE_ID),
     billing: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
+    // Reported for deployment checks only: super resolution is a separate capability, so a missing
+    // key must not make the site look degraded.
+    superResKey: Boolean(process.env.ALPHANET_SUPERRES_API_KEY),
   };
   const ready = checks.alphaNet && checks.firebaseAuth && checks.quotaBackend && Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
   return res.status(ready ? 200 : 503).json({
