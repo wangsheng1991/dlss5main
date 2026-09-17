@@ -6,5 +6,8 @@
     { "source": "/api/image-edit/results/:id", "destination": "/api/image-edit/results/[id]" },
     { "source": "/api/billing/:route", "destination": "/api/billing/[route]" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  ],
+  "functions": {
+    "api/image-edit/samples.ts": { "maxDuration": 60 }
+  }
 }

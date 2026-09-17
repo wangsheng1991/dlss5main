@@ -4,12 +4,9 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
+import { SAMPLES, SAMPLE_IDS, type SampleId } from '../config/samples';
 import { useGeneration } from '../features/generation/useGeneration';
-
-const EXAMPLES = [
-  { src: '/examples/sample1.jpg', name: 'Kitchen render', prompt: 'Make it look like a real photo of this kitchen, keeping the layout identical.' },
-  { src: '/examples/sample2.jpg', name: 'Bedroom render', prompt: 'Turn this render into a photorealistic photo with soft morning light.' },
-];
+import { useSampleRun } from '../features/generation/useSampleRun';
 
 type HistoryJob = { id: string; status: string; prompt: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
 
@@ -40,6 +37,8 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const { user, profile, dailyCheckIn } = useAuth();
   const generation = useGeneration(user);
+  const sampleRun = useSampleRun();
+  const [selectedSample, setSelectedSample] = useState<SampleId | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState('');
   const [fileError, setFileError] = useState('');
@@ -104,15 +103,21 @@ export default function Dashboard() {
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > 20 * 1024 * 1024) { setFileError('Choose a JPEG, PNG or WebP image up to 20 MiB.'); return; }
     setFileError(''); setFile(candidate);
   };
-  // Example thumbnails ship in public/examples; load them as a File so they follow the same path as an upload.
-  const loadExample = async (example: typeof EXAMPLES[number]) => {
+  /**
+   * Signed in: an example becomes the input File and runs like an upload.
+   * Signed out: the example is previewed and the server generates it for free from its own catalog.
+   */
+  const useExample = async (sample: SampleId) => {
     setFileError('');
+    sampleRun.reset();
+    setSelectedSample(sample);
+    setPrompt(SAMPLES[sample].prompt);
+    if (!user) return;
     try {
-      const response = await fetch(example.src);
+      const response = await fetch(SAMPLES[sample].src);
       if (!response.ok) throw new Error('unavailable');
       const blob = await response.blob();
-      setPrompt(example.prompt);
-      choose(new File([blob], example.src.split('/').pop() || 'example.jpg', { type: blob.type || 'image/jpeg' }));
+      choose(new File([blob], SAMPLES[sample].fileName, { type: blob.type || SAMPLES[sample].contentType }));
     } catch {
       setFileError('That example could not be loaded. Choose your own image instead.');
     }
@@ -161,27 +166,42 @@ export default function Dashboard() {
       <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
         <div><div className="bg-primary/15 border border-primary/30 rounded-lg p-3 text-primary font-semibold">Image editing</div><p className="text-xs text-zinc-400 mt-2">True 2× / 4× super resolution is not available with this model.</p></div>
-        <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">Describe your edit</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">Describe lighting, colors or objects to change. Results may alter details.</p></div>
+        <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">Describe your edit</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
           <button type="button" onClick={() => void checkIn()} disabled={checkingIn || !profile || profile.lastCheckIn === new Date().toISOString().slice(0, 10)} className="w-full px-4 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"><Gift className="w-4 h-4"/>{profile?.lastCheckIn === new Date().toISOString().slice(0, 10) ? t('dashboard.checkedIn') : checkingIn ? t('dashboard.checkingIn') : t('dashboard.claimCredits')}</button>
           <p className="text-xs text-zinc-400 mt-2">{t('dashboard.checkInReward')}</p>
           {checkInNotice && <p role="status" className="text-xs text-nvidia-green mt-2">{checkInNotice}</p>}
         </div>}
-        <div className="text-sm text-zinc-400 space-y-2"><p>Output: 1024 × 1024 · WebP</p><p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p><Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
+        <div className="text-sm text-zinc-400 space-y-2"><p>Output: 1024 × 1024 · WebP</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
       </section>
       <section aria-label="Image workspace" className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
-        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">You can preview an image before signing in. <Link to="/login" className="text-primary underline">Sign in to generate</Link>.</div>}
+        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">The two examples below are free and need no account. <Link to="/login" className="text-primary underline">Sign in</Link> to upload your own image and write your own prompt.</div>}
+        {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
+        {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">Preparing {SAMPLES[sampleRun.state.sample].name.toLowerCase()}…</h2><p className="text-zinc-400 text-sm max-w-md">This example is generated once and then served from cache, so it costs nothing and needs no account.</p></div>}
+        {!user && sampleRun.state.status === 'ready' && <div className="flex-1 flex flex-col gap-5">
+          <div className="flex-1 min-h-64"><ImageSlider highRes={sampleRun.state.run.result} lowRes={sampleRun.state.run.input}/></div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p role="status" className="text-nvidia-green text-sm">Example ready{sampleRun.state.run.cached ? ' · served from cache' : ''}</p>
+            <div className="flex flex-wrap gap-3">
+              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.webp`} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download example result</a>
+              <button onClick={() => { sampleRun.reset(); setSelectedSample(null); }} className="px-4 py-3 border border-outline-variant/30 rounded-lg text-white">Try another example</button>
+              <Link to="/login" className="px-4 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10">Sign in to use your own image</Link>
+            </div>
+          </div>
+        </div>}
         {generation.operation && <div className="mb-4 text-xs text-zinc-400 break-all">Operation: {generation.operation.jobId || generation.operation.key}<br/>Saved on this device. Refreshing will preserve this request.</div>}
         {generation.busy && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{generation.phase}</h2><p className="text-zinc-400 text-sm">You can leave and return. Do not submit another image for this operation.</p>{!generation.submitting && <button onClick={generation.pause} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-zinc-300">Pause checking</button>}</div>}
         {!generation.busy && generation.pending && <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-10"><h2 className="text-white text-xl">Your operation is saved</h2><p className="text-sm text-zinc-400 max-w-md">The result is not confirmed yet. Resume the same operation to check its status without creating a new charge.</p><button onClick={() => void generation.resume()} className="px-6 py-3 bg-primary text-black rounded-lg font-bold">Resume operation</button></div>}
         {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Open full image</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
-        {!generation.busy && !generation.pending && !result && <div className="flex-1 flex flex-col gap-5 justify-center">
-          <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} className="sr-only"/>
-          {preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">JPEG, PNG or WebP · up to 20 MiB</span></button>}
-          {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{EXAMPLES.map(example => <button key={example.src} type="button" onClick={() => void loadExample(example)} className="relative aspect-video rounded-lg overflow-hidden border border-outline-variant/20 hover:border-primary transition-all group"><img src={example.src} alt={example.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{example.name}</span></button>)}</div></div>}
-          {file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}</span><button onClick={() => { setFile(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!user || !profile || !prompt.trim()} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : 'Generate · 1 credit'}</button></div>}
+        {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
+          <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
+          {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">JPEG, PNG or WebP · up to 20 MiB</span></button>)}
+          {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
+          {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{SAMPLE_IDS.map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}</span><button onClick={() => { setFile(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || !prompt.trim()} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : 'Generate · 1 credit'}</button></div>}
+          {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
     </div>
