@@ -146,7 +146,16 @@
     "checkedIn": "오늘 체크인 완료",
     "creditsEarned": "크레딧 적립!",
     "alreadyCheckedIn": "오늘 이미 체크인하셨습니다",
-    "checkingIn": "체크인 중..."
+    "checkingIn": "체크인 중...",
+    "shareHeading": "{{count}} 크레딧 받기",
+    "shareBody": "Reddit, X, Facebook 등 공개 사이트에 저희를 소개하고 게시물 스크린샷을 보내주세요. 심사 없이 전송 즉시 적립됩니다.",
+    "shareUpload": "스크린샷 업로드",
+    "shareUploading": "스크린샷 전송 중…",
+    "shareClaim": "{{count}} 크레딧 받기",
+    "shareGranted": "{{count}} 크레딧이 추가되었습니다. 보너스 잔액으로 유지되며 월말에 사라지지 않습니다.",
+    "shareAlready": "이미 이 보상을 받았습니다",
+    "shareFailed": "스크린샷을 보내지 못했습니다. 다시 시도해 주세요.",
+    "bonusCredits": "보너스"
   },
   "models": {
     "architecture": "아키텍처",

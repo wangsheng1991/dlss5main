@@ -146,7 +146,16 @@
     "checkedIn": "Sudah check-in hari ini",
     "creditsEarned": "Kredit dikreditkan!",
     "alreadyCheckedIn": "Anda sudah check-in hari ini",
-    "checkingIn": "Memeriksa..."
+    "checkingIn": "Memeriksa...",
+    "shareHeading": "Dapatkan {{count}} kredit",
+    "shareBody": "Ceritakan tentang kami di Reddit, X, Facebook, atau situs publik mana pun, lalu kirim tangkapan layar unggahan Anda. Tanpa peninjauan — kredit langsung masuk saat dikirim.",
+    "shareUpload": "Unggah tangkapan layar",
+    "shareUploading": "Mengirim tangkapan layar…",
+    "shareClaim": "Klaim {{count}} kredit",
+    "shareGranted": "{{count}} kredit ditambahkan. Tersimpan sebagai saldo bonus dan tidak hangus di akhir bulan.",
+    "shareAlready": "Anda sudah mengklaim hadiah ini",
+    "shareFailed": "Tangkapan layar gagal dikirim. Coba lagi.",
+    "bonusCredits": "bonus"
   },
   "models": {
     "architecture": "Arsitektur",

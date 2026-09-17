@@ -146,7 +146,16 @@
     "checkedIn": "Checked in today",
     "creditsEarned": "credits earned!",
     "alreadyCheckedIn": "Already checked in today",
-    "checkingIn": "Checking in..."
+    "checkingIn": "Checking in...",
+    "shareHeading": "Earn {{count}} credits",
+    "shareBody": "Tell people about us on Reddit, X, Facebook or any public site, then send a screenshot of your post. No review — the credits appear the moment you send it.",
+    "shareUpload": "Upload a screenshot",
+    "shareUploading": "Sending the screenshot…",
+    "shareClaim": "Claim {{count}} credits",
+    "shareGranted": "{{count}} credits added. They sit in your bonus balance and do not expire with the monthly allowance.",
+    "shareAlready": "You already claimed this reward",
+    "shareFailed": "The screenshot could not be sent. Try again.",
+    "bonusCredits": "bonus"
   },
   "models": {
     "architecture": "Architecture",

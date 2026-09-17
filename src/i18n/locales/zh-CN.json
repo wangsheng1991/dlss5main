@@ -146,7 +146,16 @@
     "checkedIn": "今日已签到",
     "creditsEarned": "积分已到账！",
     "alreadyCheckedIn": "今日已签到，明天再来吧",
-    "checkingIn": "签到中..."
+    "checkingIn": "签到中...",
+    "shareHeading": "分享即可获得 {{count}} 次额度",
+    "shareBody": "在 Reddit、X、Facebook 或其他公开平台介绍我们，然后把帖子的截图发过来。不需要审核，发送成功即刻到账。",
+    "shareUpload": "上传截图",
+    "shareUploading": "正在上传截图…",
+    "shareClaim": "领取 {{count}} 次额度",
+    "shareGranted": "已到账 {{count}} 次额度，计入赠送余额，月底不清零。",
+    "shareAlready": "这份奖励你已经领过了",
+    "shareFailed": "截图发送失败，请重试。",
+    "bonusCredits": "赠送"
   },
   "models": {
     "architecture": "架构",

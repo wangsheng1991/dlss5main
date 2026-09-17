@@ -9,10 +9,18 @@ export type Job = {
   status: JobStatus; providerTaskId?: string; leaseUntil: number; leaseOwner: string;
   settled: boolean; refunded: boolean; createdAt: number; completedAt?: number;
   quotaDay: string; quotaMonth: string; errorCode?: string; result?: ResultMeta;
+  /** A refund must return to the bucket that paid, so the reservation records which one it was. */
+  paidWithBonus?: boolean;
 };
 
 /** Daily sign-in allowance: enough for a couple of generations, small enough not to replace a plan. */
 export const CHECK_IN_CREDITS = 5;
+/**
+ * Promotional credits live in their own bucket. The monthly rollover resets the plan allowance, so
+ * anything granted on top (welcome-back top-ups, share rewards) must sit outside it or it would
+ * silently expire on the first of the next month. Monthly credits are spent first, then this bucket.
+ */
+export const BONUS_CREDITS_FIELD = 'bonusCredits';
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 const day = () => new Date().toISOString().slice(0, 10);
 const month = () => day().slice(0, 7);
@@ -26,7 +34,7 @@ export class JobStore {
     return this.db.runTransaction(async tx => {
       const user = await tx.get(ref);
       if (user.exists) return user.data()!;
-      const data = { email, name, tier: 'free', credits: 10, quotaMonth: month(), quotaDay: day(), dayUsed: 0, activeJobs: 0, createdAt: new Date().toISOString() };
+      const data = { email, name, tier: 'free', credits: 10, bonusCredits: 0, quotaMonth: month(), quotaDay: day(), dayUsed: 0, activeJobs: 0, createdAt: new Date().toISOString() };
       tx.create(ref, data);
       tx.create(this.db.doc(`credit_ledger/${hash(uid + ':signup')}`), { uid, units: 10, kind: 'signup', createdAt: Date.now() });
       return data;
@@ -34,6 +42,33 @@ export class JobStore {
   }
   async bindUpload(uid: string, fileId: string, metadata: { size: number; contentType: string }) {
     await this.db.doc(`image_uploads/${hash(fileId)}`).create({ uid, fileId, ...metadata, createdAt: Date.now() });
+  }
+  /**
+   * Grants promotional credits exactly once per (account, promo): the ledger document id is derived
+   * from the promo id, so re-running any script or retrying a request cannot pay twice.
+   */
+  async grantBonus(uid: string, promoId: string, units: number, meta: Record<string, unknown> = {}) {
+    if (!Number.isSafeInteger(units) || units < 1) throw new ApiError(400, 'invalid_grant', 'Invalid grant amount');
+    const ref = this.db.doc(`users/${uid}`), ledger = this.db.doc(`credit_ledger/${hash(`${uid}:${promoId}`)}`);
+    return this.db.runTransaction(async tx => {
+      const [user, entry] = await Promise.all([tx.get(ref), tx.get(ledger)]);
+      if (!user.exists) throw new ApiError(403, 'account_missing', 'Account is not initialized');
+      const account = user.data()!;
+      if (entry.exists) return { granted: false, credits: count(account.credits), bonusCredits: count(account.bonusCredits) };
+      const bonusCredits = count(account.bonusCredits) + units;
+      tx.update(ref, { bonusCredits });
+      tx.create(ledger, { uid, kind: 'promo', promo: promoId, units, ...meta, createdAt: Date.now() });
+      return { granted: true, credits: count(account.credits), bonusCredits };
+    });
+  }
+  /** A reward claim must point at a screenshot this account actually pushed through our upload API. */
+  async ownedUpload(uid: string, fileId: string) {
+    const snapshot = await this.db.doc(`image_uploads/${hash(fileId)}`).get();
+    return snapshot.exists && snapshot.data()!.uid === uid;
+  }
+  /** Keeps the proof of a reward claim next to the account, so support can look at what was sent. */
+  async recordShare(uid: string, promoId: string, fileId: string) {
+    await this.db.doc(`share_claims/${hash(uid)}`).set({ uid, promo: promoId, fileId, createdAt: Date.now() });
   }
   async uploadQuota(uid: string) {
     const ref = this.db.doc(`upload_limits/${hash(uid + day())}`);
@@ -66,14 +101,16 @@ export class JobStore {
       if (uploads.some(u => !u.exists || u.data()!.uid !== uid)) throw new ApiError(403, 'file_not_owned', 'Input file does not belong to you');
       const account = user.data()!, plan = limits(account.tier);
       const credits = account.quotaMonth && account.quotaMonth !== month() ? plan.monthlyCredits : count(account.credits);
+      const bonus = count(account.bonusCredits);
       const used = account.quotaDay === day() ? count(account.dayUsed) : 0;
-      if (credits < 1) throw new ApiError(402, 'insufficient_credits', 'Insufficient credits');
+      if (credits + bonus < 1) throw new ApiError(402, 'insufficient_credits', 'Insufficient credits');
       if (used >= plan.dailyGenerationLimit) throw new ApiError(429, 'daily_limit', 'Daily generation limit reached');
       if (count(account.activeJobs) >= plan.maxConcurrentJobs) throw new ApiError(429, 'concurrency_limit', 'Another job is still active');
-      const job: Job = { uid, inputJson, fingerprint, providerKey: id, status: 'SUBMISSION_UNCERTAIN', leaseUntil: now + 60000, leaseOwner: randomUUID(), settled: false, refunded: false, createdAt: now, quotaDay: day(), quotaMonth: month() };
-      tx.update(userRef, { credits: credits - 1, activeJobs: count(account.activeJobs) + 1, dayUsed: used + 1, quotaDay: day(), quotaMonth: month() });
+      const paidWithBonus = credits < 1;
+      const job: Job = { uid, inputJson, fingerprint, providerKey: id, status: 'SUBMISSION_UNCERTAIN', leaseUntil: now + 60000, leaseOwner: randomUUID(), settled: false, refunded: false, paidWithBonus, createdAt: now, quotaDay: day(), quotaMonth: month() };
+      tx.update(userRef, { credits: credits - (paidWithBonus ? 0 : 1), bonusCredits: bonus - (paidWithBonus ? 1 : 0), activeJobs: count(account.activeJobs) + 1, dayUsed: used + 1, quotaDay: day(), quotaMonth: month() });
       tx.create(ref, job);
-      tx.create(this.db.doc(`credit_ledger/${id}_reserve`), { uid, jobId: id, kind: 'reserve', units: -1, createdAt: now });
+      tx.create(this.db.doc(`credit_ledger/${id}_reserve`), { uid, jobId: id, kind: 'reserve', units: -1, bucket: paidWithBonus ? 'bonus' : 'monthly', createdAt: now });
       return { id, job, submit: true };
     });
   }
@@ -121,11 +158,13 @@ export class JobStore {
       if (!job || job.uid !== uid || !user.exists) throw new ApiError(404, 'job_not_found', 'Job not found');
       if (job.settled) return;
       const account = user.data()!, refund = status === 'FAILED';
-      // Return an old-month reservation only if the account has not reset since.
-      const balanceRefund = refund && account.quotaMonth === job.quotaMonth ? 1 : 0;
-      tx.update(userRef, { credits: count(account.credits) + balanceRefund, activeJobs: Math.max(0, count(account.activeJobs) - 1), dayUsed: Math.max(0, count(account.dayUsed) - (refund && account.quotaDay === job.quotaDay ? 1 : 0)) });
+      // Return an old-month reservation only if the account has not reset since. Promotional credits
+      // never reset, so their refund does not depend on the month.
+      const toMonthly = refund && !job.paidWithBonus && account.quotaMonth === job.quotaMonth ? 1 : 0;
+      const toBonus = refund && job.paidWithBonus ? 1 : 0;
+      tx.update(userRef, { credits: count(account.credits) + toMonthly, bonusCredits: count(account.bonusCredits) + toBonus, activeJobs: Math.max(0, count(account.activeJobs) - 1), dayUsed: Math.max(0, count(account.dayUsed) - (refund && account.quotaDay === job.quotaDay ? 1 : 0)) });
       tx.update(ref, { status, settled: true, refunded: refund, completedAt: Date.now(), errorCode });
-      tx.create(this.db.doc(`credit_ledger/${id}_${refund ? 'refund' : 'settle'}`), { uid, jobId: id, kind: refund ? 'refund' : 'settle', units: balanceRefund, expiredUnits: refund ? 1 - balanceRefund : 0, createdAt: Date.now() });
+      tx.create(this.db.doc(`credit_ledger/${id}_${refund ? 'refund' : 'settle'}`), { uid, jobId: id, kind: refund ? 'refund' : 'settle', units: toMonthly + toBonus, bucket: toBonus ? 'bonus' : 'monthly', expiredUnits: refund ? 1 - toMonthly - toBonus : 0, createdAt: Date.now() });
     });
   }
 }

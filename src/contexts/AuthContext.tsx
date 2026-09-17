@@ -17,6 +17,8 @@ interface UserProfile {
   name?: string;
   image?: string;
   credits: number;
+  /** Promotional credits, spent after the monthly allowance and never cleared by the month rollover. */
+  bonusCredits?: number;
   lastCheckIn?: string; // date string YYYY-MM-DD
 }
 

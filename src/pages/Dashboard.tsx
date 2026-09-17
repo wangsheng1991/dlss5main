@@ -8,6 +8,8 @@ import { SAMPLES, SAMPLE_IDS, type SampleId } from '../config/samples';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, type EnhanceFactor } from '../config/enhance';
 import { useGeneration } from '../features/generation/useGeneration';
 import { useSampleRun } from '../features/generation/useSampleRun';
+import { claimShareReward } from '../features/rewards/shareClaim';
+import { SHARE_REWARD } from '../config/promos';
 
 type HistoryJob = { id: string; status: string; prompt: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
 
@@ -53,7 +55,12 @@ export default function Dashboard() {
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkInNotice, setCheckInNotice] = useState('');
   const [billingNotice, setBillingNotice] = useState('');
+  const [shareFile, setShareFile] = useState<File | null>(null);
+  const [shareBusy, setShareBusy] = useState(false);
+  const [shareClaimed, setShareClaimed] = useState(false);
+  const [shareNotice, setShareNotice] = useState('');
   const input = useRef<HTMLInputElement>(null);
+  const shareInput = useRef<HTMLInputElement>(null);
   // Stripe returns buyers here with the checkout session; the server confirms it and grants credits.
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -102,6 +109,17 @@ export default function Dashboard() {
       ? `${outcome.message} ${t('dashboard.creditsEarned')}`
       : outcome.code === 'already_checked_in' ? t('dashboard.alreadyCheckedIn') : outcome.message);
     setCheckingIn(false);
+  };
+  const claimShare = async () => {
+    if (!user || !shareFile) return;
+    setShareBusy(true); setShareNotice('');
+    try {
+      const result = await claimShareReward(user, shareFile);
+      setShareClaimed(true); setShareFile(null);
+      setShareNotice(result.granted ? t('dashboard.shareGranted', { count: result.awarded }) : t('dashboard.shareAlready'));
+    } catch (cause) {
+      setShareNotice(cause instanceof Error ? cause.message : t('dashboard.shareFailed'));
+    } finally { setShareBusy(false); }
   };
   const choose = (candidate?: File) => {
     if (!candidate) return;
@@ -153,12 +171,23 @@ export default function Dashboard() {
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
       <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Edit a photo with a prompt. Independent AI image editing; not NVIDIA DLSS game rendering.</p></div>
       <div className="flex flex-wrap items-center gap-3">
-        <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'} credits` : 'Sign in to generate'}</span>
+        <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} credits` : 'Sign in to generate'}</span>
         {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? 'Change plan' : 'Upgrade'}</Link>}
         {user && profile?.tier && profile.tier !== 'free' && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">Manage billing</button>}
       </div>
     </div>
     {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}
+    {user && <section aria-labelledby="share-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
+      <h2 id="share-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-2">{t('dashboard.shareHeading', { count: SHARE_REWARD.credits })}</h2>
+      <p className="text-sm text-zinc-300 max-w-3xl">{t('dashboard.shareBody', { count: SHARE_REWARD.credits })}</p>
+      <input ref={shareInput} type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('dashboard.shareUpload')} onChange={e => { setShareFile(e.target.files?.[0] ?? null); setShareNotice(''); e.target.value = ''; }} className="sr-only"/>
+      <div className="flex flex-wrap items-center gap-3 mt-4">
+        <button type="button" onClick={() => shareInput.current?.click()} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{shareFile ? `${shareFile.name} · ${(shareFile.size / 1024).toFixed(0)} KB` : t('dashboard.shareUpload')}</button>
+        <button type="button" disabled={!shareFile || shareBusy || shareClaimed} onClick={() => void claimShare()} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{shareBusy ? t('dashboard.shareUploading') : t('dashboard.shareClaim', { count: SHARE_REWARD.credits })}</button>
+        {shareClaimed && <span className="text-sm text-nvidia-green">{t('dashboard.shareAlready')}</span>}
+      </div>
+      {shareNotice && <p role="status" aria-live="polite" className="text-sm text-nvidia-green mt-3">{shareNotice}</p>}
+    </section>}
     {user && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
       <h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Your generations</h2>
       {history.length === 0

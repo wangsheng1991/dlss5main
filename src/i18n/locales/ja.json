@@ -146,7 +146,16 @@
     "checkedIn": "本日サインイン済み",
     "creditsEarned": "クレジット到手！",
     "alreadyCheckedIn": "今日はすでにサインイン済みです",
-    "checkingIn": "サインイン中..."
+    "checkingIn": "サインイン中...",
+    "shareHeading": "{{count}} クレジットを獲得",
+    "shareBody": "Reddit、X、Facebook などの公開サイトで当サービスを紹介し、投稿のスクリーンショットを送信してください。審査はありません。送信した時点で加算されます。",
+    "shareUpload": "スクリーンショットをアップロード",
+    "shareUploading": "スクリーンショットを送信中…",
+    "shareClaim": "{{count}} クレジットを受け取る",
+    "shareGranted": "{{count}} クレジットを追加しました。ボーナス残高として保持され、月末でも失効しません。",
+    "shareAlready": "この特典はすでに受け取り済みです",
+    "shareFailed": "スクリーンショットを送信できませんでした。もう一度お試しください。",
+    "bonusCredits": "ボーナス"
   },
   "models": {
     "architecture": "アーキテクチャ",

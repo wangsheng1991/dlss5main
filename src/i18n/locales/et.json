@@ -146,7 +146,16 @@
     "checkedIn": "Täna sisse loginud",
     "creditsEarned": "Krediidid lisatud!",
     "alreadyCheckedIn": "Olete täna juba sisse loginud",
-    "checkingIn": "Sisse logimas..."
+    "checkingIn": "Sisse logimas...",
+    "shareHeading": "Saa {{count}} krediiti",
+    "shareBody": "Räägi meist Redditis, X-is, Facebookis või muul avalikul saidil ja saada oma postituse ekraanipilt. Ülevaatamist ei toimu — krediidid lisatakse kohe.",
+    "shareUpload": "Laadi ekraanipilt üles",
+    "shareUploading": "Ekraanipildi saatmine…",
+    "shareClaim": "Võta {{count}} krediiti",
+    "shareGranted": "Lisatud {{count}} krediiti. Need jäävad boonussaldosse ega aegu kuu lõpus.",
+    "shareAlready": "Oled selle preemia juba kätte saanud",
+    "shareFailed": "Ekraanipilti ei õnnestunud saata. Proovi uuesti.",
+    "bonusCredits": "boonus"
   },
   "models": {
     "architecture": "Arhitektuur",
