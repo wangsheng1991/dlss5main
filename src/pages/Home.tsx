@@ -157,8 +157,9 @@ export default function Home() {
           <div className="lg:col-span-5 flex flex-col gap-6 h-full">
             <div className="bg-surface-high rounded-xl p-1 overflow-hidden relative group aspect-[4/3] glow-border flex-1">
               <ImageSlider 
-                highRes="https://lh3.googleusercontent.com/aida-public/AB6AXuAgMs1RSg3O_1Sa3p30fgI3YUHwQQfFs07kGZMGKyFyoEQm-OV9Q80s9L_VAjq6PPIL4xtaTqR0T9Spv2YqokmfgYPWeEDIaoQr-b_cWhfmnIgq8aEqqG60kty-pmpK8FVMaWQnJO_alw5WYwG3TGhDdxNpx_ZwZgY2ckp1k1TV_tLi7iFmt5rkfCNyQR5qc2MSI7WWxfd4pus_zzslLB6bpO80SJcRC5MWqi1CClqIJAQIYCs8gvSG8VE1od87qiiz6z58h1Ej7OY"
-                lowRes="https://lh3.googleusercontent.com/aida-public/AB6AXuBX0NBLbz6dfCyZtZSBqUaNkc7P42wSPQbQ4Dlon60UOsPWWNKWQuKfUQpS7W0JjQLC3viWlcObRSBXdZoKxfShQc5rKpEFd14ybi0f6lrVILfPPqUzCpI4RKNVfJZaBujlW9Kwoj_v2zIAZrGl__FsvSDBWpYZVFvYhRo3X1Mltv4NxGiocHN_LB1gYNWDNgZCcs9SYcDfTtz733YHMkTIqJu7I9DkQt4LheM4Hcvd9IQIMZrXgvZQBI83SUxc5HPx8VnYchvzMCI"
+                highRes="/examples/sample1-photo.webp"
+                lowRes="/examples/sample1-photo-low.webp"
+                alt="Kitchen photo restored from its low-resolution copy"
               />
             </div>
             

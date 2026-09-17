@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ChevronsLeftRight } from 'lucide-react';
 
 /**
- * Before/after comparison for one edit.
+ * Before/after comparison for one edit: the original sits on the left, the result on the right.
  *
  * The two images usually have different aspect ratios (the model answers with a square), so both are
  * placed in the exact same box and cropped with object-cover: the frame comes from the result, and
@@ -59,7 +59,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
       aria-valuemax={100}
       aria-valuenow={Math.round(sliderPos)}
       className="relative w-full overflow-hidden rounded-lg bg-black cursor-ew-resize select-none touch-none focus-visible:outline-2 focus-visible:outline-primary"
-      style={{ aspectRatio: ratio }}
+      style={{ aspectRatio: ratio, maxHeight: '100%' }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={stopDragging}
@@ -85,7 +85,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
         onLoad={(event) => measure(event.currentTarget, true)}
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-        style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
+        style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}
       />
       <div className="absolute inset-y-0 z-20 pointer-events-none border-l-2 border-primary" style={{ left: `${sliderPos}%` }} />
       <div className="absolute inset-y-0 z-20 flex items-center justify-center pointer-events-none" style={{ left: `${sliderPos}%`, transform: 'translateX(-50%)' }}>
