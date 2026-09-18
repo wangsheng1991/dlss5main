@@ -10,3 +10,5 @@ export const SAMPLES = {
 export type SampleId = keyof typeof SAMPLES;
 export const SAMPLE_IDS = Object.keys(SAMPLES) as SampleId[];
 export const isSampleId = (value: unknown): value is SampleId => typeof value === 'string' && value in SAMPLES;
+// Bump when example output geometry or prompts change so Firestore does not serve stale comparisons.
+export const SAMPLE_CACHE_VERSION = 'geometry-v2';

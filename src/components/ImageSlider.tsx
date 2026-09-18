@@ -5,7 +5,7 @@ import { ChevronsLeftRight } from 'lucide-react';
  * Before/after comparison for one edit: the original sits on the left, the result on the right.
  *
  * The two images usually have different aspect ratios (the model answers with a square), so both are
- * placed in the exact same box and cropped with object-cover: the frame comes from the result, and
+ * placed in the exact same box. Containment keeps older cached inputs visible without cropping, and
  * the split is drawn with clip-path so the input never scales independently of the output.
  * The handle only follows a real drag or a tap, not a passing pointer.
  */
@@ -76,7 +76,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
         draggable={false}
         onLoad={(event) => measure(event.currentTarget, false)}
         referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+        className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
       />
       <img
         src={highRes}
@@ -84,7 +84,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
         draggable={false}
         onLoad={(event) => measure(event.currentTarget, true)}
         referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+        className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
         style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}
       />
       <div className="absolute inset-y-0 z-20 pointer-events-none border-l-2 border-primary" style={{ left: `${sliderPos}%` }} />

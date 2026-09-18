@@ -3,7 +3,7 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 import type { User } from 'firebase/auth';
 import { request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type SavedOperation } from './operation';
-import { enhanceOutput, type EnhanceFactor } from '../../config/enhance';
+import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
@@ -71,15 +71,17 @@ export function useGeneration(user: User | null) {
       const existing = readOperation(user.uid);
       if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
       localStorage.setItem(`dlss:storage-check:${user.uid}`, '1'); localStorage.removeItem(`dlss:storage-check:${user.uid}`);
-      const source = enhancing ? options.source || await measureImage(file) : null;
+      // Measure every mode so normal edits can keep the source geometry as well as HD enhance.
+      const source = options.source || await measureImage(file);
       setPhase('Uploading image…');
       const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size }) });
       const upload = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: file, signal: AbortSignal.timeout(120000) });
       if (!upload.ok) throw new Error('Image upload failed. No generation was submitted.');
       if (uid.current !== user.uid) throw new Error('Account changed. Sign in again before submitting.');
-      const body: GenerationBody = enhancing && source
-        ? { prompt: '', image_ids: [ticket.file_id], ...enhanceOutput(source.width, source.height, options.factor === 4 ? 4 : 2), output_format: 'webp', mode: 'enhance', factor: options.factor === 4 ? 4 : 2, source_width: source.width, source_height: source.height }
-        : { prompt: prompt.trim(), image_ids: [ticket.file_id], width: 1024, height: 1024, output_format: 'webp', mode: 'edit' };
+      const output = enhancing ? enhanceOutput(source.width, source.height, options.factor === 4 ? 4 : 2) : preserveOutput(source.width, source.height);
+      const body: GenerationBody = enhancing
+        ? { prompt: '', image_ids: [ticket.file_id], ...output, output_format: 'webp', mode: 'enhance', factor: options.factor === 4 ? 4 : 2, source_width: source.width, source_height: source.height }
+        : { prompt: prompt.trim(), image_ids: [ticket.file_id], ...output, output_format: 'webp', mode: 'edit', source_width: source.width, source_height: source.height };
       const saved: SavedOperation = { version: 1, userId: user.uid, key: crypto.randomUUID(), body, createdAt: new Date().toISOString() };
       saveOperation(saved); setOperation(saved); active.current = false; await replay(saved);
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not upload your image.'); }

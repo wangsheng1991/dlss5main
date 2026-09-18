@@ -14,11 +14,12 @@ export class SampleStore {
   constructor(readonly db: Firestore) {}
 
   /** The cached example result, or null when the example still has to be generated. */
-  async read(sampleId: string): Promise<(StoredResult & { prompt: string; cachedAt: number }) | null> {
+  async read(sampleId: string, cacheVersion?: string): Promise<(StoredResult & { prompt: string; cachedAt: number }) | null> {
     const snapshot = await this.db.doc(`sample_results/${sampleId}`).get();
     if (!snapshot.exists) return null;
     const data = snapshot.data()!;
     if (typeof data.data !== 'string') return null;
+    if (cacheVersion && data.cacheVersion !== cacheVersion) return null;
     return {
       contentType: typeof data.contentType === 'string' ? data.contentType : 'image/webp',
       buffer: Buffer.from(data.data, 'base64'),
@@ -30,13 +31,14 @@ export class SampleStore {
     };
   }
 
-  async save(sampleId: string, prompt: string, image: { url: string; content_type?: string; width?: number; height?: number; sha256?: string }) {
+  async save(sampleId: string, prompt: string, image: { url: string; content_type?: string; width?: number; height?: number; sha256?: string }, cacheVersion?: string) {
     const response = await fetch(image.url, { signal: AbortSignal.timeout(20000) });
     if (!response.ok) throw new Error(`Example download failed (${response.status})`);
     const buffer = Buffer.from(await response.arrayBuffer());
     if (buffer.length > MAX_STORED_BYTES) throw new Error('Example result is too large to cache');
     const document = {
       sampleId,
+      cacheVersion,
       prompt,
       contentType: image.content_type || response.headers.get('content-type') || 'image/webp',
       size: buffer.length,
@@ -52,12 +54,12 @@ export class SampleStore {
   }
 
   /** Exactly one caller warms an example; everyone else waits for the cached copy. */
-  async claimWarm(sampleId: string) {
+  async claimWarm(sampleId: string, cacheVersion?: string) {
     const ref = this.db.doc(`sample_results/${sampleId}`), now = Date.now();
     return this.db.runTransaction(async (tx) => {
       const snapshot = await tx.get(ref);
       const data = snapshot.data();
-      if (typeof data?.data === 'string') return false;
+      if (typeof data?.data === 'string' && (!cacheVersion || data.cacheVersion === cacheVersion)) return false;
       if (Number(data?.warmingUntil) > now) return false;
       tx.set(ref, { sampleId, warmingUntil: now + WARM_LEASE_MS }, { merge: true });
       return true;

@@ -3,7 +3,7 @@ import { alphaNet, alphaNetSuperRes } from '../_lib/alphanet.js';
 import { fail, requireUser } from '../_lib/auth.js';
 import { JobStore } from '../../server/job-store.js';
 import { database } from '../../server/admin.js';
-import { enhanceOutput, enhancePrompt, isEnhanceFactor } from '../../src/config/enhance.js';
+import { enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput } from '../../src/config/enhance.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -14,8 +14,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // AlphaNet accepts 1–4 input images per task; the prototype only ever sends one.
     if (!Array.isArray(image_ids) || image_ids.length < 1 || image_ids.length > 4 || image_ids.some((id) => typeof id !== 'string')) return res.status(400).json({ error: 'image_ids are required' });
 
-    // HD enhance sizes the output from the source, capped by the provider's 1536 px edge, and owns
-    // its own prompt; a plain edit keeps the caller's prompt and size.
+    // Both modes size the output from the source, capped by the provider's 1536 px edge. This keeps
+    // a landscape or portrait edit from silently becoming a square result.
     let finalPrompt = '';
     let targetWidth = width;
     let targetHeight = height;
@@ -30,7 +30,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       finalPrompt = enhancePrompt(targetWidth, targetHeight);
     } else {
       if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > 4000) return res.status(400).json({ error: 'prompt is required' });
-      finalPrompt = prompt.trim();
+      // Replays created before geometry metadata existed can still complete with their saved size.
+      const sourceWidth = source_width ?? width;
+      const sourceHeight = source_height ?? height;
+      if (!Number.isSafeInteger(sourceWidth) || !Number.isSafeInteger(sourceHeight) || sourceWidth < 16 || sourceHeight < 16 || sourceWidth > 8192 || sourceHeight > 8192) {
+        return res.status(400).json({ error: 'source_width and source_height are required' });
+      }
+      const output = source_width && source_height ? preserveOutput(sourceWidth, sourceHeight) : { width: width as number, height: height as number };
+      targetWidth = output.width;
+      targetHeight = output.height;
+      finalPrompt = `${prompt.trim()} Preserve the original aspect ratio, framing, camera angle, composition and object placement. Apply only the requested edit; do not add, remove or crop content.`;
     }
 
     const idempotencyKey = req.headers['idempotency-key'];

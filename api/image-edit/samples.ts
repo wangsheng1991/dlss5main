@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet } from '../_lib/alphanet.js';
 import { fail } from '../_lib/auth.js';
-import { SAMPLES, isSampleId } from '../../src/config/samples.js';
+import { SAMPLES, SAMPLE_CACHE_VERSION, isSampleId } from '../../src/config/samples.js';
 import { SampleStore } from '../../server/sample-store.js';
 import { database } from '../../server/admin.js';
 
@@ -74,7 +74,7 @@ async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
     const task = await alphaNet.poll(accepted.task_id) as { status?: string; result?: { images?: Array<{ url: string; content_type?: string; width?: number; height?: number; sha256?: string }> }; error?: string };
     if (task.status === 'FAILURE') throw new Error(task.error || 'Example generation failed');
     const image = task.result?.images?.[0];
-    if (task.status === 'SUCCESS' && image?.url) return store.save(sampleId, sample.prompt, image);
+    if (task.status === 'SUCCESS' && image?.url) return store.save(sampleId, sample.prompt, image, SAMPLE_CACHE_VERSION);
   }
   throw new Error('Example generation is still running. Try again in a moment.');
 }
@@ -89,7 +89,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     await store.countGuest(clientIp(req));
     const sample = SAMPLES[sampleId];
-    const cached = await store.read(sampleId);
+    const cached = await store.read(sampleId, SAMPLE_CACHE_VERSION);
     const payload = {
       status: 'SUCCEEDED', sample: sampleId, prompt: sample.prompt, input: sample.src,
       result: `/api/image-edit/samples?sample=${sampleId}`,
@@ -99,7 +99,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     };
     if (cached) return res.status(200).json({ ...payload, cached: true });
 
-    if (!(await store.claimWarm(sampleId))) return res.status(202).json({ status: 'WARMING', sample: sampleId });
+    if (!(await store.claimWarm(sampleId, SAMPLE_CACHE_VERSION))) return res.status(202).json({ status: 'WARMING', sample: sampleId });
     try {
       const saved = await warm(req, sampleId, store);
       return res.status(200).json({ ...payload, cached: false, width: saved.width, height: saved.height, contentType: saved.contentType, extension: extensionOf(saved.contentType) });

@@ -249,7 +249,7 @@ export default function Dashboard() {
           <p className="text-xs text-zinc-400 mt-2">{t('dashboard.checkInReward')}</p>
           {checkInNotice && <p role="status" className="text-xs text-nvidia-green mt-2">{checkInNotice}</p>}
         </div>}
-        <div className="text-sm text-zinc-400 space-y-2"><p>{mode === 'enhance' ? `Output: ${enhance ? `${enhance.width} × ${enhance.height}` : 'follows your image'} · up to ${ENHANCE_MAX_EDGE} px per edge` : 'Output: 1024 × 1024 · WebP'}</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
+        <div className="text-sm text-zinc-400 space-y-2"><p>{mode === 'enhance' ? `Output: ${enhance ? `${enhance.width} × ${enhance.height}` : 'follows your image'} · up to ${ENHANCE_MAX_EDGE} px per edge` : 'Output: preserves your image aspect ratio · WebP'}</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
       </section>
       <section aria-label="Image workspace" className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}

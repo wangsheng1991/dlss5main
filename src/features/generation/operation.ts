@@ -1,7 +1,7 @@
 export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEEDED' | 'FAILED';
 export interface GenerationBody {
   prompt: string; image_ids: string[]; width: number; height: number; output_format: string;
-  /** `edit` (default) sends the caller's prompt; `enhance` lets the server own prompt and output size. */
+  /** `edit` sends the caller's prompt; both modes include source geometry for deterministic sizing. */
   mode?: 'edit' | 'enhance';
   factor?: number; source_width?: number; source_height?: number;
 }

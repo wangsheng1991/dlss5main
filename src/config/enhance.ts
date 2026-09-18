@@ -17,6 +17,12 @@ export const isEnhanceFactor = (value: unknown): value is EnhanceFactor => ENHAN
 
 export const roundTo16 = (value: number) => Math.max(16, Math.round(value / 16) * 16);
 
+/** Keep a normal edit at the source aspect ratio while respecting the provider's size contract. */
+export function preserveOutput(sourceWidth: number, sourceHeight: number) {
+  const scale = Math.min(1, ENHANCE_MAX_EDGE / sourceWidth, ENHANCE_MAX_EDGE / sourceHeight);
+  return { width: roundTo16(sourceWidth * scale), height: roundTo16(sourceHeight * scale) };
+}
+
 /** The output size we ask for, and the factor actually achieved after the 1536 px ceiling. */
 export function enhanceOutput(sourceWidth: number, sourceHeight: number, factor: EnhanceFactor) {
   const scale = Math.min(factor, ENHANCE_MAX_EDGE / sourceWidth, ENHANCE_MAX_EDGE / sourceHeight);
