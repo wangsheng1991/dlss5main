@@ -5,6 +5,17 @@ import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import { ARTICLES } from '../content/articles/types';
 import SEO from '../components/SEO';
 
+const ARTICLE_COVERS: Record<string, { src: string; alt: string }> = {
+  'what-is-dlss-5-neural-rendering-guide': { src: '/examples/sample1.jpg', alt: 'Neural rendering concept in a kitchen scene' },
+  'dlss5-vs-dlss4-vs-fsr4-comparison-2026': { src: 'https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/dlss-4-5-dynamic-multi-frame-gen-6x-2nd-gen-transformer-super-res/dlss-4-5-dynamic-multi-frame-gen-6x-2nd-gen-transformer-super-res-ogimage.jpg', alt: 'NVIDIA DLSS 4.5 neural rendering' },
+  'crimson-desert-pc-optimization-dlss-fsr-guide-2026': { src: '/examples/sample2.jpg', alt: 'Game scene optimization guide' },
+  'best-ai-image-upscaler-2026-comparison': { src: '/examples/sample1-photo.webp', alt: 'AI image enhancement comparison' },
+  'dlss5-artistic-vision-debate-honest-assessment': { src: 'https://www.nvidia.com/content/dam/en-zz/nvidiaweb/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/nvidia-dlss-5-breakthrough-in-visual-fidelity-for-games-ogimage.jpg', alt: 'DLSS 5 visual fidelity and artistic direction' },
+  'dlss-5-online-image-upscaler-guide': { src: '/examples/sample2.jpg', alt: 'Online AI image upscaling workflow' },
+  'dlss-5-gpt-6-astra-ai-rendering-workflow-2026': { src: '/examples/sample1-photo.webp', alt: 'AI reasoning and neural rendering workflow' },
+  'dlss-5-latest-news-september-2026': { src: 'https://www.nvidia.com/content/dam/en-zz/nvidiaweb/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/nvidia-dlss-5-breakthrough-in-visual-fidelity-for-games-ogimage.jpg', alt: 'Latest DLSS 5 neural rendering briefing' },
+};
+
 export default function Blog() {
   const { t, i18n } = useTranslation();
   const { slug } = useParams();
@@ -23,25 +34,27 @@ export default function Blog() {
         <div className="mb-12">
           <h1 className="text-4xl font-headline font-bold text-white mb-4">DLSS 5 Blog</h1>
           <p className="text-zinc-400">
-            In-depth articles about DLSS 5 technology, comparisons, and AI image upscaling.
+            {activeLang === 'cn' ? '一手资料驱动的 DLSS 5 新闻、神经渲染解析、GPT-6 工作流和实用 AI 图像研究。' : 'Source-led DLSS 5 news, neural rendering explainers, GPT-6 workflows, and practical AI image research.'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {ARTICLES.map(article => (
+          {[...ARTICLES].sort((a, b) => Number(!!b.datePublished) - Number(!!a.datePublished)).map(article => (
             <Link
               key={article.slug}
               to={`/blog/${article.slug}`}
-              className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 hover:border-primary/50 transition-colors group"
+              className="bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden hover:border-primary/50 transition-colors group"
             >
-              <div className="flex items-center gap-2 mb-3">
-                <span className={`px-2 py-0.5 rounded text-xs font-label uppercase ${
-                  article.priority === 'P0' ? 'bg-nvidia-green/20 text-nvidia-green' : 'bg-surface-high text-zinc-400'
+              <div className="relative aspect-[16/7] overflow-hidden bg-surface-high">
+                <img src={ARTICLE_COVERS[article.slug]?.src || '/examples/sample1.jpg'} alt={ARTICLE_COVERS[article.slug]?.alt || article.title_en} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                <span className={`absolute left-4 bottom-4 px-2 py-0.5 rounded text-xs font-label uppercase ${
+                  article.priority === 'P0' ? 'bg-nvidia-green/90 text-black' : 'bg-black/60 text-zinc-200'
                 }`}>
-                  {article.priority}
+                  {article.priority} · {article.readTime}
                 </span>
-                <span className="text-xs text-zinc-500">{article.readTime}</span>
               </div>
+              <div className="p-6">
               <h2 className="text-xl font-headline font-bold text-white mb-2 group-hover:text-primary transition-colors">
                 {activeLang === 'cn' ? article.title_cn : article.title_en}
               </h2>
@@ -54,6 +67,7 @@ export default function Blog() {
                     {tag}
                   </span>
                 ))}
+              </div>
               </div>
             </Link>
           ))}
@@ -71,6 +85,7 @@ export default function Blog() {
   const content = activeLang === 'cn' ? article.content_cn : article.content_en;
   const title = activeLang === 'cn' ? article.title_cn : article.title_en;
   const description = activeLang === 'cn' ? article.description_cn || article.title_cn : article.description_en || article.title_en;
+  const cover = ARTICLE_COVERS[article.slug] || { src: '/examples/sample1.jpg', alt: article.title_en };
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -305,6 +320,12 @@ export default function Blog() {
             ))}
           </div>
         </header>
+
+        <figure className="relative aspect-[16/7] rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10">
+          <img src={cover.src} alt={cover.alt} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+          <figcaption className="absolute bottom-4 left-5 right-5 text-xs text-zinc-200/80">{activeLang === 'cn' ? '技术简报 · 来源驱动内容' : 'Technical briefing · source-led coverage'}</figcaption>
+        </figure>
 
         {/* SEO Keywords for crawlers */}
         <div className="sr-only">
