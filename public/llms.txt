@@ -15,6 +15,17 @@ DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging i
 - Pricing: https://www.dlss5nvidia.com/pricing
 - Enterprise: https://www.dlss5nvidia.com/enterprise
 
+## Technical articles
+
+- GPT-6 Astra and DLSS 5 workflow: https://www.dlss5nvidia.com/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026
+- DLSS 5 September 2026 news roundup: https://www.dlss5nvidia.com/blog/dlss-5-latest-news-september-2026
+- DLSS 5 neural rendering guide: https://www.dlss5nvidia.com/blog/what-is-dlss-5-neural-rendering-guide
+- DLSS 5 vs DLSS 4 vs FSR 4 comparison: https://www.dlss5nvidia.com/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026
+
+## Language coverage
+
+The interface supports English, Simplified Chinese, Japanese, Korean, Russian, Ukrainian, Indonesian and Estonian. The technical article body is currently maintained in English and Simplified Chinese; other interface languages display the English source edition until a human-reviewed translation is published.
+
 ## Common questions
 
 - Is this an official NVIDIA DLSS product? No. This is an independent showcase using a separate AI model inspired by neural super-resolution concepts.
