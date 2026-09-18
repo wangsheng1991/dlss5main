@@ -10,6 +10,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const user = await requireUser(req);
     const store = new BillingStore(database());
     const [account, orders] = await Promise.all([store.account(user.uid), store.listOrders(user.uid)]);
-    return res.status(200).json({ ...account, billingConfigured: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET), orders });
+    return res.status(200).json({ ...account, billingConfigured: Boolean((process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET) || (process.env.DODO_PAYMENTS_API_KEY && process.env.DODO_PAYMENTS_WEBHOOK_KEY)), orders });
   } catch (error) { return fail(res, error); }
 }

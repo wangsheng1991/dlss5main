@@ -13,13 +13,14 @@ export default function Pricing() {
   const [contact, setContact] = useState('support@dlss5nvidia.com');
   const [billingEnabled, setBillingEnabled] = useState(false);
   const [paypal, setPaypal] = useState<{ enabled: boolean; environment: string } | null>(null);
+  const [dodo, setDodo] = useState<{ enabled: boolean; environment: string } | null>(null);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
   const paypalCancelled = params.get('paypal') === 'cancelled';
   const cancelled = params.get('checkout') === 'cancelled' || paypalCancelled;
   useEffect(() => {
     fetch('/api/billing/plans').then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
-      setPlans(d.plans); setContact(d.membershipContact || 'support@dlss5nvidia.com'); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null);
+      setPlans(d.plans); setContact(d.membershipContact || 'support@dlss5nvidia.com'); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null);
     }).catch(() => setPlans(null));
   }, []);
   const current = (profile?.tier || 'free') as PlanId;
@@ -58,6 +59,11 @@ export default function Pricing() {
       setBusy('');
     }
   };
+  const chooseDodo = async (id: PlanId) => {
+    if (!user) return;
+    setBusy(id); setError('');
+    try { const checkout = await post('/api/billing/dodo-checkout', { plan: id }); if (!checkout.ok || !checkout.data.url) throw new Error(checkout.data.error || 'Dodo checkout is unavailable right now.'); window.location.assign(checkout.data.url); } catch (cause) { setError((cause as Error).message); setBusy(''); }
+  };
   const mailto = (id: string) => `mailto:${contact}?subject=${encodeURIComponent(`Membership application: ${id}`)}&body=${encodeURIComponent(`Hello,\n\nI would like to apply for the ${id} plan.\n\nAccount email: \nCompany/use case: \n`)}`;
   return <main className="pt-32 pb-24 px-6 max-w-6xl mx-auto min-h-[80vh]"><SEO title="AI Image Upscaling Plans | DLSS 5 Credits" description="Choose a predictable AI image upscaling plan with monthly credits, daily limits, and API access options." keywords={['ai image upscaling pricing', 'image enhancement api pricing', 'dlss 5 credits', 'ai upscaler plans']} canonical="/pricing" />
     <div className="text-center mb-14"><span className="text-nvidia-green text-xs uppercase tracking-[0.2em]">Plans</span><h1 className="text-5xl font-bold text-white mt-4">Choose your plan</h1><p className="text-zinc-400 mt-4">Every plan uses GPT Image 2 with predictable monthly limits.</p></div>
@@ -77,6 +83,7 @@ export default function Pricing() {
             : <a href={mailto(id)} className="block text-center py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-black">Apply by email</a>}
           {/* A second checkout lane: buyers who prefer PayPal never touch the card form. */}
           {paypal?.enabled && !subscribed && <button onClick={() => void choosePaypal(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with PayPal${paypal.environment === 'sandbox' ? ' (sandbox)' : ''}`}</button>}
+          {dodo?.enabled && !subscribed && <button onClick={() => void chooseDodo(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with Dodo${dodo.environment === 'test_mode' ? ' (test)' : ''}`}</button>}
         </div>}
     </article>)}</div>}
     <p className="text-center text-xs text-zinc-500 mt-10">Subscriptions renew monthly and can be cancelled any time; unused credits do not roll over. Questions? <a href={`mailto:${contact}`} className="text-primary underline">{contact}</a></p>

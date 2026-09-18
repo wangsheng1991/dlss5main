@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { planPricing } from '../../_lib/stripe.js';
 import { paypalConfigured, paypalEnvironment } from '../../_lib/paypal.js';
 import { PAID_PLANS, PLANS } from '../../../src/config/plans.js';
+import { dodoConfigured, dodoEnvironment } from '../../_lib/dodo.js';
 
 /** Advertised price always comes from the Stripe price that checkout actually charges. */
 async function catalog() {
@@ -25,6 +26,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     // PayPal is offered next to card checkout while the Stripe keys are still test keys; the
     // environment tells the pricing page to label a sandbox purchase as such.
     paypal: { enabled: paypalConfigured(), environment: paypalEnvironment() },
+    dodo: { enabled: dodoConfigured() && Boolean(process.env.DODO_PRODUCT_PRO && process.env.DODO_PRODUCT_TEAM), environment: dodoEnvironment() },
     plans,
   });
 }

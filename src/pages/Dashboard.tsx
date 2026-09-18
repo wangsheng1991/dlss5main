@@ -70,6 +70,11 @@ export default function Dashboard() {
       url.searchParams.delete('plan');
       window.history.replaceState({}, '', url);
     }
+    if (url.searchParams.get('dodo') === 'success') {
+      setBillingNotice('Dodo checkout completed. Your credits will appear after the verified payment webhook arrives.');
+      url.searchParams.delete('dodo');
+      window.history.replaceState({}, '', url);
+    }
     if (!user) return;
     // PayPal's return carries no subscription id of its own: the account bound at checkout is the one
     // the server confirms, which also covers a buyer who approves on PayPal and lands back here.

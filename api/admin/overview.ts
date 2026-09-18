@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { dodoConfigured } from '../_lib/dodo.js';
 
 const plans = {
   free: { monthlyCredits: 10, dailyGenerationLimit: 3, maxConcurrentJobs: 1 },
@@ -22,7 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       services: {
         alphaNet: Boolean(process.env.ALPHANET_API_KEY && process.env.ALPHANET_BASE_URL),
         firebase: Boolean(process.env.FIREBASE_PROJECT_ID),
-        billing: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
+        billing: Boolean((process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET) || (dodoConfigured() && process.env.DODO_PAYMENTS_WEBHOOK_KEY)),
       },
       generatedAt: new Date().toISOString(),
     });
