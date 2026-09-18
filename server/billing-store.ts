@@ -182,9 +182,10 @@ export class BillingStore {
         subscriptionStatus: 'active',
         // Each provider keeps its own binding, so a PayPal purchase can never be mistaken for a
         // Stripe customer (and the Stripe portal keeps working for Stripe buyers).
-        ...(input.customerId ? (provider === 'paypal' ? { paypalPayerId: input.customerId } : { stripeCustomerId: input.customerId }) : {}),
+        ...(input.customerId ? (provider === 'paypal' ? { paypalPayerId: input.customerId } : provider === 'dodo' ? { dodoCustomerId: input.customerId } : { stripeCustomerId: input.customerId }) : {}),
         ...(input.subscriptionId ? (provider === 'paypal'
           ? { paypalSubscriptionId: input.subscriptionId, paypalSubscriptionStatus: 'active' }
+          : provider === 'dodo' ? { dodoSubscriptionId: input.subscriptionId, dodoSubscriptionStatus: 'active' }
           : { stripeSubscriptionId: input.subscriptionId }) : {}),
         ...(input.periodEnd ? { currentPeriodEnd: input.periodEnd } : {}),
         updatedAt: new Date().toISOString(),
