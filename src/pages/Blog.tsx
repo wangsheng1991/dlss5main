@@ -130,15 +130,27 @@ const BLOG_COPY: Record<BlogLocale, {
 
 export default function Blog() {
   const { i18n } = useTranslation();
-  const { slug } = useParams();
-  const locale = (i18n.resolvedLanguage || i18n.language || 'en-US') as BlogLocale;
+  const { slug, locale: routeLocale } = useParams<{ slug?: string; locale?: 'en' | 'zh' }>();
+  const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' ? 'en-US' : undefined;
+  const locale = (routeLanguage || i18n.resolvedLanguage || i18n.language || 'en-US') as BlogLocale;
   const copy = BLOG_COPY[locale] || BLOG_COPY['en-US'];
   const isArticleLocaleSupported = locale === 'en-US' || locale === 'zh-CN';
   const [activeLang, setActiveLang] = useState<'en' | 'cn'>(locale.startsWith('zh') ? 'cn' : 'en');
 
   useEffect(() => {
-    setActiveLang((i18n.resolvedLanguage || i18n.language || '').startsWith('zh') ? 'cn' : 'en');
-  }, [i18n.language, i18n.resolvedLanguage]);
+    if (routeLanguage && i18n.language !== routeLanguage) {
+      void i18n.changeLanguage(routeLanguage);
+    }
+    setActiveLang((routeLanguage || i18n.resolvedLanguage || i18n.language || '').startsWith('zh') ? 'cn' : 'en');
+  }, [i18n, i18n.language, i18n.resolvedLanguage, routeLanguage]);
+
+  const localizedBlogPath = (language: 'en' | 'zh') => `/${language}/blog${slug ? `/${slug}` : ''}`;
+  const canonicalPath = routeLocale ? localizedBlogPath(routeLocale) : `/blog${slug ? `/${slug}` : ''}`;
+  const alternateLinks = [
+    { hrefLang: 'en', href: `https://www.dlss5nvidia.com${localizedBlogPath('en')}` },
+    { hrefLang: 'zh-CN', href: `https://www.dlss5nvidia.com${localizedBlogPath('zh')}` },
+    { hrefLang: 'x-default', href: `https://www.dlss5nvidia.com${slug ? `/blog/${slug}` : '/blog'}` },
+  ];
 
   // Blog index page
   if (!slug) {
@@ -148,9 +160,10 @@ export default function Blog() {
           title={`${copy.pageTitle} — Neural Rendering News, GPT-6 Workflows & AI Upscaling`}
           description={copy.tagline}
           keywords={['dlss 5 latest news', 'dlss 5 gpt-6', 'gpt-6 astra image workflow', 'dlss 4.5 transformer', '3d-guided neural rendering', 'ai image upscaling guide']}
-          canonical="/blog"
+          canonical={canonicalPath}
           image="/blog/dlss5-neural-rendering.png"
           language={locale}
+          alternates={alternateLinks}
         />
         <div className="mb-12">
           <h1 className="text-4xl font-headline font-bold text-white mb-4">{copy.pageTitle}</h1>
@@ -218,7 +231,7 @@ export default function Blog() {
     datePublished: article.datePublished || undefined,
     author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk' },
     publisher: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: 'https://www.dlss5nvidia.com' },
-    mainEntityOfPage: `https://www.dlss5nvidia.com/blog/${article.slug}`,
+    mainEntityOfPage: `https://www.dlss5nvidia.com${canonicalPath}`,
     citation: article.sources?.map(source => source.url),
   };
 
@@ -375,10 +388,11 @@ export default function Blog() {
         title={`${title} — DLSS 5 Blog`}
         description={description}
         keywords={activeLang === 'cn' ? article.target_keywords_cn : article.target_keywords_en}
-        canonical={`/blog/${slug}`}
+        canonical={canonicalPath}
         type="article"
         image={cover.ogSrc || cover.src}
         language={activeLang === 'cn' ? 'zh-CN' : 'en-US'}
+        alternates={alternateLinks}
         structuredData={structuredData}
       />
       {/* Language Toggle */}
@@ -391,8 +405,8 @@ export default function Blog() {
           {copy.back}
         </Link>
         <div className="ml-auto flex gap-2">
-          <button
-            onClick={() => setActiveLang('en')}
+          <Link
+            to={localizedBlogPath('en')}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               activeLang === 'en'
                 ? 'bg-primary text-black font-bold'
@@ -400,9 +414,9 @@ export default function Blog() {
             }`}
           >
             EN
-          </button>
-          <button
-            onClick={() => setActiveLang('cn')}
+          </Link>
+          <Link
+            to={localizedBlogPath('zh')}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               activeLang === 'cn'
                 ? 'bg-primary text-black font-bold'
@@ -410,7 +424,7 @@ export default function Blog() {
             }`}
           >
             中文
-          </button>
+          </Link>
         </div>
       </div>
 
