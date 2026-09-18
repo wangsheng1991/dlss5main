@@ -15,9 +15,9 @@ export default function Blog() {
     return (
       <main className="pt-32 pb-24 px-6 max-w-[1200px] mx-auto">
         <SEO
-          title="DLSS 5 Blog — NVIDIA AI Image Upscaling Guides & Comparisons"
-          description="In-depth articles about DLSS 5 neural rendering, FSR4 comparisons, RTX support list, and AI image upscaling. Expert guides for gaming and professional workflows."
-          keywords={['dlss 5 news', 'dlss 4.5 vs fsr 4', 'nvidia rtx upscaling', 'ai image upscaling guide', 'crimson desert dlss']}
+          title="DLSS 5 Blog — Neural Rendering News, GPT-6 Workflows & AI Upscaling"
+          description="Source-led DLSS 5 and DLSS 4.5 news, neural rendering explainers, GPT-6 Astra workflow guides, RTX comparisons and practical AI image enhancement research."
+          keywords={['dlss 5 latest news', 'dlss 5 gpt-6', 'gpt-6 astra image workflow', 'dlss 4.5 transformer', '3d-guided neural rendering', 'ai image upscaling guide']}
           canonical="/blog"
         />
         <div className="mb-12">
@@ -45,6 +45,9 @@ export default function Blog() {
               <h2 className="text-xl font-headline font-bold text-white mb-2 group-hover:text-primary transition-colors">
                 {activeLang === 'cn' ? article.title_cn : article.title_en}
               </h2>
+              <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3">
+                {activeLang === 'cn' ? article.description_cn || article.type : article.description_en || article.type}
+              </p>
               <div className="flex flex-wrap gap-2 mt-4">
                 {article.tags.slice(0, 4).map(tag => (
                   <span key={tag} className="text-xs px-2 py-1 bg-surface-high rounded text-zinc-400">
@@ -67,6 +70,20 @@ export default function Blog() {
 
   const content = activeLang === 'cn' ? article.content_cn : article.content_en;
   const title = activeLang === 'cn' ? article.title_cn : article.title_en;
+  const description = activeLang === 'cn' ? article.description_cn || article.title_cn : article.description_en || article.title_en;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: title,
+    description,
+    inLanguage: activeLang === 'cn' ? 'zh-CN' : 'en-US',
+    dateModified: article.datePublished || undefined,
+    datePublished: article.datePublished || undefined,
+    author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk' },
+    publisher: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: 'https://www.dlss5nvidia.com' },
+    mainEntityOfPage: `https://www.dlss5nvidia.com/blog/${article.slug}`,
+    citation: article.sources?.map(source => source.url),
+  };
 
   // Parse markdown-like content to JSX
   const renderContent = (text: string) => {
@@ -219,9 +236,11 @@ export default function Blog() {
     <main className="pt-32 pb-24 px-6 max-w-[900px] mx-auto">
       <SEO
         title={`${title} — DLSS 5 Blog`}
-        description={activeLang === 'cn' ? article.title_cn : article.title_en}
+        description={description}
         keywords={activeLang === 'cn' ? article.target_keywords_cn : article.target_keywords_en}
         canonical={`/blog/${slug}`}
+        type="article"
+        structuredData={structuredData}
       />
       {/* Language Toggle */}
       <div className="flex items-center gap-4 mb-8">
@@ -301,6 +320,14 @@ export default function Blog() {
         <div className="prose prose-invert prose-zinc max-w-none">
           {renderContent(content)}
         </div>
+
+        {article.sources?.length ? <aside className="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5">
+          <h2 className="text-sm font-label uppercase tracking-widest text-primary mb-3">{activeLang === 'cn' ? '资料与来源' : 'Sources and methodology'}</h2>
+          <p className="text-sm text-zinc-400 mb-3">{activeLang === 'cn' ? '本文优先使用官方一手资料；厂商声明与独立测试不会混写。' : 'Primary sources are listed first; vendor claims are kept separate from independent testing.'}</p>
+          <ul className="space-y-2 text-sm">
+            {article.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer" className="text-zinc-300 underline decoration-primary/60 underline-offset-2 hover:text-primary">{source.label}</a></li>)}
+          </ul>
+        </aside> : null}
 
         {/* CTA */}
         <div className="mt-12 p-6 bg-surface-low rounded-xl border border-outline-variant/20 text-center">
