@@ -34,8 +34,8 @@ export default function App() {
                 <Route path="/docs" element={<Docs />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<Blog />} />
-                <Route path="/:locale(en|zh)/blog" element={<Blog />} />
-                <Route path="/:locale(en|zh)/blog/:slug" element={<Blog />} />
+                <Route path="/:locale/blog" element={<Blog />} />
+                <Route path="/:locale/blog/:slug" element={<Blog />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/download" element={<Download />} />
                 <Route path="/enterprise" element={<Enterprise />} />
