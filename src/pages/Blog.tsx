@@ -6,6 +6,7 @@ import { ARTICLES } from '../content/articles/types';
 import SEO from '../components/SEO';
 
 const ARTICLE_COVERS: Record<string, { src: string; ogSrc?: string; alt: string }> = {
+  'seedance-2-5-video-super-resolution-cost-guide-2026': { src: '/blog/seedance25-video-superres.png', alt: 'Low-resolution AI video passing through a neural super-resolution pipeline into a crisp 4K frame' },
   'what-is-dlss-5-neural-rendering-guide': { src: '/blog/dlss5-neural-rendering.webp', ogSrc: '/blog/dlss5-neural-rendering.png', alt: 'DLSS 5 neural rendering transforming a wireframe city into a cinematic scene' },
   'dlss5-vs-dlss4-vs-fsr4-comparison-2026': { src: 'https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/dlss-4-5-dynamic-multi-frame-gen-6x-2nd-gen-transformer-super-res/dlss-4-5-dynamic-multi-frame-gen-6x-2nd-gen-transformer-super-res-ogimage.jpg', alt: 'NVIDIA DLSS 4.5 neural rendering' },
   'crimson-desert-pc-optimization-dlss-fsr-guide-2026': { src: '/examples/sample2.jpg', alt: 'Game scene optimization guide' },
