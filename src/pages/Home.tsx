@@ -32,6 +32,60 @@ const COMMUNITY_EXAMPLES = [
   "https://picsum.photos/seed/upscale20/600/750",
 ];
 
+/** Search-led before/after cases. Keep the prompt language visible so the gallery can rank for
+ * practical intent queries such as "portrait upscaler", "product photo enhancer" and "architecture
+ * image upscaling" instead of presenting unexplained decorative images. */
+const SEARCH_CASES = [
+  {
+    id: 'kitchen',
+    title: 'Interior render to clean photo',
+    titleZh: '室内效果图转清晰照片',
+    description: 'Recover cabinet edges, countertop texture and window light while keeping the room layout unchanged.',
+    descriptionZh: '保留房间布局，增强柜体边缘、台面纹理和窗光层次。',
+    prompt: 'Upscale 4x, preserve the exact kitchen layout and geometry, recover wood grain and countertop edges, keep lighting natural, do not add objects.',
+    keywords: ['interior render upscaler', 'architecture image enhancer', '4k room photo'],
+    highRes: '/examples/sample1-photo.webp',
+    lowRes: '/examples/sample1-photo-low.webp',
+    alt: 'Kitchen image before and after AI upscaling',
+  },
+  {
+    id: 'portrait',
+    title: 'Portrait and face detail',
+    titleZh: '人像与面部细节',
+    description: 'Use a restrained prompt for eyes, hair and skin texture so the face stays recognizable instead of becoming plastic.',
+    descriptionZh: '用克制的提示词恢复眼睛、头发和皮肤纹理，尽量保持人物身份，不做塑料磨皮。',
+    prompt: 'Upscale 4x, preserve facial identity and expression, recover natural hair and skin texture, remove compression noise, do not change age or face shape.',
+    keywords: ['portrait upscaler', 'face detail enhancement', 'photo restoration'],
+    highRes: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=90',
+    lowRes: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=320&q=35&blur=8',
+    alt: 'Portrait before and after AI face detail enhancement',
+  },
+  {
+    id: 'architecture',
+    title: 'Architecture and straight edges',
+    titleZh: '建筑与直线边缘',
+    description: 'Prioritize straight lines, window frames and repeated geometry; inspect the result at 100% before publishing.',
+    descriptionZh: '优先处理直线、窗框和重复几何结构，发布前建议在 100% 比例检查结果。',
+    prompt: 'Upscale 4x, preserve straight architectural lines and window geometry, sharpen edges without halos, keep the original perspective and materials.',
+    keywords: ['architecture upscaler', 'real estate photo enhancer', 'building detail recovery'],
+    highRes: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=90',
+    lowRes: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=320&q=35&blur=8',
+    alt: 'Architecture image before and after AI upscaling',
+  },
+  {
+    id: 'product',
+    title: 'Product photo and material texture',
+    titleZh: '商品图与材质纹理',
+    description: 'Recover crisp product boundaries and surface texture from a compressed marketplace image without inventing a new product shape.',
+    descriptionZh: '从压缩后的电商图片中恢复商品轮廓和表面材质，避免生成一个不同的商品形状。',
+    prompt: 'Upscale 4x, preserve the product silhouette, label placement and colors, recover material texture, remove JPEG artifacts, do not invent text.',
+    keywords: ['product photo upscaler', 'ecommerce image enhancer', 'marketplace image quality'],
+    highRes: 'https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=1200&q=90',
+    lowRes: 'https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=320&q=35&blur=8',
+    alt: 'Product photo before and after AI texture enhancement',
+  },
+] as const;
+
 export default function Home() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -221,63 +275,37 @@ export default function Home() {
       </section>
 
       {/* Featured Showcase Section */}
-      <section className="mt-32">
+      <section className="mt-32" aria-labelledby="before-after-cases-heading">
         <div className="mb-12 text-center">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('home.featuredShowcase')}</span>
-          <h2 className="text-4xl font-headline font-bold text-white mb-6">{t('home.transformations')}</h2>
+          <h2 id="before-after-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? 'AI 图片放大前后案例' : 'AI Image Upscaling Before & After Cases'}</h2>
           <p className="text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Experience the power of Neural Super-Resolution. Drag the slider to compare the original low-resolution input with our AI-enhanced output.
+            {isZh ? '拖动对比线查看输入与输出；每个案例同时公开适合搜索和复用的提示词。' : 'Drag the comparison line to inspect the low-resolution input and enhanced output. Every case also shows a reusable prompt.'}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-surface-low rounded-xl border border-outline-variant/10 overflow-hidden flex flex-col">
-            <div className="h-[300px] relative">
-              <ImageSlider 
-                highRes="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1024&q=100"
-                lowRes="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=10&blur=10"
-                alt="Portrait detail enhanced with AI super resolution"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-headline font-bold text-white mb-2">{t('home.portraitTextures')}</h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                {t('home.portraitDesc')}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-surface-low rounded-xl border border-outline-variant/10 overflow-hidden flex flex-col">
-            <div className="h-[300px] relative">
-              <ImageSlider 
-                highRes="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1024&q=100"
-                lowRes="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=256&q=10&blur=10"
-                alt="Architectural geometry enhanced with AI upscaling"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-headline font-bold text-white mb-2">{t('home.architecturalGeometry')}</h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                {t('home.archDesc')}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-surface-low rounded-xl border border-outline-variant/10 overflow-hidden flex flex-col">
-            <div className="h-[300px] relative">
-              <ImageSlider 
-                highRes="https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=1024&q=100"
-                lowRes="https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=256&q=10&blur=10"
-                alt="Fine texture enhanced with neural super resolution"
-              />
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-headline font-bold text-white mb-2">{t('home.macroTextures')}</h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                {t('home.macroDesc')}
-              </p>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {SEARCH_CASES.map((item) => (
+            <article key={item.id} className="bg-surface-low rounded-xl border border-outline-variant/10 overflow-hidden flex flex-col">
+              <div className="h-[320px] relative bg-black">
+                <ImageSlider highRes={item.highRes} lowRes={item.lowRes} alt={item.alt} />
+              </div>
+              <div className="p-6 flex flex-col gap-4">
+                <div>
+                  <p className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">{isZh ? '输入 → 输出 · 提示词案例' : 'Input → Output · Prompt case'}</p>
+                  <h3 className="text-lg font-headline font-bold text-white mb-2">{isZh ? item.titleZh : item.title}</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">{isZh ? item.descriptionZh : item.description}</p>
+                </div>
+                <div className="rounded-lg bg-surface-lowest border border-outline-variant/10 p-4">
+                  <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-2">{isZh ? '推荐提示词' : 'Prompt to try'}</p>
+                  <p className="text-xs text-zinc-300 leading-relaxed">{item.prompt}</p>
+                </div>
+                <div className="flex flex-wrap gap-2" aria-label={isZh ? '搜索关键词' : 'Search keywords'}>
+                  {item.keywords.map(keyword => <span key={keyword} className="rounded-full bg-surface-high px-3 py-1 text-[11px] text-zinc-400">{keyword}</span>)}
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
         
         <div className="mt-12 text-center">
@@ -285,7 +313,7 @@ export default function Home() {
             onClick={() => navigate('/dashboard')}
             className="bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
           >
-            {t('home.tryIt')}
+            {isZh ? '用自己的图片试试' : 'Try your own image'}
           </button>
         </div>
       </section>
