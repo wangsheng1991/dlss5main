@@ -15,6 +15,10 @@ export default function Footer() {
             <p className="text-zinc-600 text-[10px] font-medium uppercase tracking-widest">
               © {new Date().getFullYear()} {t('home.footerSystems')}
             </p>
+            {/* The business behind the subscription, on every page. */}
+            <p className="text-zinc-500 text-[10px] mt-2">
+              {LEGAL.operator} · {LEGAL.website}
+            </p>
             <p className="text-zinc-600 text-[9px] mt-3 leading-relaxed max-w-xs">
               {t('footer.trademarkDisclaimer')}
             </p>

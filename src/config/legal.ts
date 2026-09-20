@@ -7,7 +7,7 @@
  */
 export const LEGAL = {
   /** Brand the subscription is sold under. Replace with the registered entity name if there is one. */
-  operator: 'DLSS5NVIDIA',
+  operator: 'ColorReco Tech',
   website: 'www.dlss5nvidia.com',
   contactEmail: 'support@dlss5nvidia.com',
   refundWindowDays: 14,
