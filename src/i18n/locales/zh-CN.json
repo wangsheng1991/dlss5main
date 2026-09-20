@@ -14,7 +14,7 @@
   },
   "home": {
     "title": "高分辨率 AI 图像超分辨率增强",
-    "subtitle": "使用行业领先的神经超分辨率技术提升您的视觉内容。借助 NVIDIA Tensor Core 性能实现即时推理。",
+    "subtitle": "在线转换、放大和增强图片，使用 AI 神经超分辨率提升画质。无需 RTX 显卡或下载。",
     "uploadButton": "选择图片",
     "uploadHint": "支持 JPG、PNG、WEBP（最大 2MB）",
     "featuredShowcase": "精选案例",

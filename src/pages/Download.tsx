@@ -80,11 +80,11 @@ export default function Download() {
     <main className="pt-32 pb-24 px-6 max-w-[900px] mx-auto">
       <SEO
         title={isZh
-          ? 'DLSS 5 下载完整指南 | RTX 显卡兼容列表及常见问题'
-          : 'DLSS 5 Download Guide — Official Sources, RTX Compatibility & FAQ'}
+          ? 'DLSS 5 下载指南：官方下载、RTX 兼容性与在线替代方案'
+          : 'DLSS 5 Download Guide — Official Sources, RTX Compatibility & Online Alternative'}
         description={isZh
-          ? '了解 DLSS 5 官方下载方式（无独立下载包）、RTX 50/40 系列显卡 DLSS 5 兼容列表，以及 DLSS GitHub 常见问题的权威解答。'
-          : 'Official DLSS 5 guide: no standalone download exists. RTX 50/40 compatibility explained. Is DLSS on GitHub? Answers to the most common DLSS download questions.'}
+          ? 'DLSS 5 没有独立下载包。本指南说明 NVIDIA App、支持的 RTX 游戏、显卡兼容性，以及无需下载即可在线增强图片的独立替代方案。'
+          : 'DLSS 5 has no standalone download. Learn about the NVIDIA App, supported RTX games, compatibility, and an independent online image enhancement alternative with no download.'}
         canonical="/download"
         structuredData={structuredData}
       />

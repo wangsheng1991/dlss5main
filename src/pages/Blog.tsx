@@ -160,7 +160,7 @@ export default function Blog() {
         <SEO
           title={`${copy.pageTitle} — Neural Rendering News, GPT-6 Workflows & AI Upscaling`}
           description={copy.tagline}
-          keywords={['dlss 5 latest news', 'dlss 5 gpt-6', 'gpt-6 astra image workflow', 'dlss 4.5 transformer', '3d-guided neural rendering', 'ai image upscaling guide']}
+          keywords={['dlss 5 latest news', 'dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 upscaling', 'dlss 5 online', 'dlss 5 gpt-6', 'gpt-6 astra image workflow', 'dlss 4.5 transformer', '3d-guided neural rendering', 'ai image upscaling guide']}
           canonical={canonicalPath}
           image="/blog/dlss5-neural-rendering.png"
           language={locale}

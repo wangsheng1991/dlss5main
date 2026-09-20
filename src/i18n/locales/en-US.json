@@ -14,7 +14,7 @@
   },
   "home": {
     "title": "High-Resolution AI Image Upscaling",
-    "subtitle": "Elevate your visual content with industry-leading Neural Super-Resolution. Leverage NVIDIA Tensor Core performance for instant inference.",
+    "subtitle": "Convert, upscale and enhance images online with AI-powered neural super-resolution. No RTX GPU or download required.",
     "uploadButton": "Select Image",
     "uploadHint": "Supports JPG, PNG, WEBP (Max 2MB)",
     "featuredShowcase": "Featured Showcase",

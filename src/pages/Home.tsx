@@ -56,14 +56,14 @@ export default function Home() {
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "Free online DLSS image upscaler powered by AI neural super-resolution. Upscale, sharpen and enhance any image to 4K quality. No GPU required. Non-official NVIDIA DLSS showcase."
+        "description": "Free online DLSS-style image converter and visual enhancer powered by AI neural super-resolution. Upscale, sharpen and enhance images to 4K quality in a browser. No GPU or download required. Non-official showcase."
       },
       {
         "@type": "WebApplication",
         "name": "Free DLSS Image Upscaler Online",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "All",
-        "description": "Looking for a powerful DLSS image upscaler? Instantly upscale and enhance any image using AI-powered neural super-resolution. Free to use — no GPU or installation required.",
+        "description": "Looking for a DLSS 5 image converter or visual enhancer? Instantly upscale and enhance any image using AI-powered neural super-resolution. Free online — no GPU or installation required.",
         "browserRequirements": "Requires a modern web browser. Works on all operating systems.",
         "offers": {
           "@type": "Offer",
@@ -114,9 +114,9 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS Image Upscaler — Free AI Tool to Upscale & Enhance Images to 4K"
-        description="Looking for a DLSS image upscaler? Instantly upscale any image to 4K, remove blur, and sharpen details with AI-powered neural super-resolution. Free, no GPU or installation required. Try online now."
-        keywords={['dlss image upscaler', 'nvidia dlss 5', 'dlss 5 nvidia', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
+        title="DLSS 5 Image Upscaler & Converter Online — Free AI Visual Enhancer"
+        description="Use a browser-based DLSS-style image converter and visual enhancer to upscale, sharpen and restore images to 4K. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
+        keywords={['dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
         structuredData={structuredData}
       />
