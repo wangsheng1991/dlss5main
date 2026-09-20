@@ -21,6 +21,7 @@ export default function Navbar() {
   const location = useLocation();
   const { user, profile, logout } = useAuth();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const blogPath = i18n.language.startsWith('zh') ? '/zh/blog' : '/blog';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
@@ -44,7 +45,7 @@ export default function Navbar() {
             <div className="hidden md:flex gap-6 items-center">
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/blog">{t('navbar.blog')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/download">{t('navbar.download')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>
@@ -135,7 +136,7 @@ export default function Navbar() {
             <div className="flex flex-col gap-4 pb-4 border-b border-outline-variant/10">
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/about">{t('navbar.about')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/blog">{t('navbar.blog')}</Link>
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to={blogPath}>{t('navbar.blog')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/download">{t('navbar.download')}</Link>
               <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>
