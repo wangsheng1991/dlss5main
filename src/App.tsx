@@ -21,6 +21,9 @@ const About = lazy(() => import('./pages/About'));
 const Download = lazy(() => import('./pages/Download'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const Comparisons = lazy(() => import('./pages/Comparisons'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Refund = lazy(() => import('./pages/Refund'));
 
 export default function App() {
   return (
@@ -47,6 +50,9 @@ export default function App() {
                   <Route path="/enterprise" element={<Enterprise />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/comparisons" element={<Comparisons />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/refund" element={<Refund />} />
                 </Routes>
               </Suspense>
             </div>

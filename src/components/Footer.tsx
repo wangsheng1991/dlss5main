@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Hexagon, Share2, MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { LEGAL } from '../config/legal';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -33,30 +33,27 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.resources')}</h4>
             <ul className="space-y-4">
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.blog')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/blog">{t('home.blog')}</Link></li>
               <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.documentation')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.helpCenter')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.github')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/download">{t('navbar.download')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/about">{t('navbar.about')}</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.legal')}</h4>
             <ul className="space-y-4">
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.privacy')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.terms')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.security')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="#">{t('home.contact')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/privacy">{t('home.privacy')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/terms">{t('home.terms')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/refund">{t('home.refundPolicy')}</Link></li>
+              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/pricing">{t('home.pricing')}</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-outline-variant/10 gap-4">
-          <div className="flex gap-6">
-            <a className="text-zinc-600 hover:text-nvidia-green transition-colors" href="#"><Hexagon className="w-5 h-5" /></a>
-            <a className="text-zinc-600 hover:text-nvidia-green transition-colors" href="#"><Share2 className="w-5 h-5" /></a>
-            <a className="text-zinc-600 hover:text-nvidia-green transition-colors" href="#"><MessageSquare className="w-5 h-5" /></a>
-          </div>
+          {/* A reachable mailbox instead of social icons that pointed nowhere. */}
+          <a className="text-zinc-500 hover:text-nvidia-green transition-colors text-sm" href={`mailto:${LEGAL.contactEmail}`}>{LEGAL.contactEmail}</a>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-nvidia-green rounded-full animate-pulse"></div>
             <span className="text-zinc-600 text-[10px] uppercase tracking-widest font-medium">{t('footer.systemsOperational')}</span>
