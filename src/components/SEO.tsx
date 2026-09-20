@@ -12,6 +12,7 @@ interface SEOProps {
   structuredData?: object;
   language?: string;
   alternates?: Array<{ hrefLang: string; href: string }>;
+  robots?: string;
 }
 
 const BASE_URL = 'https://www.dlss5nvidia.com';
@@ -26,7 +27,8 @@ export default function SEO({
   image = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAgMs1RSg3O_1Sa3p30fgI3YUHwQQfFs07kGZMGKyFyoEQm-OV9Q80s9L_VAjq6PPIL4xtaTqR0T9Spv2YqokmfgYPWeEDIaoQr-b_cWhfmnIgq8aEqqG60kty-pmpK8FVMaWQnJO_alw5WYwG3TGhDdxNpx_ZwZgY2ckp1k1TV_tLi7iFmt5rkfCNyQR5qc2MSI7WWxfd4pus_zzslLB6bpO80SJcRC5MWqi1CClqIJAQIYCs8gvSG8VE1od87qiiz6z58h1Ej7OY',
   structuredData,
   language,
-  alternates = []
+  alternates = [],
+  robots = 'index,follow,max-image-preview:large'
 }: SEOProps) {
   const pageUrl = canonical?.startsWith('http') ? canonical : `${BASE_URL}${canonical || '/'}`;
   const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image}`;
@@ -39,7 +41,7 @@ export default function SEO({
       <title>{title}</title>
       <meta name="description" content={description} />
       {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
-      <meta name="robots" content="index,follow,max-image-preview:large" />
+      <meta name="robots" content={robots} />
 
       {/* Open Graph / Facebook tags */}
       <meta property="og:type" content={type} />

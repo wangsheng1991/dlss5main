@@ -1,10 +1,19 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/gpu/:match*", "destination": "https://gpu-api.alphanetplus.com/:match*" },
     { "source": "/api/oss/:match*", "destination": "https://oss.alphanetplus.com/:match*" },
     { "source": "/api/image-edit/jobs/:id", "destination": "/api/image-edit/jobs/[id]" },
     { "source": "/api/image-edit/results/:id", "destination": "/api/image-edit/results/[id]" },
     { "source": "/api/billing/:route", "destination": "/api/billing/[route]" },
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
+    { "source": "/en/blog", "destination": "/en/blog/index.html" },
+    { "source": "/en/blog/:slug", "destination": "/en/blog/:slug/index.html" },
+    { "source": "/zh/blog", "destination": "/zh/blog/index.html" },
+    { "source": "/zh/blog/:slug", "destination": "/zh/blog/:slug/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

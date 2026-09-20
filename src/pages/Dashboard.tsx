@@ -10,6 +10,7 @@ import { useGeneration } from '../features/generation/useGeneration';
 import { useSampleRun } from '../features/generation/useSampleRun';
 import { claimShareReward } from '../features/rewards/shareClaim';
 import { SHARE_REWARD } from '../config/promos';
+import SEO from '../components/SEO';
 
 type HistoryJob = { id: string; status: string; prompt: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
 
@@ -190,7 +191,14 @@ export default function Dashboard() {
   const result = generation.operation?.outputUrl;
   const locked = generation.busy || generation.pending || !!result;
   const enhance = mode === 'enhance' && sourceSize ? enhanceOutput(sourceSize.width, sourceSize.height, factor) : null;
-  return <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
+  return <>
+    <SEO
+      title="AI Image Studio — DLSS5NVIDIA"
+      description="Private AI image editing workspace for signed-in DLSS5NVIDIA users."
+      canonical="/dashboard"
+      robots="noindex,nofollow"
+    />
+    <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
       <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Edit a photo with a prompt. Independent AI image editing; not NVIDIA DLSS game rendering.</p></div>
       <div className="flex flex-wrap items-center gap-3">
@@ -281,5 +289,6 @@ export default function Dashboard() {
         </div>}
       </section>
     </div>
-  </main>;
+    </main>
+  </>;
 }

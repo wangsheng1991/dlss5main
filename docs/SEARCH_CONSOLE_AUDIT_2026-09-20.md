@@ -91,3 +91,11 @@ Sitemap 报告显示 `https://www.dlss5nvidia.com/sitemap.xml` 状态成功，20
 ## 结论
 
 站点已经从 8 月的低量进入 9 月增长期，搜索匹配本身没有失效。当前最值得投入的工作不是继续添加更多关键词，而是让博客文章真正进入索引，并把博客从“有展示、少点击”变成可点击的图文内容。首页和下载页的 SEO 调整先保留，待新数据窗口形成后再判断是否需要新建工具落地页。
+
+## 7. 本次已落地的 P0 修复
+
+- 构建阶段为 9 篇文章生成英文、中文和默认英文路由的静态 HTML；每页包含独立 title、description、canonical、hreflang、Open Graph、封面图、H1、正文和 TechArticle JSON-LD。
+- 博客索引页也生成静态图文卡片，爬虫在没有执行 JavaScript 时仍能看到文章标题、摘要、封面和内部链接。
+- Vercel 对 `/blog`、文章详情、`/en/blog`、`/zh/blog` 和 `/dashboard` 增加显式静态路由映射，避免被 SPA catch-all 壳覆盖。
+- `/dashboard` 已加入 `noindex,nofollow`，并从 Sitemap 移除。
+- 本地验证通过：`npm run lint`、`npm run build`、静态页面 H1/正文/JSON-LD 检查均通过。
