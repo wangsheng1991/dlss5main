@@ -99,3 +99,4 @@ Sitemap 报告显示 `https://www.dlss5nvidia.com/sitemap.xml` 状态成功，20
 - Vercel 对 `/blog`、文章详情、`/en/blog`、`/zh/blog` 和 `/dashboard` 增加显式静态路由映射，避免被 SPA catch-all 壳覆盖。
 - `/dashboard` 已加入 `noindex,nofollow`，并从 Sitemap 移除。
 - 本地验证通过：`npm run lint`、`npm run build`、静态页面 H1/正文/JSON-LD 检查均通过。
+- 生产环境验证通过：博客索引和文章详情均返回独立 HTML；`/dashboard` 返回 `noindex,nofollow`。Google Search Console 已对对比文章和 Seedance 2.5 文章提交优先抓取请求；博客索引页已显示“网址已编入 Google”。
