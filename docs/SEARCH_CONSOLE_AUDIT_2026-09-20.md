@@ -100,3 +100,10 @@ Sitemap 报告显示 `https://www.dlss5nvidia.com/sitemap.xml` 状态成功，20
 - `/dashboard` 已加入 `noindex,nofollow`，并从 Sitemap 移除。
 - 本地验证通过：`npm run lint`、`npm run build`、静态页面 H1/正文/JSON-LD 检查均通过。
 - 生产环境验证通过：博客索引和文章详情均返回独立 HTML；`/dashboard` 返回 `noindex,nofollow`。Google Search Console 已对对比文章和 Seedance 2.5 文章提交优先抓取请求；博客索引页已显示“网址已编入 Google”。
+
+## 8. 本次已落地的 P1 内链优化
+
+- 首页增加三篇带封面的精选研究卡片，直接链接到 Seedance 2.5、GPT-6 工作流和在线图片放大器文章。
+- 每篇文章增加“Related reading/继续阅读”图文推荐，文章之间形成可抓取的内部链接网络。
+- 中文首页和中文文章保持 `/zh/blog/...` 链接，英文默认首页使用无前缀 canonical 路径，减少语言版本之间的权重分散。
+- 生产环境验证：首页、博客索引、文章详情和 dashboard 均已返回新版本 HTML。
