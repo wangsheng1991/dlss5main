@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Models from './pages/Models';
-import Docs from './pages/Docs';
-import Enterprise from './pages/Enterprise';
-import Blog from './pages/Blog';
-import About from './pages/About';
-import Download from './pages/Download';
-import Pricing from './pages/Pricing';
-import Comparisons from './pages/Comparisons';
 import { AuthProvider } from './contexts/AuthContext';
+
+/**
+ * Only the landing page ships in the entry bundle. Every other route is fetched when it is
+ * opened, so a first visit downloads a small fraction of the site instead of all of it.
+ */
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Models = lazy(() => import('./pages/Models'));
+const Docs = lazy(() => import('./pages/Docs'));
+const Enterprise = lazy(() => import('./pages/Enterprise'));
+const Blog = lazy(() => import('./pages/Blog'));
+const About = lazy(() => import('./pages/About'));
+const Download = lazy(() => import('./pages/Download'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const Comparisons = lazy(() => import('./pages/Comparisons'));
 
 export default function App() {
   return (
@@ -25,23 +30,25 @@ export default function App() {
           <div className="min-h-screen bg-background text-on-surface font-body selection:bg-primary selection:text-black flex flex-col">
             <Navbar />
             <div className="flex-1">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/models" element={<Models />} />
-                <Route path="/docs" element={<Docs />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<Blog />} />
-                <Route path="/:locale/blog" element={<Blog />} />
-                <Route path="/:locale/blog/:slug" element={<Blog />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/download" element={<Download />} />
-                <Route path="/enterprise" element={<Enterprise />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/comparisons" element={<Comparisons />} />
-              </Routes>
+              <Suspense fallback={<div className="pt-40 pb-24 text-center text-zinc-500">Loading…</div>}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/models" element={<Models />} />
+                  <Route path="/docs" element={<Docs />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<Blog />} />
+                  <Route path="/:locale/blog" element={<Blog />} />
+                  <Route path="/:locale/blog/:slug" element={<Blog />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/download" element={<Download />} />
+                  <Route path="/enterprise" element={<Enterprise />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/comparisons" element={<Comparisons />} />
+                </Routes>
+              </Suspense>
             </div>
             <Footer />
           </div>

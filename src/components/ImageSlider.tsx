@@ -74,6 +74,8 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
         src={lowRes}
         alt={`${alt} — original`}
         draggable={false}
+        loading="lazy"
+        decoding="async"
         onLoad={(event) => measure(event.currentTarget, false)}
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
@@ -82,6 +84,8 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
         src={highRes}
         alt={`${alt} — result`}
         draggable={false}
+        loading="lazy"
+        decoding="async"
         onLoad={(event) => measure(event.currentTarget, true)}
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"

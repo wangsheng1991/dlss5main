@@ -6,13 +6,32 @@
     <title>DLSS Image Upscaler — Free AI Tool to Upscale & Enhance Images to 4K</title>
     <meta name="description" content="Looking for a DLSS image upscaler? Instantly upscale any image to 4K, remove blur, and sharpen details with AI-powered neural super-resolution. Free, no GPU or installation required. Try online now." />
     <meta name="keywords" content="dlss image upscaler, ai image upscaler, free image upscaler, upscale to 4k, image resolution enhancer, ai image enhancer, remove blur, sharp image" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2H65VD73K0"></script>
+    <!-- Paint the theme colour before any stylesheet arrives, so a slow link never flashes white. -->
+    <style>
+      html { background-color: #0e0e0e; color: #ffffff; }
+      body { margin: 0; }
+      #static-fallback { box-sizing: border-box; max-width: 46rem; margin: 0 auto; padding: 4rem 1.5rem; font-family: ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.7; color: #ffffff; }
+      #static-fallback h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 1rem; }
+      #static-fallback h2 { font-size: 1.15rem; margin: 2rem 0 0.5rem; }
+      #static-fallback p, #static-fallback li { color: #ababab; margin: 0.5rem 0; }
+      #static-fallback ul { padding-left: 1.25rem; }
+      #static-fallback a { color: #b1fa50; }
+    </style>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-2H65VD73K0');
+      // Google Analytics is injected after the page has loaded: googletagmanager.com is unreachable
+      // from mainland China, and a hanging request there used to delay every visitor's load event.
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-2H65VD73K0';
+          document.head.appendChild(script);
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', 'G-2H65VD73K0');
+        }, 0);
+      });
     </script>
     <script>
       // Fix for "Cannot set property fetch of #<Window> which has only a getter"
@@ -32,8 +51,35 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Real store content in the served HTML. React replaces this block on mount, but if the
+         JavaScript bundle is slow or blocked (mainland China, PayPal's crawler, any timeout) the
+         page still reads as a working shop instead of a blank screen. -->
+    <div id="root"><div id="static-fallback">
+      <h1>DLSS Image Upscaler — AI image upscaling and enhancement to 4K</h1>
+      <p>DLSS5NVIDIA is an online AI image upscaling service. Upload a photo, render, or product shot and our neural super-resolution pipeline returns a sharper 4K image in seconds — no GPU, no installation.</p>
+      <ul>
+        <li>Upscale, denoise and sharpen images up to 4K</li>
+        <li>Also available: AI image generation, image editing and video super-resolution</li>
+        <li>Runs in the browser; web API access for developers</li>
+      </ul>
+      <h2>Plans</h2>
+      <ul>
+        <li><strong>Free</strong> — 10 credits per month, 3 generations per day</li>
+        <li><strong>Pro</strong> — $19 per month, 500 credits, 50 generations per day</li>
+        <li><strong>Team</strong> — $79 per month, 2,000 credits, 200 generations per day</li>
+      </ul>
+      <p>Subscriptions renew monthly and can be cancelled at any time; unused credits do not roll over.</p>
+      <h2>Contact</h2>
+      <p>Questions about plans, invoicing or the API: <a href="mailto:support@dlss5nvidia.com">support@dlss5nvidia.com</a></p>
+      <p><a href="/pricing">Pricing</a> · <a href="/docs">API documentation</a> · <a href="/blog">Blog</a> · <a href="/about">About us</a></p>
+    </div></div>
+    <noscript>
+      <p style="max-width:46rem;margin:0 auto;padding:0 1.5rem 3rem;color:#ababab;font-family:ui-sans-serif,system-ui,sans-serif">
+        JavaScript is disabled in this browser, so the interactive uploader and dashboard are unavailable.
+        The service and its plans are described above; write to
+        <a href="mailto:support@dlss5nvidia.com" style="color:#b1fa50">support@dlss5nvidia.com</a> for anything you need.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
