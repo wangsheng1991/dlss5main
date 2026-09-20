@@ -16,6 +16,11 @@
       #static-fallback p, #static-fallback li { color: #ababab; margin: 0.5rem 0; }
       #static-fallback ul { padding-left: 1.25rem; }
       #static-fallback a { color: #b1fa50; }
+      #static-fallback .static-research { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+      #static-fallback .static-research a { display: block; border: 1px solid #303030; border-radius: 0.75rem; overflow: hidden; text-decoration: none; }
+      #static-fallback .static-research img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+      #static-fallback .static-research span { display: block; padding: 0.75rem; }
+      @media (max-width: 700px) { #static-fallback .static-research { grid-template-columns: 1fr; } }
     </style>
     <script>
       // Google Analytics is injected after the page has loaded: googletagmanager.com is unreachable
@@ -71,6 +76,12 @@
       <p>Subscriptions renew monthly and can be cancelled at any time; unused credits do not roll over.</p>
       <h2>Contact</h2>
       <p>Questions about plans, invoicing or the API: <a href="mailto:support@dlss5nvidia.com">support@dlss5nvidia.com</a></p>
+      <h2>Latest DLSS 5 research</h2>
+      <div class="static-research">
+        <a href="/blog/seedance-2-5-video-super-resolution-cost-guide-2026"><img src="/blog/seedance25-video-superres.png" alt="Seedance 2.5 video super-resolution workflow" width="1600" height="700"><span>Seedance 2.5 + video super-resolution cost guide</span></a>
+        <a href="/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026"><img src="/blog/gpt6-dlss5-workflow.png" alt="GPT-6 and DLSS 5 rendering workflow" width="1600" height="700"><span>GPT-6 + DLSS 5 rendering workflow</span></a>
+        <a href="/blog/dlss-5-online-image-upscaler-guide"><img src="/examples/sample2.jpg" alt="Online AI image upscaling guide" width="1600" height="700"><span>Online image upscaler practical guide</span></a>
+      </div>
       <p><a href="/pricing">Pricing</a> · <a href="/docs">API documentation</a> · <a href="/blog">Blog</a> · <a href="/about">About us</a></p>
     </div></div>
     <noscript>

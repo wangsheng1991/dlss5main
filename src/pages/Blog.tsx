@@ -211,6 +211,7 @@ export default function Blog() {
   const title = activeLang === 'cn' ? article.title_cn : article.title_en;
   const description = activeLang === 'cn' ? article.description_cn || article.title_cn : article.description_en || article.title_en;
   const cover = ARTICLE_COVERS[article.slug] || { src: '/examples/sample1.jpg', alt: article.title_en };
+  const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -478,6 +479,21 @@ export default function Blog() {
             {article.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer" className="text-zinc-300 underline decoration-primary/60 underline-offset-2 hover:text-primary">{source.label}</a></li>)}
           </ul>
         </aside> : null}
+
+        <aside className="mt-12" aria-labelledby="related-articles-heading">
+          <h2 id="related-articles-heading" className="text-sm font-label uppercase tracking-widest text-primary mb-4">
+            {activeLang === 'cn' ? '继续阅读' : 'Related reading'}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {relatedArticles.map(related => {
+              const relatedCover = ARTICLE_COVERS[related.slug] || { src: '/examples/sample1.jpg', alt: related.title_en };
+              return <Link key={related.slug} to={`${routeLocale ? `/${routeLocale}` : ''}/blog/${related.slug}`} className="group rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low hover:border-primary/50 transition-colors">
+                <img src={relatedCover.src} alt={relatedCover.alt} loading="lazy" className="w-full aspect-[16/9] object-cover" />
+                <span className="block p-3 text-sm text-zinc-300 group-hover:text-primary transition-colors">{activeLang === 'cn' ? related.title_cn : related.title_en}</span>
+              </Link>;
+            })}
+          </div>
+        </aside>
 
         {/* CTA */}
         <div className="mt-12 p-6 bg-surface-low rounded-xl border border-outline-variant/20 text-center">

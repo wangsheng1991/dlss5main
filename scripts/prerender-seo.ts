@@ -186,6 +186,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
   const content = isChinese ? article.content_cn : article.content_en;
   const cover = coverFor(article);
   const canonicalPath = articlePath(article.slug, locale);
+  const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -215,6 +216,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
       </figure>
       <div class="prose prose-invert prose-zinc max-w-none">${renderMarkdown(content)}</div>
       ${article.sources?.length ? `<aside class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h2>${isChinese ? '资料与来源' : 'Sources and methodology'}</h2><ul>${article.sources.map(source => `<li><a href="${escapeHtml(source.url)}" rel="noreferrer">${escapeHtml(source.label)}</a></li>`).join('')}</ul></aside>` : ''}
+      <aside class="mt-12" aria-labelledby="related-articles-heading"><h2 id="related-articles-heading">${isChinese ? '继续阅读' : 'Related reading'}</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">${relatedArticles.map(related => { const relatedCover = coverFor(related); return `<a href="${articlePath(related.slug, locale)}"><img src="${escapeHtml(relatedCover.src)}" alt="${escapeHtml(relatedCover.alt)}" width="1600" height="700" loading="lazy" /><span>${escapeHtml(isChinese ? related.title_cn : related.title_en)}</span></a>`; }).join('')}</div></aside>
       <p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a></p>
     </article>
   </main>`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   UploadCloud, Cpu, Sparkles,
   Gauge, Zap, ShieldCheck, Shield, ChevronDown
@@ -7,6 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
+import { FEATURED_ARTICLES } from '../content/articles/featured';
 
 const COMMUNITY_EXAMPLES = [
   "https://picsum.photos/seed/upscale1/600/800",
@@ -415,6 +416,36 @@ export default function Home() {
               {t('home.joinCommunity')}
             </button>
           </div>
+        </div>
+      </section>
+
+      <section className="mt-32" aria-labelledby="featured-research-heading">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
+          <div className="max-w-2xl">
+            <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">Research desk</span>
+            <h2 id="featured-research-heading" className="text-4xl font-headline font-bold text-white mb-4">
+              {isZh ? '最新 DLSS 5 技术与工作流' : 'Latest DLSS 5 research and workflows'}
+            </h2>
+            <p className="text-zinc-400 leading-relaxed">
+              {isZh ? '从 Seedance 2.5 视频超分，到 GPT-6 图像工作流，阅读有来源、有成本拆解的实用内容。' : 'Source-led guides covering Seedance 2.5 video super-resolution, GPT-6 workflows and practical image upscaling.'}
+            </p>
+          </div>
+          <Link to={isZh ? '/zh/blog' : '/blog'} className="text-primary text-sm font-semibold hover:text-white transition-colors">
+            {isZh ? '查看全部文章 →' : 'View all articles →'}
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {FEATURED_ARTICLES.map(article => (
+            <Link key={article.slug} to={`${isZh ? '/zh' : ''}/blog/${article.slug}`} className="group bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden hover:border-primary/50 transition-colors">
+              <div className="aspect-[16/9] overflow-hidden bg-surface-high">
+                <img src={article.image} alt={article.alt} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+              <div className="p-5">
+                <h3 className="text-lg font-headline font-bold text-white group-hover:text-primary transition-colors">{isZh ? article.title_cn : article.title}</h3>
+                <p className="mt-3 text-sm text-zinc-400 leading-relaxed">{isZh ? article.description_cn : article.description}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
