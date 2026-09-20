@@ -270,6 +270,50 @@ function renderDashboard(): string {
   }), root);
 }
 
+/**
+ * A crawler-safe public storefront for payment-provider review. Keep this page entirely static:
+ * it must explain the product, price, delivery and policies even when a reviewer does not run JS.
+ */
+function renderStore(): string {
+  const root = `<main style="max-width:980px;margin:0 auto;padding:64px 24px 96px;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#f5f5f5">
+    <header style="display:flex;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid #303030;padding-bottom:24px">
+      <a href="/" style="color:#b1fa50;font-size:24px;font-weight:800;text-decoration:none">DLSS5NVIDIA</a>
+      <nav style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="/pricing" style="color:#b1fa50">Pricing</a><a href="/blog" style="color:#aaa">Blog</a><a href="mailto:support@dlss5nvidia.com" style="color:#aaa">Contact</a></nav>
+    </header>
+    <section style="padding:64px 0 36px">
+      <p style="color:#b1fa50;text-transform:uppercase;letter-spacing:.18em;font-size:12px">Online AI image enhancement service</p>
+      <h1 style="font-size:clamp(36px,6vw,64px);line-height:1.05;margin:16px 0">Upscale and enhance images online</h1>
+      <p style="font-size:20px;line-height:1.6;color:#b7b7b7;max-width:760px">DLSS5NVIDIA is an independent browser-based AI image upscaling service. Upload a JPG, PNG or WEBP image, use neural super-resolution to recover detail, and download the enhanced result in seconds.</p>
+      <p style="margin-top:28px"><a href="/register" style="display:inline-block;background:#b1fa50;color:#111;padding:14px 22px;border-radius:8px;font-weight:700;text-decoration:none">Create a free account</a></p>
+    </section>
+    <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0 56px">
+      <article style="border:1px solid #303030;border-radius:12px;padding:22px"><h2 style="font-size:18px">What customers receive</h2><p style="color:#aaa;line-height:1.6">Immediate access to the web app, monthly processing credits, image upscaling and enhancement tools, and downloadable results.</p></article>
+      <article style="border:1px solid #303030;border-radius:12px;padding:22px"><h2 style="font-size:18px">How delivery works</h2><p style="color:#aaa;line-height:1.6">After checkout, credits are added to the customer account. The customer signs in, uploads an image, and receives the generated result in the browser.</p></article>
+      <article style="border:1px solid #303030;border-radius:12px;padding:22px"><h2 style="font-size:18px">Digital service</h2><p style="color:#aaa;line-height:1.6">There are no physical goods, shipping or manual fulfillment. Subscriptions renew monthly and can be cancelled at any time.</p></article>
+    </section>
+    <h2 style="font-size:30px;margin:0 0 18px">Plans</h2>
+    <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+      <article style="border:1px solid #303030;border-radius:12px;padding:24px"><h3 style="font-size:22px;margin:0">Free</h3><p style="font-size:30px;font-weight:800;margin:16px 0">$0</p><ul style="color:#aaa;line-height:1.8;padding-left:20px"><li>10 credits per month</li><li>3 generations per day</li><li>Browser access</li></ul><a href="/register" style="color:#b1fa50">Start free</a></article>
+      <article style="border:1px solid #b1fa50;border-radius:12px;padding:24px"><h3 style="font-size:22px;margin:0">Pro</h3><p style="font-size:30px;font-weight:800;margin:16px 0">$19 <small style="font-size:14px;color:#aaa">/ month</small></p><ul style="color:#aaa;line-height:1.8;padding-left:20px"><li>500 credits per month</li><li>50 generations per day</li><li>Image upscaling and enhancement</li></ul><a href="/register" style="color:#b1fa50">Subscribe after sign-in</a></article>
+      <article style="border:1px solid #303030;border-radius:12px;padding:24px"><h3 style="font-size:22px;margin:0">Team</h3><p style="font-size:30px;font-weight:800;margin:16px 0">$79 <small style="font-size:14px;color:#aaa">/ month</small></p><ul style="color:#aaa;line-height:1.8;padding-left:20px"><li>2,000 credits per month</li><li>200 generations per day</li><li>Higher-volume workflows</li></ul><a href="/register" style="color:#b1fa50">Subscribe after sign-in</a></article>
+    </section>
+    <section style="margin-top:56px;padding-top:28px;border-top:1px solid #303030;color:#aaa;line-height:1.7">
+      <h2 style="color:#f5f5f5;font-size:24px">Policies and support</h2>
+      <p>Questions about access, billing or refunds: <a href="mailto:support@dlss5nvidia.com" style="color:#b1fa50">support@dlss5nvidia.com</a></p>
+      <p><a href="/terms" style="color:#b1fa50">Terms of Service</a> · <a href="/privacy" style="color:#b1fa50">Privacy Policy</a> · <a href="/refund" style="color:#b1fa50">Refund &amp; Cancellation Policy</a></p>
+      <p style="font-size:13px">DLSS5NVIDIA is an independent tool and is not affiliated with or endorsed by NVIDIA Corporation. DLSS is a trademark of NVIDIA Corporation.</p>
+    </section>
+  </main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: 'DLSS5NVIDIA AI Image Upscaler — Plans and Online Service',
+    description: 'Public storefront for DLSS5NVIDIA, an independent online AI image upscaling and enhancement service. View plans, delivery details and policies.',
+    canonicalPath: '/store',
+    language: 'en-US',
+    image: '/examples/sample1.jpg',
+    keywords: ['ai image upscaler', 'online image enhancer', '4k image upscaling', 'ai image enhancement pricing'],
+  }), root);
+}
+
 for (const locale of [undefined, 'en', 'zh'] as const) {
   writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
   for (const article of ARTICLES) {
@@ -277,5 +321,6 @@ for (const locale of [undefined, 'en', 'zh'] as const) {
   }
 }
 writeRoute('/dashboard', renderDashboard());
+writeRoute('/store', renderStore());
 
 console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus blog indexes and dashboard noindex.`);

@@ -13,6 +13,7 @@
     { "source": "/en/blog/:slug", "destination": "/en/blog/:slug/index.html" },
     { "source": "/zh/blog", "destination": "/zh/blog/index.html" },
     { "source": "/zh/blog/:slug", "destination": "/zh/blog/:slug/index.html" },
+    { "source": "/store", "destination": "/store/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
