@@ -9,9 +9,9 @@ import { ChevronsLeftRight } from 'lucide-react';
  * the split is drawn with clip-path so the input never scales independently of the output.
  * The handle only follows a real drag or a tap, not a passing pointer.
  */
-export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comparison' }: { highRes: string; lowRes: string; alt?: string }) {
+export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comparison', inputLabel = 'Input', outputLabel = 'Output', compareLabel, initialAspectRatio }: { highRes: string; lowRes: string; alt?: string; inputLabel?: string; outputLabel?: string; compareLabel?: string; initialAspectRatio?: number; priority?: boolean }) {
   const [sliderPos, setSliderPos] = useState(50);
-  const [ratio, setRatio] = useState(1);
+  const [ratio, setRatio] = useState(initialAspectRatio || 1);
   const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const resultLoaded = useRef(false);
@@ -45,7 +45,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
   // A new pair of images starts a new comparison: the result defines the frame.
   useEffect(() => {
     resultLoaded.current = false;
-    setRatio(1);
+    setRatio(initialAspectRatio || 1);
     setSliderPos(50);
   }, [highRes, lowRes]);
 
@@ -54,7 +54,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
       ref={containerRef}
       role="slider"
       tabIndex={0}
-      aria-label={`${alt} — drag to compare`}
+      aria-label={compareLabel || `${alt} — drag to compare`}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(sliderPos)}
@@ -97,8 +97,8 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
           <ChevronsLeftRight className="text-black w-4 h-4" />
         </div>
       </div>
-      <div className="absolute bottom-4 left-4 z-30 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest text-white pointer-events-none">Input</div>
-      <div className="absolute bottom-4 right-4 z-30 bg-nvidia-green text-black px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest pointer-events-none">Output</div>
+      <div className="absolute bottom-4 left-4 z-30 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest text-white pointer-events-none">{inputLabel}</div>
+      <div className="absolute bottom-4 right-4 z-30 bg-nvidia-green text-black px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest pointer-events-none">{outputLabel}</div>
     </div>
   );
 }

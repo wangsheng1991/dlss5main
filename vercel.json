@@ -14,6 +14,10 @@
     { "source": "/zh/blog", "destination": "/zh/blog/index.html" },
     { "source": "/zh/blog/:slug", "destination": "/zh/blog/:slug/index.html" },
     { "source": "/store", "destination": "/store/index.html" },
+    { "source": "/image-upscaler", "destination": "/image-upscaler/index.html" },
+    { "source": "/image-quality-enhancer", "destination": "/image-quality-enhancer/index.html" },
+    { "source": "/unblur-image", "destination": "/unblur-image/index.html" },
+    { "source": "/es/mejorar-calidad-imagen", "destination": "/es/mejorar-calidad-imagen/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],

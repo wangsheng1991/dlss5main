@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { ARTICLE_COVERS } from '../src/content/articles/covers';
 import { ARTICLES, type Article } from '../src/content/articles/types';
+import { TOOL_LANDINGS, toolAlternates, toolSchema, toolSteps, type ToolLanding } from '../src/content/toolLandings';
 
 const BASE_URL = 'https://www.dlss5nvidia.com';
 const DIST = resolve(process.cwd(), 'dist');
@@ -103,12 +104,13 @@ function pageHead(options: {
   title: string;
   description: string;
   canonicalPath: string;
-  language: 'en-US' | 'zh-CN';
+  language: 'en-US' | 'zh-CN' | 'es-ES';
   image?: string;
   keywords?: string[];
   type?: 'website' | 'article';
   noindex?: boolean;
   structuredData?: object;
+  alternates?: Array<{ hrefLang: string; href: string }>;
 }): string {
   const image = absoluteUrl(options.image || '/blog/dlss5-neural-rendering.png');
   const canonical = absoluteUrl(options.canonicalPath);
@@ -123,13 +125,14 @@ function pageHead(options: {
     : options.canonicalPath.startsWith('/en/')
       ? options.canonicalPath.replace(/^\/en/, '/zh')
       : `/zh${options.canonicalPath}`;
-  const alternates = options.canonicalPath.includes('/blog')
+  const blogAlternates = options.canonicalPath.includes('/blog')
     ? [
         `<link rel="alternate" hreflang="en" href="${BASE_URL}${englishBlogPath}" />`,
         `<link rel="alternate" hreflang="zh-CN" href="${BASE_URL}${chineseBlogPath}" />`,
         `<link rel="alternate" hreflang="x-default" href="${BASE_URL}${baseBlogPath}" />`,
       ].join('\n    ')
     : '';
+  const localeAlternates = options.alternates?.map(alternate => `<link rel="alternate" hreflang="${escapeHtml(alternate.hrefLang)}" href="${escapeHtml(alternate.href)}" />`).join('\n    ') || '';
   const jsonLd = options.structuredData
     ? `<script type="application/ld+json">${JSON.stringify(options.structuredData).replaceAll('<', '\\u003c')}</script>`
     : '';
@@ -147,7 +150,8 @@ function pageHead(options: {
     `<meta name="twitter:title" content="${escapeHtml(options.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(options.description)}" />`,
     `<meta name="twitter:image" content="${image}" />`,
-    alternates,
+    blogAlternates,
+    localeAlternates,
     jsonLd,
   ].filter(Boolean).join('\n    ');
   return headTags;
@@ -314,6 +318,34 @@ function renderStore(): string {
   }), root);
 }
 
+function renderToolLanding(tool: ToolLanding): string {
+  const isSpanish = tool.locale === 'es';
+  const steps = toolSteps(tool);
+  const related = tool.related.map(item => `<a href="${item.path}">${escapeHtml(item.label)}</a>`).join(' · ');
+  const faqs = tool.faqs.map(faq => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
+  const schema = toolSchema(tool);
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto">
+    <nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(tool.heading)}</span></nav>
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(tool.eyebrow)}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(tool.heading)}</h1><p class="text-lg text-zinc-300 leading-relaxed mt-5">${escapeHtml(tool.intro)}</p><p class="mt-6"><a href="/dashboard?tool=${tool.dashboardTool}" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(tool.cta)} →</a></p><p class="text-xs text-zinc-500 mt-4">${escapeHtml(tool.ctaNote)}</p></div>
+      <figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="/examples/sample1-photo.webp" alt="${escapeHtml(isSpanish ? 'Comparación de mejora de imagen' : 'Image quality enhancement before and after example')}" width="1200" height="800" fetchpriority="high" class="w-full rounded-lg" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(isSpanish ? 'Ejemplo ilustrativo; el resultado depende de tu imagen original.' : 'Illustrative example; the result depends on your original image.')}</figcaption></figure>
+    </section>
+    <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cuándo usar esta herramienta' : 'When to use this tool'}</h2><ul>${tool.useCases.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cómo funciona' : 'How it works'}</h2><ol>${steps.map(step => `<li><strong>${escapeHtml(step.name)}</strong> — ${escapeHtml(step.text)}</li>`).join('')}</ol></article></section>
+    <section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">${isSpanish ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2><div class="mt-5">${faqs}</div></section>
+    <section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">${isSpanish ? 'Herramientas relacionadas' : 'Related tools'}</h2><p class="mt-4 text-primary">${related}</p><p class="mt-6"><a href="/blog/dlss-5-online-image-upscaler-guide">${isSpanish ? 'Leer la guía de mejora de imágenes (inglés) →' : 'Read the online image enhancement guide →'}</a></p></section>
+  </main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: tool.title,
+    description: tool.description,
+    canonicalPath: tool.path,
+    language: tool.language,
+    image: '/examples/sample1-photo.webp',
+    keywords: tool.keywords,
+    structuredData: schema,
+    alternates: toolAlternates(tool),
+  }), root);
+}
+
 for (const locale of [undefined, 'en', 'zh'] as const) {
   writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
   for (const article of ARTICLES) {
@@ -322,5 +354,6 @@ for (const locale of [undefined, 'en', 'zh'] as const) {
 }
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
+for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));
 
-console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus blog indexes and dashboard noindex.`);
+console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${TOOL_LANDINGS.length} SEO tools, blog indexes and dashboard noindex.`);

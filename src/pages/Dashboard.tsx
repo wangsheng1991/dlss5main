@@ -62,6 +62,11 @@ export default function Dashboard() {
   const [shareNotice, setShareNotice] = useState('');
   const input = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
+  // SEO tool pages link into the same studio with the enhancement preset already selected.
+  useEffect(() => {
+    const tool = new URL(window.location.href).searchParams.get('tool');
+    if (tool === 'upscale' || tool === 'enhance' || tool === 'unblur') setMode('enhance');
+  }, []);
   // Stripe and PayPal both return buyers here; the server confirms the purchase and grants credits.
   useEffect(() => {
     const url = new URL(window.location.href);

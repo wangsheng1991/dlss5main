@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import ToolLanding from './pages/ToolLanding';
 import { AuthProvider } from './contexts/AuthContext';
 
 /**
@@ -50,6 +51,10 @@ export default function App() {
                   <Route path="/enterprise" element={<Enterprise />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/comparisons" element={<Comparisons />} />
+                  <Route path="/image-upscaler" element={<ToolLanding />} />
+                  <Route path="/image-quality-enhancer" element={<ToolLanding />} />
+                  <Route path="/unblur-image" element={<ToolLanding />} />
+                  <Route path="/es/mejorar-calidad-imagen" element={<ToolLanding />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />
