@@ -28,7 +28,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
         ? ['Check the displayed output dimensions before spending a credit.', 'Keep the original aspect ratio and compare straight edges.', 'For print, calculate the required pixel dimensions first.']
         : ['Inspect blocky compression areas and fine product textures.', 'Check that labels and logos have not been rewritten.', 'Compare colors and lighting against your original.'];
   return <>
-    <main lang={tool.locale} className="pt-10 sm:pt-14 pb-20 px-5 max-w-[1200px] mx-auto w-full">
+    <main lang={tool.locale} className="pt-28 sm:pt-32 pb-20 px-5 max-w-[1200px] mx-auto w-full">
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start" id="tool">
         <div className="lg:col-span-6">
           <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">{tool.eyebrow}</p>
