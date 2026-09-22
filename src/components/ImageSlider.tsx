@@ -9,7 +9,7 @@ import { ChevronsLeftRight } from 'lucide-react';
  * the split is drawn with clip-path so the input never scales independently of the output.
  * The handle only follows a real drag or a tap, not a passing pointer.
  */
-export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comparison', inputLabel = 'Input', outputLabel = 'Output', compareLabel, initialAspectRatio }: { highRes: string; lowRes: string; alt?: string; inputLabel?: string; outputLabel?: string; compareLabel?: string; initialAspectRatio?: number; priority?: boolean }) {
+export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comparison', inputLabel = 'Input', outputLabel = 'Output', compareLabel, initialAspectRatio, outputBackdrop }: { highRes: string; lowRes: string; alt?: string; inputLabel?: string; outputLabel?: string; compareLabel?: string; initialAspectRatio?: number; priority?: boolean; outputBackdrop?: string }) {
   const [sliderPos, setSliderPos] = useState(50);
   const [ratio, setRatio] = useState(initialAspectRatio || 1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,17 +80,25 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
         referrerPolicy="no-referrer"
         className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
       />
-      <img
-        src={highRes}
-        alt={`${alt} — result`}
-        draggable={false}
-        loading="lazy"
-        decoding="async"
-        onLoad={(event) => measure(event.currentTarget, true)}
-        referrerPolicy="no-referrer"
-        className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
-        style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}
-      />
+      {/* The result sits on its own layer so a transparent result (a cutout) can be shown on an
+          opaque backdrop: without one, the input underneath shows through the cut-out area and the
+          comparison looks unchanged. Repeating the backdrop over the whole frame is the point — a
+          backdrop sized to the subject would move the edges. */}
+      <div
+        className="absolute inset-0 pointer-events-none select-none"
+        style={{ clipPath: `inset(0 0 0 ${sliderPos}%)`, background: outputBackdrop }}
+      >
+        <img
+          src={highRes}
+          alt={`${alt} — result`}
+          draggable={false}
+          loading="lazy"
+          decoding="async"
+          onLoad={(event) => measure(event.currentTarget, true)}
+          referrerPolicy="no-referrer"
+          className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+        />
+      </div>
       <div className="absolute inset-y-0 z-20 pointer-events-none border-l-2 border-primary" style={{ left: `${sliderPos}%` }} />
       <div className="absolute inset-y-0 z-20 flex items-center justify-center pointer-events-none" style={{ left: `${sliderPos}%`, transform: 'translateX(-50%)' }}>
         <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">

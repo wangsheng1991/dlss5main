@@ -29,7 +29,8 @@ export type ToolLanding = {
   checks?: string[];
   featureList?: string[];
   /** A worked example… or two real frames of one, for the result slider. */
-  demo?: { before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number };
+  demo?: { before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number; /** A transparent result needs an opaque surface under it, or the input shows through. */
+    backdrop?: string };
 };
 
 export const TOOL_LANDINGS: ToolLanding[] = [
@@ -187,7 +188,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       before: '/examples/cutout-teapot.jpg', after: '/examples/cutout-teapot-after.jpg',
       beforeLabel: 'Your photo', afterLabel: 'Cutout (transparency shown on white)',
       caption: 'Real output: the teapot was cut out at its original 1024 × 1024 pixels and shows an alpha channel. No background was redrawn.',
-      aspectRatio: 1,
+      aspectRatio: 1, backdrop: '#ffffff',
     },
   },
   {
