@@ -1,6 +1,7 @@
 import type { VercelRequest } from '@vercel/node';
 import Stripe from 'stripe';
 import { ApiError } from '../../server/errors.js';
+import { resolveSiteUrl, siteHost } from '../../src/config/site-url.js';
 import type { PurchasablePlanId } from '../../src/config/plans.js';
 
 /** Lazily built so a missing key only breaks billing routes, never the whole deployment. */
@@ -37,7 +38,7 @@ export async function planPricing(plan: PurchasablePlanId, fallbackUsd: number) 
 export function siteOrigin(req: VercelRequest) {
   const configured = (process.env.PUBLIC_SITE_URL || '').trim().replace(/\/$/, '');
   if (configured) return configured;
-  const host = String(req.headers['x-forwarded-host'] || req.headers.host || 'www.dlss5nvidia.com').split(',')[0];
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || siteHost(resolveSiteUrl(process.env.VITE_SITE_URL))).split(',')[0];
   const proto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0];
   return `${proto}://${host}`;
 }

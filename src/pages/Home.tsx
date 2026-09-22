@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 import { FEATURED_ARTICLES } from '../content/articles/featured';
+import { SITE_URL } from '../config/site';
 
 const COMMUNITY_EXAMPLES = [
   "https://picsum.photos/seed/upscale1/600/800",
@@ -96,9 +97,9 @@ export default function Home() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://www.dlss5nvidia.com/#organization",
+        "@id": `${SITE_URL}/#organization`,
         "name": "DLSS 5 NVIDIA Independent Showcase",
-        "url": "https://www.dlss5nvidia.com/",
+        "url": `${SITE_URL}/`,
         "description": "Independent, non-official AI image upscaling and neural super-resolution showcase."
       },
       {

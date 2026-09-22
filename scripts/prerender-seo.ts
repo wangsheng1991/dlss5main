@@ -1,12 +1,22 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { ARTICLE_COVERS } from '../src/content/articles/covers';
 import { ARTICLES, type Article } from '../src/content/articles/types';
 import { TOOL_LANDINGS, toolAlternates, toolSchema, toolSteps, type ToolLanding } from '../src/content/toolLandings';
+import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 
-const BASE_URL = 'https://www.dlss5nvidia.com';
+/** Each deployment states its own origin through `VITE_SITE_URL`; see `src/config/site-url.ts`. */
+const BASE_URL = resolveSiteUrl(process.env.VITE_SITE_URL);
+const SUPPORT_EMAIL = resolveSupportEmail(process.env.VITE_SUPPORT_EMAIL);
 const DIST = resolve(process.cwd(), 'dist');
-const TEMPLATE = readFileSync(resolve(DIST, 'index.html'), 'utf8');
+/**
+ * The static shell Vite emitted still names the default storefront, so it is rewritten here before
+ * it is copied into every prerendered route — and written back below for the routes that are not
+ * prerendered at all.
+ */
+const TEMPLATE = readFileSync(resolve(DIST, 'index.html'), 'utf8')
+  .replaceAll(DEFAULT_SITE_URL, BASE_URL)
+  .replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL);
 
 function escapeHtml(value: string): string {
   return value
@@ -282,7 +292,7 @@ function renderStore(): string {
   const root = `<main style="max-width:980px;margin:0 auto;padding:64px 24px 96px;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#f5f5f5">
     <header style="display:flex;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid #303030;padding-bottom:24px">
       <a href="/" style="color:#b1fa50;font-size:24px;font-weight:800;text-decoration:none">DLSS5NVIDIA</a>
-      <nav style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="/pricing" style="color:#b1fa50">Pricing</a><a href="/blog" style="color:#aaa">Blog</a><a href="mailto:support@dlss5nvidia.com" style="color:#aaa">Contact</a></nav>
+      <nav style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="/pricing" style="color:#b1fa50">Pricing</a><a href="/blog" style="color:#aaa">Blog</a><a href="mailto:${SUPPORT_EMAIL}" style="color:#aaa">Contact</a></nav>
     </header>
     <section style="padding:64px 0 36px">
       <p style="color:#b1fa50;text-transform:uppercase;letter-spacing:.18em;font-size:12px">Online AI image enhancement service</p>
@@ -303,7 +313,7 @@ function renderStore(): string {
     </section>
     <section style="margin-top:56px;padding-top:28px;border-top:1px solid #303030;color:#aaa;line-height:1.7">
       <h2 style="color:#f5f5f5;font-size:24px">Policies and support</h2>
-      <p>Questions about access, billing or refunds: <a href="mailto:support@dlss5nvidia.com" style="color:#b1fa50">support@dlss5nvidia.com</a></p>
+      <p>Questions about access, billing or refunds: <a href="mailto:${SUPPORT_EMAIL}" style="color:#b1fa50">${SUPPORT_EMAIL}</a></p>
       <p><a href="/terms" style="color:#b1fa50">Terms of Service</a> · <a href="/privacy" style="color:#b1fa50">Privacy Policy</a> · <a href="/refund" style="color:#b1fa50">Refund &amp; Cancellation Policy</a></p>
       <p style="font-size:13px">DLSS5NVIDIA is an independent tool and is not affiliated with or endorsed by NVIDIA Corporation. DLSS is a trademark of NVIDIA Corporation.</p>
     </section>
@@ -357,5 +367,22 @@ for (const locale of [undefined, 'en', 'zh'] as const) {
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
 for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));
+
+/** Routes that are not prerendered fall back to the shell, so it carries the same origin as well. */
+writeFileSync(resolve(DIST, 'index.html'), TEMPLATE);
+
+/**
+ * `public/` is copied verbatim, and these files state the origin as an absolute URL. Rewriting them
+ * here keeps one set of files truthful for every deployment; the default project is a no-op.
+ */
+for (const file of ['llms.txt', 'sitemap.xml', 'robots.txt']) {
+  const target = resolve(DIST, file);
+  if (!existsSync(target)) continue;
+  const original = readFileSync(target, 'utf8');
+  const adapted = original
+    .replaceAll(DEFAULT_SITE_URL, BASE_URL)
+    .replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL);
+  if (adapted !== original) writeFileSync(target, adapted);
+}
 
 console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${TOOL_LANDINGS.length} SEO tools, blog indexes and dashboard noindex.`);

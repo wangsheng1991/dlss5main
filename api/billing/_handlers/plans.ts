@@ -3,6 +3,7 @@ import { planPricing } from '../../_lib/stripe.js';
 import { paypalConfigured, paypalEnvironment } from '../../_lib/paypal.js';
 import { PAID_PLANS, PLANS } from '../../../src/config/plans.js';
 import { dodoConfigured, dodoEnvironment } from '../../_lib/dodo.js';
+import { resolveSupportEmail } from '../../../src/config/site-url.js';
 
 /** Advertised price always comes from the Stripe price that checkout actually charges. */
 async function catalog() {
@@ -20,7 +21,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
   return res.status(200).json({
     version: 3,
     currency: 'USD',
-    membershipContact: process.env.MEMBERSHIP_CONTACT_EMAIL || 'support@dlss5nvidia.com',
+    membershipContact: process.env.MEMBERSHIP_CONTACT_EMAIL || resolveSupportEmail(process.env.VITE_SUPPORT_EMAIL),
     // Sandbox and production both report whether checkout is live, so the UI never offers a dead button.
     billingEnabled: configured,
     // PayPal is offered next to card checkout while the Stripe keys are still test keys; the

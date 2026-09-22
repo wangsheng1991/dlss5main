@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { SITE_URL } from '../config/site';
 
 interface SEOProps {
   title: string;
@@ -15,7 +16,7 @@ interface SEOProps {
   robots?: string;
 }
 
-const BASE_URL = 'https://www.dlss5nvidia.com';
+const BASE_URL = SITE_URL;
 
 export default function SEO({
   title,

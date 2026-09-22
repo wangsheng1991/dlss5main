@@ -1,4 +1,5 @@
 import { ENHANCE_MAX_EDGE } from '../config/enhance';
+import { SITE_URL } from '../config/site';
 
 export type ToolLanding = {
   path: string;
@@ -287,7 +288,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
 
 export const TOOL_LANDING_BY_PATH = Object.fromEntries(TOOL_LANDINGS.map(tool => [tool.path, tool])) as Record<string, ToolLanding>;
 
-export const TOOL_BASE_URL = 'https://www.dlss5nvidia.com';
+export const TOOL_BASE_URL = SITE_URL;
 
 /** Only the enhancer has a translated equivalent. Distinct tools are not language alternates. */
 export function toolAlternates(tool: ToolLanding) {

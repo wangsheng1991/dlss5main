@@ -6,6 +6,7 @@ import { SAMPLES, SAMPLE_CACHE_VERSION, GUEST_SAMPLE_IDS, isSampleId } from '../
 import { buildToolTask, modelForTool } from '../../src/config/tools.js';
 import { SampleStore } from '../../server/sample-store.js';
 import { database } from '../../server/admin.js';
+import { resolveSiteUrl } from '../../src/config/site-url.js';
 
 /**
  * Free example generation for signed-out visitors.
@@ -56,7 +57,7 @@ async function readInput(req: VercelRequest, src: string) {
     if (isImage(src.endsWith('.png') ? 'image/png' : 'image/jpeg', bytes)) return bytes;
   }
   const proto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
-  for (const origin of [`${proto}://${req.headers.host}`, 'https://www.dlss5nvidia.com']) {
+  for (const origin of [`${proto}://${req.headers.host}`, resolveSiteUrl(process.env.VITE_SITE_URL)]) {
     const response = await fetch(`${origin}${src}`, { signal: AbortSignal.timeout(20000) }).catch(() => null);
     if (!response?.ok) continue;
     const bytes = Buffer.from(await response.arrayBuffer());

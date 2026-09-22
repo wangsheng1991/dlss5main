@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../contexts/AuthContext';
+import { SUPPORT_EMAIL } from '../config/site';
 
 type Plan = { name: string; monthlyCredits: number; dailyGenerationLimit: number; maxConcurrentJobs: number; priceUsd: number; purchasable: boolean; currency?: string };
 type PlanId = 'free' | 'pro' | 'team';
@@ -10,7 +11,7 @@ export default function Pricing() {
   const { user, profile } = useAuth();
   const [params] = useSearchParams();
   const [plans, setPlans] = useState<Record<string, Plan> | null>(null);
-  const [contact, setContact] = useState('support@dlss5nvidia.com');
+  const [contact, setContact] = useState(SUPPORT_EMAIL);
   const [billingEnabled, setBillingEnabled] = useState(false);
   const [paypal, setPaypal] = useState<{ enabled: boolean; environment: string } | null>(null);
   const [dodo, setDodo] = useState<{ enabled: boolean; environment: string } | null>(null);
@@ -20,7 +21,7 @@ export default function Pricing() {
   const cancelled = params.get('checkout') === 'cancelled' || paypalCancelled;
   useEffect(() => {
     fetch('/api/billing/plans').then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
-      setPlans(d.plans); setContact(d.membershipContact || 'support@dlss5nvidia.com'); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null);
+      setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null);
     }).catch(() => setPlans(null));
   }, []);
   const current = (profile?.tier || 'free') as PlanId;

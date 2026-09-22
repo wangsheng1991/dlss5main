@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import { ARTICLES } from '../content/articles/types';
 import { ARTICLE_COVERS } from '../content/articles/covers';
 import SEO from '../components/SEO';
+import { SITE_URL } from '../config/site';
 
 type BlogLocale = 'en-US' | 'zh-CN' | 'ja' | 'ko' | 'ru' | 'uk' | 'id' | 'et';
 
@@ -137,9 +138,9 @@ export default function Blog() {
   const localizedBlogPath = (language: 'en' | 'zh') => `/${language}/blog${slug ? `/${slug}` : ''}`;
   const canonicalPath = routeLocale ? localizedBlogPath(routeLocale) : `/blog${slug ? `/${slug}` : ''}`;
   const alternateLinks = [
-    { hrefLang: 'en', href: `https://www.dlss5nvidia.com${localizedBlogPath('en')}` },
-    { hrefLang: 'zh-CN', href: `https://www.dlss5nvidia.com${localizedBlogPath('zh')}` },
-    { hrefLang: 'x-default', href: `https://www.dlss5nvidia.com${slug ? `/blog/${slug}` : '/blog'}` },
+    { hrefLang: 'en', href: `${SITE_URL}${localizedBlogPath('en')}` },
+    { hrefLang: 'zh-CN', href: `${SITE_URL}${localizedBlogPath('zh')}` },
+    { hrefLang: 'x-default', href: `${SITE_URL}${slug ? `/blog/${slug}` : '/blog'}` },
   ];
 
   // Blog index page
@@ -221,8 +222,8 @@ export default function Blog() {
     dateModified: article.datePublished || undefined,
     datePublished: article.datePublished || undefined,
     author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk' },
-    publisher: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: 'https://www.dlss5nvidia.com' },
-    mainEntityOfPage: `https://www.dlss5nvidia.com${canonicalPath}`,
+    publisher: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: SITE_URL },
+    mainEntityOfPage: `${SITE_URL}${canonicalPath}`,
     citation: article.sources?.map(source => source.url),
   };
 
