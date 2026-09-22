@@ -328,7 +328,9 @@ function renderToolLanding(tool: ToolLanding): string {
     <nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(tool.heading)}</span></nav>
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
       <div><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(tool.eyebrow)}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(tool.heading)}</h1><p class="text-lg text-zinc-300 leading-relaxed mt-5">${escapeHtml(tool.intro)}</p><p class="mt-6"><a href="/dashboard?tool=${tool.dashboardTool}" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(tool.cta)} →</a></p><p class="text-xs text-zinc-500 mt-4">${escapeHtml(tool.ctaNote)}</p></div>
-      <figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="/examples/sample1-photo.webp" alt="${escapeHtml(isSpanish ? 'Comparación de mejora de imagen' : 'Image quality enhancement before and after example')}" width="1200" height="800" fetchpriority="high" class="w-full rounded-lg" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(isSpanish ? 'Ejemplo ilustrativo; el resultado depende de tu imagen original.' : 'Illustrative example; the result depends on your original image.')}</figcaption></figure>
+      ${tool.demo
+        ? `<figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="${tool.demo.after}" alt="${escapeHtml(`${tool.heading} — ${tool.demo.afterLabel}`)}" width="1024" height="1024" fetchpriority="high" class="w-full rounded-lg" /><img src="${tool.demo.before}" alt="${escapeHtml(`${tool.heading} — ${tool.demo.beforeLabel}`)}" width="1024" height="1024" class="w-full rounded-lg" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(tool.demo.caption)}</figcaption></figure>`
+        : `<figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="/examples/sample1-photo.webp" alt="${escapeHtml(isSpanish ? 'Comparación de mejora de imagen' : 'Image quality enhancement before and after example')}" width="1200" height="800" fetchpriority="high" class="w-full rounded-lg" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(isSpanish ? 'Ejemplo ilustrativo; el resultado depende de tu imagen original.' : 'Illustrative example; the result depends on your original image.')}</figcaption></figure>`}
     </section>
     <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cuándo usar esta herramienta' : 'When to use this tool'}</h2><ul>${tool.useCases.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cómo funciona' : 'How it works'}</h2><ol>${steps.map(step => `<li><strong>${escapeHtml(step.name)}</strong> — ${escapeHtml(step.text)}</li>`).join('')}</ol></article></section>
     <section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">${isSpanish ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2><div class="mt-5">${faqs}</div></section>
@@ -339,7 +341,7 @@ function renderToolLanding(tool: ToolLanding): string {
     description: tool.description,
     canonicalPath: tool.path,
     language: tool.language,
-    image: '/examples/sample1-photo.webp',
+    image: tool.demo?.after ?? '/examples/sample1-photo.webp',
     keywords: tool.keywords,
     structuredData: schema,
     alternates: toolAlternates(tool),

@@ -4,7 +4,7 @@ export type ToolLanding = {
   path: string;
   locale: 'en' | 'es';
   slug: string;
-  dashboardTool: 'upscale' | 'enhance' | 'unblur';
+  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'erase';
   language: 'en-US' | 'es-ES';
   title: string;
   description: string;
@@ -20,6 +20,16 @@ export type ToolLanding = {
   keywords: string[];
   faqs: Array<{ question: string; answer: string }>;
   related: Array<{ path: string; label: string }>;
+  /** The tools other than the enhancer describe themselves: these fields replace its copy. */
+  whenToUse?: string;
+  sharedNote?: string;
+  disclaimer?: string;
+  stepsHeading?: string;
+  steps?: Array<{ name: string; text: string }>;
+  checks?: string[];
+  featureList?: string[];
+  /** A worked example… or two real frames of one, for the result slider. */
+  demo?: { before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number };
 };
 
 export const TOOL_LANDINGS: ToolLanding[] = [
@@ -135,6 +145,96 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
     ],
   },
+  {
+    path: '/remove-background',
+    locale: 'en',
+    slug: 'remove-background',
+    dashboardTool: 'cutout',
+    language: 'en-US',
+    title: 'Remove Image Background Online — Transparent PNG',
+    description: 'Delete the background from a photo online and download a transparent PNG at the resolution you uploaded. Try the example free, no account needed.',
+    eyebrow: 'AI image tool',
+    heading: 'Remove Background',
+    intro: 'Cut the subject out of a photo and keep it on transparency, at the pixel size you uploaded. The example below runs free, without an account.',
+    cta: 'Remove a background',
+    ctaNote: 'JPG, PNG and WebP · up to 20 MiB · transparent PNG at the original size',
+    resultLabel: 'Cutout result',
+    originalLabel: 'Your photo',
+    prompt: 'Remove the background and keep the subject on transparency.',
+    useCases: ['Product photos for a shop listing', 'Profile pictures and team pages', 'Cutouts for design mockups', 'Objects that become stickers or assets'],
+    keywords: ['remove background', 'background remover', 'transparent png', 'cut out image', 'remove image background online'],
+    whenToUse: 'Best on a single subject with a reasonably distinct edge — products, people, pets or objects. Very fine detail such as loose hair, glass and motion blur may keep some background, and a see-through subject cannot be cut out cleanly.',
+    sharedNote: 'This tool also powers the cutout inside the company tools. It runs in about two seconds and keeps your original pixel size; there is no prompt to write.',
+    disclaimer: 'The cut does not change your image size, but the model can still round off very fine edges such as hair or transparent materials. Keep the original file and compare before publishing.',
+    stepsHeading: 'How to remove a background',
+    steps: [
+      { name: 'Choose your image', text: 'Select a JPG, PNG or WebP up to 20 MiB. The preview stays in your browser until you submit.' },
+      { name: 'Cut the subject out', text: 'Pick Remove background and confirm the task. It takes about two seconds and uses 1 credit per task.' },
+      { name: 'Compare and download', text: 'Check the edges at 100%, especially hair and transparent objects, then download the PNG with transparency.' },
+    ],
+    checks: ['Zoom to the edges and check fine hair or fur.', 'Confirm nothing was cut off the subject itself.', 'Open the PNG on a light and a dark page to see the transparency.'],
+    featureList: ['Transparent PNG output', 'Original pixel size kept', 'JPG, PNG and WebP input up to 20 MiB'],
+    faqs: [
+      { question: 'Does removing the background change the image size?', answer: 'No. The cutout keeps the pixel dimensions of the file you uploaded and only changes what is behind the subject — the output is a PNG with an alpha channel.' },
+      { question: 'Can I get a white or coloured background instead?', answer: 'Yes. The API accepts a background colour for the same tool, so a product shot can come back on white without a second step. The studio currently returns transparency.' },
+      { question: 'What kind of photo works best?', answer: 'One clear subject with an edge you can already see: a product on a plain surface, a person against a wall, or an object on a table. Busy backgrounds and see-through materials are harder.' },
+    ],
+    related: [
+      { path: '/erase-object', label: 'Erase Object' },
+      { path: '/image-upscaler', label: 'AI Image Upscaler' },
+    ],
+    demo: {
+      before: '/examples/cutout-teapot.jpg', after: '/examples/cutout-teapot-after.jpg',
+      beforeLabel: 'Your photo', afterLabel: 'Cutout (transparency shown on white)',
+      caption: 'Real output: the teapot was cut out at its original 1024 × 1024 pixels and shows an alpha channel. No background was redrawn.',
+      aspectRatio: 1,
+    },
+  },
+  {
+    path: '/erase-object',
+    locale: 'en',
+    slug: 'erase-object',
+    dashboardTool: 'erase',
+    language: 'en-US',
+    title: 'Erase Objects from Photos with AI — Remove Anything Online',
+    description: 'Remove an object, watermark or line of text from a photo and let the model rebuild what was behind it. Example pair and full-size sample provided.',
+    eyebrow: 'AI image tool',
+    heading: 'Erase Object',
+    intro: 'Name what should go: the model removes it and rebuilds the surface underneath, keeping the rest of the frame as it was.',
+    cta: 'Erase an object',
+    ctaNote: 'JPG, PNG and WebP · up to 20 MiB · 1024 × 1024 PNG output, about a minute',
+    resultLabel: 'Erased result',
+    originalLabel: 'Your photo',
+    prompt: 'Remove the spoon from the table and rebuild the wooden surface behind it; keep the mug, the napkin and the lighting exactly as they are.',
+    useCases: ['Objects that spoil a photo', 'Watermarks and logos on your own images', 'Text and labels you no longer need', 'Repair work on old photos'],
+    keywords: ['erase object from photo', 'remove object from image', 'remove watermark online', 'ai object remover', 'clean up photo'],
+    whenToUse: 'Best for an object on a textured or continuous surface — a table, a wall, a floor, sky or grass. The model rebuilds the covered area, so the result is a re-render, not a perfect copy of what was there.',
+    sharedNote: 'This is a generative edit: the frame is re-rendered at 1024 × 1024, so a larger photo comes back at that size rather than its original resolution.',
+    disclaimer: 'Because the whole frame is re-rendered, fine text and small details elsewhere in the photo can change slightly. Review the result at 100% before you rely on it.',
+    stepsHeading: 'How to erase an object',
+    steps: [
+      { name: 'Choose your image', text: 'Select a JPG, PNG or WebP up to 20 MiB. Photos with one obvious object work best.' },
+      { name: 'Name what should go', text: 'Describe the object to remove in the studio, then submit. The task takes about a minute and uses 1 credit.' },
+      { name: 'Compare and download', text: 'Check where the object was and the rest of the frame, then download the 1024 × 1024 PNG.' },
+    ],
+    checks: ['Zoom into the area the object occupied for seams or repeated texture.', 'Check text, logos and faces elsewhere in the frame for drift.', 'Compare the lighting direction with the original.'],
+    featureList: ['Object and watermark removal', 'Rebuilds the surface behind the object', '1024 × 1024 PNG output'],
+    faqs: [
+      { question: 'Does it work on watermarks and text?', answer: 'Yes, as long as you own the image: describe the watermark or the line of text as the thing to remove. Dense or semi-transparent text over a busy background is the hardest case.' },
+      { question: 'Why does the output come back at 1024 × 1024?', answer: 'The model rebuilds the entire frame rather than patching pixels, and it works at a fixed 1024 px square. A larger original is therefore re-rendered at that size.' },
+      { question: 'How long does an erase take?', answer: 'About a minute on the shared GPUs behind this site. The task is queued if the hardware is busy, and a confirmed failure is refunded automatically.' },
+    ],
+    related: [
+      { path: '/remove-background', label: 'Remove Background' },
+      { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
+    ],
+    demo: {
+      before: '/examples/erase-spoon.jpg', after: '/examples/erase-spoon-after.jpg',
+      beforeLabel: 'Your photo', afterLabel: 'Spoon erased',
+      caption: 'Real output: the spoon was removed and the wooden surface rebuilt behind it. The mug, the napkin and the light are unchanged.',
+      aspectRatio: 1,
+    },
+  },
 ];
 
 export const TOOL_LANDING_BY_PATH = Object.fromEntries(TOOL_LANDINGS.map(tool => [tool.path, tool])) as Record<string, ToolLanding>;
@@ -152,6 +252,8 @@ export function toolAlternates(tool: ToolLanding) {
 }
 
 export function toolSteps(tool: ToolLanding) {
+  // Tools other than the enhancer bring their own steps; the enhancer's are shared by its three pages.
+  if (tool.steps) return tool.steps;
   return tool.locale === 'es' ? [
     { name: 'Selecciona tu imagen', text: 'Selecciona un JPG, PNG o WebP y revisa sus dimensiones. La vista previa es local.' },
     { name: 'Confirma el tamaño', text: `Elige un objetivo de 2× o 4×. La salida está limitada a ${ENHANCE_MAX_EDGE} px por lado. Inicia sesión y confirma el uso de 1 crédito.` },
@@ -169,7 +271,8 @@ export function toolSchema(tool: ToolLanding) {
     '@graph': [
       { '@type': 'WebApplication', '@id': `${TOOL_BASE_URL}${tool.path}#application`, name: tool.heading,
         url: `${TOOL_BASE_URL}${tool.path}`, applicationCategory: 'MultimediaApplication', operatingSystem: 'Web',
-        description: tool.description, inLanguage: tool.locale, featureList: [`2× / 4× targets, up to ${ENHANCE_MAX_EDGE} px per edge`, 'JPEG, PNG and WebP input'],
+        description: tool.description, inLanguage: tool.locale,
+        featureList: tool.featureList ?? [`2× / 4× targets, up to ${ENHANCE_MAX_EDGE} px per edge`, 'JPEG, PNG and WebP input'],
         provider: { '@type': 'Organization', name: 'DLSS5NVIDIA', url: TOOL_BASE_URL },
       },
       { '@type': 'HowTo', name: tool.heading, description: tool.intro, inLanguage: tool.locale,

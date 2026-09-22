@@ -122,7 +122,7 @@ export class JobStore {
   }
   async list(uid: string, limit = 20) {
     const snapshot = await this.db.collection('image_operations').where('uid', '==', uid).orderBy('createdAt', 'desc').limit(Math.min(Math.max(limit, 1), 50)).get();
-    return snapshot.docs.map(doc => { const job = doc.data() as Job; let input: Record<string, unknown> = {}; try { input = JSON.parse(job.inputJson); } catch {} return { id: doc.id, status: job.status, createdAt: job.createdAt, completedAt: job.completedAt, errorCode: job.errorCode, prompt: typeof input.prompt === 'string' ? input.prompt : '', saved: !!job.result?.stored, width: job.result?.width || 0, height: job.result?.height || 0 }; });
+    return snapshot.docs.map(doc => { const job = doc.data() as Job; let input: Record<string, unknown> = {}; try { input = JSON.parse(job.inputJson); } catch {} return { id: doc.id, status: job.status, createdAt: job.createdAt, completedAt: job.completedAt, errorCode: job.errorCode, prompt: typeof input.prompt === 'string' ? input.prompt : '', tool: typeof input.tool === 'string' ? input.tool : '', saved: !!job.result?.stored, width: job.result?.width || 0, height: job.result?.height || 0 }; });
   }
   /** Keeps the durable result metadata on the job so history can render it without reading the image. */
   async attachResult(id: string, result: ResultMeta) {

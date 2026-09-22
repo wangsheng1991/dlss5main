@@ -13,6 +13,8 @@ export default function handler(_req: VercelRequest, res: VercelResponse) {
     // Reported for deployment checks only: super resolution is a separate capability, so a missing
     // key must not make the site look degraded.
     superResKey: Boolean(process.env.ALPHANET_SUPERRES_API_KEY),
+    // The C-line tools fall back to ALPHANET_API_KEY, so a false here means "same project", not broken.
+    toolsKey: Boolean(process.env.ALPHANET_TOOLS_API_KEY),
   };
   const ready = checks.alphaNet && checks.firebaseAuth && checks.quotaBackend && Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
   return res.status(ready ? 200 : 503).json({

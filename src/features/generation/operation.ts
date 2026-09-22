@@ -1,9 +1,14 @@
 export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEEDED' | 'FAILED';
+/** The studio's modes: two editing presets plus the C-line tools, which size their own output. */
+export type GenerationMode = 'edit' | 'enhance' | 'cutout' | 'erase';
 export interface GenerationBody {
-  prompt: string; image_ids: string[]; width: number; height: number; output_format: string;
-  /** `edit` sends the caller's prompt; both modes include source geometry for deterministic sizing. */
-  mode?: 'edit' | 'enhance';
+  image_ids: string[];
+  /** Editing modes send a prompt and explicit geometry; the tools send neither size nor format. */
+  prompt?: string; width?: number; height?: number; output_format?: string;
+  mode?: GenerationMode;
   factor?: number; source_width?: number; source_height?: number;
+  /** Optional for the eraser only: how many re-rendering steps to spend (4–20). */
+  num_inference_steps?: number;
 }
 export interface SavedOperation { version: 1; userId: string; key: string; body: GenerationBody; jobId?: string; createdAt: string; status?: JobStatus; outputUrl?: string }
 const storageKey = (uid: string) => `dlss:operation:${uid}`;

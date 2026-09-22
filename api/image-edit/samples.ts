@@ -1,8 +1,9 @@
 import { existsSync, readFileSync } from 'node:fs';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { alphaNet } from '../_lib/alphanet.js';
+import { alphaNet, alphaNetTools } from '../_lib/alphanet.js';
 import { fail } from '../_lib/auth.js';
-import { SAMPLES, SAMPLE_CACHE_VERSION, isSampleId } from '../../src/config/samples.js';
+import { SAMPLES, SAMPLE_CACHE_VERSION, GUEST_SAMPLE_IDS, isSampleId } from '../../src/config/samples.js';
+import { buildToolTask, modelForTool } from '../../src/config/tools.js';
 import { SampleStore } from '../../server/sample-store.js';
 import { database } from '../../server/admin.js';
 
@@ -62,16 +63,22 @@ async function readInput(req: VercelRequest, src: string) {
 /** Generates the example with the fixed catalog prompt and stores the copy guests will receive. */
 async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
   const sample = SAMPLES[sampleId];
+  // An example may belong to a C-line tool, which answers under its own provider model and takes no
+  // size or format field — so the client and the body are both chosen from the catalog entry.
+  const client = sample.tool ? alphaNetTools : alphaNet;
   const bytes = await readInput(req, sample.src);
-  const ticket = await alphaNet.createUpload({ fileName: sample.fileName, contentType: sample.contentType, size: bytes.length });
+  const ticket = await client.createUpload({ fileName: sample.fileName, contentType: sample.contentType, size: bytes.length, model: sample.tool ? modelForTool(sample.tool) : undefined });
   const upload = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: bytes, signal: AbortSignal.timeout(120000) });
   if (!upload.ok) throw new Error(`Example upload failed (${upload.status})`);
   const key = `sample-warm:${sampleId}:${Date.now()}`;
-  const accepted = await alphaNet.submit({ prompt: sample.prompt, image_ids: [ticket.file_id], width: 1024, height: 1024, seed: 42, num_inference_steps: 4, output_format: 'webp' }, key);
+  const body = sample.tool
+    ? buildToolTask(sample.tool, { imageIds: [ticket.file_id], prompt: sample.prompt })
+    : { prompt: sample.prompt, image_ids: [ticket.file_id], width: 1024, height: 1024, seed: 42, num_inference_steps: 4, output_format: 'webp' };
+  const accepted = await client.submit(body, key);
   const deadline = Date.now() + POLL_BUDGET_MS;
   while (Date.now() < deadline) {
     await sleep(POLL_INTERVAL_MS);
-    const task = await alphaNet.poll(accepted.task_id) as { status?: string; result?: { images?: Array<{ url: string; content_type?: string; width?: number; height?: number; sha256?: string }> }; error?: string };
+    const task = await client.poll((accepted as { task_id: string }).task_id) as { status?: string; result?: { images?: Array<{ url: string; content_type?: string; width?: number; height?: number; sha256?: string }> }; error?: string };
     if (task.status === 'FAILURE') throw new Error(task.error || 'Example generation failed');
     const image = task.result?.images?.[0];
     if (task.status === 'SUCCESS' && image?.url) return store.save(sampleId, sample.prompt, image, SAMPLE_CACHE_VERSION);

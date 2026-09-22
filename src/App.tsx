@@ -54,6 +54,8 @@ export default function App() {
                   <Route path="/image-upscaler" element={<ToolLanding />} />
                   <Route path="/image-quality-enhancer" element={<ToolLanding />} />
                   <Route path="/unblur-image" element={<ToolLanding />} />
+                  <Route path="/remove-background" element={<ToolLanding />} />
+                  <Route path="/erase-object" element={<ToolLanding />} />
                   <Route path="/es/mejorar-calidad-imagen" element={<ToolLanding />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />

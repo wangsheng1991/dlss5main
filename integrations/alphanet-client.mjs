@@ -29,16 +29,19 @@ export class AlphaNetClient {
     return result;
   }
 
-  createUpload({ fileName, contentType, size }) {
+  // model 决定能力线：'flux-klein'（生成式精修，需 prompt）或 'pixrestore-s'（细节增强，只吃 1 张图）。
+  // 上传票据接口同样要带上 model（网关按渠道的模型清单校验）。
+  createUpload({ fileName, contentType, size, model = 'flux-klein' }) {
     return this.request('/v1/flux/uploads', {
-      body: { model: 'flux-klein', file_name: fileName, content_type: contentType, size },
+      body: { model, file_name: fileName, content_type: contentType, size },
     });
   }
 
   submit(input, idempotencyKey) {
     if (!idempotencyKey) throw new Error('Persist an idempotency key before submitting');
+    const model = input.model ?? 'flux-klein';
     return this.request('/v1/tasks/alphanet-flux', {
-      body: { ...input, model: 'flux-klein' }, idempotencyKey,
+      body: { ...input, model }, idempotencyKey,
     });
   }
 

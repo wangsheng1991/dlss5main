@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import type { User } from 'firebase/auth';
 import { request } from './client';
-import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type SavedOperation } from './operation';
+import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
+import { isToolId, modelForTool, toolNeedsPrompt } from '../../config/tools';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
@@ -60,13 +61,16 @@ export function useGeneration(user: User | null) {
     } catch (cause) { if (uid.current === saved.userId) setError(cause instanceof Error ? cause.message : 'Connection interrupted. Resume your saved operation.'); }
     finally { active.current = false; setSubmitting(false); }
   }
-  async function submit(file: File, prompt: string, options: { mode?: 'edit' | 'enhance'; factor?: EnhanceFactor; source?: { width: number; height: number } } = {}) {
+  async function submit(file: File, prompt: string, options: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number } = {}) {
     if (!user) { setError('Sign in before generating an image.'); return; }
     if (active.current || (operation && !terminal(operation.status))) return;
     active.current = true; setSubmitting(true); setError('');
     try {
-      const enhancing = options.mode === 'enhance';
-      if (!enhancing && !prompt.trim()) throw new Error('Describe the edit you want to make.');
+      const mode = options.mode || 'edit';
+      const enhancing = mode === 'enhance';
+      const tool = isToolId(mode) ? mode : null;
+      if (!enhancing && !tool && !prompt.trim()) throw new Error('Describe the edit you want to make.');
+      if (tool && toolNeedsPrompt(tool) && !prompt.trim()) throw new Error(tool === 'erase' ? 'Describe what should be removed.' : 'Describe what you want to change.');
       if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 20 * 1024 * 1024 || !file.size) throw new Error('Use a JPEG, PNG or WebP image up to 20 MiB.');
       const existing = readOperation(user.uid);
       if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
@@ -74,14 +78,23 @@ export function useGeneration(user: User | null) {
       // Measure every mode so normal edits can keep the source geometry as well as HD enhance.
       const source = options.source || await measureImage(file);
       setPhase('Uploading image…');
-      const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size }) });
+      const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size, model: tool ? modelForTool(tool) : 'flux-klein' }) });
       const upload = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: file, signal: AbortSignal.timeout(120000) });
       if (!upload.ok) throw new Error('Image upload failed. No generation was submitted.');
       if (uid.current !== user.uid) throw new Error('Account changed. Sign in again before submitting.');
-      const output = enhancing ? enhanceOutput(source.width, source.height, options.factor === 4 ? 4 : 2) : preserveOutput(source.width, source.height);
-      const body: GenerationBody = enhancing
-        ? { prompt: '', image_ids: [ticket.file_id], ...output, output_format: 'webp', mode: 'enhance', factor: options.factor === 4 ? 4 : 2, source_width: source.width, source_height: source.height }
-        : { prompt: prompt.trim(), image_ids: [ticket.file_id], ...output, output_format: 'webp', mode: 'edit', source_width: source.width, source_height: source.height };
+      let body: GenerationBody;
+      if (tool) {
+        // The tool's model decides the output geometry, so no width, height or format is sent: the
+        // provider refuses those fields instead of ignoring them.
+        body = { image_ids: [ticket.file_id], mode: tool };
+        if (toolNeedsPrompt(tool)) body.prompt = prompt.trim();
+        if (tool === 'erase' && options.steps) body.num_inference_steps = options.steps;
+      } else {
+        const output = enhancing ? enhanceOutput(source.width, source.height, options.factor === 4 ? 4 : 2) : preserveOutput(source.width, source.height);
+        body = enhancing
+          ? { prompt: '', image_ids: [ticket.file_id], ...output, output_format: 'webp', mode: 'enhance', factor: options.factor === 4 ? 4 : 2, source_width: source.width, source_height: source.height }
+          : { prompt: prompt.trim(), image_ids: [ticket.file_id], ...output, output_format: 'webp', mode: 'edit', source_width: source.width, source_height: source.height };
+      }
       const saved: SavedOperation = { version: 1, userId: user.uid, key: crypto.randomUUID(), body, createdAt: new Date().toISOString() };
       saveOperation(saved); setOperation(saved); active.current = false; await replay(saved);
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not upload your image.'); }
