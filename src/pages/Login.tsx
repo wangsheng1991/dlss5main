@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { loadFirebase } from '../lib/firebase';
 
 export default function Login() {
   const { t } = useTranslation();
@@ -19,6 +18,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
+      const { auth, signInWithEmailAndPassword } = await loadFirebase();
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/dashboard');
     } catch (err: any) {

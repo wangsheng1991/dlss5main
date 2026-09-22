@@ -1,14 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  User, 
-  onAuthStateChanged, 
-  signInWithPopup, 
-  signOut,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db, googleProvider } from '../lib/firebase';
+import type { User } from 'firebase/auth';
+import { loadFirebase } from '../lib/firebase';
 
 interface UserProfile {
   email: string;
@@ -46,51 +38,77 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     let profileUnsubscribe: (() => void) | null = null;
+    let authUnsubscribe: (() => void) | null = null;
+    let cancelled = false;
 
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // Fetch or create user profile
-        const userRef = doc(db, 'users', currentUser.uid);
-        const userSnap = await getDoc(userRef);
-        
-        // Profile creation and signup credits are server-owned and idempotent.
-        // Never grant or mutate credits from the browser.
-        const idToken = await currentUser.getIdToken();
-        const bootstrap = await fetch('/api/me/bootstrap', { method: 'POST', headers: { Authorization: `Bearer ${idToken}` } });
-        if (!bootstrap.ok) throw new Error('Unable to initialize your account. Please try again.');
-        const data = (await bootstrap.json()) as Partial<UserProfile>;
-        if (!userSnap.exists()) {
-          // The server response is authoritative; snapshot listener will hydrate the full profile.
-          setProfile({ email: currentUser.email || '', tier: data.tier || 'free', createdAt: new Date().toISOString(), name: currentUser.displayName || undefined, image: currentUser.photoURL || undefined, credits: data.credits ?? 0 });
-        }
+    /**
+     * The provider is always mounted, but the SDK behind it is not: visitors read the page first and
+     * the browser fetches firebase once it has nothing better to do. Someone who signed in earlier
+     * still gets their session back a moment after the first paint, and anything that needs auth
+     * before then (the sign-in page) loads the same module on demand.
+     */
+    const start = () => {
+      void (async () => {
+        const { auth, db, onAuthStateChanged, doc, getDoc, onSnapshot } = await loadFirebase();
+        if (cancelled) return;
 
-        // Listen for profile changes (e.g., credits deduction)
-        import('firebase/firestore').then(({ onSnapshot }) => {
-          profileUnsubscribe = onSnapshot(userRef, (docSnap) => {
-            if (docSnap.exists()) {
-              setProfile(docSnap.data() as UserProfile);
+        authUnsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+          setUser(currentUser);
+          if (currentUser) {
+            // Fetch or create user profile
+            const userRef = doc(db, 'users', currentUser.uid);
+            const userSnap = await getDoc(userRef);
+
+            // Profile creation and signup credits are server-owned and idempotent.
+            // Never grant or mutate credits from the browser.
+            const idToken = await currentUser.getIdToken();
+            const bootstrap = await fetch('/api/me/bootstrap', { method: 'POST', headers: { Authorization: `Bearer ${idToken}` } });
+            if (!bootstrap.ok) throw new Error('Unable to initialize your account. Please try again.');
+            const data = (await bootstrap.json()) as Partial<UserProfile>;
+            if (!userSnap.exists()) {
+              // The server response is authoritative; snapshot listener will hydrate the full profile.
+              setProfile({ email: currentUser.email || '', tier: data.tier || 'free', createdAt: new Date().toISOString(), name: currentUser.displayName || undefined, image: currentUser.photoURL || undefined, credits: data.credits ?? 0 });
             }
-          });
+
+            // Listen for profile changes (e.g., credits deduction)
+            profileUnsubscribe = onSnapshot(userRef, (docSnap) => {
+              if (docSnap.exists()) {
+                setProfile(docSnap.data() as UserProfile);
+              }
+            });
+          } else {
+            setProfile(null);
+            if (profileUnsubscribe) {
+              profileUnsubscribe();
+              profileUnsubscribe = null;
+            }
+          }
+          setLoading(false);
         });
-      } else {
-        setProfile(null);
-        if (profileUnsubscribe) {
-          profileUnsubscribe();
-          profileUnsubscribe = null;
-        }
-      }
-      setLoading(false);
-    });
+      })().catch((error) => {
+        console.error('Unable to start authentication:', error);
+        if (!cancelled) setLoading(false);
+      });
+    };
+
+    // Safari before 16.4 has no requestIdleCallback; a short delay is the same thing there.
+    const hasIdleCallback = typeof window.requestIdleCallback === 'function';
+    const handle = hasIdleCallback
+      ? window.requestIdleCallback(start, { timeout: 1000 })
+      : window.setTimeout(start, 200);
 
     return () => {
-      unsubscribe();
+      cancelled = true;
+      if (hasIdleCallback) window.cancelIdleCallback(handle);
+      else window.clearTimeout(handle);
+      if (authUnsubscribe) authUnsubscribe();
       if (profileUnsubscribe) profileUnsubscribe();
     };
   }, []);
 
   const signInWithGoogle = async () => {
     try {
+      const { auth, googleProvider, signInWithPopup } = await loadFirebase();
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error('Error signing in with Google:', error);
@@ -100,6 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
+      const { auth, signOut } = await loadFirebase();
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out:', error);

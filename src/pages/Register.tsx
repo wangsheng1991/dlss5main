@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { loadFirebase } from '../lib/firebase';
 
 export default function Register() {
   const { t } = useTranslation();
@@ -20,6 +19,7 @@ export default function Register() {
     setError('');
     setLoading(true);
     try {
+      const { auth, createUserWithEmailAndPassword, updateProfile } = await loadFirebase();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       if (name) {
         await updateProfile(userCredential.user, { displayName: name });
