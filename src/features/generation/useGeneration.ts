@@ -79,7 +79,7 @@ export function useGeneration(user: User | null) {
       const source = options.source || await measureImage(file);
       // The services refuse more than 40 MP (a 48 MP phone photo is only ~15 MiB), and learning that
       // from a failed task costs a queue wait and hides the reason — so refuse it here instead.
-      const tooBig = oversizeNote(source.width, source.height);
+      const tooBig = oversizeNote(source.width, source.height, mode);
       if (tooBig) throw new Error(tooBig);
       setPhase('Uploading image…');
       const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size, model: tool ? modelForTool(tool) : 'flux-klein' }) });
@@ -119,7 +119,7 @@ export function useGeneration(user: User | null) {
   const statusText = operation?.status === 'SUBMISSION_UNCERTAIN' ? 'Confirming submission. Resume safely with the same saved request.' : operation?.status === 'QUEUED' ? 'Queued — waiting for processing.' : 'Processing your image…';
   // The provider now reports why a task failed (the gateway used to answer with an empty reason),
   // so a refund comes with the sentence that tells the customer what to change.
-  const reason = failureNote(query.data?.error);
+  const reason = failureNote(query.data?.error, operation?.body?.mode || 'edit');
   const failure = operation?.status === 'FAILED' ? `${query.data?.refunded ? 'Generation failed. Your credit has been refunded.' : 'Generation failed. Check your balance; refund reconciliation may still be pending.'}${reason ? ` ${reason}` : ''}` : '';
   return { operation, busy: submitting || waiting, submitting, pending, error: error || query.error?.message || failure, phase: submitting ? phase : statusText, submit, resume,
     pause: () => setPaused(true),

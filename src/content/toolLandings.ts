@@ -181,7 +181,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { question: 'Does removing the background change the image size?', answer: 'No. The cutout keeps the pixel dimensions of the file you uploaded and only changes what is behind the subject — the output is a PNG with an alpha channel.' },
       { question: 'Can I get a white or coloured background instead?', answer: 'Yes. The API accepts a background colour for the same tool, so a product shot can come back on white without a second step. The studio currently returns transparency.' },
       { question: 'What kind of photo works best?', answer: 'One clear subject with an edge you can already see: a product on a plain surface, a person against a wall, or an object on a table. Busy backgrounds and see-through materials are harder.' },
-      { question: 'Is there a size limit on the image I upload?', answer: 'Two: the file is capped at 20 MiB and the image at 40 megapixels (for example 8000 × 5000). A 48 MP phone photo is only about 15 MiB, so it passes the size check and still gets refused — the studio measures the picture when you pick it and tells you before anything is submitted.' },
+      { question: 'Is there a size limit on the image I upload?', answer: 'Two: the file is capped at 20 MiB and, for this tool, at 40 megapixels (for example 8000 × 5000). A 48 MP phone photo is only about 15 MiB, so it passes the size check and would still be refused — the studio measures the picture when you pick it and tells you before anything is submitted.' },
     ],
     related: [
       { path: '/erase-object', label: 'Erase Object' },
@@ -206,7 +206,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     heading: 'Erase Object',
     intro: 'Name what should go: the model removes it and rebuilds the surface underneath, keeping the rest of the frame as it was.',
     cta: 'Erase an object',
-    ctaNote: 'JPG, PNG and WebP · up to 20 MiB and 40 MP · 1024 × 1024 PNG output, about a minute',
+    ctaNote: 'JPG, PNG and WebP · up to 20 MiB · 1024 × 1024 PNG output, about a minute',
     resultLabel: 'Erased result',
     originalLabel: 'Your photo',
     prompt: 'Remove the spoon from the table and rebuild the wooden surface behind it; keep the mug, the napkin and the lighting exactly as they are.',
@@ -217,7 +217,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     disclaimer: 'Because the whole frame is re-rendered, fine text and small details elsewhere in the photo can change slightly. Review the result at 100% before you rely on it.',
     stepsHeading: 'How to erase an object',
     steps: [
-      { name: 'Choose your image', text: 'Select a JPG, PNG or WebP up to 20 MiB and 40 megapixels. Photos with one obvious object work best.' },
+      { name: 'Choose your image', text: 'Select a JPG, PNG or WebP up to 20 MiB — any pixel size, since the reference is scaled to the model before it renders. Photos with one obvious object work best.' },
       { name: 'Name what should go', text: 'Describe the object to remove in the studio, then submit. The task takes about a minute and uses 1 credit.' },
       { name: 'Compare and download', text: 'Check where the object was and the rest of the frame, then download the 1024 × 1024 PNG.' },
     ],
@@ -227,7 +227,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { question: 'Does it work on watermarks and text?', answer: 'Yes, as long as you own the image: describe the watermark or the line of text as the thing to remove. Dense or semi-transparent text over a busy background is the hardest case.' },
       { question: 'Why does the output come back at 1024 × 1024?', answer: 'The model rebuilds the entire frame rather than patching pixels, and it works at a fixed 1024 px square. A larger original is therefore re-rendered at that size.' },
       { question: 'How long does an erase take?', answer: 'About a minute on the shared GPUs behind this site. The task is queued if the hardware is busy, and a confirmed failure is refunded automatically.' },
-      { question: 'Is there a size limit on the image I upload?', answer: 'Two: the file is capped at 20 MiB and the image at 40 megapixels (for example 8000 × 5000). Most phone photos are far smaller than the file limit but a 48 MP camera can exceed the pixel one, so the studio measures the picture when you pick it and says so before the task is submitted.' },
+      { question: 'Is there a size limit on the image I upload?', answer: 'Only one here: the file is capped at 20 MiB, with no pixel ceiling — the reference image is scaled down inside the service before the frame is re-rendered at 1024 × 1024. (The editing and enhancement models accept up to 20 megapixels, and background removal and vectorizing up to 40 megapixels.)' },
     ],
     related: [
       { path: '/remove-background', label: 'Remove Background' },
@@ -274,7 +274,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { question: 'Should I vectorize a photograph?', answer: 'Usually not. A photograph holds thousands of colours, and tracing all of them produces a very large file, so the photo preset limits the palette to 16 colours first. That gives a posterized illustration rather than a faithful copy.' },
       { question: 'Does the SVG keep my image size?', answer: 'The trace runs at your image size up to the long edge you choose — 1024, 1536 or 2048 px. A larger source is scaled down to that edge before tracing, and the SVG states its own width and height.' },
       { question: 'Is this the same as embedding my PNG in an SVG?', answer: 'No. A bitmap wrapped in an SVG tag still contains pixels and blurs when scaled. Here the image is traced into vector paths, which is what makes it editable and resolution-independent.' },
-      { question: 'Is there a size limit on the image I upload?', answer: 'Two: the file is capped at 20 MiB and the image at 40 megapixels (for example 8000 × 5000); the trace itself then runs at up to the 2048 px long edge you choose. The studio measures the picture when you pick it, so an over-sized photo is refused before it is uploaded.' },
+      { question: 'Is there a size limit on the image I upload?', answer: 'Two: the file is capped at 20 MiB and, for this tool, at 40 megapixels (for example 8000 × 5000); the trace itself then runs at up to the 2048 px long edge you choose. The studio measures the picture when you pick it, so an over-sized photo is refused before it is uploaded.' },
     ],
     related: [
       { path: '/remove-background', label: 'Remove Background' },
