@@ -4,6 +4,7 @@ import { ARTICLE_COVERS } from '../src/content/articles/covers';
 import { ARTICLES, type Article } from '../src/content/articles/types';
 import { TOOL_LANDINGS, toolAlternates, toolSchema, toolSteps, type ToolLanding } from '../src/content/toolLandings';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
+import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
 
 /** Each deployment states its own origin through `VITE_SITE_URL`; see `src/config/site-url.ts`. */
 const BASE_URL = resolveSiteUrl(process.env.VITE_SITE_URL);
@@ -17,6 +18,26 @@ const DIST = resolve(process.cwd(), 'dist');
 const TEMPLATE = readFileSync(resolve(DIST, 'index.html'), 'utf8')
   .replaceAll(DEFAULT_SITE_URL, BASE_URL)
   .replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL);
+
+/**
+ * Everything a generated file has to agree on: the origin it points at (done above), the brand it
+ * names, and the sections this deployment actually serves. A section that is not published would
+ * otherwise leave dead links in the shell and in every page copied from it.
+ *
+ * The `<!-- begin:x -->` / `<!-- end:x -->` markers exist only for this step; they are stripped for
+ * every profile, the default one included, so a deployment that serves everything comes out exactly
+ * as it would without them.
+ */
+function forThisDeployment(html: string): string {
+  const withoutHidden = SITE_SECTIONS.filter((section) => !profileHas(section)).reduce(
+    (acc, section) => acc.replace(new RegExp(`[ \\t]*<!-- begin:${section} -->[\\s\\S]*?<!-- end:${section} -->\\n?`, 'g'), ''),
+    html,
+  );
+  const unmarked = withoutHidden
+    .replace(/[ \t]*<!-- site-profile:[\s\S]*?-->\n?/g, '')
+    .replace(/[ \t]*<!-- (?:begin|end):[a-z-]+ -->\n?/g, '');
+  return brandCopy(unmarked);
+}
 
 function escapeHtml(value: string): string {
   return value
@@ -183,10 +204,34 @@ function withRoot(template: string, rootHtml: string): string {
   return `${template.slice(0, rootStart)}<div id="root">${rootHtml}</div>${template.slice(noscriptStart)}`;
 }
 
+/**
+ * Drops sitemap entries and prose lines that point at sections this deployment does not serve, so a
+ * crawler reading these files is never sent to a page that only redirects home.
+ */
+function withoutHiddenUrls(text: string): string {
+  const published = (url: string) => {
+    try {
+      return isPublishedPath(new URL(url).pathname);
+    } catch {
+      return true;
+    }
+  };
+  if (text.includes('<url>')) {
+    return text.replace(/[ \t]*<url>[\s\S]*?<\/url>\n?/g, (block) => {
+      const loc = block.match(/<loc>([^<]+)<\/loc>/)?.[1];
+      return !loc || published(loc) ? block : '';
+    });
+  }
+  return text
+    .split('\n')
+    .filter((line) => (line.match(/https?:\/\/[^\s"'<>)]+/g) || []).every(published))
+    .join('\n');
+}
+
 function writeRoute(route: string, html: string): void {
   const output = resolve(DIST, route.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(output), { recursive: true });
-  writeFileSync(output, html);
+  writeFileSync(output, forThisDeployment(html));
 }
 
 function coverFor(article: Article) {
@@ -292,7 +337,7 @@ function renderStore(): string {
   const root = `<main style="max-width:980px;margin:0 auto;padding:64px 24px 96px;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#f5f5f5">
     <header style="display:flex;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid #303030;padding-bottom:24px">
       <a href="/" style="color:#b1fa50;font-size:24px;font-weight:800;text-decoration:none">DLSS5NVIDIA</a>
-      <nav style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="/pricing" style="color:#b1fa50">Pricing</a><a href="/blog" style="color:#aaa">Blog</a><a href="mailto:${SUPPORT_EMAIL}" style="color:#aaa">Contact</a></nav>
+      <nav style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="/pricing" style="color:#b1fa50">Pricing</a>${profileHas('blog') ? '<a href="/blog" style="color:#aaa">Blog</a>' : ''}<a href="mailto:${SUPPORT_EMAIL}" style="color:#aaa">Contact</a></nav>
     </header>
     <section style="padding:64px 0 36px">
       <p style="color:#b1fa50;text-transform:uppercase;letter-spacing:.18em;font-size:12px">Online AI image enhancement service</p>
@@ -315,7 +360,7 @@ function renderStore(): string {
       <h2 style="color:#f5f5f5;font-size:24px">Policies and support</h2>
       <p>Questions about access, billing or refunds: <a href="mailto:${SUPPORT_EMAIL}" style="color:#b1fa50">${SUPPORT_EMAIL}</a></p>
       <p><a href="/terms" style="color:#b1fa50">Terms of Service</a> · <a href="/privacy" style="color:#b1fa50">Privacy Policy</a> · <a href="/refund" style="color:#b1fa50">Refund &amp; Cancellation Policy</a></p>
-      <p style="font-size:13px">DLSS5NVIDIA is an independent tool and is not affiliated with or endorsed by NVIDIA Corporation. DLSS is a trademark of NVIDIA Corporation.</p>
+      <p style="font-size:13px">${SITE_PROFILE.legalName} is an independent tool and is not affiliated with or endorsed by NVIDIA Corporation. DLSS is a trademark of NVIDIA Corporation.</p>
     </section>
   </main>`;
   return withRoot(withHead(TEMPLATE, {
@@ -344,7 +389,7 @@ function renderToolLanding(tool: ToolLanding): string {
     </section>
     <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cuándo usar esta herramienta' : 'When to use this tool'}</h2><ul>${tool.useCases.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cómo funciona' : 'How it works'}</h2><ol>${steps.map(step => `<li><strong>${escapeHtml(step.name)}</strong> — ${escapeHtml(step.text)}</li>`).join('')}</ol></article></section>
     <section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">${isSpanish ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2><div class="mt-5">${faqs}</div></section>
-    <section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">${isSpanish ? 'Herramientas relacionadas' : 'Related tools'}</h2><p class="mt-4 text-primary">${related}</p><p class="mt-6"><a href="/blog/dlss-5-online-image-upscaler-guide">${isSpanish ? 'Leer la guía de mejora de imágenes (inglés) →' : 'Read the online image enhancement guide →'}</a></p></section>
+    <section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">${isSpanish ? 'Herramientas relacionadas' : 'Related tools'}</h2><p class="mt-4 text-primary">${related}</p>${profileHas('blog') ? `<p class="mt-6"><a href="/blog/dlss-5-online-image-upscaler-guide">${isSpanish ? 'Leer la guía de mejora de imágenes (inglés) →' : 'Read the online image enhancement guide →'}</a></p>` : ''}</section>
   </main>`;
   return withRoot(withHead(TEMPLATE, {
     title: tool.title,
@@ -358,18 +403,24 @@ function renderToolLanding(tool: ToolLanding): string {
   }), root);
 }
 
-for (const locale of [undefined, 'en', 'zh'] as const) {
-  writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
-  for (const article of ARTICLES) {
-    writeRoute(articlePath(article.slug, locale), renderArticle(article, locale).html);
+/**
+ * Only the sections this deployment serves are written out: prerendering a page that only redirects
+ * home would hand a crawler an indexable dead end.
+ */
+if (profileHas('blog')) {
+  for (const locale of [undefined, 'en', 'zh'] as const) {
+    writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
+    for (const article of ARTICLES) {
+      writeRoute(articlePath(article.slug, locale), renderArticle(article, locale).html);
+    }
   }
 }
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
-for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));
+if (profileHas('tools')) for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));
 
 /** Routes that are not prerendered fall back to the shell, so it carries the same origin as well. */
-writeFileSync(resolve(DIST, 'index.html'), TEMPLATE);
+writeFileSync(resolve(DIST, 'index.html'), forThisDeployment(TEMPLATE));
 
 /**
  * `public/` is copied verbatim, and these files state the origin as an absolute URL. Rewriting them
@@ -379,9 +430,11 @@ for (const file of ['llms.txt', 'sitemap.xml', 'robots.txt']) {
   const target = resolve(DIST, file);
   if (!existsSync(target)) continue;
   const original = readFileSync(target, 'utf8');
-  const adapted = original
-    .replaceAll(DEFAULT_SITE_URL, BASE_URL)
-    .replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL);
+  const adapted = withoutHiddenUrls(
+    forThisDeployment(
+      original.replaceAll(DEFAULT_SITE_URL, BASE_URL).replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL),
+    ),
+  );
   if (adapted !== original) writeFileSync(target, adapted);
 }
 

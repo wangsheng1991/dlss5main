@@ -3,6 +3,7 @@ import { ArrowRight, Check, UploadCloud } from 'lucide-react';
 import ImageSlider from './ImageSlider';
 import { toolAlternates, toolSteps, type ToolLanding } from '../content/toolLandings';
 import { ENHANCE_MAX_EDGE } from '../config/enhance';
+import { profileHas } from '../config/profile';
 
 export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
   const es = tool.locale === 'es';
@@ -70,7 +71,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
       <section className="mt-16 border-t border-outline-variant/20 pt-8" aria-labelledby="related-heading">
         <h2 id="related-heading" className="text-xl font-headline font-bold text-white">{es ? 'Herramientas relacionadas (en inglés)' : 'Related tools'}</h2>
         <div className="mt-4 flex flex-wrap gap-3">{tool.related.map(related => <a key={related.path} href={related.path} hrefLang="en" className="rounded-lg border border-outline-variant/30 px-4 py-3 text-sm text-zinc-300 hover:border-primary hover:text-primary">{related.label} <ArrowRight aria-hidden="true" className="ml-1 inline w-4 h-4" /></a>)}</div>
-        <a className="inline-block mt-6 text-sm text-primary" href="/blog/dlss-5-online-image-upscaler-guide">{es ? 'Guía sobre mejora de imágenes (en inglés) →' : 'Read the online image enhancement guide →'}</a>
+        {profileHas('blog') && <a className="inline-block mt-6 text-sm text-primary" href="/blog/dlss-5-online-image-upscaler-guide">{es ? 'Guía sobre mejora de imágenes (en inglés) →' : 'Read the online image enhancement guide →'}</a>}
       </section>
     </main>
   </>;

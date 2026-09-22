@@ -9,6 +9,7 @@ import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 import { FEATURED_ARTICLES } from '../content/articles/featured';
 import { SITE_URL } from '../config/site';
+import { SITE_PROFILE, brandCopy, profileHas } from '../config/profile';
 
 const COMMUNITY_EXAMPLES = [
   "https://picsum.photos/seed/upscale1/600/800",
@@ -98,13 +99,13 @@ export default function Home() {
       {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
-        "name": "DLSS 5 NVIDIA Independent Showcase",
+        "name": SITE_PROFILE.orgName,
         "url": `${SITE_URL}/`,
         "description": "Independent, non-official AI image upscaling and neural super-resolution showcase."
       },
       {
         "@type": "SoftwareApplication",
-        "name": "DLSS 5 Neural Super-Resolution (Non-Official)",
+        "name": SITE_PROFILE.softwareName,
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "Web",
         "offers": {
@@ -236,7 +237,7 @@ export default function Home() {
       {/* How It Works */}
       <section className="mt-20 mb-16">
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-10 text-center">
-          {isZh ? '如何使用 DLSS 图像放大器' : 'How to Use Our DLSS Image Upscaler'}
+          {brandCopy(isZh ? '如何使用 DLSS 图像放大器' : 'How to Use Our DLSS Image Upscaler')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
@@ -448,6 +449,8 @@ export default function Home() {
         </div>
       </section>
 
+      {/* The research desk is the blog; a deployment without one does not advertise it. */}
+      {profileHas('blog') && (
       <section className="mt-32" aria-labelledby="featured-research-heading">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
           <div className="max-w-2xl">
@@ -477,6 +480,7 @@ export default function Home() {
           ))}
         </div>
       </section>
+      )}
 
       <section className="mt-32 max-w-4xl mx-auto">
         <h2 className="text-3xl font-headline font-bold text-white mb-12 text-center">{t('home.faq')}</h2>

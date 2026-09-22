@@ -1,23 +1,20 @@
+import { readBuildEnv } from './build-env';
 import { resolveSiteUrl, resolveSupportEmail, siteHost } from './site-url';
 
 /**
- * The deployment's public origin, as seen by the browser bundle: `VITE_SITE_URL` is inlined by Vite
- * at build time, so every page, canonical tag and JSON-LD block names the domain this build serves.
+ * The deployment's public origin.
  *
- * The prerender script imports this module under Node, where `import.meta.env` does not exist, so
- * `process.env` is read as a fallback and the same build-time variable works in both worlds. Unset
- * everywhere means the original storefront — see `site-url.ts`.
+ * The origin has to be baked into the build rather than read from the request: canonical tags,
+ * sitemap entries and JSON-LD must be absolute, and one Vercel build can be served under several
+ * domains. Each deployment states its own through `VITE_SITE_URL`; unset means the original
+ * storefront, so a project that sets nothing keeps behaving exactly as before.
  */
-const viteEnv = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
-const nodeEnv = typeof process === 'undefined' ? undefined : process.env;
-
-const read = (key: string): string | undefined => viteEnv?.[key] || nodeEnv?.[key];
 
 /** Absolute origin without a trailing slash, e.g. `https://www.dlss5nvidia.com`. */
-export const SITE_URL = resolveSiteUrl(read('VITE_SITE_URL'));
+export const SITE_URL = resolveSiteUrl(readBuildEnv('VITE_SITE_URL'));
 
 /** Host only, for the legal pages that print the website address. */
 export const SITE_HOST = siteHost(SITE_URL);
 
 /** Where buyers are told to write. */
-export const SUPPORT_EMAIL = resolveSupportEmail(read('VITE_SUPPORT_EMAIL'));
+export const SUPPORT_EMAIL = resolveSupportEmail(readBuildEnv('VITE_SUPPORT_EMAIL'));

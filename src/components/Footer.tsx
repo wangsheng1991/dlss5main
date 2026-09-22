@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LEGAL } from '../config/legal';
+import { SITE_PROFILE, profileHas } from '../config/profile';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export default function Footer() {
       <div className="max-w-[1440px] mx-auto px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
           <div className="col-span-2">
-            <span className="text-nvidia-green font-black text-2xl font-headline mb-4 block">DLSS 5</span>
+            <span className="text-nvidia-green font-black text-2xl font-headline mb-4 block">{SITE_PROFILE.brand}</span>
             <p className="text-zinc-500 text-sm max-w-xs mb-6">{t('home.footerTagline')}</p>
             <p className="text-zinc-600 text-[10px] font-medium uppercase tracking-widest">
               © {new Date().getFullYear()} {t('home.footerSystems')}
@@ -27,20 +28,20 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.platform')}</h4>
             <ul className="space-y-4">
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/models">{t('home.modelsLink')}</Link></li>
+              {profileHas('models') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/models">{t('home.modelsLink')}</Link></li>}
               <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/pricing">{t('home.pricing')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/enterprise">{t('home.enterpriseLink')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.apiDocs')}</Link></li>
+              {profileHas('enterprise') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/enterprise">{t('home.enterpriseLink')}</Link></li>}
+              {profileHas('docs') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.apiDocs')}</Link></li>}
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.resources')}</h4>
             <ul className="space-y-4">
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/blog">{t('home.blog')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.documentation')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/download">{t('navbar.download')}</Link></li>
-              <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/about">{t('navbar.about')}</Link></li>
+              {profileHas('blog') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/blog">{t('home.blog')}</Link></li>}
+              {profileHas('docs') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.documentation')}</Link></li>}
+              {profileHas('download') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/download">{t('navbar.download')}</Link></li>}
+              {profileHas('about') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/about">{t('navbar.about')}</Link></li>}
             </ul>
           </div>
 

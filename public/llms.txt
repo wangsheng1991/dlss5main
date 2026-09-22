@@ -15,6 +15,7 @@ DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging i
 - Pricing: https://www.dlss5nvidia.com/pricing
 - Enterprise: https://www.dlss5nvidia.com/enterprise
 
+<!-- begin:blog -->
 ## Technical articles
 
 - GPT-6 Astra and DLSS 5 workflow: https://www.dlss5nvidia.com/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026
@@ -24,6 +25,7 @@ DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging i
 - Seedance 2.5 + video super-resolution cost guide: https://www.dlss5nvidia.com/blog/seedance-2-5-video-super-resolution-cost-guide-2026
 
 English and Simplified Chinese crawlable blog indexes are available at https://www.dlss5nvidia.com/en/blog and https://www.dlss5nvidia.com/zh/blog. Each localized article URL exposes reciprocal `hreflang` links and its own canonical URL.
+<!-- end:blog -->
 
 ## Language coverage
 
@@ -34,7 +36,8 @@ The interface supports English, Simplified Chinese, Japanese, Korean, Russian, U
 - Is this an official NVIDIA DLSS product? No. This is an independent showcase using a separate AI model inspired by neural super-resolution concepts.
 - Does it require an RTX GPU? No. The web tool runs processing on its server-side AI service and works from a modern browser.
 - What files are supported? The interface accepts common image formats such as JPEG, PNG, and WebP within the displayed size limits.
-- Is there an API? API availability and integration guidance are documented at /docs and may depend on the current plan.
+<!-- begin:docs -->- Is there an API? API availability and integration guidance are documented at /docs and may depend on the current plan.
+<!-- end:docs -->
 
 ## Preferred terminology
 

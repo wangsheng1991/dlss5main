@@ -2,6 +2,7 @@ import React from 'react';
 import SEO from '../components/SEO';
 import LegalPage, { Bullets, Section } from '../components/LegalPage';
 import { LEGAL } from '../config/legal';
+import { profileHas } from '../config/profile';
 
 export default function Terms() {
   return (
@@ -63,7 +64,7 @@ export default function Terms() {
         </Section>
 
         <Section title="7. Availability, changes and beta features">
-          <p>We work to keep the service available, but it is provided without an uptime guarantee unless we have signed a separate agreement with you (see the <a className="text-primary underline" href="/enterprise">Enterprise page</a>). Features marked beta or preview may change or be withdrawn, and third-party model providers can be unavailable from time to time — failed generations are refunded in credits automatically.</p>
+          <p>We work to keep the service available, but it is provided without an uptime guarantee unless we have signed a separate agreement with you{profileHas('enterprise') && <> (see the <a className="text-primary underline" href="/enterprise">Enterprise page</a>)</>}. Features marked beta or preview may change or be withdrawn, and third-party model providers can be unavailable from time to time — failed generations are refunded in credits automatically.</p>
         </Section>
 
         <Section title="8. Suspension and termination">

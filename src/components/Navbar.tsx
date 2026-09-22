@@ -4,6 +4,7 @@ import { Database, LogOut, User as UserIcon, Menu, X, Globe, ChevronDown } from 
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 import { useAuth } from '../contexts/AuthContext';
+import { SITE_PROFILE, profileHas } from '../config/profile';
 
 const LANGUAGES = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
@@ -40,15 +41,15 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-[#0e0e0e]/90 backdrop-blur-xl border-b border-outline-variant/10">
       <div className="flex justify-between items-center px-4 md:px-8 h-16 max-w-[1440px] mx-auto">
         <div className="flex items-center gap-8">
-          <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline" to="/">DLSS 5</Link>
+          <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline" to="/">{SITE_PROFILE.brand}</Link>
           {!isAuthPage && (
             <div className="hidden md:flex gap-6 items-center">
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/download">{t('navbar.download')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>
+              {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>}
+              {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>}
+              {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>}
+              {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>}
+              {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/download">{t('navbar.download')}</Link>}
+              {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>}
               <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/pricing">Pricing</Link>
             </div>
           )}
@@ -134,12 +135,12 @@ export default function Navbar() {
         <div className="md:hidden absolute top-16 left-0 w-full bg-[#0e0e0e] border-b border-outline-variant/10 flex flex-col p-4 gap-4 shadow-2xl">
           {!isAuthPage && (
             <div className="flex flex-col gap-4 pb-4 border-b border-outline-variant/10">
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/about">{t('navbar.about')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to={blogPath}>{t('navbar.blog')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/download">{t('navbar.download')}</Link>
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>
+              {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>}
+              {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/about">{t('navbar.about')}</Link>}
+              {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to={blogPath}>{t('navbar.blog')}</Link>}
+              {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>}
+              {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/download">{t('navbar.download')}</Link>}
+              {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>}
             </div>
           )}
 

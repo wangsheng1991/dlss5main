@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SITE_URL } from '../config/site';
+import { SITE_PROFILE, brandCopy } from '../config/profile';
 
 interface SEOProps {
   title: string;
@@ -24,13 +25,17 @@ export default function SEO({
   keywords = [],
   canonical,
   type = 'website',
-  name = 'DLSS 5 Neural Monolith',
+  name = SITE_PROFILE.siteName,
   image = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAgMs1RSg3O_1Sa3p30fgI3YUHwQQfFs07kGZMGKyFyoEQm-OV9Q80s9L_VAjq6PPIL4xtaTqR0T9Spv2YqokmfgYPWeEDIaoQr-b_cWhfmnIgq8aEqqG60kty-pmpK8FVMaWQnJO_alw5WYwG3TGhDdxNpx_ZwZgY2ckp1k1TV_tLi7iFmt5rkfCNyQR5qc2MSI7WWxfd4pus_zzslLB6bpO80SJcRC5MWqi1CClqIJAQIYCs8gvSG8VE1od87qiiz6z58h1Ej7OY',
   structuredData,
   language,
   alternates = [],
   robots = 'index,follow,max-image-preview:large'
 }: SEOProps) {
+  // Titles and descriptions are written for the original storefront; a differently branded
+  // deployment rewrites the names in them here rather than in every page (see `config/profile.ts`).
+  const pageTitle = brandCopy(title);
+  const pageDescription = brandCopy(description);
   const pageUrl = canonical?.startsWith('http') ? canonical : `${BASE_URL}${canonical || '/'}`;
   const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image}`;
   const pageLanguage = language || undefined;
@@ -39,15 +44,15 @@ export default function SEO({
     <Helmet>
       {pageLanguage && <html lang={pageLanguage} />}
       {/* Standard metadata tags */}
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+      <title>{pageTitle}</title>
+      <meta name="description" content={pageDescription} />
+      {keywords.length > 0 && <meta name="keywords" content={brandCopy(keywords.join(', '))} />}
       <meta name="robots" content={robots} />
 
       {/* Open Graph / Facebook tags */}
       <meta property="og:type" content={type} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:title" content={pageTitle} />
+      <meta property="og:description" content={pageDescription} />
       <meta property="og:site_name" content={name} />
       <meta property="og:image" content={imageUrl} />
       <meta property="og:url" content={pageUrl} />
@@ -56,8 +61,8 @@ export default function SEO({
       {/* Twitter tags */}
       <meta name="twitter:creator" content={name} />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:title" content={pageTitle} />
+      <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={imageUrl} />
 
       <link rel="canonical" href={pageUrl} />
@@ -68,7 +73,7 @@ export default function SEO({
       {/* Structured Data (JSON-LD) for GEO and Rich Snippets */}
       {structuredData && (
         <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
+          {brandCopy(JSON.stringify(structuredData))}
         </script>
       )}
     </Helmet>
