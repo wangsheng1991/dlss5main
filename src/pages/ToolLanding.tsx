@@ -14,7 +14,7 @@ export default function ToolLanding() {
   const path = pathname.replace(/\/+$/, '') || '/';
   const tool = TOOL_LANDING_BY_PATH[path] || TOOL_LANDING_BY_PATH['/image-upscaler'];
   return <>
-    <SEO title={tool.title} description={tool.description} keywords={tool.keywords} canonical={tool.path} language={tool.language} structuredData={toolSchema(tool)} alternates={toolAlternates(tool)} />
+    <SEO title={tool.title} description={tool.description} keywords={tool.keywords} canonical={tool.path} language={tool.language} structuredData={toolSchema(tool)} alternates={toolAlternates(tool)} image={tool.demo?.social ?? tool.demo?.after} />
     <ToolLandingView tool={tool} />
   </>;
 }

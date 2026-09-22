@@ -4,20 +4,20 @@ import { fail, requireUser } from '../_lib/auth.js';
 import { JobStore } from '../../server/job-store.js';
 import { database } from '../../server/admin.js';
 import { enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput } from '../../src/config/enhance.js';
-import { buildToolTask, isToolId, toolNeedsPrompt, type ToolId } from '../../src/config/tools.js';
+import { buildToolTask, isToolId, isVectorizePreset, toolNeedsPrompt, type ToolId } from '../../src/config/tools.js';
 
 type Body = Record<string, unknown>;
 
 const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
 
 /**
- * The C-line tools (background removal, object erasing). Unlike the editing models these own their
- * output geometry, so no size or format field is sent — asking for one is refused upstream rather
- * than ignored, which is exactly the behaviour we want kept.
+ * The C-line tools (background removal, vectorizing, object erasing). Unlike the editing models
+ * these own their output geometry, so no size or format field is sent — asking for one is refused
+ * upstream rather than ignored, which is exactly the behaviour we want kept.
  */
 async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey: string, store: JobStore) {
   const imageIds = body.image_ids;
-  // Both tools take exactly one image; the eraser rebuilds whatever the object was covering.
+  // Every tool takes exactly one image; the eraser rebuilds whatever the object was covering.
   if (!Array.isArray(imageIds) || imageIds.length !== 1 || imageIds.some((id) => typeof id !== 'string')) {
     return { error: 'image_ids must contain exactly one uploaded file id' };
   }
@@ -26,7 +26,18 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
     if (!prompt) return { error: mode === 'erase' ? 'Describe what should be removed' : 'prompt is required' };
     if (prompt.length > 4000) return { error: 'prompt is too long' };
   }
-  const task = buildToolTask(mode, { imageIds: imageIds as string[], prompt, steps: body.num_inference_steps as number | undefined, seed: body.seed as number | undefined });
+  // The preset is a name, not a parameter set: an unknown value is a client bug and must not be
+  // forwarded for the provider to guess at.
+  if (mode === 'vectorize' && body.preset !== undefined && !isVectorizePreset(body.preset)) {
+    return { error: 'preset must be logo, illustration or photo' };
+  }
+  const task = buildToolTask(mode, {
+    imageIds: imageIds as string[], prompt,
+    steps: body.num_inference_steps as number | undefined,
+    seed: body.seed as number | undefined,
+    preset: mode === 'vectorize' && isVectorizePreset(body.preset) ? body.preset : undefined,
+    maxEdge: mode === 'vectorize' ? (body.max_edge as number | undefined) : undefined,
+  });
   // The stored input doubles as the history record, so the tool name is kept next to the task.
   const claim = await store.claim(uid, idempotencyKey, { ...task, tool: mode });
   if (!claim.submit) return { jobId: claim.id, status: claim.job.status, replayed: true };

@@ -4,7 +4,7 @@ import type { User } from 'firebase/auth';
 import { request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
-import { isToolId, modelForTool, toolNeedsPrompt } from '../../config/tools';
+import { isToolId, modelForTool, toolNeedsPrompt, type VectorizePreset } from '../../config/tools';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
@@ -61,7 +61,7 @@ export function useGeneration(user: User | null) {
     } catch (cause) { if (uid.current === saved.userId) setError(cause instanceof Error ? cause.message : 'Connection interrupted. Resume your saved operation.'); }
     finally { active.current = false; setSubmitting(false); }
   }
-  async function submit(file: File, prompt: string, options: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number } = {}) {
+  async function submit(file: File, prompt: string, options: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number; preset?: VectorizePreset; maxEdge?: number } = {}) {
     if (!user) { setError('Sign in before generating an image.'); return; }
     if (active.current || (operation && !terminal(operation.status))) return;
     active.current = true; setSubmitting(true); setError('');
@@ -89,6 +89,10 @@ export function useGeneration(user: User | null) {
         body = { image_ids: [ticket.file_id], mode: tool };
         if (toolNeedsPrompt(tool)) body.prompt = prompt.trim();
         if (tool === 'erase' && options.steps) body.num_inference_steps = options.steps;
+        if (tool === 'vectorize') {
+          if (options.preset) body.preset = options.preset;
+          if (options.maxEdge) body.max_edge = options.maxEdge;
+        }
       } else {
         const output = enhancing ? enhanceOutput(source.width, source.height, options.factor === 4 ? 4 : 2) : preserveOutput(source.width, source.height);
         body = enhancing

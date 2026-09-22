@@ -1,4 +1,4 @@
-import type { ToolId } from './tools';
+import type { ToolId, VectorizePreset } from './tools';
 
 /**
  * The printable example inputs. Guests may generate these without an account, so both the
@@ -23,6 +23,12 @@ export const SAMPLES = {
     id: 'spoon', name: 'Cup and spoon', src: '/examples/erase-spoon.jpg', fileName: 'erase-spoon.jpg', contentType: 'image/jpeg',
     tool: 'erase' as ToolId,
     prompt: 'Remove the spoon from the table and rebuild the wooden surface behind it; keep the mug, the napkin and the lighting exactly as they are.',
+  },
+  badge: {
+    id: 'badge', name: 'Coffee badge', src: '/examples/vectorize-badge.png', fileName: 'vectorize-badge.png', contentType: 'image/png',
+    tool: 'vectorize' as ToolId,
+    preset: 'logo' as VectorizePreset,
+    prompt: 'Trace the badge into a clean vector SVG.',
   },
 } as const;
 

@@ -341,7 +341,7 @@ function renderToolLanding(tool: ToolLanding): string {
     description: tool.description,
     canonicalPath: tool.path,
     language: tool.language,
-    image: tool.demo?.after ?? '/examples/sample1-photo.webp',
+    image: tool.demo?.social ?? tool.demo?.after ?? '/examples/sample1-photo.webp',
     keywords: tool.keywords,
     structuredData: schema,
     alternates: toolAlternates(tool),

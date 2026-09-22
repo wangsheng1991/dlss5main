@@ -4,7 +4,7 @@ export type ToolLanding = {
   path: string;
   locale: 'en' | 'es';
   slug: string;
-  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'erase';
+  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'vectorize' | 'erase';
   language: 'en-US' | 'es-ES';
   title: string;
   description: string;
@@ -30,7 +30,8 @@ export type ToolLanding = {
   featureList?: string[];
   /** A worked example… or two real frames of one, for the result slider. */
   demo?: { before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number; /** A transparent result needs an opaque surface under it, or the input shows through. */
-    backdrop?: string };
+    backdrop?: string; /** Social cards cannot render an SVG, so a vector demo names a raster twin for og:image. */
+    social?: string };
 };
 
 export const TOOL_LANDINGS: ToolLanding[] = [
@@ -234,6 +235,52 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       beforeLabel: 'Your photo', afterLabel: 'Spoon erased',
       caption: 'Real output: the spoon was removed and the wooden surface rebuilt behind it. The mug, the napkin and the light are unchanged.',
       aspectRatio: 1,
+    },
+  },
+  {
+    path: '/image-to-svg',
+    locale: 'en',
+    slug: 'image-to-svg',
+    dashboardTool: 'vectorize',
+    language: 'en-US',
+    title: 'Image to SVG Converter Online — Vectorize a Logo or Icon',
+    description: 'Convert a PNG or JPG into a real SVG online. Logos, icons, badges and flat illustrations come back as vector paths you can scale and edit. Try the example free, no account needed.',
+    eyebrow: 'AI image tool',
+    heading: 'Image to SVG',
+    intro: 'Trace a bitmap into an actual vector file — paths, not pixels — at the size you uploaded. The badge example below runs free, without an account.',
+    cta: 'Vectorize an image',
+    ctaNote: 'JPG, PNG and WebP · up to 20 MiB · SVG output · long edge up to 2048 px',
+    resultLabel: 'Traced SVG',
+    originalLabel: 'Your bitmap',
+    prompt: 'Trace the badge into a clean vector SVG.',
+    useCases: ['Logos and brand marks', 'Icons and UI graphics', 'Badges, seals and lettering', 'Flat illustrations for print'],
+    keywords: ['image to svg', 'png to svg converter', 'vectorize image online', 'convert jpg to svg', 'logo to vector', 'svg converter free'],
+    whenToUse: 'Best on flat artwork with a limited palette: logos, icons, badges, lettering and flat illustration. A photograph traced colour-for-colour would produce an enormous file, so the photo preset limits the palette to 16 colours first — that result is a posterized illustration, not a faithful vector copy of the photograph.',
+    sharedNote: 'The trace follows the pixels you upload and respects transparency, so a cut-out PNG comes back as an SVG with no background rectangle.',
+    disclaimer: 'Vectorizing redraws the artwork as paths, so very small type, hairlines and anti-aliased edges can shift slightly. Inspect small text at 100% before you send the file to print.',
+    stepsHeading: 'How to convert an image to SVG',
+    steps: [
+      { name: 'Choose your image', text: 'Select a JPG, PNG or WebP up to 20 MiB — a logo, an icon or flat artwork at a sensible resolution.' },
+      { name: 'Pick a preset', text: 'Logo keeps exact colours and crisp edges, flat illustration smooths curves, photo limits the palette for a photograph. Confirm the 1-credit task.' },
+      { name: 'Open the SVG', text: 'Download the file, place it on a page or open it in a vector editor — it stays sharp at any size.' },
+    ],
+    checks: ['Zoom into small text and thin lines for rounded or merged strokes.', 'Compare the palette with the original — the photo preset limits colours.', 'Scale the SVG up and confirm the edges stay crisp instead of pixelating.'],
+    featureList: ['True SVG output (paths, not pixels)', 'Transparency preserved', 'JPG, PNG and WebP input up to 20 MiB'],
+    faqs: [
+      { question: 'What do I get from converting an image to SVG?', answer: 'An SVG file built from paths and shapes instead of a grid of pixels, so it can be scaled to any size without blurring and edited in vector software. The trace follows the colours and edges of the bitmap you upload.' },
+      { question: 'Should I vectorize a photograph?', answer: 'Usually not. A photograph holds thousands of colours, and tracing all of them produces a very large file, so the photo preset limits the palette to 16 colours first. That gives a posterized illustration rather than a faithful copy.' },
+      { question: 'Does the SVG keep my image size?', answer: 'The trace runs at your image size up to the long edge you choose — 1024, 1536 or 2048 px. A larger source is scaled down to that edge before tracing, and the SVG states its own width and height.' },
+      { question: 'Is this the same as embedding my PNG in an SVG?', answer: 'No. A bitmap wrapped in an SVG tag still contains pixels and blurs when scaled. Here the image is traced into vector paths, which is what makes it editable and resolution-independent.' },
+    ],
+    related: [
+      { path: '/remove-background', label: 'Remove Background' },
+      { path: '/erase-object', label: 'Erase Object' },
+    ],
+    demo: {
+      before: '/examples/vectorize-badge.png', after: '/examples/vectorize-badge-after.svg',
+      beforeLabel: 'Bitmap logo (1024 × 1024 PNG)', afterLabel: 'Traced SVG (24 KB of paths)',
+      caption: 'Real output: a 78 KB PNG badge traced with the logo preset into a 24 KB SVG in 0.4 s. Every shape is now a path, the lettering is still legible, and the file scales to any print size.',
+      aspectRatio: 1, social: '/examples/vectorize-badge-after.png',
     },
   },
 ];

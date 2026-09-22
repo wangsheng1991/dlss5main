@@ -32,9 +32,14 @@ async function serve(req: VercelRequest, res: VercelResponse, sampleId: string, 
   return res.status(200).send(cached.buffer);
 }
 
-/** The provider decides the result format (it answers PNG even when webp is requested), so the
- *  client names its download after the bytes that are actually cached rather than the request. */
-const extensionOf = (contentType: string) => contentType === 'image/png' ? 'png' : contentType === 'image/webp' ? 'webp' : 'jpg';
+/** The provider decides the result format (it answers PNG even when webp is requested, and SVG for
+ *  the vectorizer), so the client names its download after the bytes that are actually cached
+ *  rather than the request. */
+const extensionOf = (contentType: string) =>
+  contentType === 'image/png' ? 'png'
+    : contentType === 'image/webp' ? 'webp'
+      : contentType === 'image/svg+xml' || contentType === 'image/svg' ? 'svg'
+        : 'jpg';
 
 /** True when the bytes really are an image, so a rewrite that serves HTML cannot be mistaken for one. */
 function isImage(contentType: string | null, buffer: Buffer) {
@@ -72,7 +77,7 @@ async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
   if (!upload.ok) throw new Error(`Example upload failed (${upload.status})`);
   const key = `sample-warm:${sampleId}:${Date.now()}`;
   const body = sample.tool
-    ? buildToolTask(sample.tool, { imageIds: [ticket.file_id], prompt: sample.prompt })
+    ? buildToolTask(sample.tool, { imageIds: [ticket.file_id], prompt: sample.prompt, preset: 'preset' in sample ? sample.preset : undefined })
     : { prompt: sample.prompt, image_ids: [ticket.file_id], width: 1024, height: 1024, seed: 42, num_inference_steps: 4, output_format: 'webp' };
   const accepted = await client.submit(body, key);
   const deadline = Date.now() + POLL_BUDGET_MS;

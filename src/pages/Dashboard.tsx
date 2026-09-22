@@ -6,7 +6,11 @@ import ImageSlider from '../components/ImageSlider';
 import { useAuth } from '../contexts/AuthContext';
 import { SAMPLES, SAMPLE_IDS, GUEST_SAMPLE_IDS, type SampleId } from '../config/samples';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, type EnhanceFactor } from '../config/enhance';
-import { STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE, type ToolId } from '../config/tools';
+import {
+  STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE,
+  VECTORIZE_MAX_EDGE, VECTORIZE_PRESETS, VECTORIZE_PRESET_LABEL, VECTORIZE_PRESET_NOTE,
+  type VectorizePreset, type ToolId,
+} from '../config/tools';
 import type { GenerationMode } from '../features/generation/operation';
 import { useGeneration } from '../features/generation/useGeneration';
 import { useSampleRun } from '../features/generation/useSampleRun';
@@ -20,6 +24,7 @@ type HistoryJob = { id: string; status: string; prompt: string; tool?: string; c
 const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
   upscale: 'enhance', enhance: 'enhance', unblur: 'enhance',
   'remove-background': 'cutout', erase: 'erase', 'erase-object': 'erase',
+  'image-to-svg': 'vectorize', vectorize: 'vectorize',
 };
 
 /** The presets offered in the studio, in display order. */
@@ -27,10 +32,16 @@ const MODES: Array<[GenerationMode, string]> = [
   ['edit', 'Image editing'],
   ['enhance', 'HD enhance'],
   ['cutout', TOOL_SUMMARY.cutout.label],
+  ['vectorize', TOOL_SUMMARY.vectorize.label],
   ['erase', TOOL_SUMMARY.erase.label],
 ];
 
-const TOOL_LABEL: Record<ToolId, string> = { cutout: TOOL_SUMMARY.cutout.label, erase: TOOL_SUMMARY.erase.label };
+const TOOL_LABEL: Record<ToolId, string> = {
+  cutout: TOOL_SUMMARY.cutout.label, vectorize: TOOL_SUMMARY.vectorize.label, erase: TOOL_SUMMARY.erase.label,
+};
+
+/** Traced long edges the studio offers; the service accepts 256–2048. */
+const VECTORIZE_EDGES = [1024, 1536, VECTORIZE_MAX_EDGE.max] as const;
 
 /** Results are owner-only, so the image is fetched with the ID token instead of a plain <img src>. */
 function HistoryResult({ jobId, token, alt }: { jobId: string; token: string; alt: string }) {
@@ -68,6 +79,8 @@ export default function Dashboard() {
   const [mode, setMode] = useState<GenerationMode>('edit');
   const [factor, setFactor] = useState<EnhanceFactor>(2);
   const [steps, setSteps] = useState<number>(STEPS_RANGE.default);
+  const [preset, setPreset] = useState<VectorizePreset>('logo');
+  const [vectorEdge, setVectorEdge] = useState<number>(VECTORIZE_MAX_EDGE.default);
   const [sourceSize, setSourceSize] = useState<{ width: number; height: number } | null>(null);
   const [history, setHistory] = useState<HistoryJob[]>([]);
   const [historyToken, setHistoryToken] = useState('');
@@ -190,9 +203,11 @@ export default function Dashboard() {
     sampleRun.reset();
     setSelectedSample(sample);
     setPrompt(SAMPLES[sample].prompt);
-    // An example may belong to a tool: picking it also selects the tool it belongs to.
+    // An example may belong to a tool: picking it also selects the tool it belongs to, and the
+    // vectorizer example also selects the preset it was traced with.
     const tool = SAMPLES[sample].tool;
     setMode(tool ?? 'edit');
+    if (tool === 'vectorize' && 'preset' in SAMPLES[sample]) setPreset(SAMPLES[sample].preset as VectorizePreset);
     if (!user) return;
     try {
       const response = await fetch(SAMPLES[sample].src);
@@ -278,10 +293,16 @@ export default function Dashboard() {
             <label className="block text-xs text-zinc-400 mb-2" htmlFor="erase-steps">Detail steps · {steps}</label>
             <input id="erase-steps" type="range" min={STEPS_RANGE.min} max={STEPS_RANGE.max} step={2} value={steps} disabled={locked} onChange={e => setSteps(Number(e.target.value))} className="w-full accent-[var(--color-primary,#b1fa50)]"/>
             <p className="text-xs text-zinc-400 mt-2">The model rebuilds the whole frame, so the result becomes {ERASE_OUTPUT_EDGE} × {ERASE_OUTPUT_EDGE} and takes {TOOL_SUMMARY.erase.seconds}. More steps refine the rebuilt area and take longer.</p>
+          </div> : mode === 'vectorize' ? <div className="mt-3">
+            <div className="grid grid-cols-1 gap-2">{VECTORIZE_PRESETS.map(value => <button key={value} type="button" onClick={() => setPreset(value)} disabled={locked} aria-pressed={preset === value} className={preset === value ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-2 text-primary font-semibold text-sm text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-2 text-zinc-300 text-sm text-left disabled:opacity-60'}>{VECTORIZE_PRESET_LABEL[value]}</button>)}</div>
+            <p className="text-xs text-zinc-400 mt-2">{VECTORIZE_PRESET_NOTE[preset]}</p>
+            <label className="block text-xs text-zinc-400 mt-3 mb-1" htmlFor="vector-edge">Long edge of the trace</label>
+            <div className="grid grid-cols-3 gap-2">{VECTORIZE_EDGES.map(value => <button key={value} type="button" onClick={() => setVectorEdge(value)} disabled={locked} aria-pressed={vectorEdge === value} className={vectorEdge === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value} px</button>)}</div>
+            <p className="text-xs text-zinc-500 mt-2">A larger image is traced down to this edge; the SVG keeps your colours{sourceSize ? ` (this image is ${sourceSize.width} × ${sourceSize.height})` : ''}.</p>
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
         {mode === 'edit' || mode === 'erase'
           ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{mode === 'erase' ? 'What should be removed?' : 'Describe your edit'}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? mode === 'erase' ? 'Name the object to erase. Everything else is asked to stay exactly as it is.' : 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
-          : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
+          : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
           <button type="button" onClick={() => void checkIn()} disabled={checkingIn || !profile || profile.lastCheckIn === new Date().toISOString().slice(0, 10)} className="w-full px-4 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"><Gift className="w-4 h-4"/>{profile?.lastCheckIn === new Date().toISOString().slice(0, 10) ? t('dashboard.checkedIn') : checkingIn ? t('dashboard.checkingIn') : t('dashboard.claimCredits')}</button>
@@ -292,7 +313,7 @@ export default function Dashboard() {
       </section>
       <section aria-label="Image workspace" className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
-        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">The examples below are free and need no account — including the background-removal one. <Link to="/login" className="text-primary underline">Sign in</Link> to upload your own image and write your own prompt.</div>}
+        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">The examples below are free and need no account — including the background-removal and vectorizing ones. <Link to="/login" className="text-primary underline">Sign in</Link> to upload your own image and write your own prompt.</div>}
         {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
         {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">Preparing {SAMPLES[sampleRun.state.sample].name.toLowerCase()}…</h2><p className="text-zinc-400 text-sm max-w-md">This example is generated once and then served from cache, so it costs nothing and needs no account.</p></div>}
         {!user && sampleRun.state.status === 'ready' && <div className="flex-1 flex flex-col gap-5">
@@ -309,13 +330,13 @@ export default function Dashboard() {
         {generation.operation && <div className="mb-4 text-xs text-zinc-400 break-all">Operation: {generation.operation.jobId || generation.operation.key}<br/>Saved on this device. Refreshing will preserve this request.</div>}
         {generation.busy && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{generation.phase}</h2><p className="text-zinc-400 text-sm">You can leave and return. Do not submit another image for this operation.</p>{!generation.submitting && <button onClick={generation.pause} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-zinc-300">Pause checking</button>}</div>}
         {!generation.busy && generation.pending && <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-10"><h2 className="text-white text-xl">Your operation is saved</h2><p className="text-sm text-zinc-400 max-w-md">The result is not confirmed yet. Resume the same operation to check its status without creating a new charge.</p><button onClick={() => void generation.resume()} className="px-6 py-3 bg-primary text-black rounded-lg font-bold">Resume operation</button></div>}
-        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Open full image</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
+        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{generation.operation?.body.mode === 'vectorize' ? 'Open the SVG' : 'Open full image'}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
         {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
           {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">JPEG, PNG or WebP · up to 20 MiB</span></button>)}
           {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
           {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize)} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize)} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
