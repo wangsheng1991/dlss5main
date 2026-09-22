@@ -1,3 +1,4 @@
+import { SITE_PROFILE } from './profile';
 import { SITE_HOST, SUPPORT_EMAIL } from './site';
 
 /**
@@ -9,7 +10,7 @@ import { SITE_HOST, SUPPORT_EMAIL } from './site';
  */
 export const LEGAL = {
   /** Brand the subscription is sold under. Replace with the registered entity name if there is one. */
-  operator: 'ColorReco Tech',
+  operator: SITE_PROFILE.operatorName,
   website: SITE_HOST,
   contactEmail: SUPPORT_EMAIL,
   refundWindowDays: 14,

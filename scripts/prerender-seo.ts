@@ -27,15 +27,21 @@ const TEMPLATE = readFileSync(resolve(DIST, 'index.html'), 'utf8')
  * The `<!-- begin:x -->` / `<!-- end:x -->` markers exist only for this step; they are stripped for
  * every profile, the default one included, so a deployment that serves everything comes out exactly
  * as it would without them.
+ *
+ * Whitespace around a marker is handled line by line: a marker alone on its line takes that line's
+ * indentation and newline with it, while one used mid-sentence takes nothing, so the space that
+ * separates the block from the text around it has to sit outside the markers — before `begin` and
+ * after `end`, never just inside `end`, which is the one place the removal also eats.
  */
 function forThisDeployment(html: string): string {
-  const withoutHidden = SITE_SECTIONS.filter((section) => !profileHas(section)).reduce(
-    (acc, section) => acc.replace(new RegExp(`[ \\t]*<!-- begin:${section} -->[\\s\\S]*?<!-- end:${section} -->\\n?`, 'g'), ''),
+  const hidden = [...SITE_SECTIONS.filter((section) => !profileHas(section)), ...(SITE_PROFILE.dropBlocks ?? [])];
+  const withoutHidden = hidden.reduce(
+    (acc, name) => acc.replace(new RegExp(`(?:^[ \\t]*)?<!-- begin:${name} -->[\\s\\S]*?<!-- end:${name} -->[ \\t]*\\n?`, 'gm'), ''),
     html,
   );
   const unmarked = withoutHidden
     .replace(/[ \t]*<!-- site-profile:[\s\S]*?-->\n?/g, '')
-    .replace(/[ \t]*<!-- (?:begin|end):[a-z-]+ -->\n?/g, '');
+    .replace(/(?:^[ \t]*)?<!-- (?:begin|end):[a-z-]+ -->(?:[ \t]*\n)?/gm, '');
   return brandCopy(unmarked);
 }
 
@@ -435,7 +441,10 @@ for (const file of ['llms.txt', 'sitemap.xml', 'robots.txt']) {
       original.replaceAll(DEFAULT_SITE_URL, BASE_URL).replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL),
     ),
   );
-  if (adapted !== original) writeFileSync(target, adapted);
+  // Dropping a block from the crawler notes leaves the blank line that separated it behind, so the
+  // notes close up. The default project drops nothing, and so is still written byte for byte.
+  const tidied = file === 'llms.txt' ? adapted.replace(/\n{3,}/g, '\n\n') : adapted;
+  if (tidied !== original) writeFileSync(target, tidied);
 }
 
 console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${TOOL_LANDINGS.length} SEO tools, blog indexes and dashboard noindex.`);

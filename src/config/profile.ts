@@ -36,6 +36,8 @@ export type SiteProfile = {
   legalName: string;
   /** `Organization` name in JSON-LD. */
   orgName: string;
+  /** The business the policy pages say the subscription is sold by (`config/legal.ts`). */
+  operatorName: string;
   /** `SoftwareApplication` name in JSON-LD, which reads wrong if the aside is substituted away. */
   softwareName: string;
   /** Sections this deployment publishes; anything absent 404s to the home page and never prerenders. */
@@ -47,6 +49,13 @@ export type SiteProfile = {
   brandTokens: ReadonlyArray<readonly [string, string]>;
   /** Sentences that must stay untouched by `brandTokens` because they name NVIDIA's own IP. */
   brandTokenGuard: RegExp;
+  /**
+   * Extra `<!-- begin:name -->…<!-- end:name -->` blocks this deployment drops, for copy that only
+   * makes sense on one brand and no section owns — see the terminology notes in `public/llms.txt`.
+   * Names must not collide with a `SiteSection`; every marker is stripped for every profile either
+   * way, so a deployment that drops nothing is unaffected.
+   */
+  dropBlocks?: readonly string[];
   /** Translation keys whose wording cannot be fixed by substitution. */
   copyOverrides: Record<string, string>;
 };
@@ -93,6 +102,9 @@ const PROFILES: Record<string, SiteProfile> = {
     siteName: 'DLSS 5 Neural Monolith',
     legalName: 'DLSS5NVIDIA',
     orgName: 'DLSS 5 NVIDIA Independent Showcase',
+    // Long-standing value on the original storefront, kept so the policy pages read exactly as they
+    // did before the profiles existed. Worth confirming with the owner: it names no NVIDIA site.
+    operatorName: 'ColorReco Tech',
     softwareName: 'DLSS 5 Neural Super-Resolution (Non-Official)',
     sections: ALL_SECTIONS,
     brandTokens: [],
@@ -106,23 +118,26 @@ const PROFILES: Record<string, SiteProfile> = {
    */
   store: {
     id: 'store',
-    brand: 'ColorReco',
-    productName: 'ColorReco',
-    siteName: 'ColorReco',
-    legalName: 'ColorReco',
-    orgName: 'ColorReco Tech',
-    softwareName: 'ColorReco Neural Super-Resolution',
+    // The brand is the domain, not an invented company: there is no legal entity behind this
+    // deployment that a policy page or a receipt could honestly name.
+    brand: 'Token2Any',
+    productName: 'Token2Any',
+    siteName: 'Token2Any',
+    legalName: 'Token2Any',
+    orgName: 'Token2Any',
+    operatorName: 'Token2Any',
+    softwareName: 'Token2Any Neural Super-Resolution',
     sections: ['tools'],
     brandTokens: [
-      ['DLSS 5 NVIDIA', 'ColorReco'],
-      ['DLSS5NVIDIA', 'ColorReco'],
+      ['DLSS 5 NVIDIA', 'Token2Any'],
+      ['DLSS5NVIDIA', 'Token2Any'],
       // Written the other way round in some copy, and in the translations. Longest first, so the
       // version number is consumed before the bare product name gets its turn.
-      ['NVIDIA DLSS 5', 'ColorReco'],
-      ['NVIDIA DLSS', 'ColorReco'],
-      ['DLSS 5', 'ColorReco'],
-      ['DLSS5', 'ColorReco'],
-      ['DLSS', 'ColorReco'],
+      ['NVIDIA DLSS 5', 'Token2Any'],
+      ['NVIDIA DLSS', 'Token2Any'],
+      ['DLSS 5', 'Token2Any'],
+      ['DLSS5', 'Token2Any'],
+      ['DLSS', 'Token2Any'],
       // Product names stay verbatim in every locale, so these work language-agnostically too. The
       // claim they carry ("we run on NVIDIA tensor cores") reads as an affiliate claim on a site
       // that is meant to be independent, so it is dropped rather than reworded per language.
@@ -131,6 +146,7 @@ const PROFILES: Record<string, SiteProfile> = {
       ['NVIDIA-accelerated', 'hardware-accelerated'],
     ],
     brandTokenGuard: TRADEMARK_NOTICE,
+    dropBlocks: ['brand'],
     copyOverrides: {
       // Substitution cannot fix this one: dropping it is the fix, and that reads the same in every
       // language because the replacement is empty.
