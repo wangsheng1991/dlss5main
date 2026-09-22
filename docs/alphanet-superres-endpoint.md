@@ -106,11 +106,11 @@ const st = await (await fetch(`${BASE}/v1/tasks/${sub.task_id}?include_result=tr
 ### 1.3 参数约束与错误表（全部实测）
 
 约束：`image_ids` **1–4 个**已上传且属于本项目、未过期的 `file_id`；`width`/`height` 必须是 **16 的倍数**；
-`size` 与实际字节一致且 ≤ 20 MiB；支持 `image/png`、`image/jpeg`、`image/webp`。
+`size` 与实际字节一致且 ≤ 10 MiB（2026-09-22 起从 20 MiB 下调；服务端产物上限仍是 20 MiB，是另一道闸）；支持 `image/png`、`image/jpeg`、`image/webp`。
 
 | HTTP | 响应体（节选） | 触发 |
 |---|---|---|
-| 400 | `{"error":"invalid_upload"}` | 类型不支持（如 gif）、`size` > 20 MiB 或与实传不符 |
+| 400 | `{"error":"invalid_upload"}` | 类型不支持（如 gif）、`size` > 10 MiB 或与实传不符 |
 | 400 | `{"code":"plugin_request_invalid","message":"… image_ids must contain 1 to 4 …"}` | `image_ids` 空 / >4 |
 | 400 | `{"code":"plugin_request_invalid","message":"… prompt is required …"}` | `prompt` 空 |
 | 401 | `{"error":{"message":"Invalid token …","type":"new_api_error"}}` | Key 缺失/伪造/过期/额度用尽 |

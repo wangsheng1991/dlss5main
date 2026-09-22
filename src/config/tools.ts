@@ -36,8 +36,14 @@ export const ERASE_SECONDS_NOTE = 'about a minute';
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 /** The same ceiling in whole MiB, for the copy the customer reads. */
 export const MAX_UPLOAD_MIB = MAX_UPLOAD_BYTES / (1024 * 1024);
-/** One ceiling for the whole studio: 16 MP ≈ 4928 × 3264. Only the eraser is exempt. */
-export const STUDIO_MAX_PIXELS = 16_000_000;
+/**
+ * One ceiling for the whole studio — 4096 × 4096, which is what a customer would call 16 MP. It is
+ * 2^24 rather than 16,000,000 on purpose: a 3:2 camera's 16 MP frame is 4928 × 3264 = 16.08 MP, and
+ * a round 16 million would refuse it by half a percent. Only the eraser is exempt.
+ */
+export const STUDIO_MAX_PIXELS = 16_777_216;
+/** What the copy calls that ceiling. Kept beside the number so the two can never drift apart. */
+export const STUDIO_MAX_PIXELS_LABEL = '16 MP';
 export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase', number | null> = {
   edit: STUDIO_MAX_PIXELS,        // flux-klein / editing
   enhance: STUDIO_MAX_PIXELS,     // flux-klein / HD enhance
@@ -49,11 +55,18 @@ export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize'
 export const maxPixelsForMode = (mode: string): number | null =>
   mode in MODE_MAX_PIXELS ? MODE_MAX_PIXELS[mode as keyof typeof MODE_MAX_PIXELS] : MODE_MAX_PIXELS.edit;
 
+/** That ceiling in the words the pages use: the label when it is the studio's, else the raw number. */
+export function pixelLimitLabel(mode = 'edit'): string {
+  const limit = maxPixelsForMode(mode);
+  if (!limit) return '';
+  return limit === STUDIO_MAX_PIXELS ? STUDIO_MAX_PIXELS_LABEL : `${limit / 1_000_000} MP`;
+}
+
 /** One short line for the studio panel: what the input may be, in that mode's terms. */
 export const inputLimitNote = (mode: string): string => {
   const limit = maxPixelsForMode(mode);
   return limit
-    ? `input up to ${limit / 1_000_000} MP and ${MAX_UPLOAD_MIB} MiB`
+    ? `input up to ${pixelLimitLabel(mode)} and ${MAX_UPLOAD_MIB} MiB`
     : `any pixel size, file up to ${MAX_UPLOAD_MIB} MiB`;
 };
 
@@ -63,7 +76,7 @@ export function oversizeNote(width: number, height: number, mode = 'edit'): stri
   const limit = maxPixelsForMode(mode);
   if (!limit || width * height <= limit) return '';
   const megapixels = Math.round((width * height) / 1_000_000);
-  return `That image is ${width} × ${height} (${megapixels} MP). This tool accepts up to ${limit / 1_000_000} MP — shrink it and try again.`;
+  return `That image is ${width} × ${height} (${megapixels} MP). This tool accepts up to ${pixelLimitLabel(mode)} — shrink it and try again.`;
 }
 
 /**
@@ -76,7 +89,7 @@ export function failureNote(reason: unknown, mode = 'edit'): string {
   if (!text) return '';
   if (/413|exceeds \d+ pixels|larger than \d+ bytes|too large/i.test(text)) {
     const limit = maxPixelsForMode(mode);
-    return `The image is too large for this service (up to ${MAX_UPLOAD_MIB} MiB${limit ? ` and ${limit / 1_000_000} MP` : ''}). Shrink it and try again.`;
+    return `The image is too large for this service (up to ${MAX_UPLOAD_MIB} MiB${limit ? ` and ${pixelLimitLabel(mode)}` : ''}). Shrink it and try again.`;
   }
   return text.length > 160 ? `${text.slice(0, 157)}…` : text;
 }

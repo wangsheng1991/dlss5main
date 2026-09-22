@@ -70,7 +70,7 @@ const ticket = await client.createUpload({
 }
 ```
 
-响应包含 `file_id`、`upload_url`、`headers`。支持 `image/png`、`image/jpeg`、`image/webp`，申报文件大小须在 1 字节至 20 MiB 内；实际上传必须与申报一致。当前上传票据本身不是硬性的对象大小限制，SaaS 必须自行限制上传滥用。
+响应包含 `file_id`、`upload_url`、`headers`。支持 `image/png`、`image/jpeg`、`image/webp`，申报文件大小须在 1 字节至 10 MiB 内（2026-09-22 起从 20 MiB 下调）；实际上传必须与申报一致。当前上传票据本身不是硬性的对象大小限制，SaaS 必须自行限制上传滥用。
 
 ### 2. 浏览器直接上传图片
 
