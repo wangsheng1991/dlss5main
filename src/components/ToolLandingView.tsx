@@ -4,12 +4,13 @@ import ImageSlider from './ImageSlider';
 import { toolAlternates, toolSteps, type ToolLanding } from '../content/toolLandings';
 import { ENHANCE_MAX_EDGE } from '../config/enhance';
 import { profileHas } from '../config/profile';
+import { trackEvent } from '../lib/analytics';
 
 export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
   const es = tool.locale === 'es';
   return <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-6 text-center">
     <UploadCloud aria-hidden="true" className="w-8 h-8 mx-auto mb-3 text-primary" />
-    <a href={`/dashboard?tool=${tool.dashboardTool}`} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.cta}</a>
+    <a href={`/dashboard?tool=${tool.dashboardTool}`} onClick={() => trackEvent('tool_cta_click', { tool: tool.dashboardTool, locale: tool.locale })} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.cta}</a>
     <p className="mt-3 text-xs leading-relaxed text-zinc-400">{es ? 'O arrastra una imagen aquí. La vista previa permanece en tu navegador.' : 'Or drop an image here. Your preview stays in your browser.'}</p>
     <p className="mt-2 text-xs text-zinc-400">{tool.ctaNote}</p>
   </div>;

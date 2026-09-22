@@ -18,6 +18,7 @@ import { useSampleRun } from '../features/generation/useSampleRun';
 import { claimShareReward } from '../features/rewards/shareClaim';
 import { SHARE_REWARD } from '../config/promos';
 import SEO from '../components/SEO';
+import { fileSizeBucket, pixelBucket, trackEvent } from '../lib/analytics';
 
 type HistoryJob = { id: string; status: string; prompt: string; tool?: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
 
@@ -30,8 +31,8 @@ const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
 
 /** The presets offered in the studio, in display order. */
 const MODES: Array<[GenerationMode, string]> = [
-  ['edit', 'Image editing'],
-  ['enhance', 'HD enhance'],
+  ['enhance', 'Enhance & upscale'],
+  ['edit', 'Prompt edit'],
   ['cutout', TOOL_SUMMARY.cutout.label],
   ['vectorize', TOOL_SUMMARY.vectorize.label],
   ['erase', TOOL_SUMMARY.erase.label],
@@ -77,7 +78,8 @@ export default function Dashboard() {
   const [preview, setPreview] = useState('');
   const [fileError, setFileError] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
-  const [mode, setMode] = useState<GenerationMode>('edit');
+  // Usage data shows enhancement is the primary job; make the high-intent path the default.
+  const [mode, setMode] = useState<GenerationMode>('enhance');
   const [factor, setFactor] = useState<EnhanceFactor>(2);
   const [steps, setSteps] = useState<number>(STEPS_RANGE.default);
   const [preset, setPreset] = useState<VectorizePreset>('logo');
@@ -93,6 +95,7 @@ export default function Dashboard() {
   const [shareBusy, setShareBusy] = useState(false);
   const [shareClaimed, setShareClaimed] = useState(false);
   const [shareNotice, setShareNotice] = useState('');
+  const trackedOperation = useRef('');
   const input = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
   // SEO tool pages link into the same studio with the matching preset already selected.
@@ -100,7 +103,19 @@ export default function Dashboard() {
     const tool = new URL(window.location.href).searchParams.get('tool');
     const preset = tool ? MODE_BY_TOOL_QUERY[tool] : undefined;
     if (preset) setMode(preset);
+    trackEvent('studio_open', { tool: tool || 'direct' });
   }, []);
+  useEffect(() => {
+    const current = generation.operation;
+    if (!current?.jobId || !['SUCCEEDED', 'FAILED'].includes(current.status || '')) return;
+    const key = `${current.jobId}:${current.status}`;
+    if (trackedOperation.current === key) return;
+    trackedOperation.current = key;
+    trackEvent(current.status === 'SUCCEEDED' ? 'generation_success' : 'generation_failure', {
+      mode: current.body.mode || 'edit',
+      status: current.status,
+    });
+  }, [generation.operation?.jobId, generation.operation?.status]);
   // Stripe and PayPal both return buyers here; the server confirms the purchase and grants credits.
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -188,12 +203,14 @@ export default function Dashboard() {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > MAX_UPLOAD_BYTES) { setFileError(`Choose a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`); return; }
     setFileError(''); setFile(candidate); setSourceSize(null);
+    trackEvent('image_selected', { mode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size) });
     // Enhancement is sized from the original pixels, so measure the file as soon as it is picked.
     const url = URL.createObjectURL(candidate);
     const image = new Image();
     image.onload = () => {
       URL.revokeObjectURL(url);
       setSourceSize({ width: image.naturalWidth, height: image.naturalHeight });
+      trackEvent('image_measured', { mode, pixels: pixelBucket(image.naturalWidth, image.naturalHeight) });
       // The studio caps the input at 16 MP; a 48 MP phone photo is only ~15 MiB, so it would pass
       // the size check above and then fail inside the service with no visible reason.
       const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, mode);
@@ -251,7 +268,7 @@ export default function Dashboard() {
     />
     <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-      <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Edit a photo with a prompt. Independent AI image editing; not NVIDIA DLSS game rendering.</p></div>
+      <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Enhance, upscale or repair a photo, render or product image. Prompt editing is available when you need a specific change.</p></div>
       <div className="flex flex-wrap items-center gap-3">
         <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} credits` : 'Sign in to generate'}</span>
         {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? 'Change plan' : 'Upgrade'}</Link>}
@@ -289,7 +306,7 @@ export default function Dashboard() {
       <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
         <div><div className="grid grid-cols-2 gap-2">
-          {MODES.map(([value, label]) => <button key={value} type="button" onClick={() => setMode(value)} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{label}</button>)}
+          {MODES.map(([value, label]) => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{label}</button>)}
         </div>
           {mode === 'enhance' ? <div className="mt-3">
             <div className="grid grid-cols-2 gap-2">{ENHANCE_FACTORS.map(value => <button key={value} type="button" onClick={() => setFactor(value)} disabled={locked} className={factor === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value}×</button>)}</div>
@@ -329,7 +346,7 @@ export default function Dashboard() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p role="status" className="text-nvidia-green text-sm">Example ready{sampleRun.state.run.cached ? ' · served from cache' : ''}</p>
             <div className="flex flex-wrap gap-3">
-              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.${sampleRun.state.run.extension}`} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download example result</a>
+              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.${sampleRun.state.run.extension}`} onClick={() => trackEvent('example_download', { sample: sampleRun.state.run.sample })} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download example result</a>
               <button onClick={() => { sampleRun.reset(); setSelectedSample(null); }} className="px-4 py-3 border border-outline-variant/30 rounded-lg text-white">Try another example</button>
               <Link to="/login" className="px-4 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10">Sign in to use your own image</Link>
             </div>
@@ -338,13 +355,13 @@ export default function Dashboard() {
         {generation.operation && <div className="mb-4 text-xs text-zinc-400 break-all">Operation: {generation.operation.jobId || generation.operation.key}<br/>Saved on this device. Refreshing will preserve this request.</div>}
         {generation.busy && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{generation.phase}</h2><p className="text-zinc-400 text-sm">You can leave and return. Do not submit another image for this operation.</p>{!generation.submitting && <button onClick={generation.pause} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-zinc-300">Pause checking</button>}</div>}
         {!generation.busy && generation.pending && <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-10"><h2 className="text-white text-xl">Your operation is saved</h2><p className="text-sm text-zinc-400 max-w-md">The result is not confirmed yet. Resume the same operation to check its status without creating a new charge.</p><button onClick={() => void generation.resume()} className="px-6 py-3 bg-primary text-black rounded-lg font-bold">Resume operation</button></div>}
-        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{generation.operation?.body.mode === 'vectorize' ? 'Open the SVG' : 'Open full image'}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
+        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" onClick={() => trackEvent('result_download', { mode: generation.operation?.body.mode || 'edit' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{generation.operation?.body.mode === 'vectorize' ? 'Open the SVG' : 'Open full image'}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
         {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
           {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
           {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
           {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize)} onClick={() => { if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
