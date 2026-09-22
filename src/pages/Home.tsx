@@ -58,8 +58,8 @@ const SEARCH_CASES = [
     descriptionZh: '用克制的提示词恢复眼睛、头发和皮肤纹理，尽量保持人物身份，不做塑料磨皮。',
     prompt: 'Upscale 4x, preserve facial identity and expression, recover natural hair and skin texture, remove compression noise, do not change age or face shape.',
     keywords: ['portrait upscaler', 'face detail enhancement', 'photo restoration'],
-    highRes: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=90',
-    lowRes: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=320&q=35&blur=8',
+    highRes: '/examples/case-portrait.jpg',
+    lowRes: '/examples/case-portrait-low.jpg',
     alt: 'Portrait before and after AI face detail enhancement',
   },
   {
@@ -70,8 +70,8 @@ const SEARCH_CASES = [
     descriptionZh: '优先处理直线、窗框和重复几何结构，发布前建议在 100% 比例检查结果。',
     prompt: 'Upscale 4x, preserve straight architectural lines and window geometry, sharpen edges without halos, keep the original perspective and materials.',
     keywords: ['architecture upscaler', 'real estate photo enhancer', 'building detail recovery'],
-    highRes: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=90',
-    lowRes: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=320&q=35&blur=8',
+    highRes: '/examples/case-architecture.jpg',
+    lowRes: '/examples/case-architecture-low.jpg',
     alt: 'Architecture image before and after AI upscaling',
   },
   {
@@ -82,8 +82,8 @@ const SEARCH_CASES = [
     descriptionZh: '从压缩后的电商图片中恢复商品轮廓和表面材质，避免生成一个不同的商品形状。',
     prompt: 'Upscale 4x, preserve the product silhouette, label placement and colors, recover material texture, remove JPEG artifacts, do not invent text.',
     keywords: ['product photo upscaler', 'ecommerce image enhancer', 'marketplace image quality'],
-    highRes: 'https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=1200&q=90',
-    lowRes: 'https://images.unsplash.com/photo-1618365908648-e71bd5716cba?auto=format&fit=crop&w=320&q=35&blur=8',
+    highRes: '/examples/case-product.jpg',
+    lowRes: '/examples/case-product-low.jpg',
     alt: 'Product photo before and after AI texture enhancement',
   },
 ] as const;
