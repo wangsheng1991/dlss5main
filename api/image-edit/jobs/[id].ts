@@ -19,7 +19,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try { stored = JSON.parse(operation.inputJson); } catch { /* an unreadable input still has a task id */ }
     const task = await (stored.tool ? alphaNetTools : alphaNet).poll(operation.providerTaskId);
     const status = task.status === 'SUCCESS' ? 'SUCCEEDED' : task.status === 'FAILURE' ? 'FAILED' : 'RUNNING';
-    if (status === 'SUCCEEDED' || status === 'FAILED') await store.settle(uid, operationId, status, task.error || '');
+    // The provider's reason for a failure lives in fail_reason (the gateway keeps it there); reading
+    // only `error` left every failed history row without a cause to show.
+    const failure = String(task.error || task.fail_reason || '');
+    if (status === 'SUCCEEDED' || status === 'FAILED') await store.settle(uid, operationId, status, failure);
     // History must outlive the provider's signed link, so the result is copied once it survives settling.
     const image = task.result?.images?.[0];
     if (status === 'SUCCEEDED' && image?.url && !operation.result) {
@@ -28,6 +31,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await store.attachResult(operationId, meta);
       } catch { /* the live provider link still serves this response */ }
     }
-    return res.status(200).json({ jobId: operationId, status, progress: task.progress, result: task.result, error: task.error });
+    return res.status(200).json({ jobId: operationId, status, progress: task.progress, result: task.result, error: failure });
   } catch (error) { return fail(res, error); }
 }

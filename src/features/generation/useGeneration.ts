@@ -4,7 +4,7 @@ import type { User } from 'firebase/auth';
 import { request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
-import { isToolId, modelForTool, toolNeedsPrompt, type VectorizePreset } from '../../config/tools';
+import { failureNote, isToolId, MAX_UPLOAD_BYTES, modelForTool, oversizeNote, toolNeedsPrompt, type VectorizePreset } from '../../config/tools';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
@@ -71,12 +71,16 @@ export function useGeneration(user: User | null) {
       const tool = isToolId(mode) ? mode : null;
       if (!enhancing && !tool && !prompt.trim()) throw new Error('Describe the edit you want to make.');
       if (tool && toolNeedsPrompt(tool) && !prompt.trim()) throw new Error(tool === 'erase' ? 'Describe what should be removed.' : 'Describe what you want to change.');
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 20 * 1024 * 1024 || !file.size) throw new Error('Use a JPEG, PNG or WebP image up to 20 MiB.');
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > MAX_UPLOAD_BYTES || !file.size) throw new Error('Use a JPEG, PNG or WebP image up to 20 MiB.');
       const existing = readOperation(user.uid);
       if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
       localStorage.setItem(`dlss:storage-check:${user.uid}`, '1'); localStorage.removeItem(`dlss:storage-check:${user.uid}`);
       // Measure every mode so normal edits can keep the source geometry as well as HD enhance.
       const source = options.source || await measureImage(file);
+      // The services refuse more than 40 MP (a 48 MP phone photo is only ~15 MiB), and learning that
+      // from a failed task costs a queue wait and hides the reason — so refuse it here instead.
+      const tooBig = oversizeNote(source.width, source.height);
+      if (tooBig) throw new Error(tooBig);
       setPhase('Uploading image…');
       const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size, model: tool ? modelForTool(tool) : 'flux-klein' }) });
       const upload = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: file, signal: AbortSignal.timeout(120000) });
@@ -113,7 +117,10 @@ export function useGeneration(user: User | null) {
   const pending = !!operation && !terminal(operation.status);
   const waiting = pending && !!operation.jobId && !paused && !query.isError && Date.now() - pollingStarted.current <= POLL_BUDGET_MS;
   const statusText = operation?.status === 'SUBMISSION_UNCERTAIN' ? 'Confirming submission. Resume safely with the same saved request.' : operation?.status === 'QUEUED' ? 'Queued — waiting for processing.' : 'Processing your image…';
-  const failure = operation?.status === 'FAILED' ? (query.data?.refunded ? 'Generation failed. Your credit has been refunded.' : 'Generation failed. Check your balance; refund reconciliation may still be pending.') : '';
+  // The provider now reports why a task failed (the gateway used to answer with an empty reason),
+  // so a refund comes with the sentence that tells the customer what to change.
+  const reason = failureNote(query.data?.error);
+  const failure = operation?.status === 'FAILED' ? `${query.data?.refunded ? 'Generation failed. Your credit has been refunded.' : 'Generation failed. Check your balance; refund reconciliation may still be pending.'}${reason ? ` ${reason}` : ''}` : '';
   return { operation, busy: submitting || waiting, submitting, pending, error: error || query.error?.message || failure, phase: submitting ? phase : statusText, submit, resume,
     pause: () => setPaused(true),
     reset: () => { if (user && terminal(operation?.status)) { clearOperation(user.uid); setOperation(null); setError(''); queryClient.removeQueries({ queryKey: ['generation', user.uid] }); } },

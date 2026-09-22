@@ -15,6 +15,40 @@ export const ERASE_OUTPUT_EDGE = 1024;
 /** The erase model re-renders the whole frame, which takes about a minute on the shared GPU. */
 export const ERASE_SECONDS_NOTE = 'about a minute';
 
+/**
+ * Input limits, checked in the browser as well as on the server.
+ *
+ * `MAX_UPLOAD_BYTES` is the file ceiling everywhere (studio picker, `/api/image-edit/upload`, the
+ * gateway's upload ticket, the tool services' own `MAX_BYTES`). `MAX_INPUT_PIXELS` is the second
+ * ceiling, and it is the one a customer cannot guess: a 48 MP phone photo is only ~15 MiB, so it
+ * passes every size check and then dies inside the service (`image 8000x6000 exceeds 40000000
+ * pixels`). Measuring the picked file locally turns that silent failure into an instant message.
+ */
+export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+export const MAX_INPUT_PIXELS = 40_000_000;
+
+/** '' when the measured image is within the services' limits, otherwise the sentence to show. */
+export function oversizeNote(width: number, height: number): string {
+  if (!width || !height) return '';
+  if (width * height <= MAX_INPUT_PIXELS) return '';
+  const megapixels = Math.round((width * height) / 1_000_000);
+  return `That image is ${width} × ${height} (${megapixels} MP). The services accept up to ${MAX_INPUT_PIXELS / 1_000_000} MP — shrink it and try again.`;
+}
+
+/**
+ * Turns a provider failure into something a customer can act on. The provider's own words are kept
+ * when they are already meaningful; the over-size case is the one worth translating, because the
+ * raw text is `backend_413: ... exceeds 40000000 pixels`.
+ */
+export function failureNote(reason: unknown): string {
+  const text = typeof reason === 'string' ? reason.trim() : '';
+  if (!text) return '';
+  if (/413|exceeds \d+ pixels|larger than \d+ bytes|too large/i.test(text)) {
+    return 'The image is too large for this service (up to 20 MiB and 40 MP). Shrink it and try again.';
+  }
+  return text.length > 160 ? `${text.slice(0, 157)}…` : text;
+}
+
 export const STEPS_RANGE = { min: 4, max: 20, default: 8 } as const;
 
 export type ToolId = 'cutout' | 'vectorize' | 'erase';
