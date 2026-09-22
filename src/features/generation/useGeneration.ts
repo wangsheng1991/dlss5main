@@ -4,7 +4,7 @@ import type { User } from 'firebase/auth';
 import { request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
-import { failureNote, isToolId, MAX_UPLOAD_BYTES, modelForTool, oversizeNote, toolNeedsPrompt, type VectorizePreset } from '../../config/tools';
+import { failureNote, isToolId, MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, modelForTool, oversizeNote, toolNeedsPrompt, type VectorizePreset } from '../../config/tools';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
@@ -71,13 +71,13 @@ export function useGeneration(user: User | null) {
       const tool = isToolId(mode) ? mode : null;
       if (!enhancing && !tool && !prompt.trim()) throw new Error('Describe the edit you want to make.');
       if (tool && toolNeedsPrompt(tool) && !prompt.trim()) throw new Error(tool === 'erase' ? 'Describe what should be removed.' : 'Describe what you want to change.');
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > MAX_UPLOAD_BYTES || !file.size) throw new Error('Use a JPEG, PNG or WebP image up to 20 MiB.');
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > MAX_UPLOAD_BYTES || !file.size) throw new Error(`Use a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`);
       const existing = readOperation(user.uid);
       if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
       localStorage.setItem(`dlss:storage-check:${user.uid}`, '1'); localStorage.removeItem(`dlss:storage-check:${user.uid}`);
       // Measure every mode so normal edits can keep the source geometry as well as HD enhance.
       const source = options.source || await measureImage(file);
-      // The services refuse more than 40 MP (a 48 MP phone photo is only ~15 MiB), and learning that
+      // The services refuse more than 16 MP (a 48 MP phone photo is only ~15 MiB), and learning that
       // from a failed task costs a queue wait and hides the reason — so refuse it here instead.
       const tooBig = oversizeNote(source.width, source.height, mode);
       if (tooBig) throw new Error(tooBig);

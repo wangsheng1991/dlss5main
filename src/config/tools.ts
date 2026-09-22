@@ -19,22 +19,31 @@ export const ERASE_SECONDS_NOTE = 'about a minute';
  * Input limits, checked in the browser as well as on the server.
  *
  * `MAX_UPLOAD_BYTES` is the file ceiling everywhere (studio picker, `/api/image-edit/upload`, the
- * gateway's upload ticket, every upstream service's own 20 MiB check).
+ * gateway's upload ticket, every upstream service's own `MAX_BYTES` check).
  *
  * The pixel ceiling is **per mode**, because each upstream enforces its own: the FLUX editor
- * (editing and enhancement) refuses more than 20 MP (`MAX_IMAGE_PIXELS` in the GPU service), the
- * two CPU tools allow 40 MP, and the eraser downsizes its reference to a 1024 px long edge before
- * rendering, so it has no pixel ceiling at all. A phone photo is the case that matters: 48 MP is
- * only about 15 MiB, so it passes the file check and dies upstream — measuring the picture when it
- * is picked turns that into an instant, specific message.
+ * refuses more than 20 MP (`MAX_IMAGE_PIXELS` in the GPU service) and the two CPU tools 40 MP.
+ * The numbers below are deliberately **stricter than any upstream**: the editor renders at a
+ * 1536 px long edge and the cut keeps the input's size, so 16 MP (4928 × 3264) covers every phone
+ * default — a 12 MP phone photo is 4032 × 3024 — plus 4K/5K screenshots, while a 24 MP or 48 MP
+ * file is downscaled by the service anyway and only costs upload time and a queued wait. Measured
+ * on the CPU services (2026-09-22): 16 MP → 3.1 s cutout, 20 MP → 3.6 s, 32 MP → 5.6 s. The eraser
+ * downsizes its reference to a 1024 px long edge before rendering, so it has no pixel ceiling at
+ * all. A phone photo is the case that matters: 48 MP is only about 15 MiB, so it passes the file
+ * check and dies upstream — measuring the picture when it is picked turns that into an instant,
+ * specific message.
  */
-export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+/** The same ceiling in whole MiB, for the copy the customer reads. */
+export const MAX_UPLOAD_MIB = MAX_UPLOAD_BYTES / (1024 * 1024);
+/** One ceiling for the whole studio: 16 MP ≈ 4928 × 3264. Only the eraser is exempt. */
+export const STUDIO_MAX_PIXELS = 16_000_000;
 export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase', number | null> = {
-  edit: 20_000_000,        // flux-klein / editing
-  enhance: 20_000_000,     // flux-klein / HD enhance
-  cutout: 40_000_000,      // background removal (rembg)
-  vectorize: 40_000_000,   // vectorizer (VTracer)
-  erase: null,             // generative erase: the reference is scaled inside the service
+  edit: STUDIO_MAX_PIXELS,        // flux-klein / editing
+  enhance: STUDIO_MAX_PIXELS,     // flux-klein / HD enhance
+  cutout: STUDIO_MAX_PIXELS,      // background removal (rembg)
+  vectorize: STUDIO_MAX_PIXELS,   // vectorizer (VTracer)
+  erase: null,                    // generative erase: the reference is scaled inside the service
 };
 /** Pixel ceiling for one mode; the strictest applies when the mode is unknown. */
 export const maxPixelsForMode = (mode: string): number | null =>
@@ -43,7 +52,9 @@ export const maxPixelsForMode = (mode: string): number | null =>
 /** One short line for the studio panel: what the input may be, in that mode's terms. */
 export const inputLimitNote = (mode: string): string => {
   const limit = maxPixelsForMode(mode);
-  return limit ? `input up to ${limit / 1_000_000} MP and 20 MiB` : 'any pixel size, file up to 20 MiB';
+  return limit
+    ? `input up to ${limit / 1_000_000} MP and ${MAX_UPLOAD_MIB} MiB`
+    : `any pixel size, file up to ${MAX_UPLOAD_MIB} MiB`;
 };
 
 /** '' when the measured image is within that mode's limits, otherwise the sentence to show. */
@@ -65,7 +76,7 @@ export function failureNote(reason: unknown, mode = 'edit'): string {
   if (!text) return '';
   if (/413|exceeds \d+ pixels|larger than \d+ bytes|too large/i.test(text)) {
     const limit = maxPixelsForMode(mode);
-    return `The image is too large for this service (up to 20 MiB${limit ? ` and ${limit / 1_000_000} MP` : ''}). Shrink it and try again.`;
+    return `The image is too large for this service (up to ${MAX_UPLOAD_MIB} MiB${limit ? ` and ${limit / 1_000_000} MP` : ''}). Shrink it and try again.`;
   }
   return text.length > 160 ? `${text.slice(0, 157)}…` : text;
 }
