@@ -442,10 +442,10 @@ function renderPassportPhoto(spec?: PhotoSpec): string {
   const selected = spec || specs[0];
   const selectedSlug = PASSPORT_PHOTO_SPEC_SLUGS[selected.id];
   const canonicalPath = spec ? `/tools/passport-photo/${selectedSlug}` : '/tools/passport-photo';
-  const title = spec ? `${selected.label} Online — Printable Passport Photo Maker` : 'Passport Photo Maker — Printable 3×4 and 35×45 Photos';
+  const title = spec ? `Free ${selected.label} Online — Printable Passport Photo Maker` : 'Free Passport Photo Maker — Printable 3×4 and 35×45 Photos';
   const description = spec
-    ? `Create a ${selected.sizeMm.width} × ${selected.sizeMm.height} mm ${selected.label.toLowerCase()} locally in your browser. Align the head guide and download a printable sheet without uploading your photo.`
-    : 'Create printable 3×4 cm and 35×45 mm passport or document photos locally in your browser. Choose a verified format, align the guide and download a finished sheet.';
+    ? `Create a free ${selected.sizeMm.width} × ${selected.sizeMm.height} mm ${selected.label.toLowerCase()} locally in your browser. Align the head guide and download a printable sheet without uploading your photo.`
+    : 'Create free printable 3×4 cm and 35×45 mm passport or document photos locally in your browser. Choose a verified format, align the guide and download a finished sheet without an account or credits.';
   const links = specs.map(item => `<li><a href="/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[item.id]}">${escapeHtml(item.label)}</a> — ${item.sizeMm.width} × ${item.sizeMm.height} mm, minimum ${item.minDpi} DPI</li>`).join('');
   const facts = spec ? `<dl><dt>Printed size</dt><dd>${selected.sizeMm.width} × ${selected.sizeMm.height} mm</dd><dt>Minimum resolution</dt><dd>${selected.minDpi} DPI</dd><dt>Background</dt><dd>${escapeHtml(selected.background)}</dd><dt>Head guide</dt><dd>${selected.headHeightMm ? `${selected.headHeightMm.min}–${selected.headHeightMm.max} mm` : 'Not stated'} with ${selected.headroomMm ? `${selected.headroomMm.min}–${selected.headroomMm.max} mm` : 'no stated'} headroom</dd></dl>` : `<p>Available verified formats:</p><ul>${links}</ul>`;
   const structuredData = {
@@ -453,7 +453,7 @@ function renderPassportPhoto(spec?: PhotoSpec): string {
     '@graph': [
       {
         '@type': 'WebApplication',
-        name: 'Passport Photo Maker',
+        name: 'Free Passport Photo Maker',
         url: absoluteUrl(canonicalPath),
         applicationCategory: 'MultimediaApplication',
         operatingSystem: 'Web',
@@ -472,13 +472,13 @@ function renderPassportPhoto(spec?: PhotoSpec): string {
     ],
   };
   const toolHref = `${canonicalPath}#tool`;
-  const root = `<main class="pt-28 pb-24 px-6 max-w-[1100px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>Passport Photo Maker</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">Small tool · local processing</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(title.replace(' — Printable Passport Photo Maker', ''))}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(description)}</p><p class="mt-6"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="${toolHref}">Open the local photo tool →</a></p></header><section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">Published specification</h2><div class="mt-5 text-sm text-zinc-300">${facts}</div></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">How it works</h2><ol class="mt-5 space-y-3 text-sm text-zinc-300"><li><strong>1. Upload locally.</strong> Choose a JPG, PNG or WebP; the browser reads it without sending it to our server.</li><li><strong>2. Align the guide.</strong> Position the crown and chin inside the published head-height and headroom lines.</li><li><strong>3. Export.</strong> Download an exact-size PNG or a repeated print sheet with cut marks.</li></ol></article></section><section class="mt-12 rounded-xl border border-primary/25 bg-primary/5 p-6"><h2 class="text-2xl font-bold text-white">Before submitting</h2><p class="mt-4 text-sm leading-relaxed text-zinc-300">A correctly sized file is not a guarantee of acceptance. Check the receiving authority's current photo rules, expression requirements and background guidance.</p><div class="mt-5 flex flex-wrap gap-4 text-sm">${specs.map(item => `<a class="text-primary" href="/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[item.id]}">${escapeHtml(item.label)} →</a>`).join('')}</div></section></main>`;
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1100px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>Free Passport Photo Maker</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">Free small tool · local processing</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(title.replace(' — Printable Passport Photo Maker', ''))}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(description)}</p><p class="mt-6"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="${toolHref}">Open the free local photo tool →</a></p></header><section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">Published specification</h2><div class="mt-5 text-sm text-zinc-300">${facts}</div></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">How it works</h2><ol class="mt-5 space-y-3 text-sm text-zinc-300"><li><strong>1. Upload locally.</strong> Choose a JPG, PNG or WebP; the browser reads it without sending it to our server.</li><li><strong>2. Align the guide.</strong> Position the crown and chin inside the published head-height and headroom lines.</li><li><strong>3. Export.</strong> Download an exact-size PNG or a repeated print sheet with cut marks.</li></ol></article></section><section class="mt-12 rounded-xl border border-primary/25 bg-primary/5 p-6"><h2 class="text-2xl font-bold text-white">Before submitting</h2><p class="mt-4 text-sm leading-relaxed text-zinc-300">A correctly sized file is not a guarantee of acceptance. Check the receiving authority's current photo rules, expression requirements and background guidance.</p><div class="mt-5 flex flex-wrap gap-4 text-sm">${specs.map(item => `<a class="text-primary" href="/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[item.id]}">${escapeHtml(item.label)} →</a>`).join('')}</div></section></main>`;
   return withRoot(withHead(TEMPLATE, {
     title,
     description,
     canonicalPath,
     language: 'en-US',
-    keywords: ['passport photo online', 'passport photo maker', '3x4 photo online', '35x45 passport photo', 'printable ID photo'],
+    keywords: ['free passport photo online', 'free passport photo maker', '3x4 photo online free', '35x45 passport photo free', 'printable ID photo'],
     structuredData,
   }), root);
 }
