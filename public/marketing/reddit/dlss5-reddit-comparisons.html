@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>DLSS-style image enhancement — before and after comparisons</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b0c0d;--panel:#141617;--line:#303536;--muted:#a7adad;--green:#b1fa50;--ink:#f6f7f7}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 12% 0,#1b2915 0,transparent 34rem),var(--bg);color:var(--ink);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{max-width:1360px;margin:auto;padding:clamp(30px,6vw,84px) clamp(18px,4vw,60px) 70px}.kicker{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.intro{max-width:760px}.intro h1{font-size:clamp(34px,5vw,66px);line-height:1.04;margin:15px 0 18px;letter-spacing:-.04em}.intro p{color:var(--muted);font-size:18px;max-width:720px}.note{border:1px solid #47543d;background:#141d13;border-radius:12px;padding:12px 16px;color:#dbe7d4;max-width:860px;margin:28px 0 44px}.note strong{color:var(--green)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.card{background:linear-gradient(150deg,#191d1e,#101213);border:1px solid var(--line);border-radius:18px;overflow:hidden}.card header{display:flex;justify-content:space-between;gap:12px;padding:20px 20px 15px}.card h2{font-size:22px;margin:0}.pill{color:var(--green);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#050606}.frame{position:relative;background:#202324;overflow:hidden}.frame img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover}.frame span{position:absolute;left:10px;top:10px;border-radius:6px;padding:4px 8px;background:rgba(0,0,0,.72);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.card p{color:var(--muted);font-size:14px;margin:0;padding:15px 20px 21px;min-height:78px}.footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:52px;padding-top:20px;color:#7f8787;font-size:13px}.footer a{color:var(--green);text-decoration:none}.hidden{display:none!important}@media(max-width:940px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:640px){main{padding-top:32px}.grid{grid-template-columns:1fr}.intro p{font-size:16px}.footer{display:block}.footer span{display:block;margin-bottom:8px}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="intro">
+      <div class="kicker">Independent comparison board · free preview</div>
+      <h1>What changes when a low-resolution image is enhanced?</h1>
+      <p>Three real before-and-after examples from the DLSS5NVIDIA browser workflow. The comparison is meant for inspection, not a claim that AI can recover information that was never captured.</p>
+    </div>
+    <div class="note"><strong>Review before publishing:</strong> AI reconstruction can alter faces, text, labels and fine geometry. Keep the original file and inspect the output at 100%. NVIDIA DLSS is a trademark of NVIDIA Corporation; this is an independent, non-official demo.</div>
+    <section class="grid" aria-label="Before and after comparisons">
+      <article class="card" data-case="portrait">
+        <header><h2>Portrait detail</h2><span class="pill">face check</span></header>
+        <div class="comparison"><div class="frame"><img src="/examples/case-portrait-low.jpg" alt="Soft low-resolution portrait before enhancement"><span>Before</span></div><div class="frame"><img src="/examples/case-portrait.jpg" alt="Portrait after AI enhancement"><span>After</span></div></div>
+        <p>Edges and skin texture look cleaner, but compare eyes, jawline and expression with the original before using it as a profile image.</p>
+      </article>
+      <article class="card" data-case="architecture">
+        <header><h2>Architecture render</h2><span class="pill">line check</span></header>
+        <div class="comparison"><div class="frame"><img src="/examples/case-architecture-low.jpg" alt="Low-resolution architecture render before enhancement"><span>Before</span></div><div class="frame"><img src="/examples/case-architecture.jpg" alt="Architecture render after AI enhancement"><span>After</span></div></div>
+        <p>Window edges and material texture are easier to read. Check perspective, repeated windows and straight lines for invented structure.</p>
+      </article>
+      <article class="card" data-case="product">
+        <header><h2>Product photo</h2><span class="pill">label check</span></header>
+        <div class="comparison"><div class="frame"><img src="/examples/case-product-low.jpg" alt="Low-resolution product photo before enhancement"><span>Before</span></div><div class="frame"><img src="/examples/case-product.jpg" alt="Product photo after AI enhancement"><span>After</span></div></div>
+        <p>The product silhouette and surface are clearer. Inspect logos, serial numbers and packaging copy instead of trusting reconstructed text.</p>
+      </article>
+    </section>
+    <footer class="footer"><span>Free example preview · no claim of official NVIDIA affiliation</span><a href="https://www.dlss5nvidia.com/">Try the browser workflow →</a></footer>
+  </main>
+  <script>
+    const requested = new URLSearchParams(location.search).get('case');
+    if (requested && ['portrait','architecture','product'].includes(requested)) {
+      document.querySelectorAll('[data-case]').forEach(card => card.classList.toggle('hidden', card.dataset.case !== requested));
+    }
+  </script>
+</body>
+</html>

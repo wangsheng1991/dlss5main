@@ -24,7 +24,7 @@ AI tools for upscaling, restoration, portraits and image editing. Each states it
 - Image Quality Enhancer: https://www.dlss5nvidia.com/image-quality-enhancer
 - Unblur Image: https://www.dlss5nvidia.com/unblur-image
 - Old Photo Restoration: https://www.dlss5nvidia.com/old-photo-restoration
-- AI Headshot Enhancer: https://www.dlss5nvidia.com/ai-headshot
+- Free AI Headshot Enhancer: https://www.dlss5nvidia.com/ai-headshot
 - Image to SVG: https://www.dlss5nvidia.com/image-to-svg
 - Remove Background: https://www.dlss5nvidia.com/remove-background
 - Erase Object: https://www.dlss5nvidia.com/erase-object
@@ -44,11 +44,11 @@ Before-and-after workflow pages connect real image cases to the matching tool. E
 <!-- begin:microTools -->
 ## Small browser tools
 
-Exact-format utilities run locally in the browser. The passport photo maker does not upload the source image and exports both a single PNG and a printable sheet.
+Free exact-format utilities run locally in the browser. The passport photo maker does not upload the source image and exports both a single PNG and a printable sheet.
 
-- Passport Photo Maker: https://www.dlss5nvidia.com/tools/passport-photo
-- 3×4 document photo: https://www.dlss5nvidia.com/tools/passport-photo/3-na-4
-- 35×45 passport photo: https://www.dlss5nvidia.com/tools/passport-photo/35x45-ru
+- Free Passport Photo Maker: https://www.dlss5nvidia.com/tools/passport-photo
+- Free 3×4 document photo: https://www.dlss5nvidia.com/tools/passport-photo/3-na-4
+- Free 35×45 passport photo: https://www.dlss5nvidia.com/tools/passport-photo/35x45-ru
 <!-- end:microTools -->
 
 <!-- begin:blog -->

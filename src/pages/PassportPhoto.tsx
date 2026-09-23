@@ -59,12 +59,12 @@ function photoSchema(spec: PhotoSpec, canonicalPath: string) {
     '@graph': [
       {
         '@type': 'WebApplication',
-        name: 'Passport Photo Maker',
+        name: 'Free Passport Photo Maker',
         url: `${SITE_URL}${path}`,
         applicationCategory: 'MultimediaApplication',
         operatingSystem: 'Web',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        description: `Create a ${spec.sizeMm.width} × ${spec.sizeMm.height} mm printable document photo locally in your browser.`,
+        description: `Create a free ${spec.sizeMm.width} × ${spec.sizeMm.height} mm printable document photo locally in your browser without uploading the source image.`,
       },
       {
         '@type': 'HowTo',
@@ -195,9 +195,9 @@ export default function PassportPhoto() {
 
   return <>
     <SEO
-      title={`${spec.label} Online — Printable Passport Photo Maker`}
+      title={`Free ${spec.label} Online — Printable Passport Photo Maker`}
       description={`Create a ${spec.sizeMm.width} × ${spec.sizeMm.height} mm ${spec.label.toLowerCase()} online. Align the head guide and download a printable sheet locally without uploading your photo.`}
-      keywords={['passport photo online', 'passport photo maker', `${spec.sizeMm.width}x${spec.sizeMm.height} photo`, ...(['passport photo', '3x4 photo online', '35x45 passport photo', 'фото 3 на 4 онлайн'] as const)]}
+      keywords={['free passport photo online', 'free passport photo maker', `${spec.sizeMm.width}x${spec.sizeMm.height} photo free`, ...(['passport photo', '3x4 photo online free', '35x45 passport photo free', 'фото 3 на 4 онлайн'] as const)]}
       canonical={pagePath}
       structuredData={photoSchema(spec, pagePath)}
       language={isZh ? 'zh-CN' : 'en-US'}
