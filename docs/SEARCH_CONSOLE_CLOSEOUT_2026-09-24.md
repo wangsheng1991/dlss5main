@@ -41,12 +41,14 @@ Search Console displayed “已请求编入索引” for these URLs:
 - `/use-cases/architecture-render-upscaler`
 - `/use-cases/portrait-photo-enhancer`
 - `/image-upscaler`
+- `/image-quality-enhancer`
+- `/unblur-image`
 
 The request only places a URL in Google's priority crawl queue; it does not guarantee immediate indexing.
 
 ## Sitemap fallback
 
-Google's URL Inspection daily quota was reached while requesting `/image-quality-enhancer`; Search Console showed “超出了配额”. The latest sitemap was then resubmitted successfully on 2026-09-24. Search Console reported:
+Google's URL Inspection daily quota was reached again while requesting `/image-to-svg`; Search Console showed “超出了配额”. The latest sitemap was then resubmitted successfully on 2026-09-24. Search Console reported:
 
 - Sitemap status: successful
 - Last read: 2026-09-24
@@ -63,8 +65,6 @@ URLs for all three. Search Console validation was started for both issue groups 
 
 After Google's daily quota resets, retry URL Inspection for:
 
-- `/image-quality-enhancer`
-- `/unblur-image`
 - `/image-to-svg`
 - `/remove-background`
 - `/erase-object`
