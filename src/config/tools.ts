@@ -111,6 +111,26 @@ export const isProviderModel = (value: unknown): value is ProviderModel =>
 export const modelForTool = (tool: ToolId): ProviderModel =>
   tool === 'cutout' ? CUTOUT_MODEL : tool === 'vectorize' ? VECTORIZE_MODEL : ERASE_MODEL;
 
+/**
+ * The mode a provider model belongs to — the inverse of `modelForTool`, plus the editor both edit
+ * and enhance upload under. The server takes the model from an upload request and needs the same
+ * per-mode ceiling the browser applies, so the mapping lives beside the numbers it feeds.
+ */
+export const modeForModel = (model: string): string =>
+  model === CUTOUT_MODEL ? 'cutout' : model === VECTORIZE_MODEL ? 'vectorize' : model === ERASE_MODEL ? 'erase' : 'edit';
+
+/**
+ * The one sentence a caller gets when its image is over a mode's ceiling, checked at upload as well
+ * as in the browser. `width`/`height` arrive as unknown because they come off a request body: an
+ * absent or unreadable pair leaves the pixel check to whoever can measure the file (the browser),
+ * which is why `oversizeNote` answers '' for a zero.
+ */
+export function pixelCheckNote(width: unknown, height: unknown, mode: string): string {
+  const w = Number(width), h = Number(height);
+  if (!Number.isSafeInteger(w) || !Number.isSafeInteger(h) || w < 1 || h < 1) return '';
+  return oversizeNote(w, h, mode);
+}
+
 /** Whether the caller has to describe what should go. */
 export const toolNeedsPrompt = (tool: ToolId) => tool === 'erase';
 

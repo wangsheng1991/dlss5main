@@ -4,7 +4,7 @@ import { fail, requireUser } from '../_lib/auth.js';
 import { JobStore } from '../../server/job-store.js';
 import { database } from '../../server/admin.js';
 import { enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput } from '../../src/config/enhance.js';
-import { buildToolTask, isToolId, isVectorizePreset, toolNeedsPrompt, type ToolId } from '../../src/config/tools.js';
+import { buildToolTask, isToolId, isVectorizePreset, pixelCheckNote, toolNeedsPrompt, type ToolId } from '../../src/config/tools.js';
 
 type Body = Record<string, unknown>;
 
@@ -77,20 +77,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let finalPrompt = '';
     let targetWidth = width as number;
     let targetHeight = height as number;
+    // Both branches already insist on the source geometry; keeping it in one pair of variables lets
+    // the pixel ceiling be checked once, whichever mode asked.
+    let sourceWidth = 0;
+    let sourceHeight = 0;
     if (mode === 'enhance') {
       if (!isEnhanceFactor(factor)) return res.status(400).json({ error: 'factor must be 2 or 4' });
       if (!Number.isSafeInteger(source_width) || !Number.isSafeInteger(source_height) || (source_width as number) < 16 || (source_height as number) < 16 || (source_width as number) > 8192 || (source_height as number) > 8192) {
         return res.status(400).json({ error: 'source_width and source_height are required' });
       }
-      const output = enhanceOutput(source_width as number, source_height as number, factor);
+      sourceWidth = source_width as number;
+      sourceHeight = source_height as number;
+      const output = enhanceOutput(sourceWidth, sourceHeight, factor);
       targetWidth = output.width;
       targetHeight = output.height;
       finalPrompt = enhancePrompt(targetWidth, targetHeight);
     } else {
       if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > 4000) return res.status(400).json({ error: 'prompt is required' });
       // Replays created before geometry metadata existed can still complete with their saved size.
-      const sourceWidth = (source_width ?? width) as number;
-      const sourceHeight = (source_height ?? height) as number;
+      sourceWidth = (source_width ?? width) as number;
+      sourceHeight = (source_height ?? height) as number;
       if (!Number.isSafeInteger(sourceWidth) || !Number.isSafeInteger(sourceHeight) || sourceWidth < 16 || sourceHeight < 16 || sourceWidth > 8192 || sourceHeight > 8192) {
         return res.status(400).json({ error: 'source_width and source_height are required' });
       }
@@ -99,6 +105,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       targetHeight = output.height;
       finalPrompt = `${prompt.trim()} Preserve the original aspect ratio, framing, camera angle, composition and object placement. Apply only the requested edit; do not add, remove or crop content.`;
     }
+
+    // Second gate on the same ceiling as the upload: a client that skipped the studio still gets the
+    // reason now, before a credit is reserved or the task takes a place in the provider's queue.
+    const oversize = pixelCheckNote(sourceWidth, sourceHeight, mode);
+    if (oversize) return res.status(400).json({ error: oversize });
 
     const claim = await store.claim(uid, idempotencyKey, { prompt: finalPrompt, image_ids: image_ids as string[], width: targetWidth, height: targetHeight, seed: seed as number, num_inference_steps: num_inference_steps as number, output_format: output_format as string });
     if (!claim.submit) return res.status(202).json({ jobId: claim.id, status: claim.job.status, replayed: true });

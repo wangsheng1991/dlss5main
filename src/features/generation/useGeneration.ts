@@ -82,7 +82,9 @@ export function useGeneration(user: User | null) {
       const tooBig = oversizeNote(source.width, source.height, mode);
       if (tooBig) throw new Error(tooBig);
       setPhase('Uploading image…');
-      const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size, model: tool ? modelForTool(tool) : 'flux-klein' }) });
+      // The measured size travels with the upload request so the server can apply the same ceiling
+      // the browser just did, instead of letting an oversized file reach the provider and fail there.
+      const ticket = await request('/api/image-edit/upload', await user.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size, width: source.width, height: source.height, model: tool ? modelForTool(tool) : 'flux-klein' }) });
       const upload = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: file, signal: AbortSignal.timeout(120000) });
       if (!upload.ok) throw new Error('Image upload failed. No generation was submitted.');
       if (uid.current !== user.uid) throw new Error('Account changed. Sign in again before submitting.');

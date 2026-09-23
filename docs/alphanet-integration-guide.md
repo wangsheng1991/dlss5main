@@ -155,7 +155,7 @@ if (state.status === 'SUCCESS') {
 
 | 自己的 SaaS 路由（示例，可改名） | 服务端职责 |
 |---|---|
-| POST `/api/image-edit/upload` | 检查登录、大小/类型/配额；调用 createUpload；绑定 file_id 与当前用户 |
+| POST `/api/image-edit/upload` | 检查登录、大小/类型/配额；请求带宽高时按模式检查像素上限（超限直接 400，尺寸和上限写进错误里），不要等上游回 413；调用 createUpload；绑定 file_id 与当前用户 |
 | POST `/api/image-edit/jobs` | 检查文件属于当前用户；持久化幂等操作及参数；submit；保存 task_id；立即响应 |
 | GET `/api/image-edit/jobs/{id}` | 根据自己的记录检查用户归属；调用 poll；返回状态/结果 |
 
