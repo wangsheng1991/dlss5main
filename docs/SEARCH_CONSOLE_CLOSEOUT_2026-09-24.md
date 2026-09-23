@@ -11,6 +11,12 @@ The following production pages returned HTTP 200. Each page has a unique `<title
 - `/remove-background`
 - `/erase-object`
 - `/es/mejorar-calidad-imagen`
+
+The two localized copies of the AI upscaler comparison article also returned independent,
+language-appropriate metadata and canonical URLs:
+
+- `/en/blog/best-ai-image-upscaler-2026-comparison`
+- `/zh/blog/best-ai-image-upscaler-2026-comparison`
 - `/old-photo-restoration`
 - `/ai-headshot`
 - `/tools/passport-photo`
@@ -49,6 +55,10 @@ Google's URL Inspection daily quota was reached while requesting `/image-quality
 
 The sitemap contains the remaining tool pages and all localized blog pages, so Google has a crawl path even while URL Inspection requests are rate-limited.
 
+The stale coverage report also showed one comparison article with an old canonical warning and two
+localized comparison pages in “crawled — not indexed”. The production HTML now has self-canonical
+URLs for all three. Search Console validation was started for both issue groups on 2026-09-24.
+
 ## Automatic follow-up
 
 After Google's daily quota resets, retry URL Inspection for:
@@ -59,5 +69,8 @@ After Google's daily quota resets, retry URL Inspection for:
 - `/remove-background`
 - `/erase-object`
 - `/es/mejorar-calidad-imagen`
+
+The two localized comparison pages will be re-evaluated by the validation run; no manual user action
+is required.
 
 No user decision is required for this retry. Internal links, static homepage links, `robots.txt`, `llms.txt` and the successful sitemap submission are already in place.
