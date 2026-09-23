@@ -181,7 +181,7 @@ export default function Home() {
       <section className="text-center mb-16 relative">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
         
-        <h1 className="text-5xl md:text-7xl font-headline font-bold tracking-tight text-white mb-6 leading-[1.1]">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-headline font-bold tracking-tight text-white mb-6 leading-[1.1] break-words">
           {t('home.title').split(' ').slice(0, 2).join(' ')} <br/> <span className="text-nvidia-green">{t('home.title').split(' ').slice(2).join(' ')}</span>
         </h1>
         <p className="text-on-surface-variant text-lg max-w-2xl mx-auto font-light leading-relaxed mb-12">
