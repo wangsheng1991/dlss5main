@@ -6,6 +6,7 @@ import i18n from '../i18n';
 import { useAuth } from '../contexts/AuthContext';
 import { SITE_PROFILE, profileHas } from '../config/profile';
 import { TOOL_LANDINGS } from '../content/toolLandings';
+import { USE_CASES } from '../content/useCases';
 
 const LANGUAGES = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
@@ -73,6 +74,7 @@ export default function Navbar() {
                   )}
                 </div>
               )}
+              {profileHas('useCases') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={USE_CASES[0].path}>{t('navbar.useCases')}</Link>}
               {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>}
               {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>}
               {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>}
@@ -176,6 +178,14 @@ export default function Navbar() {
                     {TOOL_LANDINGS.map(tool => (
                       <Link key={tool.path} to={tool.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{tool.heading}</Link>
                     ))}
+                  </div>
+                </div>
+              )}
+              {profileHas('useCases') && (
+                <div className="flex flex-col gap-3">
+                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.useCases')}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {USE_CASES.map(item => <Link key={item.path} to={item.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{item.heading}</Link>)}
                   </div>
                 </div>
               )}

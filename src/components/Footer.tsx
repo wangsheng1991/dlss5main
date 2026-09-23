@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { LEGAL } from '../config/legal';
 import { SITE_PROFILE, profileHas } from '../config/profile';
 import { TOOL_LANDINGS } from '../content/toolLandings';
+import { USE_CASES } from '../content/useCases';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -44,6 +45,15 @@ export default function Footer() {
                 {TOOL_LANDINGS.map(tool => (
                   <li key={tool.path}><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={tool.path}>{tool.heading}</Link></li>
                 ))}
+              </ul>
+            </div>
+          )}
+
+          {profileHas('useCases') && (
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('navbar.useCases')}</h4>
+              <ul className="space-y-4">
+                {USE_CASES.map(item => <li key={item.path}><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={item.path}>{item.heading}</Link></li>)}
               </ul>
             </div>
           )}

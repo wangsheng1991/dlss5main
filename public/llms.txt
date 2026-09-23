@@ -29,6 +29,16 @@ Six single-purpose tool pages, plus a Spanish edition of the enhancer. Each stat
 - Mejorar la calidad de imagen (Spanish): https://www.dlss5nvidia.com/es/mejorar-calidad-imagen
 <!-- end:tools -->
 
+<!-- begin:useCases -->
+## Workflow guides
+
+Before-and-after workflow pages connect real image cases to the matching tool. Each page includes a short answer, checks, steps and FAQs rather than a thin keyword variant.
+
+- Product photo enhancer: https://www.dlss5nvidia.com/use-cases/product-photo-enhancer
+- Architecture render upscaler: https://www.dlss5nvidia.com/use-cases/architecture-render-upscaler
+- Portrait photo enhancer: https://www.dlss5nvidia.com/use-cases/portrait-photo-enhancer
+<!-- end:useCases -->
+
 <!-- begin:blog -->
 ## Technical articles
 

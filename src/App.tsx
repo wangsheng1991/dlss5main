@@ -26,6 +26,7 @@ const Comparisons = lazy(() => import('./pages/Comparisons'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Refund = lazy(() => import('./pages/Refund'));
+const UseCaseLanding = lazy(() => import('./pages/UseCaseLanding'));
 
 /**
  * Renders a page, or sends the visitor home when this deployment does not publish that section. A
@@ -67,6 +68,9 @@ export default function App() {
                   <Route path="/remove-background" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/erase-object" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
+                  <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />
+                  <Route path="/use-cases/portrait-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />

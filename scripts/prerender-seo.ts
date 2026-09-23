@@ -3,6 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { ARTICLE_COVERS } from '../src/content/articles/covers';
 import { ARTICLES, type Article } from '../src/content/articles/types';
 import { TOOL_LANDINGS, toolAlternates, toolSchema, toolSteps, type ToolLanding } from '../src/content/toolLandings';
+import { USE_CASES, useCaseSchema, type UseCase } from '../src/content/useCases';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
 
@@ -409,6 +410,30 @@ function renderToolLanding(tool: ToolLanding): string {
   }), root);
 }
 
+function renderUseCaseLanding(item: UseCase): string {
+  const related = item.related.map(relatedItem => `<a href="${relatedItem.path}">${escapeHtml(relatedItem.label)}</a>`).join(' · ');
+  const faqs = item.faqs.map(faq => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto">
+    <nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(item.heading)}</span></nav>
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(item.eyebrow)}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(item.heading)}</h1><p class="text-lg text-zinc-300 leading-relaxed mt-5">${escapeHtml(item.intro)}</p><aside class="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-5"><p class="text-xs uppercase tracking-widest text-primary mb-2">Quick answer</p><p class="text-sm leading-relaxed text-zinc-200">${escapeHtml(item.tldr)}</p></aside><p class="mt-6"><a href="/dashboard?tool=${item.dashboardTool}" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">Try this workflow →</a></p><p class="text-xs text-zinc-500 mt-4">JPG, PNG and WebP · sign in before processing · 1 credit per task</p></div>
+      <figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="${escapeHtml(item.after)}" alt="${escapeHtml(item.imageAlt)}" width="1200" height="800" fetchpriority="high" class="w-full rounded-lg" /><img src="${escapeHtml(item.before)}" alt="${escapeHtml(item.beforeLabel)}" width="1200" height="800" class="w-full rounded-lg" loading="lazy" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(item.caption)}</figcaption></figure>
+    </section>
+    <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">When this workflow helps</h2><ul>${item.useCases.map(useCase => `<li>${escapeHtml(useCase)}</li>`).join('')}</ul><p class="mt-5 text-sm leading-relaxed text-zinc-400">The result is an AI reconstruction. Keep the original file and inspect information-sensitive details before using the image commercially.</p></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">How to use it</h2><ol>${item.steps.map(step => `<li><strong>${escapeHtml(step.name)}</strong> — ${escapeHtml(step.text)}</li>`).join('')}</ol></article></section>
+    <section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">Frequently asked questions</h2><div class="mt-5">${faqs}</div></section>
+    <section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">Use the underlying tool</h2><p class="mt-4 text-primary">${related}</p><p class="mt-6"><a href="/blog/dlss-5-online-image-upscaler-guide">Read the image enhancement guide →</a></p></section>
+  </main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: item.title,
+    description: item.description,
+    canonicalPath: item.path,
+    language: 'en-US',
+    image: item.after,
+    keywords: item.keywords,
+    structuredData: useCaseSchema(item),
+  }), root);
+}
+
 /**
  * Only the sections this deployment serves are written out: prerendering a page that only redirects
  * home would hand a crawler an indexable dead end.
@@ -424,6 +449,7 @@ if (profileHas('blog')) {
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
 if (profileHas('tools')) for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));
+if (profileHas('useCases')) for (const item of USE_CASES) writeRoute(item.path, renderUseCaseLanding(item));
 
 /** Routes that are not prerendered fall back to the shell, so it carries the same origin as well. */
 writeFileSync(resolve(DIST, 'index.html'), forThisDeployment(TEMPLATE));
@@ -447,4 +473,4 @@ for (const file of ['llms.txt', 'sitemap.xml', 'robots.txt']) {
   if (tidied !== original) writeFileSync(target, tidied);
 }
 
-console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${TOOL_LANDINGS.length} SEO tools, blog indexes and dashboard noindex.`);
+console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${TOOL_LANDINGS.length} SEO tools and ${USE_CASES.length} workflow guides, blog indexes and dashboard noindex.`);

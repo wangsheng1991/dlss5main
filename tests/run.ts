@@ -9,5 +9,6 @@
 import { runAll } from './harness';
 import './spec.test';
 import './tools.test';
+import './use-cases.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

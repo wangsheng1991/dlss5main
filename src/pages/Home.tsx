@@ -9,8 +9,10 @@ import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 import { FEATURED_ARTICLES } from '../content/articles/featured';
 import { TOOL_LANDINGS } from '../content/toolLandings';
+import { USE_CASES } from '../content/useCases';
 import { SITE_URL } from '../config/site';
 import { SITE_PROFILE, brandCopy, profileHas } from '../config/profile';
+import { trackEvent } from '../lib/analytics';
 
 const COMMUNITY_EXAMPLES = [
   "https://picsum.photos/seed/upscale1/600/800",
@@ -50,6 +52,7 @@ const SEARCH_CASES = [
     highRes: '/examples/sample1-photo.webp',
     lowRes: '/examples/sample1-photo-low.webp',
     alt: 'Kitchen image before and after AI upscaling',
+    useCasePath: '/use-cases/architecture-render-upscaler',
   },
   {
     id: 'portrait',
@@ -62,6 +65,7 @@ const SEARCH_CASES = [
     highRes: '/examples/case-portrait.jpg',
     lowRes: '/examples/case-portrait-low.jpg',
     alt: 'Portrait before and after AI face detail enhancement',
+    useCasePath: '/use-cases/portrait-photo-enhancer',
   },
   {
     id: 'architecture',
@@ -74,6 +78,7 @@ const SEARCH_CASES = [
     highRes: '/examples/case-architecture.jpg',
     lowRes: '/examples/case-architecture-low.jpg',
     alt: 'Architecture image before and after AI upscaling',
+    useCasePath: '/use-cases/architecture-render-upscaler',
   },
   {
     id: 'product',
@@ -86,6 +91,7 @@ const SEARCH_CASES = [
     highRes: '/examples/case-product.jpg',
     lowRes: '/examples/case-product-low.jpg',
     alt: 'Product photo before and after AI texture enhancement',
+    useCasePath: '/use-cases/product-photo-enhancer',
   },
 ] as const;
 
@@ -306,6 +312,7 @@ export default function Home() {
                 <div className="flex flex-wrap gap-2" aria-label={isZh ? '搜索关键词' : 'Search keywords'}>
                   {item.keywords.map(keyword => <span key={keyword} className="rounded-full bg-surface-high px-3 py-1 text-[11px] text-zinc-400">{keyword}</span>)}
                 </div>
+                <Link to={item.useCasePath} className="text-sm text-primary font-semibold hover:text-white">{isZh ? '查看完整场景指南 →' : 'Open the full workflow guide →'}</Link>
               </div>
             </article>
           ))}
@@ -320,6 +327,22 @@ export default function Home() {
           </button>
         </div>
       </section>
+
+      {profileHas('useCases') && (
+        <section className="mt-32" aria-labelledby="use-cases-heading">
+          <div className="mb-12 max-w-2xl">
+            <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('navbar.useCases')}</span>
+            <h2 id="use-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? '按工作场景选择图像工具' : 'Start with the job, then choose the tool'}</h2>
+            <p className="text-zinc-400 leading-relaxed">{isZh ? '真实前后案例、操作步骤和发布前检查，帮助你判断增强结果是否适合商品、建筑和人像场景。' : 'Real before-and-after cases, practical steps and publishing checks for product, architecture and portrait workflows.'}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {USE_CASES.map(item => <Link key={item.path} to={item.path} onClick={() => trackEvent('use_case_card_click', { use_case: item.slug })} className="group rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden hover:border-primary/50 transition-colors">
+              <img src={item.after} alt={item.imageAlt} className="w-full aspect-[3/2] object-cover" loading="lazy" />
+              <div className="p-5"><p className="text-[10px] uppercase tracking-widest text-primary mb-2">{item.eyebrow}</p><h3 className="text-lg font-headline font-bold text-white group-hover:text-primary transition-colors">{item.heading}</h3><p className="mt-3 text-sm leading-relaxed text-zinc-400 line-clamp-3">{item.tldr}</p><span className="inline-block mt-4 text-sm text-primary font-semibold">{isZh ? '查看指南 →' : 'Read the guide →'}</span></div>
+            </Link>)}
+          </div>
+        </section>
+      )}
 
       {/* The free tools: single-purpose pages that answer one search each. A deployment without them
           does not advertise them. */}

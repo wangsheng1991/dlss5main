@@ -22,7 +22,9 @@ export type SiteSection =
   | 'enterprise'
   | 'comparisons'
   /** The SEO landing pages for individual tools (`TOOL_LANDINGS`). */
-  | 'tools';
+  | 'tools'
+  /** Search-led workflow pages built around a real before/after example. */
+  | 'useCases';
 
 export type SiteProfile = {
   id: string;
@@ -78,6 +80,11 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
     '/erase-object',
     '/es/mejorar-calidad-imagen',
   ],
+  useCases: [
+    '/use-cases/product-photo-enhancer',
+    '/use-cases/architecture-render-upscaler',
+    '/use-cases/portrait-photo-enhancer',
+  ],
 };
 
 const ALL_SECTIONS = Object.keys(SECTION_PATHS) as SiteSection[];
@@ -127,7 +134,7 @@ const PROFILES: Record<string, SiteProfile> = {
     orgName: 'Token2Any',
     operatorName: 'Token2Any',
     softwareName: 'Token2Any Neural Super-Resolution',
-    sections: ['tools'],
+    sections: ['tools', 'useCases'],
     brandTokens: [
       ['DLSS 5 NVIDIA', 'Token2Any'],
       ['DLSS5NVIDIA', 'Token2Any'],
