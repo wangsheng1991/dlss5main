@@ -7,9 +7,84 @@
 - [人像对比图](../../public/marketing/reddit/dlss5-portrait-before-after.png)
 - [建筑效果图对比](../../public/marketing/reddit/dlss5-architecture-before-after.png)
 - [产品图对比](../../public/marketing/reddit/dlss5-product-before-after.png)
-- [三组对比图板（HTML）](../../public/marketing/reddit/dlss5-reddit-comparisons.html)
+- [20 组官方参考图 + 3 组独立案例图板（HTML）](../../public/marketing/reddit/dlss5-reddit-comparisons.html)
+- [20 组官方参考图总览（contact sheet）](../../public/marketing/reddit/dlss5-official-contact-sheet.jpg)
+- 官方原图（40 张 OFF/ON）位于 `../../public/marketing/reddit/dlss5-official/`
+- 可直接发到 Reddit 的横向合成图位于 `../../public/marketing/reddit/dlss5-official-comparisons/`
 
 图板地址（上线后）：`https://www.dlss5nvidia.com/marketing/reddit/dlss5-reddit-comparisons.html`
+
+### 20 组官方参考图怎么用
+
+图板前 20 组是 NVIDIA 已公开发布的 DLSS 5 OFF/ON 参考图，按场景分为 Resident Evil Requiem（3 组）、EA SPORTS FC 26（2 组）、Starfield（3 组）、Hogwarts Legacy（3 组）、Zorah（5 组）、NBA 2K27（3 组）和 Ramen Chef 开发者参考（1 组）。每组都保留 `DLSS off` / `DLSS on` 标签、原始 NVIDIA 文章链接和一个可下载的横向合成图。
+
+这 20 组是“可核验的外部参考”，不是 DLSS5NVIDIA 的模型输出，也不能写成 NVIDIA 官方合作或我们的性能基准。图片版权仍归 NVIDIA；发帖时保留来源链接和图板中的归属说明。技术背景可引用 [NVIDIA Developer Blog](https://developer.nvidia.com/blog/whats-new-for-game-developers-dlss-5-with-3d-guided-neural-rendering-nvidia-ace-updates-new-rtx-kit-capabilities/)，游戏场景可引用 [NVIDIA DLSS 5 announcement](https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/)，NBA 2K27 / Ramen Chef 可引用 [NVIDIA 3D-Guided Neural Rendering 页面](https://www.nvidia.com/en-eu/geforce/news/dlss-5-3d-guided-neural-rendering/)。
+
+发帖时优先使用单张合成图或 contact sheet，正文写清“官方参考图”和“独立案例”是两类素材；不要把 20 张图一次性全部塞进帖子。图板用筛选按钮按游戏分组，评论区可补充同组的原始链接。
+
+## Reddit 版本 E：20 组官方参考图讨论帖
+
+**建议社区：** r/nvidia、r/pcgaming、r/hardware（先看版规，尤其是外链和自荐要求）
+
+**标题**
+
+I collected 20 NVIDIA-published DLSS 5 before/after pairs — which detail changes do you notice first?
+
+**正文**
+
+I put together a small, source-led gallery of 20 DLSS 5 OFF/ON pairs published by NVIDIA across Resident Evil Requiem, EA SPORTS FC 26, Starfield, Hogwarts Legacy, Zorah, NBA 2K27 and a developer Ramen Chef reference.
+
+The point is to make visual inspection easier, not to present these as my own benchmark. Each tile keeps the NVIDIA source link and a 100%-zoom reminder. I am looking at the same things a reviewer would check in a side-by-side: faces and hair, thin geometry, repeated windows, foliage, materials, shadows and small text.
+
+Gallery: https://www.dlss5nvidia.com/marketing/reddit/dlss5-reddit-comparisons.html
+
+Which pair is the most convincing, and which one needs a crop or pixel-level inspection before you would trust the claim? The three independent browser examples are separated at the bottom of the page so they are not confused with NVIDIA's references.
+
+**第一条评论（发帖后补充）**
+
+The source articles are linked on every tile. Official reference images remain NVIDIA property; this gallery is independent and not sponsored or endorsed by NVIDIA.
+
+**配图建议**
+
+先发 `dlss5-official-contact-sheet.jpg`，评论区再贴 1–2 张最有讨论价值的 composite。不要在标题里写“官方合作”“最佳”或“证明了性能提升”。
+
+## Reddit 版本 F：图形程序 / 开发者讨论
+
+**建议社区：** r/GraphicsProgramming、r/gamedev、r/realtime_rendering（先按版规决定是否允许展示链接）
+
+**标题**
+
+A visual checklist for renderer-grounded neural rendering: 20 DLSS 5 reference pairs
+
+**正文**
+
+I organized 20 published DLSS 5 comparisons into a review board for a very practical question: what should we inspect when a neural renderer gets more visual detail?
+
+My checklist is deliberately concrete: preserve scene structure, inspect motion-sensitive edges, compare identity cues in faces, check thin geometry and repeated patterns, and separate reconstructed texture from source-grounded information. NVIDIA describes DLSS 5 as using engine-rendered inputs such as the frame and motion vectors; the gallery links back to the technical and game-specific source pages.
+
+Gallery: https://www.dlss5nvidia.com/marketing/reddit/dlss5-reddit-comparisons.html
+
+I would appreciate comments from people who ship temporal or neural rendering: what crop, metric or failure case should be added before this becomes a useful QA checklist?
+
+## Reddit 版本 G：AI 图像工具对比讨论
+
+**建议社区：** r/StableDiffusion、r/aiArt、r/ArtificialIntelligence（必须先确认版规）
+
+**标题**
+
+Renderer-grounded references vs generic image enhancement: a 20-pair visual audit
+
+**正文**
+
+I made a gallery that keeps two conversations separate: NVIDIA-published DLSS 5 reference pairs, and three independent browser image-enhancement examples. The first set is useful for studying renderer-grounded reconstruction; the second is a free workflow test where faces, text and geometry still need human review.
+
+Gallery: https://www.dlss5nvidia.com/marketing/reddit/dlss5-reddit-comparisons.html
+
+The useful part is the failure checklist. If a model makes a portrait sharper but changes the eyes, or makes a product photo cleaner but invents label text, the output is a visual draft—not evidence. Which hard case should I add next: old handwriting, architectural linework, foliage, or small UI text?
+
+## 90/10 发布规则
+
+每个社区先发一个真实问题和一张对比图，约 90% 篇幅放在观察方法、限制和可复核来源，最后 10% 才给图板或免费工具入口。不要同日把同一份正文复制到多个社区；间隔至少 48 小时，并根据评论里的具体问题补图或裁剪。社区不允许外链时，只发图片、来源和检查方法。
 
 ## Reddit 版本 A：AI 图像增强 / Stable Diffusion 社区
 
