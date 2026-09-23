@@ -48,12 +48,14 @@ The request only places a URL in Google's priority crawl queue; it does not guar
 
 ## Sitemap fallback
 
-Google's URL Inspection daily quota was reached again while requesting `/image-to-svg`; Search Console showed “超出了配额”. The latest sitemap was then resubmitted successfully on 2026-09-24. Search Console reported:
+Google's URL Inspection service returned its rate-limit/error response again while requesting `/image-to-svg`. The latest sitemap was resubmitted successfully again on 2026-09-24. Search Console reported:
 
 - Sitemap status: successful
 - Last read: 2026-09-24
 - Discovered pages: 53
 - Discovered videos: 0
+
+The second sitemap submission still reports the same 53 discovered pages and successful status.
 
 The sitemap contains the remaining tool pages and all localized blog pages, so Google has a crawl path even while URL Inspection requests are rate-limited.
 
