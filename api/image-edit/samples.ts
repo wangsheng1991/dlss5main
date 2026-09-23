@@ -97,6 +97,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const sampleId = String((req.method === 'GET' ? req.query.sample : req.body?.sample) || '');
     if (!isSampleId(sampleId)) return res.status(400).json({ error: 'Unknown example.' });
+    // The free path is only for the examples a visitor may run without an account, and the eraser is
+    // not one of them: it re-renders the whole frame, which takes about two minutes on the shared
+    // GPU — longer than this function is allowed to live (maxDuration 60, and it polls for 45 of
+    // them). Warmed anyway it spends a real provider run and still answers 500 with nothing cached,
+    // so the line GUEST_SAMPLE_IDS draws is enforced here rather than only in the client's list.
+    if (!GUEST_SAMPLE_IDS.includes(sampleId)) return res.status(403).json({ error: 'Sign in to run this example.' });
     if (req.method === 'GET') return await serve(req, res, sampleId, store);
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
