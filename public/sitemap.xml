@@ -9,19 +9,19 @@
   </url>
   <url>
     <loc>https://www.dlss5nvidia.com/models</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.dlss5nvidia.com/about</loc>
-    <lastmod>2026-04-14</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.dlss5nvidia.com/download</loc>
-    <lastmod>2026-04-27</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -177,27 +177,27 @@
   </url>
   <url>
     <loc>https://www.dlss5nvidia.com/docs</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.dlss5nvidia.com/enterprise</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.dlss5nvidia.com/login</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://www.dlss5nvidia.com/pricing</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.dlss5nvidia.com/register</loc>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://www.dlss5nvidia.com/comparisons</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.dlss5nvidia.com/en/blog</loc>

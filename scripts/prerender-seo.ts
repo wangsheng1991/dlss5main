@@ -203,6 +203,14 @@ function withHead(template: string, options: Parameters<typeof pageHead>[0]): st
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(options.title)}</title>`);
   html = html.replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeHtml(options.description)}" />`);
   html = html.replace(/<meta name="keywords" content="[^"]*"\s*\/>/, `<meta name="keywords" content="${escapeHtml((options.keywords || []).join(', '))}" />`);
+  // The shell carries homepage metadata for a no-JavaScript visit. Remove those route-agnostic
+  // tags before adding the route-specific head, otherwise every prerendered page would expose two
+  // canonicals (and crawlers could keep the homepage URL).
+  html = html
+    .replace(/^\s*<meta name="robots"[^>]*>\s*$/gm, '')
+    .replace(/^\s*<link rel="canonical"[^>]*>\s*$/gm, '')
+    .replace(/^\s*<meta property="og-[^"]+"[^>]*>\s*$/gm, '')
+    .replace(/^\s*<meta name="twitter:[^"]+"[^>]*>\s*$/gm, '');
   const marker = '    <!-- Paint the theme colour';
   return html.replace(marker, `    ${pageHead(options)}\n${marker}`);
 }
@@ -325,6 +333,33 @@ function renderBlogIndex(locale?: 'en' | 'zh'): string {
     language: isChinese ? 'zh-CN' : 'en-US',
     image: '/blog/dlss5-neural-rendering.png',
     keywords: ['dlss 5 latest news', 'dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 upscaling', 'dlss 5 online', 'dlss 5 gpt-6'],
+  }), root);
+}
+
+type PublicGuideOptions = {
+  path: string;
+  title: string;
+  description: string;
+  heading: string;
+  lead: string;
+  keywords: string[];
+  links?: Array<{ label: string; path: string }>;
+  noindex?: boolean;
+};
+
+/** Keep the non-blog public routes crawlable before React loads the lazy page bundle. */
+function renderPublicGuide(options: PublicGuideOptions): string {
+  const links = options.links?.length
+    ? `<nav class="mt-10 border-t border-outline-variant/20 pt-7" aria-label="Related pages"><h2 class="text-xl font-bold text-white">Continue exploring</h2><ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">${options.links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(link.label)} →</a></li>`).join('')}</ul></nav>`
+    : '';
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">DLSS5NVIDIA · independent guide</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">What this page covers</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${links}</main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: options.title,
+    description: options.description,
+    canonicalPath: options.path,
+    language: 'en-US',
+    keywords: options.keywords,
+    noindex: options.noindex,
   }), root);
 }
 
@@ -495,6 +530,87 @@ if (profileHas('blog')) {
     }
   }
 }
+if (profileHas('models')) writeRoute('/models', renderPublicGuide({
+  path: '/models',
+  title: 'AI Upscaling Models | DLSS 5 Neural Super Resolution',
+  description: 'Compare AI image upscaling and neural super resolution models for portraits, cinematic art, documents, and high speed enhancement.',
+  heading: 'AI Upscaling Models',
+  lead: 'Compare neural super-resolution workflows for portraits, cinematic art, documents and fast image enhancement.',
+  keywords: ['ai upscaling models', 'neural super resolution', 'dlss model comparison', 'image enhancement model', '4k upscaling model'],
+  links: [{ label: 'AI Image Upscaler', path: '/image-upscaler' }, { label: 'Image Quality Enhancer', path: '/image-quality-enhancer' }, { label: 'API documentation', path: '/docs' }],
+}));
+if (profileHas('about')) writeRoute('/about', renderPublicGuide({
+  path: '/about',
+  title: 'NVIDIA DLSS 5 — Neural Rendering Technology & Tensor Core Guide',
+  description: 'Complete guide to NVIDIA DLSS 5 neural rendering. Learn how DLSS 5 uses Tensor Cores for AI upscaling, supported RTX GPUs, and how it differs from DLSS 4 and FSR 4.',
+  heading: 'NVIDIA DLSS 5 — Neural Rendering Explained',
+  lead: 'A source-aware technical guide to neural rendering, Tensor Core acceleration, version differences and the limits of an independent DLSS-style image tool.',
+  keywords: ['NVIDIA DLSS 5', 'DLSS 5 neural rendering', 'Tensor Core upscaling', 'DLSS 5 vs DLSS 4', 'DLSS 5 vs FSR 4'],
+  links: [{ label: 'DLSS 5 latest news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'DLSS 5 technical guide', path: '/blog/what-is-dlss-5-neural-rendering-guide' }, { label: 'AI image tools compared', path: '/comparisons' }],
+}));
+if (profileHas('download')) writeRoute('/download', renderPublicGuide({
+  path: '/download',
+  title: 'DLSS 5 Download Guide — Official Sources, RTX Compatibility & Online Alternative',
+  description: 'DLSS 5 has no standalone download. Learn about the NVIDIA App, supported RTX games, compatibility, and an independent online image enhancement alternative with no download.',
+  heading: 'DLSS 5 Download Guide',
+  lead: 'Understand where DLSS is delivered, what RTX compatibility means, and when a browser-based image enhancement workflow is a better fit.',
+  keywords: ['DLSS 5 download', 'DLSS download free', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'online image upscaler no download'],
+  links: [{ label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
+}));
+if (profileHas('docs')) writeRoute('/docs', renderPublicGuide({
+  path: '/docs',
+  title: 'AI Image Upscaling API Docs | DLSS 5 Developer API',
+  description: 'Integrate AI image upscaling and neural super resolution into your product with the DLSS 5 developer API documentation.',
+  heading: 'AI Image Upscaling API Docs',
+  lead: 'Find the integration surface, authentication notes and image enhancement workflow guidance for developers.',
+  keywords: ['ai upscaling api', 'image enhancement api', 'dlss api', 'neural super resolution api'],
+  links: [{ label: 'Enterprise image upscaling', path: '/enterprise' }, { label: 'AI upscaling models', path: '/models' }, { label: 'Pricing and credits', path: '/pricing' }],
+}));
+if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({
+  path: '/enterprise',
+  title: 'Enterprise AI Image Upscaling | Private Neural Rendering API',
+  description: 'Deploy private AI image upscaling for production workflows with dedicated capacity, on premise options, and custom neural rendering support.',
+  heading: 'Enterprise AI Image Upscaling',
+  lead: 'Plan a private, higher-volume image enhancement workflow with dedicated capacity, API integration and operational support.',
+  keywords: ['enterprise ai upscaling', 'private image upscaling api', 'on premise neural rendering', 'custom image enhancement model'],
+  links: [{ label: 'Developer API docs', path: '/docs' }, { label: 'AI upscaling models', path: '/models' }, { label: 'Contact and plans', path: '/pricing' }],
+}));
+if (profileHas('comparisons')) writeRoute('/comparisons', renderPublicGuide({
+  path: '/comparisons',
+  title: 'AI Image Tools Compared: GPT Image 2, ChatGPT Images, Midjourney & DLSS 5',
+  description: 'Compare AI image generation, editing and upscaling tools by quality, structure preservation, speed, cost, API access and best use case.',
+  heading: 'AI Image Tools Compared',
+  lead: 'Choose the right job for a renderer-grounded upscaler, a generative image model or a conversational editing workflow.',
+  keywords: ['GPT Image 2 vs Midjourney', 'ChatGPT Images vs FLUX', 'DLSS 5 vs AI upscaler', 'best AI image generator comparison'],
+  links: [{ label: 'AI Image Upscaler', path: '/image-upscaler' }, { label: 'DLSS 5 and GPT-6 workflow', path: '/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026' }, { label: 'Pricing and credits', path: '/pricing' }],
+}));
+writeRoute('/pricing', renderPublicGuide({
+  path: '/pricing',
+  title: 'AI Image Upscaling Plans | DLSS 5 Credits',
+  description: 'Choose a predictable AI image upscaling plan with monthly credits, daily limits, and API access options.',
+  heading: 'AI Image Upscaling Plans',
+  lead: 'Compare free, Pro and Team image enhancement access before you sign in or subscribe.',
+  keywords: ['ai image upscaling pricing', 'image enhancement api pricing', 'dlss 5 credits', 'ai upscaler plans'],
+  links: [{ label: 'Start with the free image upscaler', path: '/image-upscaler' }, { label: 'Refund and cancellation policy', path: '/refund' }, { label: 'Developer API docs', path: '/docs' }],
+}));
+writeRoute('/login', renderPublicGuide({
+  path: '/login',
+  title: 'Sign In | DLSS5NVIDIA AI Image Tools',
+  description: 'Sign in to the private DLSS5NVIDIA AI image workspace.',
+  heading: 'Sign in to your AI image workspace',
+  lead: 'Authentication is required before processing your own image or managing credits.',
+  keywords: ['DLSS5NVIDIA login', 'AI image upscaler login'],
+  noindex: true,
+}));
+writeRoute('/register', renderPublicGuide({
+  path: '/register',
+  title: 'Create an Account | DLSS5NVIDIA AI Image Tools',
+  description: 'Create a DLSS5NVIDIA account to use AI image upscaling and enhancement workflows.',
+  heading: 'Create your AI image account',
+  lead: 'Start with the free image enhancement workflow, then manage credits and results from your workspace.',
+  keywords: ['DLSS5NVIDIA register', 'free AI image upscaler account'],
+  noindex: true,
+}));
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
 if (profileHas('tools')) for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));

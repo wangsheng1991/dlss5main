@@ -14,6 +14,7 @@ DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging i
 - API documentation: https://www.dlss5nvidia.com/docs
 - Pricing: https://www.dlss5nvidia.com/pricing
 - Enterprise: https://www.dlss5nvidia.com/enterprise
+- AI image tools compared: https://www.dlss5nvidia.com/comparisons
 
 <!-- begin:tools -->
 ## Free tools
