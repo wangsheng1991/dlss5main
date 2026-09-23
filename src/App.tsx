@@ -27,6 +27,7 @@ const Terms = lazy(() => import('./pages/Terms'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Refund = lazy(() => import('./pages/Refund'));
 const UseCaseLanding = lazy(() => import('./pages/UseCaseLanding'));
+const PassportPhoto = lazy(() => import('./pages/PassportPhoto'));
 
 /**
  * Renders a page, or sends the visitor home when this deployment does not publish that section. A
@@ -71,6 +72,8 @@ export default function App() {
                   <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/portrait-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
+                  <Route path="/tools/passport-photo" element={orHome('microTools', <PassportPhoto />)} />
+                  <Route path="/tools/passport-photo/:spec" element={orHome('microTools', <PassportPhoto />)} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />

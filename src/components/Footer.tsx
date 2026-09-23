@@ -5,6 +5,7 @@ import { LEGAL } from '../config/legal';
 import { SITE_PROFILE, profileHas } from '../config/profile';
 import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
+import { MICRO_TOOLS } from '../content/microTools';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -54,6 +55,15 @@ export default function Footer() {
               <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('navbar.useCases')}</h4>
               <ul className="space-y-4">
                 {USE_CASES.map(item => <li key={item.path}><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={item.path}>{item.heading}</Link></li>)}
+              </ul>
+            </div>
+          )}
+
+          {profileHas('microTools') && (
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('navbar.smallTools')}</h4>
+              <ul className="space-y-4">
+                {MICRO_TOOLS.map(item => <li key={item.path}><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={item.path}>{item.heading}</Link></li>)}
               </ul>
             </div>
           )}

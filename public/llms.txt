@@ -39,6 +39,16 @@ Before-and-after workflow pages connect real image cases to the matching tool. E
 - Portrait photo enhancer: https://www.dlss5nvidia.com/use-cases/portrait-photo-enhancer
 <!-- end:useCases -->
 
+<!-- begin:microTools -->
+## Small browser tools
+
+Exact-format utilities run locally in the browser. The passport photo maker does not upload the source image and exports both a single PNG and a printable sheet.
+
+- Passport Photo Maker: https://www.dlss5nvidia.com/tools/passport-photo
+- 3×4 document photo: https://www.dlss5nvidia.com/tools/passport-photo/3-na-4
+- 35×45 passport photo: https://www.dlss5nvidia.com/tools/passport-photo/35x45-ru
+<!-- end:microTools -->
+
 <!-- begin:blog -->
 ## Technical articles
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   UploadCloud, Cpu, Sparkles,
-  Gauge, Zap, ShieldCheck, Shield, ChevronDown
+  Gauge, Zap, ShieldCheck, Shield, ChevronDown, FileImage
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
@@ -10,6 +10,7 @@ import ImageSlider from '../components/ImageSlider';
 import { FEATURED_ARTICLES } from '../content/articles/featured';
 import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
+import { MICRO_TOOLS } from '../content/microTools';
 import { SITE_URL } from '../config/site';
 import { SITE_PROFILE, brandCopy, profileHas } from '../config/profile';
 import { trackEvent } from '../lib/analytics';
@@ -339,6 +340,21 @@ export default function Home() {
             {USE_CASES.map(item => <Link key={item.path} to={item.path} onClick={() => trackEvent('use_case_card_click', { use_case: item.slug })} className="group rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden hover:border-primary/50 transition-colors">
               <img src={item.after} alt={item.imageAlt} className="w-full aspect-[3/2] object-cover" loading="lazy" />
               <div className="p-5"><p className="text-[10px] uppercase tracking-widest text-primary mb-2">{item.eyebrow}</p><h3 className="text-lg font-headline font-bold text-white group-hover:text-primary transition-colors">{item.heading}</h3><p className="mt-3 text-sm leading-relaxed text-zinc-400 line-clamp-3">{item.tldr}</p><span className="inline-block mt-4 text-sm text-primary font-semibold">{isZh ? '查看指南 →' : 'Read the guide →'}</span></div>
+            </Link>)}
+          </div>
+        </section>
+      )}
+
+      {profileHas('microTools') && (
+        <section className="mt-32" aria-labelledby="small-tools-heading">
+          <div className="mb-12 max-w-2xl">
+            <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('navbar.smallTools')}</span>
+            <h2 id="small-tools-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? '格式明确的小工具' : 'Small tools with a finished file at the end'}</h2>
+            <p className="text-zinc-400 leading-relaxed">{isZh ? '证件照这类任务不需要生成式模型。上传、对齐规格，直接得到可下载的成品；图片只在本地浏览器处理。' : 'Some jobs need an exact file, not a model prompt. Upload, align the published specification and download the finished file; the photo stays in your browser.'}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {MICRO_TOOLS.map(item => <Link key={item.path} to={item.path} onClick={() => trackEvent('micro_tool_card_click', { tool: item.slug })} className="group rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-surface-low to-surface-low p-6 hover:border-primary transition-colors">
+              <div className="flex items-start gap-4"><div className="w-12 h-12 shrink-0 rounded-xl bg-primary/15 flex items-center justify-center"><FileImage className="w-6 h-6 text-primary" /></div><div><p className="text-[10px] uppercase tracking-widest text-primary mb-2">Local browser utility</p><h3 className="text-xl font-headline font-bold text-white group-hover:text-primary transition-colors">{item.heading}</h3><p className="mt-3 text-sm leading-relaxed text-zinc-400">{isZh ? '制作 3×4 或 35×45 mm 证件照，显示头部参考线，并导出单张 PNG 或可打印排版。' : item.description}</p><span className="inline-block mt-5 text-sm text-primary font-semibold">{isZh ? '打开证件照工具 →' : 'Open passport photo maker →'}</span></div></div>
             </Link>)}
           </div>
         </section>

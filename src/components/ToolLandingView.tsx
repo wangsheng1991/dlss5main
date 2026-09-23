@@ -6,6 +6,7 @@ import { ENHANCE_MAX_EDGE } from '../config/enhance';
 import { profileHas } from '../config/profile';
 import { trackEvent } from '../lib/analytics';
 import { USE_CASES } from '../content/useCases';
+import { MICRO_TOOLS } from '../content/microTools';
 
 export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
   const es = tool.locale === 'es';
@@ -76,6 +77,10 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
         {profileHas('useCases') && <>
           <h3 className="text-lg font-headline font-bold text-white mt-8">Workflow guides</h3>
           <div className="mt-4 flex flex-wrap gap-3">{USE_CASES.filter(item => item.toolPath === tool.path).map(item => <a key={item.path} href={item.path} className="rounded-lg border border-primary/30 px-4 py-3 text-sm text-primary hover:bg-primary/10">{item.heading} <ArrowRight aria-hidden="true" className="ml-1 inline w-4 h-4" /></a>)}</div>
+        </>}
+        {profileHas('microTools') && <>
+          <h3 className="text-lg font-headline font-bold text-white mt-8">Small utilities</h3>
+          <div className="mt-4 flex flex-wrap gap-3">{MICRO_TOOLS.map(item => <a key={item.path} href={item.path} className="rounded-lg border border-primary/30 px-4 py-3 text-sm text-primary hover:bg-primary/10">{item.heading} <ArrowRight aria-hidden="true" className="ml-1 inline w-4 h-4" /></a>)}</div>
         </>}
         {profileHas('blog') && <a className="inline-block mt-6 text-sm text-primary" href="/blog/dlss-5-online-image-upscaler-guide">{es ? 'Guía sobre mejora de imágenes (en inglés) →' : 'Read the online image enhancement guide →'}</a>}
       </section>

@@ -24,7 +24,9 @@ export type SiteSection =
   /** The SEO landing pages for individual tools (`TOOL_LANDINGS`). */
   | 'tools'
   /** Search-led workflow pages built around a real before/after example. */
-  | 'useCases';
+  | 'useCases'
+  /** Small, local browser utilities with exact output formats. */
+  | 'microTools';
 
 export type SiteProfile = {
   id: string;
@@ -85,6 +87,7 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
     '/use-cases/architecture-render-upscaler',
     '/use-cases/portrait-photo-enhancer',
   ],
+  microTools: ['/tools/passport-photo'],
 };
 
 const ALL_SECTIONS = Object.keys(SECTION_PATHS) as SiteSection[];
@@ -134,7 +137,7 @@ const PROFILES: Record<string, SiteProfile> = {
     orgName: 'Token2Any',
     operatorName: 'Token2Any',
     softwareName: 'Token2Any Neural Super-Resolution',
-    sections: ['tools', 'useCases'],
+    sections: ['tools', 'useCases', 'microTools'],
     brandTokens: [
       ['DLSS 5 NVIDIA', 'Token2Any'],
       ['DLSS5NVIDIA', 'Token2Any'],

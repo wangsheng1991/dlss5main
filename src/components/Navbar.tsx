@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { SITE_PROFILE, profileHas } from '../config/profile';
 import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
+import { MICRO_TOOLS } from '../content/microTools';
 
 const LANGUAGES = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
@@ -75,6 +76,7 @@ export default function Navbar() {
                 </div>
               )}
               {profileHas('useCases') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={USE_CASES[0].path}>{t('navbar.useCases')}</Link>}
+              {profileHas('microTools') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={MICRO_TOOLS[0].path}>{t('navbar.smallTools')}</Link>}
               {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>}
               {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>}
               {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>}
@@ -186,6 +188,14 @@ export default function Navbar() {
                   <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.useCases')}</span>
                   <div className="flex flex-wrap gap-2">
                     {USE_CASES.map(item => <Link key={item.path} to={item.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{item.heading}</Link>)}
+                  </div>
+                </div>
+              )}
+              {profileHas('microTools') && (
+                <div className="flex flex-col gap-3">
+                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.smallTools')}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {MICRO_TOOLS.map(item => <Link key={item.path} to={item.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{item.heading}</Link>)}
                   </div>
                 </div>
               )}
