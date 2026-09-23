@@ -205,10 +205,10 @@ export default function PassportPhoto() {
     <main className="pt-28 sm:pt-32 pb-24 px-5 max-w-[1200px] mx-auto w-full">
       <nav className="mb-8 text-sm text-zinc-500" aria-label="Breadcrumb"><a href="/" className="hover:text-primary">DLSS5NVIDIA</a><span className="mx-2">/</span><span>Passport Photo</span></nav>
       <header className="max-w-3xl mb-10">
-        <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">Small tool · local processing</p>
-        <h1 className="text-4xl md:text-5xl font-headline font-bold tracking-tight text-white leading-tight">{spec.label} online</h1>
-        <p className="mt-5 text-lg leading-relaxed text-zinc-300">Create an exact-size document photo from your own image. Choose a verified specification, align the head guide and download a single photo or a print sheet with cut marks.</p>
-        <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-400"><span className="rounded-full bg-surface-low px-3 py-2">{spec.sizeMm.width} × {spec.sizeMm.height} mm</span><span className="rounded-full bg-surface-low px-3 py-2">minimum {spec.minDpi} DPI</span><span className="rounded-full bg-surface-low px-3 py-2"><LockKeyhole className="inline w-4 h-4 mr-1"/>photo stays in browser</span></div>
+        <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">Free small tool · local processing</p>
+        <h1 className="text-4xl md:text-5xl font-headline font-bold tracking-tight text-white leading-tight">Free {spec.label} online</h1>
+        <p className="mt-5 text-lg leading-relaxed text-zinc-300">Create a free exact-size document photo from your own image. Choose a verified specification, align the head guide and download a single photo or a print sheet with cut marks; no account, upload or credits are required.</p>
+        <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-400"><span className="rounded-full bg-surface-low px-3 py-2">free · no account</span><span className="rounded-full bg-surface-low px-3 py-2">{spec.sizeMm.width} × {spec.sizeMm.height} mm</span><span className="rounded-full bg-surface-low px-3 py-2">minimum {spec.minDpi} DPI</span><span className="rounded-full bg-surface-low px-3 py-2"><LockKeyhole className="inline w-4 h-4 mr-1"/>photo stays in browser</span></div>
       </header>
 
       <section id="tool" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
