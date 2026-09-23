@@ -65,6 +65,8 @@ export default function App() {
                   <Route path="/image-upscaler" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/image-quality-enhancer" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/unblur-image" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/old-photo-restoration" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/ai-headshot" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/image-to-svg" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/remove-background" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/erase-object" element={orHome('tools', <ToolLanding />)} />
