@@ -6,11 +6,13 @@
  */
 
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import {
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, STUDIO_MAX_PIXELS, failureNote, inputLimitNote, maxPixelsForMode,
   modeForModel, oversizeNote, pixelCheckNote,
 } from '../src/config/tools';
+import { TOOL_LANDINGS } from '../src/content/toolLandings';
 
 import { test } from './harness';
 
@@ -75,4 +77,46 @@ test('the upstream 413 is translated, so a failure still reads like advice', () 
   assert.doesNotMatch(note, /413/);
   // Anything the provider says that is not about size is kept as it is.
   assert.equal(failureNote('prompt was rejected by the safety filter', 'edit'), 'prompt was rejected by the safety filter');
+});
+
+/**
+ * The tool pages are the site's traffic entry points, and three files have to agree about them: the
+ * router and the menu read TOOL_LANDINGS, the crawler-facing homepage lists the same paths, and the
+ * sitemap is where a crawler finds them without a link. A page added to one and forgotten in the
+ * others is a page nobody reaches, which is what these read.
+ */
+const publicFile = (name: string) => readFileSync(new URL(`../public/${name}`, import.meta.url), 'utf8');
+const homepage = () => readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+
+test('every tool page has its own path, and its related links stay inside the set', () => {
+  const paths = TOOL_LANDINGS.map(tool => tool.path);
+  assert.equal(new Set(paths).size, paths.length, 'two tool pages share a path, so one overwrites the other');
+  for (const tool of TOOL_LANDINGS) {
+    assert.match(tool.path, /^\/[a-z0-9/-]+$/, `${tool.path} is not a plain path`);
+    for (const field of ['title', 'description', 'heading', 'intro', 'cta'] as const) {
+      assert.ok(tool[field].trim().length > 0, `${tool.path} has an empty ${field}`);
+    }
+  }
+  const known = new Set(paths);
+  for (const tool of TOOL_LANDINGS) {
+    for (const related of tool.related) {
+      assert.ok(known.has(related.path), `${tool.path} links to ${related.path}, which is not a tool page`);
+    }
+  }
+});
+
+test('every tool page is in the sitemap, so a crawler finds it without a link', () => {
+  const sitemap = publicFile('sitemap.xml');
+  for (const tool of TOOL_LANDINGS) {
+    assert.ok(sitemap.includes(`<loc>https://www.dlss5nvidia.com${tool.path}</loc>`), `${tool.path} is missing from the sitemap`);
+  }
+});
+
+test('the served homepage links every tool page, for the crawler and for the visitor who runs no scripts', () => {
+  const html = homepage();
+  const block = html.match(/<!-- begin:tools -->[\s\S]*?<!-- end:tools -->/)?.[0] ?? '';
+  assert.ok(block, 'the homepage has no tools block to drop on a deployment that publishes none');
+  for (const tool of TOOL_LANDINGS) {
+    assert.ok(block.includes(`href="${tool.path}"`), `${tool.path} is not linked from the homepage`);
+  }
 });

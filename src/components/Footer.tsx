@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LEGAL } from '../config/legal';
 import { SITE_PROFILE, profileHas } from '../config/profile';
+import { TOOL_LANDINGS } from '../content/toolLandings';
 
 export default function Footer() {
   const { t } = useTranslation();
   return (
     <footer className="bg-surface-lowest w-full py-16 border-t border-outline-variant/10">
       <div className="max-w-[1440px] mx-auto px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-16">
           <div className="col-span-2">
             <span className="text-nvidia-green font-black text-2xl font-headline mb-4 block">{SITE_PROFILE.brand}</span>
             <p className="text-zinc-500 text-sm max-w-xs mb-6">{t('home.footerTagline')}</p>
@@ -34,6 +35,18 @@ export default function Footer() {
               {profileHas('docs') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.apiDocs')}</Link></li>}
             </ul>
           </div>
+
+          {/* The free tools, one row per page: they are the pages a search visitor lands on first. */}
+          {profileHas('tools') && (
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('navbar.tools')}</h4>
+              <ul className="space-y-4">
+                {TOOL_LANDINGS.map(tool => (
+                  <li key={tool.path}><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={tool.path}>{tool.heading}</Link></li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div>
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.resources')}</h4>

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 import { useAuth } from '../contexts/AuthContext';
 import { SITE_PROFILE, profileHas } from '../config/profile';
+import { TOOL_LANDINGS } from '../content/toolLandings';
 
 const LANGUAGES = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
@@ -25,6 +26,7 @@ export default function Navbar() {
   const blogPath = i18n.language.startsWith('zh') ? '/zh/blog' : '/blog';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
   const handleLanguageChange = (code: string) => {
@@ -35,6 +37,7 @@ export default function Navbar() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsLangOpen(false);
+    setIsToolsOpen(false);
   }, [location.pathname]);
 
   return (
@@ -45,6 +48,31 @@ export default function Navbar() {
           {!isAuthPage && (
             <div className="hidden md:flex gap-6 items-center">
               {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>}
+              {profileHas('tools') && (
+                // The tool pages are the site's own links: without an entry here they are reachable
+                // only from a search result. Each one is a single-purpose page, so the menu lists
+                // them by name rather than hiding them behind a hub page.
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsToolsOpen(!isToolsOpen)}
+                    aria-expanded={isToolsOpen}
+                    className="flex items-center gap-1 text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300"
+                  >
+                    {t('navbar.tools')}
+                    <ChevronDown className={`w-3 h-3 transition-transform ${isToolsOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isToolsOpen && (
+                    <div className="absolute left-0 top-full mt-3 w-60 bg-surface-low border border-outline-variant/20 rounded-xl shadow-2xl overflow-hidden z-50">
+                      {TOOL_LANDINGS.map(tool => (
+                        <Link key={tool.path} to={tool.path} className="block px-4 py-2.5 text-sm text-zinc-300 hover:bg-surface hover:text-primary transition-colors">
+                          {tool.heading}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>}
               {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>}
               {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>}
@@ -141,6 +169,16 @@ export default function Navbar() {
               {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>}
               {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/download">{t('navbar.download')}</Link>}
               {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>}
+              {profileHas('tools') && (
+                <div className="flex flex-col gap-3">
+                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.tools')}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {TOOL_LANDINGS.map(tool => (
+                      <Link key={tool.path} to={tool.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{tool.heading}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

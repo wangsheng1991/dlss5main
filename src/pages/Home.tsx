@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 import { FEATURED_ARTICLES } from '../content/articles/featured';
+import { TOOL_LANDINGS } from '../content/toolLandings';
 import { SITE_URL } from '../config/site';
 import { SITE_PROFILE, brandCopy, profileHas } from '../config/profile';
 
@@ -319,6 +320,34 @@ export default function Home() {
           </button>
         </div>
       </section>
+
+      {/* The free tools: single-purpose pages that answer one search each. A deployment without them
+          does not advertise them. */}
+      {profileHas('tools') && (
+      <section className="mt-32" aria-labelledby="free-tools-heading">
+        <div className="mb-12 max-w-2xl">
+          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('navbar.tools')}</span>
+          <h2 id="free-tools-heading" className="text-4xl font-headline font-bold text-white mb-6">
+            {isZh ? '一件工具解决一件事' : 'One tool for one job'}
+          </h2>
+          <p className="text-zinc-400 leading-relaxed">
+            {isZh
+              ? '放大、增强、去模糊、转 SVG、去背景、擦除物体——每个工具只做一件事，页面上写清了输入限制和输出尺寸。我们的示例图不用注册就能跑，物体擦除那一个除外。'
+              : 'Upscaling, enhancement, deblurring, vectorizing, background removal and object erasing — each tool does one thing and states its input limits and output size. Our example images run without an account; the object eraser is the one that asks you to sign in.'}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {TOOL_LANDINGS.map(tool => (
+            <Link key={tool.path} to={tool.path} className="group bg-surface-low rounded-xl border border-outline-variant/20 p-6 hover:border-primary/50 transition-colors flex flex-col">
+              <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-3 block">{tool.eyebrow}</span>
+              <h3 className="text-lg font-headline font-bold text-white group-hover:text-primary transition-colors">{tool.heading}</h3>
+              <p className="mt-3 text-sm text-zinc-400 leading-relaxed line-clamp-3">{tool.intro}</p>
+              <span className="mt-4 inline-block text-primary text-sm font-semibold">{isZh ? '打开工具 →' : 'Open the tool →'}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      )}
 
       <section className="mt-32">
         <div className="mb-12">
