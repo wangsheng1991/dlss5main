@@ -78,3 +78,11 @@ The two localized comparison pages will be re-evaluated by the validation run; n
 is required.
 
 No user decision is required for this retry. Internal links, static homepage links, `robots.txt`, `llms.txt` and the successful sitemap submission are already in place.
+
+## 9. 2026-09-24 follow-up: public route metadata and sitemap hygiene
+
+After the initial closeout, the production audit found that the lazy-loaded public routes (`/models`, `/about`, `/download`, `/docs`, `/enterprise`) were returning the homepage shell before JavaScript ran. They now have crawlable static first-screen HTML with route-specific titles, descriptions, keywords, canonicals and internal links. `/comparisons` and `/pricing` were added to the sitemap with the current modification date; `/login` and `/register` were removed from the sitemap and are explicitly `noindex,nofollow`.
+
+The shell now has a homepage canonical, and the prerender step removes shell-level robots/canonical/Open Graph tags before adding route metadata, so each generated page exposes exactly one canonical and one robots directive. A live audit after deployment `dpl_DCyGp5WD28SfwoS85eHsJakKV53m` checked all 53 sitemap URLs: all returned HTTP 200 and all had non-empty, route-matching metadata.
+
+The remaining Search Console actions are recorded in [SEO_SEARCH_CONSOLE_TODO.md](SEO_SEARCH_CONSOLE_TODO.md). They are limited to Google's URL Inspection quota and the logged-in site owner's Search Console controls; no code-side action remains for those four URLs until Google accepts another request.
