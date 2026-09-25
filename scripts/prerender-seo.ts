@@ -26,6 +26,26 @@ const TEMPLATE = readFileSync(resolve(DIST, 'index.html'), 'utf8')
   .replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL);
 
 /**
+ * The shell's JSON-LD graph describes the homepage. `withHead` already replaces the route-agnostic
+ * head tags with the route's own, and the graph has to go with them: left in place, every
+ * prerendered page also claimed the homepage's WebApplication, its two videos and its FAQ. Only the
+ * Organization is true of every URL, so it is the one node carried into each route's head — read
+ * from the shell rather than repeated here, so the two can never disagree.
+ */
+const SITE_ORGANIZATION = (() => {
+  const graph = TEMPLATE.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+  if (!graph) return '';
+  try {
+    const nodes = (JSON.parse(graph) as { '@graph'?: Array<{ '@type'?: string }> })['@graph'];
+    const organization = nodes?.find((node) => node['@type'] === 'Organization');
+    if (!organization) return '';
+    return `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': [organization] }).replaceAll('<', '\\u003c')}</script>`;
+  } catch {
+    return '';
+  }
+})();
+
+/**
  * Everything a generated file has to agree on: the origin it points at (done above), the brand it
  * names, and the sections this deployment actually serves. A section that is not published would
  * otherwise leave dead links in the shell and in every page copied from it.
@@ -180,6 +200,7 @@ function pageHead(options: {
     ? `<script type="application/ld+json">${JSON.stringify(options.structuredData).replaceAll('<', '\\u003c')}</script>`
     : '';
   const headTags = [
+    SITE_ORGANIZATION,
     `<meta name="robots" content="${options.noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'}" />`,
     `<link rel="canonical" href="${canonical}" />`,
     `<meta property="og:type" content="${options.type || 'website'}" />`,
@@ -207,12 +228,14 @@ function withHead(template: string, options: Parameters<typeof pageHead>[0]): st
   html = html.replace(/<meta name="keywords" content="[^"]*"\s*\/>/, `<meta name="keywords" content="${escapeHtml((options.keywords || []).join(', '))}" />`);
   // The shell carries homepage metadata for a no-JavaScript visit. Remove those route-agnostic
   // tags before adding the route-specific head, otherwise every prerendered page would expose two
-  // canonicals (and crawlers could keep the homepage URL).
+  // canonicals (and crawlers could keep the homepage URL). The homepage graph goes with them; the
+  // Organization node `pageHead` writes in its place is the only part that is true of every route.
   html = html
     .replace(/^\s*<meta name="robots"[^>]*>\s*$/gm, '')
     .replace(/^\s*<link rel="canonical"[^>]*>\s*$/gm, '')
     .replace(/^\s*<meta property="og-[^"]+"[^>]*>\s*$/gm, '')
-    .replace(/^\s*<meta name="twitter:[^"]+"[^>]*>\s*$/gm, '');
+    .replace(/^\s*<meta name="twitter:[^"]+"[^>]*>\s*$/gm, '')
+    .replace(/[ \t]*<script type="application\/ld\+json">[\s\S]*?<\/script>[ \t]*\n?/, '');
   const marker = '    <!-- Paint the theme colour';
   return html.replace(marker, `    ${pageHead(options)}\n${marker}`);
 }
