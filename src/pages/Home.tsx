@@ -11,32 +11,11 @@ import { FEATURED_ARTICLES } from '../content/articles/featured';
 import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
+import { SHOWCASE_CASES } from '../content/showcaseCases';
+import { GAME_STYLE_CASES } from '../content/gameStyleCases';
 import { SITE_URL } from '../config/site';
 import { SITE_PROFILE, brandCopy, profileHas } from '../config/profile';
 import { trackEvent } from '../lib/analytics';
-
-const COMMUNITY_EXAMPLES = [
-  "https://picsum.photos/seed/upscale1/600/800",
-  "https://picsum.photos/seed/upscale2/600/400",
-  "https://picsum.photos/seed/upscale3/600/600",
-  "https://picsum.photos/seed/upscale4/600/900",
-  "https://picsum.photos/seed/upscale5/600/500",
-  "https://picsum.photos/seed/upscale6/600/700",
-  "https://picsum.photos/seed/upscale7/600/450",
-  "https://picsum.photos/seed/upscale8/600/850",
-  "https://picsum.photos/seed/upscale9/600/550",
-  "https://picsum.photos/seed/upscale10/600/750",
-  "https://picsum.photos/seed/upscale11/600/400",
-  "https://picsum.photos/seed/upscale12/600/800",
-  "https://picsum.photos/seed/upscale13/600/600",
-  "https://picsum.photos/seed/upscale14/600/900",
-  "https://picsum.photos/seed/upscale15/600/500",
-  "https://picsum.photos/seed/upscale16/600/700",
-  "https://picsum.photos/seed/upscale17/600/450",
-  "https://picsum.photos/seed/upscale18/600/850",
-  "https://picsum.photos/seed/upscale19/600/550",
-  "https://picsum.photos/seed/upscale20/600/750",
-];
 
 /** Search-led before/after cases. Keep the prompt language visible so the gallery can rank for
  * practical intent queries such as "portrait upscaler", "product photo enhancer" and "architecture
@@ -121,20 +100,40 @@ export default function Home() {
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "Free online DLSS-style image converter and visual enhancer powered by AI neural super-resolution. Upscale, sharpen and enhance images to 4K quality in a browser. No GPU or download required. Non-official showcase."
+        "description": "Free online DLSS-style image converter and game visual enhancer powered by AI neural super-resolution. Explore image upscaling, character style references and 4K-ready comparisons in a browser. No GPU or download required. Non-official showcase."
       },
       {
         "@type": "WebApplication",
         "name": "Free DLSS Image Upscaler Online",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "All",
-        "description": "Looking for a DLSS 5 image converter or visual enhancer? Instantly upscale and enhance any image using AI-powered neural super-resolution. Free online — no GPU or installation required.",
+        "description": "Looking for a DLSS 5 image converter, game character style reference or visual enhancer? Explore AI-powered neural super-resolution comparisons online — no GPU or installation required.",
         "browserRequirements": "Requires a modern web browser. Works on all operating systems.",
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
         }
+      },
+      {
+        "@type": "VideoObject",
+        "name": "AI image upscaling before and after demo",
+        "description": "A six-second illustrative transition from a lower-resolution source to a sharper reference image. It demonstrates the comparison UI and is not a benchmark claim.",
+        "contentUrl": `${SITE_URL}/examples/dlss5-upscale-before-after-demo.mp4`,
+        "thumbnailUrl": `${SITE_URL}/examples/generated/architecture-1-after.jpg`,
+        "uploadDate": "2026-09-25",
+        "duration": "PT6S",
+        "isFamilyFriendly": true
+      },
+      {
+        "@type": "VideoObject",
+        "name": "Game character style conversion reference",
+        "description": "An original six-second reference transition for a cyberpunk game character. It illustrates prompt-led style direction and is not an official DLSS 5 capture.",
+        "contentUrl": `${SITE_URL}/examples/dlss5-game-style-transition.mp4`,
+        "thumbnailUrl": `${SITE_URL}/examples/generated/game-cyber-1-after.jpg`,
+        "uploadDate": "2026-09-25",
+        "duration": "PT6S",
+        "isFamilyFriendly": true
       },
       {
         "@type": "FAQPage",
@@ -180,8 +179,8 @@ export default function Home() {
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
         title="DLSS 5 Image Upscaler & Converter Online — Free AI Visual Enhancer"
-        description="Use a browser-based DLSS-style image converter and visual enhancer to upscale, sharpen and restore images to 4K. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
-        keywords={['dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
+        description="Use a browser-based DLSS-style image converter and game visual enhancer to explore character style references, upscale, sharpen and restore images to 4K. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
+        keywords={['dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
         structuredData={structuredData}
       />
@@ -326,6 +325,89 @@ export default function Home() {
           >
             {isZh ? '用自己的图片试试' : 'Try your own image'}
           </button>
+        </div>
+      </section>
+
+      {/* Expected-output gallery: the pairs are original illustrative references, not hidden benchmark claims. */}
+      <section className="mt-32" aria-labelledby="expected-cases-heading">
+        <div className="mb-12 max-w-3xl">
+          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{isZh ? '预期案例展示' : 'Expected output gallery'}</span>
+          <h2 id="expected-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? '20 组前后对比：先看细节，再决定是否处理' : '20 before-and-after cases, with the checks that matter'}</h2>
+          <p className="text-zinc-400 leading-relaxed">{isZh ? '这些原创示例把低分辨率输入与参考输出放在同一张图上。拖动对比线，按 100% 检查直线、文字、脸部和材质；它们用于说明预期检查点，不代表任何具体模型的性能承诺。' : 'These original illustrative pairs put a lower-resolution input beside its reference output. Drag the split and inspect edges, text, faces and materials at 100%. They explain what to check, not a performance promise for a particular model.'}</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <figure className="rounded-2xl border border-primary/30 bg-surface-low overflow-hidden">
+            <video className="w-full aspect-video object-cover bg-black" controls muted playsInline preload="metadata" poster="/examples/generated/architecture-1-after.jpg" aria-label={isZh ? 'AI 图片放大前后六秒演示' : 'Six-second AI image upscaling before-and-after demo'}>
+              <source src="/examples/dlss5-upscale-before-after-demo.mp4" type="video/mp4" />
+              {isZh ? '你的浏览器不支持视频，请打开图片对比案例。' : 'Your browser does not support this video; use the image comparisons below.'}
+            </video>
+            <figcaption className="p-5"><p className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">{isZh ? '视频演示 · 6 秒' : 'Motion demo · 6 seconds'}</p><h3 className="text-lg font-headline font-bold text-white">{isZh ? '从低清输入到参考输出的过渡' : 'A transition from source to reference output'}</h3><p className="mt-2 text-sm leading-relaxed text-zinc-400">{isZh ? '这是用于展示交互和视觉预期的原创无声视频，不是模型基准测试。' : 'An original silent transition that demonstrates the interaction and visual expectation; it is not a model benchmark.'}</p></figcaption>
+          </figure>
+          <div className="rounded-2xl border border-outline-variant/20 bg-surface-low p-6 sm:p-8 flex flex-col justify-center">
+            <p className="text-[10px] text-primary font-label uppercase tracking-widest mb-3">{isZh ? '使用前检查清单' : 'Before you publish'}</p>
+            <h3 className="text-2xl font-headline font-bold text-white">{isZh ? '把“更清晰”拆成可验证的检查' : 'Turn “sharper” into checks you can verify'}</h3>
+            <ul className="mt-6 space-y-4 text-sm leading-relaxed text-zinc-300">
+              <li><strong className="text-white">01 · {isZh ? '几何' : 'Geometry'}</strong><br />{isZh ? '建筑窗框、商品轮廓和重复结构不能被模型移动。' : 'Window frames, product silhouettes and repeated structures should not move.'}</li>
+              <li><strong className="text-white">02 · {isZh ? '身份与文字' : 'Identity and text'}</strong><br />{isZh ? '人脸、标签、数字和标识要和原图逐项对照。' : 'Compare faces, labels, numbers and marks against the original.'}</li>
+              <li><strong className="text-white">03 · {isZh ? '纹理' : 'Texture'}</strong><br />{isZh ? '纹理可以恢复，但不应凭空增加无法验证的细节。' : 'Texture may become clearer, but unverifiable detail should not be invented.'}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {SHOWCASE_CASES.map(item => (
+            <article key={item.id} className="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden">
+              <ImageSlider highRes={item.after} lowRes={item.before} alt={item.alt} inputLabel={isZh ? '输入' : 'Input'} outputLabel={isZh ? '参考' : 'Reference'} compareLabel={isZh ? `${item.titleZh}前后对比` : `${item.title} before and after`} initialAspectRatio={1.5} />
+              <div className="p-4">
+                <p className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">{isZh ? item.categoryZh : item.category}</p>
+                <h3 className="text-base font-headline font-bold text-white">{isZh ? item.titleZh : item.title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-zinc-400">{isZh ? item.descriptionZh : item.description}</p>
+                <details className="mt-3 text-xs text-zinc-400"><summary className="cursor-pointer text-primary">{isZh ? '查看提示词' : 'View prompt'}</summary><p className="mt-2 leading-relaxed">{item.prompt}</p></details>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-32" aria-labelledby="game-style-cases-heading">
+        <div className="mb-12 max-w-3xl">
+          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{isZh ? 'DLSS 5 风格参考' : 'DLSS 5 style references'}</span>
+          <h2 id="game-style-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? '游戏人物风格转换：保持角色，改变画面方向' : 'Game character style conversion: keep the character, change the visual direction'}</h2>
+          <p className="text-zinc-400 leading-relaxed">{isZh ? '这一组才是游戏场景的重点：角色轮廓、服装、动作和身份保持稳定，再改变光照、材质、色彩和世界观方向。所有素材均为原创视觉参考，不是 NVIDIA 官方 DLSS 5 截图，也不代表已经接入 DLSS 5 运行时。' : 'This is the game-focused set: keep the character silhouette, costume, pose and identity stable while changing lighting, materials, palette and world direction. All frames are original visual references; they are not NVIDIA DLSS 5 captures or proof of a DLSS 5 runtime integration.'}</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <figure className="rounded-2xl border border-primary/30 bg-surface-low overflow-hidden">
+            <video className="w-full aspect-video object-cover bg-black" controls muted playsInline preload="metadata" poster="/examples/generated/game-cyber-1-after.jpg" aria-label={isZh ? '游戏角色风格转换六秒演示' : 'Six-second game character style conversion reference'}>
+              <source src="/examples/dlss5-game-style-transition.mp4" type="video/mp4" />
+              {isZh ? '你的浏览器不支持视频，请使用下方图片对比。' : 'Your browser does not support this video; use the image comparisons below.'}
+            </video>
+            <figcaption className="p-5"><p className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">{isZh ? '角色风格视频 · 6 秒' : 'Character style motion · 6 seconds'}</p><h3 className="text-lg font-headline font-bold text-white">{isZh ? '赛博朋克角色：输入到参考风格' : 'Cyberpunk character: source to style reference'}</h3><p className="mt-2 text-sm leading-relaxed text-zinc-400">{isZh ? '展示提示词驱动的视觉方向变化；不把概念图包装成官方硬件输出。' : 'A prompt-led visual direction change; the concept is not presented as official hardware output.'}</p></figcaption>
+          </figure>
+          <div className="rounded-2xl border border-outline-variant/20 bg-surface-low p-6 sm:p-8 flex flex-col justify-center">
+            <p className="text-[10px] text-primary font-label uppercase tracking-widest mb-3">{isZh ? '角色转换提示词结构' : 'Prompt structure for character conversion'}</p>
+            <h3 className="text-2xl font-headline font-bold text-white">{isZh ? '先锁定不变项，再写风格项' : 'Lock the invariants before adding style'}</h3>
+            <ol className="mt-6 space-y-4 text-sm leading-relaxed text-zinc-300">
+              <li><strong className="text-white">01 · {isZh ? '角色锚点' : 'Character anchors'}</strong><br />{isZh ? '明确角色轮廓、服装、动作、镜头和身份不可改变。' : 'State that silhouette, costume, pose, camera and identity must remain stable.'}</li>
+              <li><strong className="text-white">02 · {isZh ? '风格变量' : 'Style variables'}</strong><br />{isZh ? '只改变光照、材质、调色、环境和渲染风格。' : 'Change only lighting, materials, color grade, environment and render style.'}</li>
+              <li><strong className="text-white">03 · {isZh ? '验收标准' : 'Acceptance checks'}</strong><br />{isZh ? '比较脸部、手部、装备边缘、布料褶皱和帧间一致性。' : 'Compare face, hands, gear edges, cloth folds and temporal consistency.'}</li>
+            </ol>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {GAME_STYLE_CASES.map(item => (
+            <article key={item.id} className="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden">
+              <ImageSlider highRes={item.after} lowRes={item.before} alt={item.alt} inputLabel={isZh ? '原始构图' : 'Base frame'} outputLabel={isZh ? '风格参考' : 'Style reference'} compareLabel={isZh ? `${item.titleZh}风格转换对比` : `${item.title} style conversion`} initialAspectRatio={1.5} />
+              <div className="p-4">
+                <p className="text-[10px] text-primary font-label uppercase tracking-widest mb-2">{isZh ? item.styleZh : item.style}</p>
+                <h3 className="text-base font-headline font-bold text-white">{isZh ? item.titleZh : item.title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-zinc-400">{isZh ? item.descriptionZh : item.description}</p>
+                <details className="mt-3 text-xs text-zinc-400"><summary className="cursor-pointer text-primary">{isZh ? '查看转换提示词' : 'View conversion prompt'}</summary><p className="mt-2 leading-relaxed">{item.prompt}</p></details>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -475,44 +557,6 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-headline font-bold text-white mb-4">{t('home.dataPrivacy')}</h3>
             <p className="text-zinc-500 text-sm leading-relaxed">{t('home.privacyDesc')}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-32">
-        <h3 className="text-center text-zinc-500 font-label uppercase tracking-[0.3em] mb-12 text-xs">{t('home.communityUpscaled')}</h3>
-        
-        <div className="relative">
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 max-h-[800px] overflow-hidden">
-            {COMMUNITY_EXAMPLES.map((url, idx) => (
-              <div key={idx} className="break-inside-avoid rounded-xl overflow-hidden relative group bg-surface-low border border-outline-variant/10">
-                <img 
-                  src={url} 
-                  alt={`Community Generation ${idx + 1}`} 
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" 
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-black">
-                      {String.fromCharCode(65 + (idx % 26))}
-                    </div>
-                    <span className="text-xs font-bold text-white">User_{Math.floor(Math.random() * 9000) + 1000}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-[#09090b] to-transparent flex items-end justify-center pb-8 pointer-events-none">
-            <button 
-              onClick={() => navigate('/dashboard')}
-              className="pointer-events-auto bg-surface-high text-white px-8 py-3 rounded-full font-bold hover:bg-primary hover:text-black transition-all duration-300 border border-outline-variant/20 shadow-2xl flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              {t('home.joinCommunity')}
-            </button>
           </div>
         </div>
       </section>
