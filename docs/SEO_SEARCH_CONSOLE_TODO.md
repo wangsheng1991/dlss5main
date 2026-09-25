@@ -14,7 +14,7 @@
 
 ## 复核项
 
-- 已确认 `https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，2026-09-25 重新提交后发现 57 个网址，当前代码新增两页后应刷新为 59 个网址，已发现视频仍以 Google 报告为准。
+- 已确认 `https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，2026-09-25 新页面上线后再次提交成功，Google 已发现 59 个网址、0 个视频。
 - 新增的四个生成式工具页、角色案例页和视频工作流页已加入同一份 sitemap，并由 prerender 脚本生成独立 HTML；上线后每页的 title、description、canonical、BreadcrumbList 和 h1 均不再回退到首页。
 - 报告中的重复规范页和重定向页不应单独提交；它们由 canonical/重定向规则处理。
 - 等 Google 抓取一轮后，再比较 `dlss 5 visual enhancer`、`dlss 5 upscaling` 和 `dlss 5 download` 的 CTR，不要在数据窗口尚未更新时继续改标题。
