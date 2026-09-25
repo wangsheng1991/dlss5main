@@ -15,7 +15,7 @@ Google URL Inspection 的每日配额恢复后，逐个打开以下 URL，点击
 
 ## 复核项
 
-- 重新提交 `https://www.dlss5nvidia.com/sitemap.xml`，确认状态为“成功”。
+- 已确认 `https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，已提交 53 个网址，最近读取时间为 2026-09-24。
 - 查看两个本地化 comparison article 的“已抓取—尚未编入索引”验证结果；不要重复提交已经处于验证中的问题组。
 - 等 Google 抓取一轮后，再比较 `dlss 5 visual enhancer`、`dlss 5 upscaling` 和 `dlss 5 download` 的 CTR，不要在数据窗口尚未更新时继续改标题。
 
@@ -47,3 +47,5 @@ Google URL Inspection 的每日配额恢复后，逐个打开以下 URL，点击
 - `/blog/dlss5-artistic-vision-debate-honest-assessment`
 
 报告中的重定向页和重复规范页不应单独提交；其规范化由站点重定向/canonical 规则处理。Google 的索引状态不会在提交后立即变更，后续只需等待抓取队列处理并观察报告刷新。
+
+线上复核（2026-09-25）：sitemap 返回 200，53 个 URL 全部返回 200，且每页 title、description、keywords、canonical 均存在并与 URL 匹配。
