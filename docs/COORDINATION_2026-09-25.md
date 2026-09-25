@@ -145,7 +145,7 @@ PY
 `vite preview` 会把 SPA shell 当成 `/image-upscaler` 的响应，验不出预渲染文件 —— 要看预渲染结果就直接
 `python3 -m http.server` 托管 `dist/`。
 
-## 7. Codex P0 implementation (2026-09-25)
+## 7. Codex P0 implementation (2026-09-26)
 
 从 `364026a` 继续完成了文档中 P0/P1 的可落地部分，并保持静态 HTML 与 React 页面共用同一份内容源：
 
