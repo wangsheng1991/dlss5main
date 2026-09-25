@@ -2,15 +2,17 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { ARTICLE_COVERS } from '../src/content/articles/covers';
 import { ARTICLES, type Article } from '../src/content/articles/types';
-import { TOOL_LANDINGS, toolAlternates, toolSchema, toolSteps, type ToolLanding } from '../src/content/toolLandings';
+import { TOOL_LANDINGS, toolAlternates, toolLongForm, toolSchema, toolSteps, type ToolLanding } from '../src/content/toolLandings';
 import { USE_CASES, useCaseSchema, type UseCase } from '../src/content/useCases';
 import { publishableSpecs } from '../src/lib/spec/specs';
 import type { PhotoSpec } from '../src/lib/spec/types';
-import { PASSPORT_PHOTO_SPEC_SLUGS } from '../src/content/passportPhoto';
-import { GAME_STYLE_LANDING, gameStyleLandingSchema } from '../src/content/gameStyleLanding';
-import { VIDEO_LANDING, videoLandingSchema } from '../src/content/videoLanding';
+import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_SLUGS } from '../src/content/passportPhoto';
+import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from '../src/content/gameStyleLanding';
+import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../src/content/videoLanding';
+import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
+import { LEGAL } from '../src/config/legal';
 
 /** Each deployment states its own origin through `VITE_SITE_URL`; see `src/config/site-url.ts`. */
 const BASE_URL = resolveSiteUrl(process.env.VITE_SITE_URL);
@@ -39,7 +41,7 @@ const SITE_ORGANIZATION = (() => {
     const nodes = (JSON.parse(graph) as { '@graph'?: Array<{ '@type'?: string }> })['@graph'];
     const organization = nodes?.find((node) => node['@type'] === 'Organization');
     if (!organization) return '';
-    return `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': [organization] }).replaceAll('<', '\\u003c')}</script>`;
+    return `<script type="application/ld+json" data-rh="true">${JSON.stringify({ '@context': 'https://schema.org', '@graph': [organization] }).replaceAll('<', '\\u003c')}</script>`;
   } catch {
     return '';
   }
@@ -190,30 +192,30 @@ function pageHead(options: {
       : `/zh${options.canonicalPath}`;
   const blogAlternates = options.canonicalPath.includes('/blog')
     ? [
-        `<link rel="alternate" hreflang="en" href="${BASE_URL}${englishBlogPath}" />`,
-        `<link rel="alternate" hreflang="zh-CN" href="${BASE_URL}${chineseBlogPath}" />`,
-        `<link rel="alternate" hreflang="x-default" href="${BASE_URL}${baseBlogPath}" />`,
+        `<link rel="alternate" hreflang="en" href="${BASE_URL}${englishBlogPath}" data-rh="true" />`,
+        `<link rel="alternate" hreflang="zh-CN" href="${BASE_URL}${chineseBlogPath}" data-rh="true" />`,
+        `<link rel="alternate" hreflang="x-default" href="${BASE_URL}${baseBlogPath}" data-rh="true" />`,
       ].join('\n    ')
     : '';
-  const localeAlternates = options.alternates?.map(alternate => `<link rel="alternate" hreflang="${escapeHtml(alternate.hrefLang)}" href="${escapeHtml(alternate.href)}" />`).join('\n    ') || '';
+  const localeAlternates = options.alternates?.map(alternate => `<link rel="alternate" hreflang="${escapeHtml(alternate.hrefLang)}" href="${escapeHtml(alternate.href)}" data-rh="true" />`).join('\n    ') || '';
   const jsonLd = options.structuredData
-    ? `<script type="application/ld+json">${JSON.stringify(options.structuredData).replaceAll('<', '\\u003c')}</script>`
+    ? `<script type="application/ld+json" data-rh="true">${JSON.stringify(options.structuredData).replaceAll('<', '\\u003c')}</script>`
     : '';
   const headTags = [
     SITE_ORGANIZATION,
-    `<meta name="robots" content="${options.noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'}" />`,
-    `<link rel="canonical" href="${canonical}" />`,
-    `<meta property="og:type" content="${options.type || 'website'}" />`,
-    `<meta property="og:title" content="${escapeHtml(options.title)}" />`,
-    `<meta property="og:description" content="${escapeHtml(options.description)}" />`,
-    `<meta property="og:url" content="${canonical}" />`,
-    `<meta property="og:image" content="${image}" />`,
-    `<meta property="og:site_name" content="DLSS5NVIDIA" />`,
-    `<meta property="og:locale" content="${options.language.replace('-', '_')}" />`,
-    `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:title" content="${escapeHtml(options.title)}" />`,
-    `<meta name="twitter:description" content="${escapeHtml(options.description)}" />`,
-    `<meta name="twitter:image" content="${image}" />`,
+    `<meta name="robots" content="${options.noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'}" data-rh="true" />`,
+    `<link rel="canonical" href="${canonical}" data-rh="true" />`,
+    `<meta property="og:type" content="${options.type || 'website'}" data-rh="true" />`,
+    `<meta property="og:title" content="${escapeHtml(options.title)}" data-rh="true" />`,
+    `<meta property="og:description" content="${escapeHtml(options.description)}" data-rh="true" />`,
+    `<meta property="og:url" content="${canonical}" data-rh="true" />`,
+    `<meta property="og:image" content="${image}" data-rh="true" />`,
+    `<meta property="og:site_name" content="DLSS5NVIDIA" data-rh="true" />`,
+    `<meta property="og:locale" content="${options.language.replace('-', '_')}" data-rh="true" />`,
+    `<meta name="twitter:card" content="summary_large_image" data-rh="true" />`,
+    `<meta name="twitter:title" content="${escapeHtml(options.title)}" data-rh="true" />`,
+    `<meta name="twitter:description" content="${escapeHtml(options.description)}" data-rh="true" />`,
+    `<meta name="twitter:image" content="${image}" data-rh="true" />`,
     blogAlternates,
     localeAlternates,
     jsonLd,
@@ -224,8 +226,8 @@ function pageHead(options: {
 function withHead(template: string, options: Parameters<typeof pageHead>[0]): string {
   let html = template.replace('<html lang="en">', `<html lang="${options.language}">`);
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(options.title)}</title>`);
-  html = html.replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeHtml(options.description)}" />`);
-  html = html.replace(/<meta name="keywords" content="[^"]*"\s*\/>/, `<meta name="keywords" content="${escapeHtml((options.keywords || []).join(', '))}" />`);
+  html = html.replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeHtml(options.description)}" data-rh="true" />`);
+  html = html.replace(/<meta name="keywords" content="[^"]*"\s*\/>/, `<meta name="keywords" content="${escapeHtml((options.keywords || []).join(', '))}" data-rh="true" />`);
   // The shell carries homepage metadata for a no-JavaScript visit. Remove those route-agnostic
   // tags before adding the route-specific head, otherwise every prerendered page would expose two
   // canonicals (and crawlers could keep the homepage URL). The homepage graph goes with them; the
@@ -233,8 +235,8 @@ function withHead(template: string, options: Parameters<typeof pageHead>[0]): st
   html = html
     .replace(/^\s*<meta name="robots"[^>]*>\s*$/gm, '')
     .replace(/^\s*<link rel="canonical"[^>]*>\s*$/gm, '')
-    .replace(/^\s*<meta property="og-[^"]+"[^>]*>\s*$/gm, '')
-    .replace(/^\s*<meta name="twitter:[^"]+"[^>]*>\s*$/gm, '')
+    .replace(/<meta property="og:[^"]+"[^>]*\/?>\s*/g, '')
+    .replace(/<meta name="twitter:[^"]+"[^>]*\/?>\s*/g, '')
     .replace(/[ \t]*<script type="application\/ld\+json">[\s\S]*?<\/script>[ \t]*\n?/, '');
   const marker = '    <!-- Paint the theme colour';
   return html.replace(marker, `    ${pageHead(options)}\n${marker}`);
@@ -388,6 +390,86 @@ function renderPublicGuide(options: PublicGuideOptions): string {
   }), root);
 }
 
+type LegalDocument = 'terms' | 'privacy' | 'refund';
+
+/** Keep the policy routes useful before React hydrates (payment reviewers and crawlers often do not run JS). */
+function renderLegalPage(kind: LegalDocument): string {
+  const documents: Record<LegalDocument, {
+    title: string;
+    description: string;
+    keywords: string[];
+    heading: string;
+    intro: string;
+    sections: Array<{ title: string; paragraphs?: string[]; bullets?: string[] }>;
+  }> = {
+    terms: {
+      title: 'Terms of Service | DLSS 5 Image Upscaler',
+      description: 'The terms that govern DLSS5NVIDIA accounts, subscriptions, credits, acceptable use and liability for the online AI image upscaling service.',
+      keywords: ['terms of service', 'subscription terms', 'ai image upscaler terms'],
+      heading: 'Terms of Service',
+      intro: `These Terms are an agreement between you and ${LEGAL.operator}, which operates ${LEGAL.website} and the AI image tools offered on it. By creating an account or paying for a plan you accept them.`,
+      sections: [
+        { title: '1. The service', paragraphs: [`${LEGAL.operator} provides browser-based AI image tools: image upscaling and enhancement, image generation and editing, video super-resolution, and a web API for developers. Processing runs on our servers and on third-party model providers — you do not need a GPU or installed software.`, 'We may add, change or retire individual tools and models. We will not remove a paid feature in the middle of a period you have already paid for.'] },
+        { title: '2. Your account', bullets: ['You must be at least 18 years old, or the age of majority where you live, to subscribe.', 'Keep your password and sign-in method secure; activity through your account is treated as done by you.', 'Give us an email address you read so we can send billing and service notices.', 'Do not share an account to avoid plan limits.'] },
+        { title: '3. Plans, credits and billing', paragraphs: ['Paid plans renew monthly until cancelled. Current plans, prices, credit allowances and limits are shown on the Pricing page and at checkout.', 'Credits are consumed per generation and the cost is shown before a job runs. Monthly credits do not roll over; failed generations on our side are returned automatically.', `Payments are collected by payment processors in US dollars. We do not receive or store your full card number. Cancellation and refunds are described in the Refund & Cancellation Policy.`] },
+        { title: '4. Acceptable use', bullets: ['Do not upload content you have no right to process or use the service for unlawful, hateful, harassing or deceptive content.', 'Do not bypass credit, rate or authentication limits, resell API access without an agreement, or overload the service.', 'We may suspend accounts that endanger the service, providers or other customers and will explain why where practical.'] },
+        { title: '5. Your content', paragraphs: ['You keep rights to images you upload and results you generate. You grant only the limited licence needed to store, transmit and process files and return results.', `We do not claim ownership of your images or use them to train models. Ask ${LEGAL.contactEmail} if you want a file or account history deleted.`] },
+        { title: '6. Our content and trademarks', paragraphs: ['The site, text, design and software are ours or our licensors\' and may not be copied or resold. This is an independent tool, not affiliated with, sponsored by or endorsed by NVIDIA Corporation. DLSS and NVIDIA are trademarks of NVIDIA Corporation.'] },
+        { title: '7. Availability, changes and beta features', paragraphs: ['We work to keep the service available but provide no uptime guarantee unless a separate agreement says otherwise. Preview features may change, and third-party providers can be unavailable; failed generations are refunded in credits automatically.'] },
+        { title: '8. Suspension and termination', paragraphs: ['You can cancel at any time. We may suspend or terminate material breaches, fraud or action required by law. If we terminate without cause, we refund the unused part of the paid period.'] },
+        { title: '9. Disclaimers and limitation of liability', paragraphs: ['The service is provided “as is”. AI output may be inaccurate or unsuitable, so check results and keep your own copies. To the extent the law allows, total liability is limited to the amount paid in the three months before the event.'] },
+        { title: '10. Governing law and disputes', paragraphs: [`These Terms are governed by the laws of ${LEGAL.governingLaw}. Before starting a formal dispute, write to ${LEGAL.contactEmail}.`] },
+        { title: '11. Changes to these Terms', paragraphs: [`We may update these Terms as the service changes. The date at the bottom shows the current version; material changes are emailed to subscribers before they take effect.`] },
+        { title: '12. Contact', paragraphs: [`${LEGAL.operator}, operating ${LEGAL.website}. Questions, notices and complaints: ${LEGAL.contactEmail}.`] },
+      ],
+    },
+    privacy: {
+      title: 'Privacy Policy | DLSS 5 Image Upscaler',
+      description: 'What DLSS5NVIDIA collects, why it is collected, which processors handle it, how long it is kept, and how to have account data deleted.',
+      keywords: ['privacy policy', 'data protection', 'ai image upscaler privacy'],
+      heading: 'Privacy Policy',
+      intro: `This policy explains what ${LEGAL.operator} collects when you use ${LEGAL.website}, why, and what you can ask us to do about it.`,
+      sections: [
+        { title: '1. What we collect', bullets: ['Account data: email, display name, sign-in provider and internal account identifier.', 'Billing data: plan, credit balance, subscription identifiers and processor status. Card numbers stay on the processor page.', 'Content you submit: uploaded images, prompts, generation settings and results.', 'Technical data: IP address, browser and language, pages opened and limited usage events.', `Support messages sent to ${LEGAL.contactEmail}.`] },
+        { title: '2. Why we use it', bullets: ['To authenticate you, process images, keep history and balances correct.', 'To bill, grant and deduct credits, and prevent fraud.', 'To keep the service stable and secure through rate limiting, abuse detection and error diagnosis.', 'To improve features with aggregated analytics and send necessary service notices.'], paragraphs: ['We do not sell personal data or use images and prompts to train models.'] },
+        { title: '3. Who processes it for us', bullets: ['Google Firebase for authentication and the account database.', 'PayPal, Stripe and Dodo Payments for payments and subscriptions.', 'Vercel for hosting and content delivery.', 'Model and storage providers for image jobs and temporary files.', 'Google Analytics for aggregated visitor statistics.'], paragraphs: ['These providers may process data outside your country under their own policies and our instructions.'] },
+        { title: '4. Cookies and local storage', paragraphs: ['Necessary storage keeps you signed in and remembers your language. Analytics storage counts visits and feature use. You can block or clear storage in your browser.'] },
+        { title: '5. How long we keep it', bullets: ['Account and billing records while the account exists and as long as tax, accounting or fraud rules require.', 'Uploaded files and results until deletion or account closure.', 'Server and error logs for a short operational window, then rolling deletion.', 'Analytics data according to the analytics tool retention setting.'] },
+        { title: '6. Your rights', paragraphs: [`Write to ${LEGAL.contactEmail} from your account address to access, correct, export or delete data, or object to a use. We answer within 30 days. EU and UK residents can also complain to their data protection authority.`] },
+        { title: '7. Security', paragraphs: ['Traffic is encrypted in transit, provider API keys stay on the server, and production access is restricted. If a breach affects your data, we will notify you and the competent authority without undue delay.'] },
+        { title: '8. Children', paragraphs: ['The service is not intended for anyone under 18 or the local age of majority. We do not knowingly collect children’s data; tell us if you believe a child has an account.'] },
+        { title: '9. Changes and contact', paragraphs: [`We update this policy when processing changes. Controller and contact: ${LEGAL.operator}, ${LEGAL.contactEmail}.`] },
+      ],
+    },
+    refund: {
+      title: 'Refund & Cancellation Policy | DLSS 5 Image Upscaler',
+      description: 'How to cancel a DLSS5NVIDIA subscription, when a refund is available, how long it takes, and how plan changes are billed.',
+      keywords: ['refund policy', 'cancel subscription', 'cancellation policy'],
+      heading: 'Refund & Cancellation Policy',
+      intro: `Subscriptions at ${LEGAL.operator} renew monthly and you can stop them whenever you like. This page explains how cancellation works, when we refund, and how long it takes.`,
+      sections: [
+        { title: '1. How to cancel', bullets: ['Card subscription (Stripe): open your dashboard and choose Manage billing.', 'PayPal subscription: cancel the recurring agreement in PayPal under Settings → Payments → Automatic payments.', `Email ${LEGAL.contactEmail} from your account address and we will cancel it for you.`] },
+        { title: '2. What happens after you cancel', bullets: ['No further charges are made and cancellation is immediate.', 'You keep access and credits for the period already paid for.', 'At the end, the account drops to the Free plan; unused paid credits are not exchanged for money.'] },
+        { title: '3. When we refund', bullets: [`Within ${LEGAL.refundWindowDays} days of a charge, if no credits were spent, we refund in full.`, `Within ${LEGAL.refundWindowDays} days with partial use, we normally refund the unused part and fully refund service failures.`, 'Duplicate or accidental charges are refunded in full.', 'A failed generation is returned as credits automatically, rather than a cash refund.'] },
+        { title: '4. When we cannot refund', bullets: [`Periods older than ${LEGAL.refundWindowDays} days or whose credits were spent.`, 'Accounts closed for fraud, abuse or reselling API access.', 'Charges already disputed as a chargeback; contact us first so we can resolve it directly.'] },
+        { title: '5. EU and UK consumers', paragraphs: ['EU and UK consumers may have a statutory 14-day withdrawal right for digital services. Using credits asks us to begin performance and ends the right for those credits; unspent credits can be refunded inside the window.'] },
+        { title: '6. How refunds are paid and how long they take', bullets: [`Send the request from your account email to ${LEGAL.contactEmail}, including a PayPal transaction or subscription ID where relevant.`, 'We reply within 2 business days and issue an approved refund within 5 business days.', 'The original processor returns the money; banks and PayPal commonly show it within 5–10 business days.', 'Refunds use the original currency and amount charged.'] },
+        { title: '7. Plan changes', paragraphs: ['Card plan changes are prorated from Manage billing. PayPal plan changes require cancelling and subscribing again; the already-paid period remains available.'] },
+      ],
+    },
+  };
+  const document = documents[kind];
+  const sections = document.sections.map(section => `<section><h2>${escapeHtml(section.title)}</h2>${section.paragraphs?.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('') || ''}${section.bullets ? `<ul>${section.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
+  const root = `<main class="pt-32 pb-24 px-6 max-w-3xl mx-auto"><header class="mb-12"><span class="text-primary text-xs uppercase tracking-widest">Legal</span><h1 class="text-4xl md:text-5xl font-bold text-white mt-4 mb-4">${escapeHtml(document.heading)}</h1><p class="text-zinc-400 leading-relaxed">${escapeHtml(document.intro)}</p></header><div class="space-y-9">${sections}</div><footer class="mt-14 pt-6 border-t border-outline-variant/10 text-zinc-600 text-xs">Last updated ${escapeHtml(LEGAL.updatedAt)}. Questions about this document: <a class="text-primary underline" href="mailto:${escapeHtml(LEGAL.contactEmail)}">${escapeHtml(LEGAL.contactEmail)}</a>.</footer></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: document.title,
+    description: document.description,
+    canonicalPath: `/${kind}`,
+    language: 'en-US',
+    keywords: document.keywords,
+  }), root);
+}
+
 function renderDashboard(): string {
   const root = `<main class="pt-32 pb-24 px-6 max-w-[900px] mx-auto"><h1 class="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p class="text-zinc-400 mt-3">Sign in to use the private image editing workspace.</p><p class="mt-6"><a class="text-primary" href="/login">Sign in</a></p></main>`;
   return withRoot(withHead(TEMPLATE, {
@@ -446,18 +528,22 @@ function renderStore(): string {
 function renderToolLanding(tool: ToolLanding): string {
   const isSpanish = tool.locale === 'es';
   const steps = toolSteps(tool);
+  const longForm = toolLongForm(tool);
   const related = tool.related.map(item => `<a href="${item.path}">${escapeHtml(item.label)}</a>`).join(' · ');
-  const faqs = tool.faqs.map(faq => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
+  const faqs = tool.faqs.map(faq => `<article><h3>${escapeHtml(faq.question)}</h3><details><summary>Read the answer</summary><p>${escapeHtml(faq.answer)}</p></details></article>`).join('');
   const schema = toolSchema(tool);
   const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto">
     <nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(tool.heading)}</span></nav>
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-      <div><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(tool.eyebrow)}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(tool.heading)}</h1><p class="text-lg text-zinc-300 leading-relaxed mt-5">${escapeHtml(tool.intro)}</p><p class="mt-6"><a href="/dashboard?tool=${tool.dashboardTool}" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(tool.cta)} →</a></p><p class="text-xs text-zinc-500 mt-4">${escapeHtml(tool.ctaNote)}</p></div>
+      <div><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(tool.eyebrow)}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(tool.heading)}</h1><p class="text-lg text-zinc-300 leading-relaxed mt-5">${escapeHtml(tool.intro)}</p><p class="text-sm text-zinc-400 leading-relaxed mt-4">${escapeHtml(AI_OVERVIEW_DEFINITION)}</p><p class="mt-6"><a href="/dashboard?tool=${tool.dashboardTool}" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(tool.cta)} →</a></p><p class="text-xs text-zinc-500 mt-4">${escapeHtml(tool.ctaNote)}</p></div>
       ${tool.demo
         ? `<figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="${tool.demo.after}" alt="${escapeHtml(`${tool.heading} — ${tool.demo.afterLabel}`)}" width="1024" height="1024" fetchpriority="high" class="w-full rounded-lg" /><img src="${tool.demo.before}" alt="${escapeHtml(`${tool.heading} — ${tool.demo.beforeLabel}`)}" width="1024" height="1024" class="w-full rounded-lg" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(tool.demo.caption)}</figcaption></figure>`
         : `<figure class="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low p-2"><img src="/examples/sample1-photo.webp" alt="${escapeHtml(isSpanish ? 'Comparación de mejora de imagen' : 'Image quality enhancement before and after example')}" width="1200" height="800" fetchpriority="high" class="w-full rounded-lg" /><figcaption class="p-3 text-xs text-zinc-400">${escapeHtml(isSpanish ? 'Ejemplo ilustrativo; el resultado depende de tu imagen original.' : 'Illustrative example; the result depends on your original image.')}</figcaption></figure>`}
     </section>
+    <section class="mt-16 max-w-4xl space-y-7" aria-labelledby="definition-heading"><div><h2 id="definition-heading">What is ${escapeHtml(tool.heading)}?</h2><p>${escapeHtml(longForm.definition)}</p></div><div><h2>How the workflow works</h2><p>${escapeHtml(longForm.workflow)}</p></div><div><h2>Input, output and source quality</h2><p>${escapeHtml(longForm.inputs)}</p></div></section>
     <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cuándo usar esta herramienta' : 'When to use this tool'}</h2><ul>${tool.useCases.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2 class="text-2xl font-bold text-white">${isSpanish ? 'Cómo funciona' : 'How it works'}</h2><ol>${steps.map(step => `<li><strong>${escapeHtml(step.name)}</strong> — ${escapeHtml(step.text)}</li>`).join('')}</ol></article></section>
+    <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2>When this workflow fits</h2><p>${escapeHtml(longForm.fit)}</p></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2>Limits and responsible use</h2><p>${escapeHtml(longForm.limits)}</p></article></section>
+    <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="bg-primary/5 rounded-xl border border-primary/25 p-6"><h2>Credits and delivery</h2><p>${escapeHtml(longForm.cost)}</p></article><article class="bg-surface-low rounded-xl border border-outline-variant/20 p-6"><h2>A practical quality review</h2><p>${escapeHtml(longForm.review)}</p></article></section>
     <section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">${isSpanish ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2><div class="mt-5">${faqs}</div></section>
     <section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">${isSpanish ? 'Herramientas relacionadas' : 'Related tools'}</h2><p class="mt-4 text-primary">${related}</p>${profileHas('blog') ? `<p class="mt-6"><a href="/blog/dlss-5-online-image-upscaler-guide">${isSpanish ? 'Leer la guía de mejora de imágenes (inglés) →' : 'Read the online image enhancement guide →'}</a></p>` : ''}</section>
   </main>`;
@@ -499,7 +585,8 @@ function renderUseCaseLanding(item: UseCase): string {
 
 function renderGameStyleLanding(): string {
   const cards = GAME_STYLE_LANDING.cases.map((item, index) => `<article class="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><figure><img src="${escapeHtml(item.after)}" alt="${escapeHtml(`${item.title} style reference`)}" width="768" height="512" ${index < 2 ? 'fetchpriority="high"' : 'loading="lazy"'} class="w-full aspect-[3/2] object-cover" /><img src="${escapeHtml(item.before)}" alt="${escapeHtml(`${item.title} base frame`)}" width="768" height="512" loading="lazy" class="w-full aspect-[3/2] object-cover" /><figcaption class="p-3 text-xs text-zinc-400">Base frame → style reference</figcaption></figure><div class="p-4"><p class="text-[10px] text-primary uppercase tracking-widest">${escapeHtml(item.style)}</p><h2 class="mt-2 text-base font-bold text-white">${escapeHtml(item.title)}</h2><p class="mt-2 text-xs leading-relaxed text-zinc-400">${escapeHtml(item.description)}</p><details class="mt-3 text-xs text-zinc-400"><summary class="cursor-pointer text-primary">View conversion prompt</summary><p class="mt-2 leading-relaxed">${escapeHtml(item.prompt)}</p></details></div></article>`).join('');
-  const root = `<main class="pt-28 pb-24 px-6 max-w-[1280px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(GAME_STYLE_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Game character style conversion</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(GAME_STYLE_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(GAME_STYLE_LANDING.intro)}</p><aside class="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-5 text-sm leading-relaxed text-zinc-200"><strong class="text-primary">Asset note: </strong>These 20 pairs are original visual references for evaluating a conversion brief. They are not NVIDIA DLSS 5 captures and do not claim a DLSS 5 runtime integration.</aside><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try your own character frame →</a> <a class="inline-block ml-3 text-primary" href="/video-upscaler">See the video enhancement workflow →</a></p></header><section class="mt-16" aria-labelledby="case-gallery-heading"><h2 id="case-gallery-heading" class="text-3xl font-bold text-white">Drag to compare: base frame → style reference</h2><p class="mt-3 text-sm text-zinc-500">Check faces, hands, gear edges and cloth folds first.</p><div class="mt-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">${cards}</div></section><section class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">01 · Lock the character</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">State that silhouette, costume, pose, camera and identity must stay stable.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">02 · Change the style</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">Use lighting, materials, color grade, environment and render direction as the variables.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">03 · Review the result</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">Compare the face, hands, gear edges and temporal consistency at 100%.</p></article></section></main>`;
+  const longForm = `<section class="mt-16 max-w-4xl space-y-7"><div><h2 class="text-2xl font-bold text-white">What game character style conversion means</h2><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(GAME_STYLE_LONG_FORM.definition)}</p></div><div><h2 class="text-2xl font-bold text-white">Lock the identity before changing the style</h2><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(GAME_STYLE_LONG_FORM.invariants)}</p></div><div><h2 class="text-2xl font-bold text-white">Change visual variables deliberately</h2><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(GAME_STYLE_LONG_FORM.variables)}</p></div><div><h2 class="text-2xl font-bold text-white">How to review a conversion</h2><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(GAME_STYLE_LONG_FORM.review)}</p></div></section>`;
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1280px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(GAME_STYLE_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Game character style conversion</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(GAME_STYLE_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(GAME_STYLE_LANDING.intro)}</p><aside class="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-5 text-sm leading-relaxed text-zinc-200"><strong class="text-primary">Asset note: </strong>These 20 pairs are original visual references for evaluating a conversion brief. They are not NVIDIA DLSS 5 captures and do not claim a DLSS 5 runtime integration.</aside><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try your own character frame →</a> <a class="inline-block ml-3 text-primary" href="/video-upscaler">See the video enhancement workflow →</a></p></header>${longForm}<section class="mt-16" aria-labelledby="case-gallery-heading"><h2 id="case-gallery-heading" class="text-3xl font-bold text-white">Drag to compare: base frame → style reference</h2><p class="mt-3 text-sm text-zinc-500">Check faces, hands, gear edges and cloth folds first.</p><div class="mt-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">${cards}</div></section><section class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">01 · Lock the character</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">State that silhouette, costume, pose, camera and identity must stay stable.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">02 · Change the style</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">Use lighting, materials, color grade, environment and render direction as the variables.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">03 · Review the result</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">Compare the face, hands, gear edges and temporal consistency at 100%.</p></article></section></main>`;
   return withRoot(withHead(TEMPLATE, {
     title: GAME_STYLE_LANDING.title,
     description: GAME_STYLE_LANDING.description,
@@ -514,8 +601,9 @@ function renderGameStyleLanding(): string {
 function renderVideoLanding(): string {
   const demos = VIDEO_LANDING.demos.map((demo) => `<figure class="rounded-2xl border border-primary/25 bg-surface-low overflow-hidden"><video class="w-full aspect-video object-cover bg-black" controls muted playsinline preload="metadata" poster="${escapeHtml(demo.poster)}" aria-label="${escapeHtml(demo.alt)}"><source src="${escapeHtml(demo.src)}" type="video/mp4" />Your browser does not support this video.</video><figcaption class="p-5"><h2 class="text-lg font-bold text-white">${escapeHtml(demo.name)}</h2><p class="mt-2 text-sm leading-relaxed text-zinc-400">${escapeHtml(demo.description)}</p></figcaption></figure>`).join('');
   const steps = [['01', 'Generate a preview', 'Use 480p or 720p to iterate on prompt, camera movement, references and timing before paying for a final finish.'], ['02', 'Inspect key frames', 'Check faces, hands, typography, thin geometry, fast motion and temporal consistency at 100%.'], ['03', 'Finish the approved shot', 'Run the selected video super-resolution pass for 1080p or 4K delivery, then keep the original beside the AI-enhanced result.']].map(([number, title, text]) => `<li class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><span class="text-primary font-mono text-sm">${number}</span><h2 class="mt-4 text-xl font-bold text-white">${title}</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">${text}</p></li>`).join('');
-  const faqs = VIDEO_LANDING.faqs.map((faq) => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
-  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(VIDEO_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Video super-resolution workflow</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(VIDEO_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(VIDEO_LANDING.intro)}</p><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try a representative frame →</a> <a class="inline-block ml-3 text-primary" href="/blog/seedance-2-5-video-super-resolution-cost-guide-2026">Read the Seedance 2.5 cost guide →</a></p><p class="mt-4 text-xs leading-relaxed text-zinc-500">The current public workspace processes still image frames. These clips are original silent reference demos for the planned video provider workflow.</p></header><section class="mt-16" aria-labelledby="video-demos-heading"><p class="text-xs uppercase tracking-widest text-primary">Original reference demos</p><h2 id="video-demos-heading" class="mt-2 text-3xl font-bold text-white">See the transition before you commit to a workflow</h2><div class="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-6">${demos}</div></section><section class="mt-20" aria-labelledby="workflow-heading"><h2 id="workflow-heading" class="text-3xl font-bold text-white">A practical 3-step video enhancement workflow</h2><ol class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-6">${steps}</ol></section><section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">Frequently asked questions</h2><div class="mt-5">${faqs}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">Continue with related workflows</h2><p class="mt-4"><a href="/game-character-style">20 game character cases</a> · <a href="/image-quality-enhancer">Image quality enhancer</a> · <a href="/comparisons">AI tools compared</a></p></section></main>`;
+  const faqs = VIDEO_LANDING.faqs.map((faq) => `<article><h3>${escapeHtml(faq.question)}</h3><details><summary>Read the answer</summary><p>${escapeHtml(faq.answer)}</p></details></article>`).join('');
+  const longForm = `<section class="mt-16 max-w-4xl space-y-7"><div><h2 class="text-2xl font-bold text-white">What AI video upscaling changes</h2><p>${escapeHtml(VIDEO_LONG_FORM.definition)}</p></div><div><h2 class="text-2xl font-bold text-white">Why preview resolution comes first</h2><p>${escapeHtml(VIDEO_LONG_FORM.preview)}</p></div><div><h2 class="text-2xl font-bold text-white">Review time, not only one frame</h2><p>${escapeHtml(VIDEO_LONG_FORM.checks)}</p></div><div><h2 class="text-2xl font-bold text-white">Document the final delivery</h2><p>${escapeHtml(VIDEO_LONG_FORM.delivery)}</p></div><div><h2 class="text-2xl font-bold text-white">Test the hardest scene</h2><p>${escapeHtml(VIDEO_LONG_FORM.sceneNotes)}</p></div><div><h2 class="text-2xl font-bold text-white">Compare the whole cost</h2><p>${escapeHtml(VIDEO_LONG_FORM.costNotes)}</p></div><div><h2 class="text-2xl font-bold text-white">Keep the handoff reproducible</h2><p>${escapeHtml(VIDEO_LONG_FORM.handoff)}</p></div><div><h2 class="text-2xl font-bold text-white">Use a final review checklist</h2><p>${escapeHtml(VIDEO_LONG_FORM.checklist)}</p></div></section>`;
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(VIDEO_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Video super-resolution workflow</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(VIDEO_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(VIDEO_LANDING.intro)}</p><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try a representative frame →</a> <a class="inline-block ml-3 text-primary" href="/blog/seedance-2-5-video-super-resolution-cost-guide-2026">Read the Seedance 2.5 cost guide →</a></p><p class="mt-4 text-xs leading-relaxed text-zinc-500">The current public workspace processes still image frames. These clips are original silent reference demos for the planned video provider workflow.</p></header>${longForm}<section class="mt-16" aria-labelledby="video-demos-heading"><p class="text-xs uppercase tracking-widest text-primary">Original reference demos</p><h2 id="video-demos-heading" class="mt-2 text-3xl font-bold text-white">See the transition before you commit to a workflow</h2><div class="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-6">${demos}</div></section><section class="mt-20" aria-labelledby="workflow-heading"><h2 id="workflow-heading" class="text-3xl font-bold text-white">A practical 3-step video enhancement workflow</h2><ol class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-6">${steps}</ol></section><section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">Frequently asked questions</h2><div class="mt-5">${faqs}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">Continue with related workflows</h2><p class="mt-4"><a href="/game-character-style">20 game character cases</a> · <a href="/image-quality-enhancer">Image quality enhancer</a> · <a href="/comparisons">AI tools compared</a></p></section></main>`;
   return withRoot(withHead(TEMPLATE, {
     title: VIDEO_LANDING.title,
     description: VIDEO_LANDING.description,
@@ -569,7 +657,8 @@ function renderPassportPhoto(spec?: PhotoSpec): string {
     ],
   };
   const toolHref = `${canonicalPath}#tool`;
-  const root = `<main class="pt-28 pb-24 px-6 max-w-[1100px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>Free Passport Photo Maker</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">Free small tool · local processing</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(title.replace(' — Printable Passport Photo Maker', ''))}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(description)}</p><p class="mt-6"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="${toolHref}">Open the free local photo tool →</a></p></header><section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">Published specification</h2><div class="mt-5 text-sm text-zinc-300">${facts}</div></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">How it works</h2><ol class="mt-5 space-y-3 text-sm text-zinc-300"><li><strong>1. Upload locally.</strong> Choose a JPG, PNG or WebP; the browser reads it without sending it to our server.</li><li><strong>2. Align the guide.</strong> Position the crown and chin inside the published head-height and headroom lines.</li><li><strong>3. Export.</strong> Download an exact-size PNG or a repeated print sheet with cut marks.</li></ol></article></section><section class="mt-12 rounded-xl border border-primary/25 bg-primary/5 p-6"><h2 class="text-2xl font-bold text-white">Before submitting</h2><p class="mt-4 text-sm leading-relaxed text-zinc-300">A correctly sized file is not a guarantee of acceptance. Check the receiving authority's current photo rules, expression requirements and background guidance.</p><div class="mt-5 flex flex-wrap gap-4 text-sm">${specs.map(item => `<a class="text-primary" href="/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[item.id]}">${escapeHtml(item.label)} →</a>`).join('')}</div></section></main>`;
+  const longForm = `<section class="mt-12 max-w-4xl space-y-7"><div><h2 class="text-2xl font-bold text-white">What a passport photo maker does</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.definition)}</p></div><div><h2 class="text-2xl font-bold text-white">A repeatable local workflow</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.workflow)}</p></div><div><h2 class="text-2xl font-bold text-white">Source quality still matters</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.quality)}</p></div><div><h2 class="text-2xl font-bold text-white">Check the receiving authority</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.verification)}</p></div><div><h2 class="text-2xl font-bold text-white">Why local processing matters</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.privacy)}</p></div><div><h2 class="text-2xl font-bold text-white">Troubleshoot before printing</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.troubleshooting)}</p></div><div><h2 class="text-2xl font-bold text-white">Know the limits</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.limitations)}</p></div><div><h2 class="text-2xl font-bold text-white">Print at the documented size</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.printNotes)}</p></div><div><h2 class="text-2xl font-bold text-white">Handle the downloaded file carefully</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.privacyNotes)}</p></div><div><h2 class="text-2xl font-bold text-white">Run the final checklist</h2><p>${escapeHtml(PASSPORT_PHOTO_LONG_FORM.checklist)}</p></div></section>`;
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1100px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>Free Passport Photo Maker</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">Free small tool · local processing</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(title.replace(' — Printable Passport Photo Maker', ''))}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(description)}</p><p class="mt-6"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="${toolHref}">Open the free local photo tool →</a></p></header>${longForm}<section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">Published specification</h2><div class="mt-5 text-sm text-zinc-300">${facts}</div></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">How it works</h2><ol class="mt-5 space-y-3 text-sm text-zinc-300"><li><strong>1. Upload locally.</strong> Choose a JPG, PNG or WebP; the browser reads it without sending it to our server.</li><li><strong>2. Align the guide.</strong> Position the crown and chin inside the published head-height and headroom lines.</li><li><strong>3. Export.</strong> Download an exact-size PNG or a repeated print sheet with cut marks.</li></ol></article></section><section class="mt-12 rounded-xl border border-primary/25 bg-primary/5 p-6"><h2 class="text-2xl font-bold text-white">Before submitting</h2><p class="mt-4 text-sm leading-relaxed text-zinc-300">A correctly sized file is not a guarantee of acceptance. Check the receiving authority's current photo rules, expression requirements and background guidance.</p><div class="mt-5 flex flex-wrap gap-4 text-sm">${specs.map(item => `<a class="text-primary" href="/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[item.id]}">${escapeHtml(item.label)} →</a>`).join('')}</div></section></main>`;
   return withRoot(withHead(TEMPLATE, {
     title,
     description,
@@ -675,6 +764,7 @@ writeRoute('/register', renderPublicGuide({
 }));
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
+for (const legalPage of ['terms', 'privacy', 'refund'] as const) writeRoute(`/${legalPage}`, renderLegalPage(legalPage));
 if (profileHas('tools')) {
   writeRoute(GAME_STYLE_LANDING.path, renderGameStyleLanding());
   writeRoute(VIDEO_LANDING.path, renderVideoLanding());

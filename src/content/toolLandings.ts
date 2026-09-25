@@ -591,6 +591,48 @@ export function toolSteps(tool: ToolLanding) {
   ];
 }
 
+export type ToolLongForm = {
+  definition: string;
+  workflow: string;
+  inputs: string;
+  fit: string;
+  limits: string;
+  cost: string;
+  review: string;
+};
+
+/**
+ * Search visitors need more than a title, a slider and a FAQ. These paragraphs are deliberately
+ * generated from each tool's own contract so the static page and the hydrated React page describe
+ * the same workflow without creating a second content source in the prerender script.
+ */
+export function toolLongForm(tool: ToolLanding): ToolLongForm {
+  const mode = tool.dashboardTool;
+  const modeCopy: Record<ToolLanding['dashboardTool'], { verb: string; noun: string; risk: string }> = {
+    upscale: { verb: 'enlarge', noun: 'image upscaling', risk: 'large edges, repeated geometry and output dimensions' },
+    enhance: { verb: 'improve', noun: 'image quality enhancement', risk: 'faces, labels, text and uncertain texture' },
+    unblur: { verb: 'clean up', noun: 'soft-image enhancement', risk: 'halos, face identity and unreadable details' },
+    cutout: { verb: 'remove the background from', noun: 'subject cutout', risk: 'hair, transparent edges and small objects' },
+    vectorize: { verb: 'trace', noun: 'raster-to-vector conversion', risk: 'tiny marks, open paths and colour boundaries' },
+    erase: { verb: 'remove an object from', noun: 'object erasing', risk: 'the rebuilt background and any nearby text' },
+    tryon: { verb: 'preview clothing on', noun: 'virtual try-on', risk: 'garment boundaries, pose and face identity' },
+    interior: { verb: 'visualize an interior from', noun: 'interior render generation', risk: 'walls, windows, perspective and furniture scale' },
+    retouch: { verb: 'refine', noun: 'portrait retouching', risk: 'skin texture, face shape and expression' },
+    makeup: { verb: 'preview makeup on', noun: 'virtual makeup', risk: 'face shape, expression and colour spill' },
+  };
+  const copy = modeCopy[mode];
+  const targets = tool.useCases.join(', ');
+  return {
+    definition: `${tool.heading} is a browser-based ${copy.noun} workflow for people who already have a source image and need a controlled visual change. It uses a task-specific instruction rather than a blank prompt, so the requested output starts from the existing composition, subject or material. The page's before-and-after example is an illustrative reference; the result from your own file depends on its resolution, lighting, crop and visible detail.`,
+    workflow: `The workflow has three decisions. First, choose the largest original file instead of a screenshot or a second-generation social download. Next, confirm what is allowed to change and what must remain anchored: the task prompt is written for ${copy.noun}, while the page shows the applicable input and output limits before submission. Finally, compare the source and result at 100 percent and download only after the information-sensitive areas pass your review. This order matters because a plausible AI result can look polished while still changing a face, label, edge or background.`,
+    inputs: `Use a clear JPG, PNG or WebP with enough pixels for the details you care about. For this page, the published intake note is: ${tool.ctaNote}. A clean input gives the model stronger evidence about edges, colour and texture. If the source is already heavily compressed, crop it tightly or find the original before spending a credit. Keep the source file beside the output; the service is an enhancement estimate, not a reversible edit history.`,
+    fit: `This workflow is a good fit for ${targets}. It is especially useful when the subject is already recognizable and the job is to ${copy.verb} it while preserving the scene's main structure. It is less useful when the source has no recoverable detail, when the requested change is an exact measurement, or when the output will be used as an official record. In those cases, use the original capture, a design or editing application, or the receiving authority's own specification.`,
+    limits: `${tool.whenToUse ?? `AI can change uncertain details, so ${copy.risk} need a deliberate check.`} ${tool.disclaimer ?? 'Do not treat a generated result as pixel-exact recovery. If a detail cannot be verified against the original, keep the original or run another source through the workflow.'} The service cannot guarantee that a small character, logo, number, face or repeated pattern will remain unchanged. A larger output also does not create new factual evidence; it creates a more usable visual estimate.`,
+    cost: `Your allowance and the task cost are shown before a signed-in job starts. The public example is available for comparison, while processing a personal file uses the displayed credit amount. A failed generation on our side is handled by the account workflow according to the billing policy. Check the output target and the source dimensions first so a task is not spent on a size you cannot use. For batch or API work, compare the per-image cost with storage, retries and your own review time.`,
+    review: `Before publishing, compare the result with the original in a fixed order: overall composition, subject identity, long straight edges, small text or labels, repeated texture, colour and shadows. Zooming to 100 percent exposes halos and invented marks that a thumbnail hides. For portraits, check eyes, teeth, hairline and skin texture. For products or architecture, check logos, windows, perspective and material boundaries. For generated edits, check that the requested change is present without unrelated objects or background drift.`,
+  };
+}
+
 export function toolSchema(tool: ToolLanding) {
   return {
     '@context': 'https://schema.org',

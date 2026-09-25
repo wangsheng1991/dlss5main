@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SITE_URL } from '../config/site';
 import { SITE_PROFILE, brandCopy } from '../config/profile';
+import { siteOrganizationSchema } from '../content/seoDefinitions';
 
 interface SEOProps {
   title: string;
@@ -39,40 +40,79 @@ export default function SEO({
   const pageUrl = canonical?.startsWith('http') ? canonical : `${BASE_URL}${canonical || '/'}`;
   const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image}`;
   const pageLanguage = language || undefined;
+  const organization = canonical === '/' ? null : siteOrganizationSchema();
+
+  // Some prerendered shells can be restored by React 19 as well as reconciled by Helmet. Both
+  // copies carry data-rh and are valid individually, but retaining two identical canonicals or
+  // JSON-LD graphs is harmful to crawlers. Collapse exact duplicates after Helmet has committed.
+  useEffect(() => {
+    const dedupe = (selector: string, signature: (element: Element) => string) => {
+      const seen = new Set<string>();
+      document.querySelectorAll(selector).forEach(element => {
+        const key = signature(element);
+        if (seen.has(key)) element.remove();
+        else seen.add(key);
+      });
+    };
+    dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
+    dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', element => element.outerHTML);
+    dedupe('script[type="application/ld+json"]', element => element.textContent || '');
+    const observer = new MutationObserver(() => {
+      dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
+      dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', element => element.outerHTML);
+      dedupe('script[type="application/ld+json"]', element => element.textContent || '');
+    });
+    observer.observe(document, { childList: true, subtree: true });
+    const timer = window.setTimeout(() => {
+      observer.disconnect();
+      dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
+      dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', element => element.outerHTML);
+      dedupe('script[type="application/ld+json"]', element => element.textContent || '');
+    }, 3000);
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timer);
+    };
+  }, [pageUrl, pageDescription, keywords, robots, structuredData, organization]);
 
   return (
     <Helmet>
       {pageLanguage && <html lang={pageLanguage} />}
       {/* Standard metadata tags */}
       <title>{pageTitle}</title>
-      <meta name="description" content={pageDescription} />
-      {keywords.length > 0 && <meta name="keywords" content={brandCopy(keywords.join(', '))} />}
-      <meta name="robots" content={robots} />
+      <meta name="description" content={pageDescription} data-rh="true" />
+      {keywords.length > 0 && <meta name="keywords" content={brandCopy(keywords.join(', '))} data-rh="true" />}
+      <meta name="robots" content={robots} data-rh="true" />
 
       {/* Open Graph / Facebook tags */}
-      <meta property="og:type" content={type} />
-      <meta property="og:title" content={pageTitle} />
-      <meta property="og:description" content={pageDescription} />
-      <meta property="og:site_name" content={name} />
-      <meta property="og:image" content={imageUrl} />
-      <meta property="og:url" content={pageUrl} />
-      {pageLanguage && <meta property="og:locale" content={pageLanguage.replace('-', '_')} />}
+      <meta property="og:type" content={type} data-rh="true" />
+      <meta property="og:title" content={pageTitle} data-rh="true" />
+      <meta property="og:description" content={pageDescription} data-rh="true" />
+      <meta property="og:site_name" content={name} data-rh="true" />
+      <meta property="og:image" content={imageUrl} data-rh="true" />
+      <meta property="og:url" content={pageUrl} data-rh="true" />
+      {pageLanguage && <meta property="og:locale" content={pageLanguage.replace('-', '_')} data-rh="true" />}
 
       {/* Twitter tags */}
-      <meta name="twitter:creator" content={name} />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={pageTitle} />
-      <meta name="twitter:description" content={pageDescription} />
-      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:creator" content={name} data-rh="true" />
+      <meta name="twitter:card" content="summary_large_image" data-rh="true" />
+      <meta name="twitter:title" content={pageTitle} data-rh="true" />
+      <meta name="twitter:description" content={pageDescription} data-rh="true" />
+      <meta name="twitter:image" content={imageUrl} data-rh="true" />
 
-      <link rel="canonical" href={pageUrl} />
+      <link rel="canonical" href={pageUrl} data-rh="true" />
       {alternates.map(alternate => (
-        <link key={`${alternate.hrefLang}-${alternate.href}`} rel="alternate" hrefLang={alternate.hrefLang} href={alternate.href} />
+        <link key={`${alternate.hrefLang}-${alternate.href}`} rel="alternate" hrefLang={alternate.hrefLang} href={alternate.href} data-rh="true" />
       ))}
 
+      {organization && (
+        <script type="application/ld+json" data-rh="true">
+          {brandCopy(JSON.stringify(organization))}
+        </script>
+      )}
       {/* Structured Data (JSON-LD) for GEO and Rich Snippets */}
       {structuredData && (
-        <script type="application/ld+json">
+        <script type="application/ld+json" data-rh="true">
           {brandCopy(JSON.stringify(structuredData))}
         </script>
       )}

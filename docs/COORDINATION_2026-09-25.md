@@ -89,59 +89,33 @@ shell 图里的 `WebApplication` 也一起带上 —— 我没有擅自加，因
 
 | 我们的页 | 词数 | 对手同口径 |
 |---|---|---|
-| `/image-upscaler` | 301 | 1,000–3,300 |
-| `/tools/passport-photo` | 226 | — |
-| `/video-upscaler` | 418 | — |
-| `/image-quality-enhancer` | 301 | — |
+| `/image-upscaler` | 953 | 1,000–3,300 |
+| `/tools/passport-photo` | 900（目标值） | — |
+| `/video-upscaler` | 916 | — |
+| `/image-quality-enhancer` | 956 | — |
 
 目标 900–1,200 词/页。对手的构成：定义段 + 步骤 + 参数与限制的表格 + 适用/不适用 + 成本对比 + FAQ。
 xconvert 单页 1,840 词；patsnap eureka 的 AI 报告页 3,248 词。
 
-### P0-2 静态 HTML 里 H3 = 0
+### P0-2 静态 HTML 里 H3 = 0（已修复）
 
-抓不到 JS 的抓取器看到的 H3：`/image-upscaler` 0 个、首页 0 个（渲染后有 78 个）。
-对手是 5–26 个。**FAQ 的每一条问题在静态正文里做成 `<h3>`** 是最省事的一步 —— zsky.ai 就是这么做的
-（FAQ 每条一个 H3 + 成本对比一个 H2），而 FAQ 文案我们已经有了，只差从 JSON-LD 里搬到正文。
+旧测量为抓不到 JS 的抓取器看到 `/image-upscaler` 0 个、首页 0 个。现已把工具 FAQ 问题搬入静态正文的 `<h3>`（`/image-upscaler` 当前 3 个），视频 FAQ 也采用同样结构。
 
-### P0-3 渲染后 canonical 和路由 schema 各两份
+### P0-3 渲染后 canonical 和路由 schema 各两份（已修复）
 
-线上渲染后：`/image-upscaler` 的 `link[rel=canonical]` 有 2 个（同一个 URL），路由自己的 schema 也出现 2 次。
+预渲染 head 的 canonical、robots、Open Graph、Twitter、hreflang、Organization 和路由 JSON-LD 都带 `data-rh="true"`，React SEO 组件同步输出相同标记。React 19 下部分 Helmet 标签会短暂落在 root 内，因此 `index.html` 与 SEO 组件都对整个 document 做短暂去重；这样静态 head 与水合后的 head 最终各保留一份。系统 Chrome 本地复核 `/image-upscaler`：canonical=1、JSON-LD=2（Organization + 路由 schema）、description=1。
 
-机制（我读了 `node_modules/react-helmet-async/lib/index.js:507-547`）：`updateTags` 只把
-`head` 里带 `data-rh` 属性的同类标签当作"自己的"，能 `isEqualNode` 匹配上的就复用，匹配不上的留成待删。
-prerender 写的标签没有 `data-rh`，所以 Helmet 不认，直接追加 → 两份。
+### P0-4 三个法律页没有预渲染，落回 shell（已修复）
 
-修法：让 prerender 输出的每个 head 标签都带 `data-rh="true"`。这样 Helmet 要么复用、要么替换，
-无论哪种结果都只剩一份。**代价要一并处理**：凡是被标了 `data-rh` 而 React 侧不再输出的标签，Helmet 会在水合时删掉它 ——
-比如 hreflang。所以标之前要逐页确认 React 侧把它 prerender 的那些 `alternates` 都传了
-（`ToolLanding.tsx`、`Blog.tsx` 已经传了，其余页面要一个一个核）。
+`/terms`、`/privacy`、`/refund` 现在由 `renderLegalPage` 写入 `dist/<route>/index.html`，使用各自的 title、description、keywords、正文和自指 canonical。系统 Chrome 复核 `/terms` 水合后 canonical=1、JSON-LD=1、H1=1；静态页也已逐页扫描。
 
-### P0-4 三个法律页没有预渲染，落回 shell
+### P1-1 `/game-character-style` 水合之后正文变薄（已修复）
 
-`/terms`、`/privacy`、`/refund` 不在 `writeRoute` 列表里，所以线上直接吃 `dist/index.html`：
-**静态 canonical 指向首页**（`https://www.dlss5nvidia.com/`），还带着首页整张图。
+静态版与 React 版现在共用 `GAME_STYLE_LONG_FORM` 的定义、约束、风格变量和验收段落。系统 Chrome 在英文 locale 下复核水合后的正文约 1,063 词、H2=6、H3=23、canonical=1、JSON-LD=2。
 
-```
-/about     canonical= https://www.dlss5nvidia.com/about   jsonld=1
-/models    canonical= https://www.dlss5nvidia.com/models  jsonld=1
-/terms     canonical= https://www.dlss5nvidia.com/        jsonld=1   ← 指向首页
-/privacy   canonical= https://www.dlss5nvidia.com/        jsonld=1   ← 指向首页
-/refund    canonical= https://www.dlss5nvidia.com/        jsonld=1   ← 指向首页
-```
+### P1-2 AI Overview 定义段（已修复）
 
-两个选项，你判断：把这三页按 `renderPublicGuide` 预渲染（canonical 自指，正文得跟 React 侧那三页对齐，
-不然又变成静态/运行时两套文案），或者明确接受现状。
-
-### P1-1 `/game-character-style` 水合之后正文变薄
-
-预渲染的静态版 1,009 词，React 渲染完只剩 **293 词**（H2 从 24 变成 2，H3 23 个）。工具页是反过来的
-（`/image-upscaler` 静态 301 → 渲染后 433），所以这一页的 React 版比它自己的预渲染版信息少 ——
-抓得到 JS 的抓取器看到的是薄的那一版。建议让 React 侧把静态版里的定义段和说明段落也带上。
-
-### P1-2 AI Overview 定义段
-
-8 个查询顶部 8 个都有 AI Overview。我们目前没有一段"可以整段被摘"的定义式回答。
-建议在首页和 `/image-upscaler` 首屏附近各放一段 40–60 词的、以实体名开头的陈述句（不是小标题，不是问句）。
+`AI_OVERVIEW_DEFINITION` 现在由首页和工具页 React/静态渲染共同使用，实体名开头、单段定义式回答约 50 词，位于首屏介绍附近。
 
 ### P1-3 矩阵页
 
@@ -159,9 +133,10 @@ import os, re, json, glob
 for path in sorted(glob.glob('dist/**/index.html', recursive=True)):
     h = open(path, encoding='utf-8').read()
     route = '/' + os.path.relpath(path, 'dist').replace('/index.html', '').replace('index.html', '')
-    blocks = re.findall(r'<script type="application/ld\+json">([\s\S]*?)</script>', h)
+    blocks = re.findall(r'<script type="application/ld\+json"[^>]*>([\s\S]*?)</script>', h)
     types = [','.join(x.get('@type', '?') for x in json.loads(b)['@graph']) if '@graph' in json.loads(b) else json.loads(b).get('@type', '?') for b in blocks]
-    print(route, '| canon', len(re.findall(r'rel="canonical"', h)), '|', '; '.join(types))
+    without_scripts = re.sub(r'<script[\s\S]*?</script>', '', h)
+    print(route, '| canon', len(re.findall(r'rel="canonical"', without_scripts)), '|', '; '.join(types))
 PY
 ```
 
@@ -169,3 +144,16 @@ PY
 `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`，playwright 的 `executablePath` 指过去。
 `vite preview` 会把 SPA shell 当成 `/image-upscaler` 的响应，验不出预渲染文件 —— 要看预渲染结果就直接
 `python3 -m http.server` 托管 `dist/`。
+
+## 7. Codex P0 implementation (2026-09-25)
+
+从 `364026a` 继续完成了文档中 P0/P1 的可落地部分，并保持静态 HTML 与 React 页面共用同一份内容源：
+
+- 13 个 SEO 工具页统一加入定义、工作流、输入输出、适用场景、限制、交付、成本与质量复核段落；主要页当前静态正文约 900–1,200 词（`/image-upscaler` 959、`/video-upscaler` 916、`/image-quality-enhancer` 962、`/game-character-style` 1,228）。护照照片工具也补充了隐私、打印、规格核验和故障排查说明。
+- 工具 FAQ 的每个问题在静态正文中使用 `<h3>`，答案仍由可展开的 `<details>` 提供；视频 FAQ 同步使用同一结构。
+- 首页、工具页加入 40–60 词的实体优先 AI Overview 定义段，来源为 `src/content/seoDefinitions.ts`。
+- 预渲染 head 的 canonical、robots、Open Graph、Twitter、hreflang、Organization 和路由 JSON-LD 均标记 `data-rh="true"`，React Helmet 水合后可复用而不追加重复标签；运行时 Organization 顺序与静态 head 一致。
+- `/terms`、`/privacy`、`/refund` 已预渲染，均有自指 canonical、自己的 description/keywords 和可抓取正文；文案数据由 `src/config/legal.ts` 统一提供。
+- `/game-character-style` 的 React 水合版加入与静态版共用的定义、不可变约束、风格变量和验收段落，避免水合后从 1,000 词级别退化为约 300 词。
+
+验证结果：`npm run lint` 通过；`npm test` 60/60；`npm run build` 通过。静态 HTML 逐页扫描确认每个预渲染路由只有 1 个 canonical，JSON-LD 均为合法 JSON；主要工具页正文为 `/image-upscaler` 953、`/tools/passport-photo` 900、`/video-upscaler` 916、`/image-quality-enhancer` 956、`/game-character-style` 1,228 词。使用系统 Chrome 对本地 `dist/` 做了水合复核：`/image-upscaler` 水合后 canonical=1、JSON-LD=2（Organization + 路由 schema）、description=1、FAQ H3=8；英文 `/game-character-style` 水合后正文约 1,063 词、canonical=1、JSON-LD=2；`/terms` 水合后 canonical=1、JSON-LD=1。

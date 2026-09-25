@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
-import { GAME_STYLE_LANDING, gameStyleLandingSchema } from '../content/gameStyleLanding';
+import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from '../content/gameStyleLanding';
 
 export default function GameCharacterStyle() {
   const { i18n } = useTranslation();
@@ -40,6 +40,13 @@ export default function GameCharacterStyle() {
             </Link>
           </div>
         </header>
+
+        <section className="mt-16 max-w-4xl space-y-7" aria-labelledby="definition-heading">
+          <div><h2 id="definition-heading" className="text-2xl font-headline font-bold text-white">What game character style conversion means</h2><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? '游戏人物风格转换是在保持人物可识别部分的前提下改变视觉语言。轮廓、动作、服装结构、镜头和身份保持稳定，再控制光照、材质、色彩、环境与渲染方向。下面的原创参考图用于制定和验收转换需求，不是 NVIDIA 官方截图，也不宣称使用 DLSS 运行时处理。' : GAME_STYLE_LONG_FORM.definition}</p></div>
+          <div><h2 className="text-2xl font-headline font-bold text-white">Lock the identity before changing the style</h2><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? '先写清楚不可改变的轮廓、动作、镜头、脸型、发型和主要装备，再把风格变量单独列出。这样可以避免提示词在改变世界观时意外重做人物。' : GAME_STYLE_LONG_FORM.invariants}</p></div>
+          <div><h2 className="text-2xl font-headline font-bold text-white">Change visual variables deliberately</h2><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? '把电影轮廓光、赛璐璐边缘、旧金属、半透明布料、霓虹反射、绘画质感或写实皮肤作为可控变量。每次只改一两个变量，并和原始构图并排比较。' : GAME_STYLE_LONG_FORM.variables}</p></div>
+          <div><h2 className="text-2xl font-headline font-bold text-white">How to review a conversion</h2><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? '缩略图检查视觉层级，100% 检查眼睛、手指、脸部比例、武器轮廓、盔甲接缝和布料褶皱。如果要用于视频，还要检查多帧之间的闪烁和身份漂移。' : GAME_STYLE_LONG_FORM.review}</p></div>
+        </section>
 
         <section className="mt-16" aria-labelledby="case-gallery-heading">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-7">

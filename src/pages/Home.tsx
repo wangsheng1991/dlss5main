@@ -15,6 +15,7 @@ import { SHOWCASE_CASES } from '../content/showcaseCases';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
 import { brandCopy, profileHas } from '../config/profile';
 import { trackEvent } from '../lib/analytics';
+import { AI_OVERVIEW_DEFINITION } from '../content/seoDefinitions';
 
 /** Search-led before/after cases. Keep the prompt language visible so the gallery can rank for
  * practical intent queries such as "portrait upscaler", "product photo enhancer" and "architecture
@@ -97,6 +98,7 @@ export default function Home() {
           {t('home.subtitle').split('.')[0]}. <br/>
           {t('home.subtitle').split('.').slice(1).join('.').trim()}
         </p>
+        <p className="max-w-3xl mx-auto -mt-5 mb-10 text-sm leading-relaxed text-zinc-400">{AI_OVERVIEW_DEFINITION}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
           <div className="lg:col-span-7 bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden relative group h-full">

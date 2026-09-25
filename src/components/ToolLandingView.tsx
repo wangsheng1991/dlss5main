@@ -1,12 +1,13 @@
 import React from 'react';
 import { ArrowRight, Check, UploadCloud } from 'lucide-react';
 import ImageSlider from './ImageSlider';
-import { toolAlternates, toolSteps, type ToolLanding } from '../content/toolLandings';
+import { toolAlternates, toolLongForm, toolSteps, type ToolLanding } from '../content/toolLandings';
 import { ENHANCE_MAX_EDGE } from '../config/enhance';
 import { profileHas } from '../config/profile';
 import { trackEvent } from '../lib/analytics';
 import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
+import { AI_OVERVIEW_DEFINITION } from '../content/seoDefinitions';
 
 export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
   const es = tool.locale === 'es';
@@ -31,6 +32,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
       : tool.dashboardTool === 'upscale'
         ? ['Check the displayed output dimensions before spending a credit.', 'Keep the original aspect ratio and compare straight edges.', 'For print, calculate the required pixel dimensions first.']
         : ['Inspect blocky compression areas and fine product textures.', 'Check that labels and logos have not been rewritten.', 'Compare colors and lighting against your original.']);
+  const longForm = toolLongForm(tool);
   return <>
     <main lang={tool.locale} className="pt-28 sm:pt-32 pb-20 px-5 max-w-[1200px] mx-auto w-full">
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start" id="tool">
@@ -38,6 +40,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">{tool.eyebrow}</p>
           <h1 className="text-4xl md:text-5xl font-headline font-bold tracking-tight text-white leading-[1.08]">{tool.heading}</h1>
           <p className="mt-5 text-lg leading-relaxed text-zinc-300">{tool.intro}</p>
+          <p className="mt-4 text-sm leading-relaxed text-zinc-400">{AI_OVERVIEW_DEFINITION}</p>
           <div className="mt-6">{workspace ?? <ToolUploadIntro tool={tool} />}</div>
           <p className="mt-4 text-xs leading-relaxed text-zinc-400">{tool.sharedNote ?? (es ? `Objetivos de 2× / 4×; máximo ${ENHANCE_MAX_EDGE} px por lado. La IA puede cambiar detalles. No garantiza recuperar información perdida.` : `2× / 4× targets; maximum ${ENHANCE_MAX_EDGE} px per edge. AI can alter details and cannot guarantee recovery of lost information.`)}</p>
         </div>
@@ -48,6 +51,12 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <ImageSlider highRes="/examples/sample1-photo.webp" lowRes="/examples/sample1-photo-low.webp" alt={es ? 'Comparación ilustrativa de calidad de imagen' : 'Illustrative image quality comparison'} inputLabel={es ? 'Baja resolución' : 'Low resolution'} outputLabel={es ? 'Referencia' : 'Reference'} compareLabel={es ? 'Arrastra o usa las flechas para comparar' : 'Drag or use arrow keys to compare'} initialAspectRatio={1.5} priority />
           <figcaption className="px-3 py-4 text-xs leading-relaxed text-zinc-400">{es ? 'Demostración ilustrativa: copia de baja resolución frente a la imagen de referencia. No es una medición del resultado del modelo. Tu resultado dependerá de la imagen original.' : 'Illustrative demo: a low-resolution copy compared with its reference image. This is not a measured model output. Your result depends on the source image.'}</figcaption>
         </figure>}
+      </section>
+
+      <section className="mt-16 max-w-4xl space-y-7" aria-labelledby="definition-heading">
+        <div><h2 id="definition-heading" className="text-2xl font-headline font-bold text-white">What is {tool.heading}?</h2><p className="mt-4 text-sm leading-relaxed text-zinc-300">{longForm.definition}</p></div>
+        <div><h2 className="text-2xl font-headline font-bold text-white">How the workflow works</h2><p className="mt-4 text-sm leading-relaxed text-zinc-400">{longForm.workflow}</p></div>
+        <div><h2 className="text-2xl font-headline font-bold text-white">Input, output and source quality</h2><p className="mt-4 text-sm leading-relaxed text-zinc-400">{longForm.inputs}</p></div>
       </section>
 
       <section className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6" id="examples" aria-labelledby="use-cases-heading">
@@ -67,9 +76,17 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
         <h2 id="steps-heading" className="text-3xl font-headline font-bold text-white mb-6">{tool.stepsHeading ?? (es ? 'Cómo mejorar tu imagen' : 'How to enhance your image')}</h2>
         <ol className="grid grid-cols-1 md:grid-cols-3 gap-6">{steps.map((step, i) => <li key={step.name} className="border-t border-outline-variant/30 pt-5"><span className="text-primary text-sm font-mono">0{i + 1}</span><h3 className="text-lg text-white font-semibold mt-3">{step.name}</h3><p className="mt-3 text-sm leading-relaxed text-zinc-400">{step.text}</p></li>)}</ol>
       </section>
+      <section className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6" aria-labelledby="fit-heading">
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-low p-6 sm:p-7"><h2 id="fit-heading" className="text-2xl font-headline font-bold text-white">When this workflow fits</h2><p className="mt-4 text-sm leading-relaxed text-zinc-400">{longForm.fit}</p></div>
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-low p-6 sm:p-7"><h2 className="text-2xl font-headline font-bold text-white">Limits and responsible use</h2><p className="mt-4 text-sm leading-relaxed text-zinc-400">{longForm.limits}</p></div>
+      </section>
+      <section className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6" aria-labelledby="cost-heading">
+        <div className="rounded-xl border border-primary/25 bg-primary/5 p-6 sm:p-7"><h2 id="cost-heading" className="text-2xl font-headline font-bold text-white">Credits and delivery</h2><p className="mt-4 text-sm leading-relaxed text-zinc-300">{longForm.cost}</p></div>
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-low p-6 sm:p-7"><h2 className="text-2xl font-headline font-bold text-white">A practical quality review</h2><p className="mt-4 text-sm leading-relaxed text-zinc-400">{longForm.review}</p></div>
+      </section>
       <section className="mt-16 max-w-4xl" id="faq" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-3xl font-headline font-bold text-white mb-6">{es ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>
-        <div className="space-y-3">{tool.faqs.map(faq => <details key={faq.question} className="rounded-xl border border-outline-variant/20 bg-surface-low p-5"><summary className="cursor-pointer font-semibold text-white">{faq.question}</summary><p className="mt-3 text-sm leading-relaxed text-zinc-400">{faq.answer}</p></details>)}</div>
+        <div className="space-y-3">{tool.faqs.map(faq => <article key={faq.question} className="rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h3 className="font-semibold text-white">{faq.question}</h3><details className="mt-3"><summary className="cursor-pointer text-xs text-primary">{es ? 'Ver respuesta' : 'Read the answer'}</summary><p className="mt-3 text-sm leading-relaxed text-zinc-400">{faq.answer}</p></details></article>)}</div>
       </section>
       <section className="mt-16 border-t border-outline-variant/20 pt-8" aria-labelledby="related-heading">
         <h2 id="related-heading" className="text-xl font-headline font-bold text-white">{es ? 'Herramientas relacionadas (en inglés)' : 'Related tools'}</h2>

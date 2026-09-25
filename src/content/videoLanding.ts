@@ -6,6 +6,17 @@ export type VideoDemo = {
   alt: string;
 };
 
+export const VIDEO_LONG_FORM = {
+  definition: 'AI video upscaling is a frame-by-frame reconstruction workflow that enlarges a finished clip and estimates cleaner edges, texture and motion detail. It is different from native 4K rendering: the model can make a shot more usable, but it cannot prove detail that was absent from the source. The safest workflow keeps the original clip beside every enhanced export.',
+  preview: 'A low-cost preview is useful when the creative decision is still changing. Generate at 480p or 720p, settle the prompt, camera move, reference images and timing, then choose the few frames that represent the shot. This avoids spending final-resolution credits on an idea that will be discarded.',
+  checks: 'Video quality is judged across time as well as in a single frame. Inspect faces, hands, typography, UI, hair, thin geometry and high-contrast edges at 100 percent. Scrub forward and backward around cuts and fast motion to catch flicker, warping, duplicate limbs or a subject whose identity drifts.',
+  delivery: 'For a finished export, record the source resolution, target resolution, provider or model, frame rate and any crop. Keep an untouched master and label the result as AI-enhanced when the reconstruction changes uncertain detail. A 4K file is a delivery size, not a guarantee that every pixel is factual.',
+  sceneNotes: 'Different scenes fail in different ways. Faces and hands expose identity errors; subtitles and game HUDs expose invented characters; foliage, hair and rain expose temporal shimmer; buildings and product edges expose ringing or oversharpening. Use a short representative clip from the hardest scene, rather than judging a clean establishing shot only.',
+  costNotes: 'A cost comparison should include generation, retries, storage and the time spent checking bad frames. The preview-plus-finish route is useful when most ideas are rejected early, while native high-resolution generation may be simpler for a single approved shot. Keep the same prompt and frame-rate assumptions when comparing providers.',
+  handoff: 'When a clip moves from generation to enhancement, pass along the original frame rate, aspect ratio, intended crop and any text-safe area. Do not silently change these between stages: a resize can make a timing problem look like a sharpness problem, and a crop can make a stable character appear to drift. Save a small contact sheet of approved key frames with the export so another editor can audit the result.',
+  checklist: 'Before publishing, write down the source and target dimensions, the frame rate, the number of frames processed and the review result for the hardest shot. Watch once with sound muted to focus on temporal structure, once at normal speed for motion, and once frame by frame around faces, text and fast cuts. This small record makes a later revision easier and keeps a cost comparison honest. It also gives a teammate enough context to reproduce the decision without guessing which version was approved.',
+} as const;
+
 export const VIDEO_LANDING = {
   path: '/video-upscaler',
   title: 'AI Video Upscaler Online — 4K Frame Enhancement Workflow',

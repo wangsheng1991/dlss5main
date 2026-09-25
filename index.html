@@ -120,6 +120,28 @@
         }
       }
     </script>
+    <script>
+      // Keep a prerendered head and React Helmet's head from exposing exact duplicate SEO tags.
+      (function () {
+        function dedupe(selector, signature) {
+          var seen = new Set();
+          document.querySelectorAll(selector).forEach(function (element) {
+            var key = signature(element);
+            if (seen.has(key)) element.remove(); else seen.add(key);
+          });
+        }
+        function clean() {
+          dedupe('link[rel="canonical"], link[rel="alternate"]', function (element) { return element.outerHTML; });
+          dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', function (element) { return element.outerHTML; });
+          dedupe('script[type="application/ld+json"]', function (element) { return element.textContent || ''; });
+        }
+        clean();
+        var observer = new MutationObserver(clean);
+        observer.observe(document, { childList: true, subtree: true });
+        var interval = setInterval(clean, 100);
+        setTimeout(function () { clean(); observer.disconnect(); clearInterval(interval); }, 5000);
+      }());
+    </script>
   </head>
   <body>
     <!-- Real store content in the served HTML. React replaces this block on mount, but if the
@@ -128,6 +150,7 @@
     <div id="root"><div id="static-fallback">
       <h1>DLSS Image Upscaler — AI image upscaling and enhancement to 4K</h1>
       <p>DLSS5NVIDIA is an online AI image upscaling service. Upload a photo, render, or product shot and our neural super-resolution pipeline returns a sharper 4K image in seconds — no GPU, no installation.</p>
+      <p>DLSS5NVIDIA is an independent browser-based AI image enhancement service that enlarges, sharpens and restores uploaded JPG, PNG or WebP images. It uses task-specific neural super-resolution workflows to preserve composition while reconstructing plausible edges and texture, so users can compare a source and result before downloading an enhanced image.</p>
       <ul>
         <li>Upscale, denoise and sharpen images up to 4K</li>
         <li>Also available: AI image generation, image editing and video super-resolution</li>
