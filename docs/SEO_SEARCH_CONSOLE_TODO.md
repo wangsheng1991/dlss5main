@@ -1,22 +1,17 @@
 # SEO / Search Console TODO
 
-自动化能完成的部分已完成。以下项目需要站点所有者在已登录的 Google Search Console 中操作；当前浏览器自动化会被 Google 重定向到登录页，没有可用的 Search Console 写入凭据，因此不代填账号或绕过验证。
+自动化能完成的站内 SEO、站点地图和 URL 检查已完成。只有 Google 的抓取队列和 Search Console 报告刷新需要等待，不能通过代码强制改变。
 
-## 需要手动请求编入索引
+## 仅需等待 Google 抓取队列
 
-Google URL Inspection 的每日配额恢复后，逐个打开以下 URL，点击“请求编入索引”：
+2026-09-25 通过已登录 Search Console 逐页复核了报告中的新文章和旧验证样本；它们当前均显示“网址已收录到 Google”，因此没有需要重复请求的 URL。报告中的“已发现—尚未编入索引”和“已抓取—尚未编入索引”数字是 2026-09-21 的历史快照，等待下一次报告刷新即可。
 
-- [Image to SVG](https://www.dlss5nvidia.com/image-to-svg)
-- [Remove Image Background](https://www.dlss5nvidia.com/remove-background)
-- [Erase Object](https://www.dlss5nvidia.com/erase-object)
-- [Spanish image enhancer](https://www.dlss5nvidia.com/es/mejorar-calidad-imagen)
-
-可直接从 Search Console 的网址检查入口粘贴 URL：<https://search.google.com/search-console/inspect?resource_id=sc-domain%3Adlss5nvidia.com>。
+唯一不能自动完成的是 Google 后台的自然抓取等待；不需要站点所有者做额外操作。
 
 ## 复核项
 
-- 已确认 `https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，已提交 53 个网址，最近读取时间为 2026-09-24。
-- 查看两个本地化 comparison article 的“已抓取—尚未编入索引”验证结果；不要重复提交已经处于验证中的问题组。
+- 已确认 `https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，2026-09-25 重新提交后发现 57 个网址，已发现视频为 0。
+- 报告中的重复规范页和重定向页不应单独提交；它们由 canonical/重定向规则处理。
 - 等 Google 抓取一轮后，再比较 `dlss 5 visual enhancer`、`dlss 5 upscaling` 和 `dlss 5 download` 的 CTR，不要在数据窗口尚未更新时继续改标题。
 
 ## 本次自动验证结果（2026-09-24）
@@ -28,7 +23,7 @@ Google URL Inspection 的每日配额恢复后，逐个打开以下 URL，点击
 
 ## Search Console 执行记录（2026-09-25）
 
-已在已登录的 Search Console 网址检查中完成逐页复核与提交：
+已在已登录的 Search Console 网址检查中完成逐页复核。以下页面都显示“网址已收录到 Google”；此前记录中的“已请求编入索引”是当时的提交动作，当前不再重复提交：
 
 - `https://www.dlss5nvidia.com/image-to-svg`：已请求编入索引。
 - `https://www.dlss5nvidia.com/blog/best-ai-image-upscaler-2026-comparison`：已请求编入索引。
@@ -48,7 +43,14 @@ Google URL Inspection 的每日配额恢复后，逐个打开以下 URL，点击
 
 报告中的重定向页和重复规范页不应单独提交；其规范化由站点重定向/canonical 规则处理。Google 的索引状态不会在提交后立即变更，后续只需等待抓取队列处理并观察报告刷新。
 
-线上复核（2026-09-25）：sitemap 返回 200，53 个 URL 全部返回 200，且每页 title、description、keywords、canonical 均存在并与 URL 匹配。
+线上复核（2026-09-25）：sitemap 返回 200，57 个 URL 全部返回 200，且每页 title、description、keywords、canonical 均存在并与 URL 匹配。首页静态 HTML 也已补齐与 React 首屏一致的 title、description、Open Graph/Twitter 图片和 JSON-LD。
+
+## 静态 SEO 修复（2026-09-25）
+
+- 首页静态 `<title>`、description、keywords 已对齐当前 DLSS 5 visual enhancer / image converter 搜索意图，避免无 JavaScript 抓取时仍显示旧的 image upscaler 标题。
+- 首页增加 Organization、WebApplication、VideoObject 和 FAQPage JSON-LD，以及 Open Graph/Twitter 大图标签；React 首页不再重复注入同一份结构化数据。
+- 工具页结构化数据增加 BreadcrumbList，保留原有 WebApplication、HowTo 和 FAQPage。
+- `npm run lint`、`npm test`（49/49）和 `npm run build` 均通过。
 
 ## 内容与转化修复（2026-09-25）
 

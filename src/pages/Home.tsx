@@ -13,8 +13,7 @@ import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
 import { SHOWCASE_CASES } from '../content/showcaseCases';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
-import { SITE_URL } from '../config/site';
-import { SITE_PROFILE, brandCopy, profileHas } from '../config/profile';
+import { brandCopy, profileHas } from '../config/profile';
 import { trackEvent } from '../lib/analytics';
 
 /** Search-led before/after cases. Keep the prompt language visible so the gallery can rank for
@@ -80,101 +79,6 @@ export default function Home() {
   const navigate = useNavigate();
   const isZh = i18n.language.startsWith('zh');
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": `${SITE_URL}/#organization`,
-        "name": SITE_PROFILE.orgName,
-        "url": `${SITE_URL}/`,
-        "description": "Independent, non-official AI image upscaling and neural super-resolution showcase."
-      },
-      {
-        "@type": "SoftwareApplication",
-        "name": SITE_PROFILE.softwareName,
-        "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Web",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "description": "Free online DLSS-style image converter and game visual enhancer powered by AI neural super-resolution. Explore image upscaling, character style references and 4K-ready comparisons in a browser. No GPU or download required. Non-official showcase."
-      },
-      {
-        "@type": "WebApplication",
-        "name": "Free DLSS Image Upscaler Online",
-        "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "All",
-        "description": "Looking for a DLSS 5 image converter, game character style reference or visual enhancer? Explore AI-powered neural super-resolution comparisons online — no GPU or installation required.",
-        "browserRequirements": "Requires a modern web browser. Works on all operating systems.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
-      },
-      {
-        "@type": "VideoObject",
-        "name": "AI image upscaling before and after demo",
-        "description": "A six-second illustrative transition from a lower-resolution source to a sharper reference image. It demonstrates the comparison UI and is not a benchmark claim.",
-        "contentUrl": `${SITE_URL}/examples/dlss5-upscale-before-after-demo.mp4`,
-        "thumbnailUrl": `${SITE_URL}/examples/generated/architecture-1-after.jpg`,
-        "uploadDate": "2026-09-25",
-        "duration": "PT6S",
-        "isFamilyFriendly": true
-      },
-      {
-        "@type": "VideoObject",
-        "name": "Game character style conversion reference",
-        "description": "An original six-second reference transition for a cyberpunk game character. It illustrates prompt-led style direction and is not an official DLSS 5 capture.",
-        "contentUrl": `${SITE_URL}/examples/dlss5-game-style-transition.mp4`,
-        "thumbnailUrl": `${SITE_URL}/examples/generated/game-cyber-1-after.jpg`,
-        "uploadDate": "2026-09-25",
-        "duration": "PT6S",
-        "isFamilyFriendly": true
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": t('home.faqHowToUpscale'),
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": t('home.faqHowToUpscaleAns')
-            }
-          },
-          {
-            "@type": "Question",
-            "name": t('home.faqProfessional'),
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": t('home.faqProfessionalAns')
-            }
-          },
-          {
-            "@type": "Question",
-            "name": t('home.faqNeuralSr'),
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": t('home.faqNeuralSrAns')
-            }
-          },
-          {
-            "@type": "Question",
-            "name": t('home.faqApi'),
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": t('home.faqApiAns')
-            }
-          }
-        ]
-      }
-    ]
-  };
-
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
@@ -182,7 +86,6 @@ export default function Home() {
         description="Use a browser-based DLSS-style image converter and game visual enhancer to explore character style references, upscale, sharpen and restore images to 4K. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
         keywords={['dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
-        structuredData={structuredData}
       />
       <section className="text-center mb-16 relative">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>

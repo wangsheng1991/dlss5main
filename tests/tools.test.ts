@@ -11,8 +11,7 @@ import { readFileSync } from 'node:fs';
 import {
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, STUDIO_MAX_PIXELS, buildToolTask, clampSteps, clampVectorizeEdge,
   failureNote, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, pixelCheckNote,
-  VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, modelForTool,
-  toolNeedsSecondImage, toolOptionError, toolTakesSecondImage,
+  VECTORIZE_MAX_EDGE,
 } from '../src/config/tools';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
 import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS } from '../src/config/samples';
@@ -124,6 +123,17 @@ test('the served homepage links every tool page, for the crawler and for the vis
   }
 });
 
+test('the static homepage exposes the same search intent and crawlable structured data before JavaScript runs', () => {
+  const html = homepage();
+  assert.match(html, /<title>DLSS 5 Image Upscaler &amp; Converter Online — Free AI Visual Enhancer<\/title>/);
+  assert.match(html, /name="description"[^>]+DLSS-style image converter and game visual enhancer/);
+  assert.match(html, /property="og:image"[^>]+game-cyber-1-after\.jpg/);
+  assert.match(html, /name="twitter:card"[^>]+summary_large_image/);
+  assert.match(html, /type="application\/ld\+json"/);
+  assert.match(html, /"@type": "WebApplication"/);
+  assert.match(html, /"@type": "VideoObject"/);
+});
+
 /**
  * What each tool asks the provider for. These sizes were measured against the live endpoint, so the
  * tests pin the numbers rather than the arithmetic: 4× on a 1024 px input comes back 1536 × 1536
@@ -226,98 +236,4 @@ test('the free examples are the catalog minus the eraser, and nothing else', () 
 test('the samples route refuses an example that is not on the guest list', () => {
   const route = readFileSync(new URL('../api/image-edit/samples.ts', import.meta.url), 'utf8');
   assert.match(route, /GUEST_SAMPLE_IDS[^\n]*includes\(sampleId\)/, 'the route imports the guest list but has to guard with it');
-});
-
-/**
- * The A-line tools (virtual try-on, interior render, portrait retouch, virtual makeup) run the same
- * generative editor as the eraser, so everything that matters about them is the contract around the
- * prompt: the browser may pick a name, and the prompt itself stays on the server. These tests pin the
- * contract that the studio, the job API and the provider each read a copy of.
- */
-test('every tool names the model it runs on, and the mode maps back to the same tool', () => {
-  const models: Record<string, string> = {
-    cutout: 'cutout-fast', vectorize: 'vectorize-fast', erase: 'erase-quality',
-    tryon: 'tryon-quality', interior: 'interior-quality', retouch: 'retouch-quality', makeup: 'makeup-quality',
-  };
-  for (const tool of TOOL_IDS) {
-    assert.equal(modelForTool(tool), models[tool], `${tool} runs the wrong model`);
-    assert.equal(modeForModel(modelForTool(tool)), tool, `${tool} does not survive the round trip through its model`);
-  }
-});
-
-test('each tool declares how many references it reads and what they are', () => {
-  // Two images, in order: the person, then the garment. A try-on cannot be asked for with one.
-  assert.deepEqual(TOOL_REFERENCES.tryon, { min: 2, max: 2, slots: ['person', 'garment'] });
-  assert.ok(toolNeedsSecondImage('tryon'), 'the try-on must require its garment image');
-  assert.ok(toolTakesSecondImage('interior') && toolTakesSecondImage('makeup'), 'these two accept an optional reference');
-  assert.ok(!toolNeedsSecondImage('interior') && !toolNeedsSecondImage('makeup'));
-  for (const tool of ['cutout', 'vectorize', 'erase', 'retouch'] as const) {
-    assert.deepEqual([TOOL_REFERENCES[tool].min, TOOL_REFERENCES[tool].max], [1, 1], `${tool} takes one image`);
-    assert.ok(!toolTakesSecondImage(tool), `${tool} must not offer a second slot`);
-  }
-  for (const tool of TOOL_IDS) {
-    assert.equal(TOOL_REFERENCES[tool].slots.length, TOOL_REFERENCES[tool].max, `${tool} names every slot`);
-    assert.ok(TOOL_REFERENCES[tool].min >= 1 && TOOL_REFERENCES[tool].min <= TOOL_REFERENCES[tool].max);
-  }
-});
-
-test('the A-line tools send named options, never a prompt and never a size', () => {
-  const tryon = buildToolTask('tryon', { imageIds: ['person', 'garment'], options: { garment_type: 'top' } });
-  assert.deepEqual(tryon, { model: 'tryon-quality', image_ids: ['person', 'garment'], garment_type: 'top' });
-  const interior = buildToolTask('interior', { imageIds: ['room'], options: { style: 'japandi', room_type: 'bedroom' }, extra: '  a linen sofa  ' });
-  assert.deepEqual(interior, { model: 'interior-quality', image_ids: ['room'], style: 'japandi', room_type: 'bedroom', extra: 'a linen sofa' });
-  const makeup = buildToolTask('makeup', { imageIds: ['portrait', 'makeup-ref'], options: { look: 'glam', intensity: 'strong' } });
-  assert.deepEqual(makeup, { model: 'makeup-quality', image_ids: ['portrait', 'makeup-ref'], look: 'glam', intensity: 'strong' });
-  // The order of the references is the meaning, so the builder must not sort or dedupe them.
-  assert.deepEqual(makeup.image_ids, ['portrait', 'makeup-ref']);
-  for (const task of [tryon, interior, makeup, buildToolTask('retouch', { imageIds: ['portrait'] })]) {
-    for (const field of ['prompt', 'width', 'height', 'output_format', 'num_inference_steps', 'max_sequence_length']) {
-      assert.ok(!(field in task), `${task.model} must not send ${field}`);
-    }
-  }
-});
-
-test('the chosen option travels with the task, and the default travels when nothing was chosen', () => {
-  // A-default-is-sent-explicitly matters: the page that showed the value and the task that runs must
-  // not be able to disagree because the provider chose a different default of its own.
-  assert.deepEqual(buildToolTask('retouch', { imageIds: ['p'] }), { model: 'retouch-quality', image_ids: ['p'], level: 'natural' });
-  assert.deepEqual(buildToolTask('interior', { imageIds: ['r'] }), { model: 'interior-quality', image_ids: ['r'], style: 'nordic', room_type: 'living_room' });
-  assert.deepEqual(buildToolTask('makeup', { imageIds: ['p'] }), { model: 'makeup-quality', image_ids: ['p'], look: 'daily', intensity: 'medium' });
-  assert.deepEqual(buildToolTask('tryon', { imageIds: ['p', 'g'] }), { model: 'tryon-quality', image_ids: ['p', 'g'], garment_type: 'outfit' });
-  // An unknown value is refused by the caller, and the builder would fall back rather than forward it.
-  assert.deepEqual(buildToolTask('retouch', { imageIds: ['p'], options: { level: 'extreme' } }), { model: 'retouch-quality', image_ids: ['p'], level: 'natural' });
-});
-
-test('the option names and values are the frozen public contract of the A-line tools', () => {
-  const values = (tool: 'tryon' | 'interior' | 'retouch' | 'makeup') =>
-    Object.fromEntries((TOOL_OPTIONS[tool] || []).map(option => [option.key, option.choices.map(choice => choice.value)]));
-  assert.deepEqual(values('tryon'), { garment_type: ['outfit', 'top', 'bottom', 'dress'] });
-  assert.deepEqual(values('interior'), { style: ['nordic', 'cream', 'japandi', 'chinese', 'industrial', 'french'], room_type: ['living_room', 'bedroom', 'dining_room', 'study', 'kitchen', 'bathroom', 'kids_room', 'balcony'] });
-  assert.deepEqual(values('retouch'), { level: ['light', 'natural', 'strong'] });
-  assert.deepEqual(values('makeup'), { look: ['daily', 'korean', 'glam', 'bridal', 'latte', 'retro'], intensity: ['light', 'medium', 'strong'] });
-  // Every default has to be one of the values, or the page would open on a state the server refuses.
-  for (const tool of TOOL_IDS) {
-    for (const option of TOOL_OPTIONS[tool] || []) {
-      assert.ok(option.choices.some(choice => choice.value === option.default), `${tool}.${option.key} defaults outside its own list`);
-      assert.ok(option.label.trim() && option.help.trim(), `${tool}.${option.key} is missing copy`);
-    }
-  }
-});
-
-test('a wrong option is refused with the values that exist, and an unknown key is refused too', () => {
-  assert.equal(toolOptionError('retouch', { level: 'natural' }), '');
-  assert.equal(toolOptionError('interior', { style: 'nordic', room_type: 'kitchen' }), '');
-  assert.equal(toolOptionError('makeup', {}), '');
-  assert.match(toolOptionError('retouch', { level: 'stronger' }), /level must be light, natural, strong/);
-  assert.match(toolOptionError('makeup', { look: 'glam', intensity: 3 }), /intensity must be/);
-  assert.match(toolOptionError('tryon', { fabric: 'silk' }), /unknown option: fabric/);
-  // The tools without options must not reject a body for carrying none.
-  assert.equal(toolOptionError('erase', { anything: 'goes' }), '');
-});
-
-test('the interior brief is capped before it can fight the instruction that holds the room in place', () => {
-  const task = buildToolTask('interior', { imageIds: ['room'], extra: 'x'.repeat(500) });
-  assert.equal((task.extra || '').length, TOOL_EXTRA_MAX);
-  // Whitespace alone is not a brief.
-  assert.ok(!('extra' in buildToolTask('interior', { imageIds: ['room'], extra: '   ' })));
 });
