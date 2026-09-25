@@ -19,7 +19,7 @@ DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging i
 <!-- begin:tools -->
 ## Free tools
 
-AI tools for upscaling, restoration, portraits and image editing. Each states its input limits and output size, and carries a worked example.
+AI tools for upscaling, restoration, portraits, virtual try-on, interior renders and image editing. Each states its input limits and output size, and carries a worked example.
 
 - AI Image Upscaler: https://www.dlss5nvidia.com/image-upscaler
 - Image Quality Enhancer: https://www.dlss5nvidia.com/image-quality-enhancer
@@ -29,6 +29,10 @@ AI tools for upscaling, restoration, portraits and image editing. Each states it
 - Image to SVG: https://www.dlss5nvidia.com/image-to-svg
 - Remove Background: https://www.dlss5nvidia.com/remove-background
 - Erase Object: https://www.dlss5nvidia.com/erase-object
+- Virtual Try-On: https://www.dlss5nvidia.com/virtual-try-on
+- Interior Design Render: https://www.dlss5nvidia.com/interior-design
+- Portrait Retouch: https://www.dlss5nvidia.com/portrait-retouch
+- Virtual Makeup: https://www.dlss5nvidia.com/virtual-makeup
 - Mejorar la calidad de imagen (Spanish): https://www.dlss5nvidia.com/es/mejorar-calidad-imagen
 <!-- end:tools -->
 

@@ -70,6 +70,10 @@ export default function App() {
                   <Route path="/image-to-svg" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/remove-background" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/erase-object" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/virtual-try-on" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/interior-design" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/portrait-retouch" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/virtual-makeup" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />

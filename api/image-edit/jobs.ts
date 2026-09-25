@@ -4,22 +4,37 @@ import { fail, requireUser } from '../_lib/auth.js';
 import { JobStore } from '../../server/job-store.js';
 import { database } from '../../server/admin.js';
 import { enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput } from '../../src/config/enhance.js';
-import { buildToolTask, isToolId, isVectorizePreset, pixelCheckNote, toolNeedsPrompt, type ToolId } from '../../src/config/tools.js';
+import { buildToolTask, isToolId, isVectorizePreset, pixelCheckNote, toolNeedsPrompt, toolOptionError, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, type ToolId } from '../../src/config/tools.js';
 
 type Body = Record<string, unknown>;
 
 const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
 
 /**
- * The C-line tools (background removal, vectorizing, object erasing). Unlike the editing models
- * these own their output geometry, so no size or format field is sent — asking for one is refused
- * upstream rather than ignored, which is exactly the behaviour we want kept.
+ * The named options a request actually carried, and nothing else — `toolOptionError` reports unknown
+ * keys, so handing it the whole body would make every request look wrong.
+ */
+function toolOptionsFromBody(mode: ToolId, body: Body): Record<string, string> {
+  const picked: Record<string, string> = {};
+  for (const spec of TOOL_OPTIONS[mode] || []) {
+    if (body[spec.key] !== undefined) picked[spec.key] = body[spec.key] as string;
+  }
+  return picked;
+}
+
+/**
+ * The tool lines. Unlike the editing models these own their output geometry, so no size or format
+ * field is sent — asking for one is refused upstream rather than ignored, which is exactly the
+ * behaviour we want kept. The A-line tools (`tryon`, `interior`, `retouch`, `makeup`) go one step
+ * further: their prompt is a server-side asset, so the browser sends named options and never text.
  */
 async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey: string, store: JobStore) {
   const imageIds = body.image_ids;
-  // Every tool takes exactly one image; the eraser rebuilds whatever the object was covering.
-  if (!Array.isArray(imageIds) || imageIds.length !== 1 || imageIds.some((id) => typeof id !== 'string')) {
-    return { error: 'image_ids must contain exactly one uploaded file id' };
+  const references = TOOL_REFERENCES[mode];
+  // The order of the references is their meaning (person then garment, room then style), so the count
+  // is checked here and nothing is reordered.
+  if (!Array.isArray(imageIds) || imageIds.length < references.min || imageIds.length > references.max || imageIds.some((id) => typeof id !== 'string')) {
+    return { error: `image_ids must contain ${references.min === references.max ? `exactly ${references.min}` : `${references.min} to ${references.max}`} uploaded file id${references.max > 1 ? 's' : ''} (${references.slots.join(', then ')})` };
   }
   const prompt = text(body.prompt);
   if (toolNeedsPrompt(mode)) {
@@ -31,12 +46,21 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
   if (mode === 'vectorize' && body.preset !== undefined && !isVectorizePreset(body.preset)) {
     return { error: 'preset must be logo, illustration or photo' };
   }
+  // Same rule for the A-line option names — and the same list the studio offered, so a caller that
+  // posts a value the page never showed is told which values exist.
+  const options = toolOptionsFromBody(mode, body);
+  const optionError = toolOptionError(mode, options);
+  if (optionError) return { error: optionError };
+  const extra = text(body.extra);
+  if (extra.length > TOOL_EXTRA_MAX) return { error: `extra must be at most ${TOOL_EXTRA_MAX} characters` };
   const task = buildToolTask(mode, {
     imageIds: imageIds as string[], prompt,
     steps: body.num_inference_steps as number | undefined,
     seed: body.seed as number | undefined,
     preset: mode === 'vectorize' && isVectorizePreset(body.preset) ? body.preset : undefined,
     maxEdge: mode === 'vectorize' ? (body.max_edge as number | undefined) : undefined,
+    options: toolOptionsFromBody(mode, body),
+    extra: mode === 'interior' ? extra : undefined,
   });
   // The stored input doubles as the history record, so the tool name is kept next to the task.
   const claim = await store.claim(uid, idempotencyKey, { ...task, tool: mode });

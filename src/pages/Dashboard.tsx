@@ -7,8 +7,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { SAMPLES, SAMPLE_IDS, GUEST_SAMPLE_IDS, type SampleId } from '../config/samples';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, type EnhanceFactor } from '../config/enhance';
 import {
-  STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE,
+  STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE, TOOL_IDS,
   VECTORIZE_MAX_EDGE, VECTORIZE_PRESETS, VECTORIZE_PRESET_LABEL, VECTORIZE_PRESET_NOTE,
+  TOOL_OPTIONS, TOOL_EXTRA_FIELD, TOOL_EXTRA_MAX, TOOL_REFERENCES,
+  toolNeedsSecondImage, toolTakesSecondImage,
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, failureNote, inputLimitNote, oversizeNote,
   type VectorizePreset, type ToolId,
 } from '../config/tools';
@@ -27,6 +29,11 @@ const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
   upscale: 'enhance', enhance: 'enhance', unblur: 'enhance',
   'remove-background': 'cutout', erase: 'erase', 'erase-object': 'erase',
   'image-to-svg': 'vectorize', vectorize: 'vectorize',
+  // The A-line tool pages. Each path has a short alias so a hand-written link still lands right.
+  'virtual-try-on': 'tryon', tryon: 'tryon', 'try-on': 'tryon',
+  'interior-design': 'interior', 'room-render': 'interior', 'interior-render': 'interior', interior: 'interior',
+  'portrait-retouch': 'retouch', retouch: 'retouch',
+  'virtual-makeup': 'makeup', makeup: 'makeup',
 };
 
 /** The presets offered in the studio, in display order. */
@@ -36,11 +43,13 @@ const MODES: Array<[GenerationMode, string]> = [
   ['cutout', TOOL_SUMMARY.cutout.label],
   ['vectorize', TOOL_SUMMARY.vectorize.label],
   ['erase', TOOL_SUMMARY.erase.label],
+  ['tryon', TOOL_SUMMARY.tryon.label],
+  ['interior', TOOL_SUMMARY.interior.label],
+  ['retouch', TOOL_SUMMARY.retouch.label],
+  ['makeup', TOOL_SUMMARY.makeup.label],
 ];
 
-const TOOL_LABEL: Record<ToolId, string> = {
-  cutout: TOOL_SUMMARY.cutout.label, vectorize: TOOL_SUMMARY.vectorize.label, erase: TOOL_SUMMARY.erase.label,
-};
+const TOOL_LABEL = Object.fromEntries(TOOL_IDS.map(id => [id, TOOL_SUMMARY[id].label])) as Record<ToolId, string>;
 
 /** Traced long edges the studio offers; the service accepts 256–2048. */
 const VECTORIZE_EDGES = [1024, 1536, VECTORIZE_MAX_EDGE.max] as const;
@@ -77,6 +86,14 @@ export default function Dashboard() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState('');
   const [fileError, setFileError] = useState('');
+  // The A-line tools read up to two references in a fixed order, so the second one gets its own slot
+  // rather than being folded into the first: swapping them would change what the tool is asked to do.
+  const [file2, setFile2] = useState<File | null>(null);
+  const [preview2, setPreview2] = useState('');
+  const [file2Error, setFile2Error] = useState('');
+  /** The named options of the selected tool, keyed exactly as the provider contract names them. */
+  const [toolChoices, setToolChoices] = useState<Record<string, string>>({});
+  const [toolExtra, setToolExtra] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
   // Usage data shows enhancement is the primary job; make the high-intent path the default.
   const [mode, setMode] = useState<GenerationMode>('enhance');
@@ -97,6 +114,7 @@ export default function Dashboard() {
   const [shareNotice, setShareNotice] = useState('');
   const trackedOperation = useRef('');
   const input = useRef<HTMLInputElement>(null);
+  const secondInput = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
   // SEO tool pages link into the same studio with the matching preset already selected.
   useEffect(() => {
@@ -164,8 +182,15 @@ export default function Dashboard() {
     return () => { active = false; };
   }, [user]);
   useEffect(() => { if (!file) { setPreview(''); return; } const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }, [file]);
+  useEffect(() => { if (!file2) { setPreview2(''); return; } const url = URL.createObjectURL(file2); setPreview2(url); return () => URL.revokeObjectURL(url); }, [file2]);
   // A different account must not inherit the previous one's image, so drop the file and its measured size together.
-  useEffect(() => { setFile(null); setSourceSize(null); }, [user?.uid]);
+  useEffect(() => { setFile(null); setSourceSize(null); setFile2(null); setFile2Error(''); }, [user?.uid]);
+  // A single-reference tool has no second slot, so switching away from a two-image tool clears it —
+  // otherwise a garment picked for the try-on would silently travel with a later portrait tool.
+  useEffect(() => {
+    if (isToolId(mode) && toolTakesSecondImage(mode)) return;
+    setFile2(null); setFile2Error('');
+  }, [mode]);
   useEffect(() => {
     let active = true;
     if (!user) { setHistory([]); setHistoryToken(''); return; }
@@ -220,6 +245,25 @@ export default function Dashboard() {
     image.src = url;
   };
   /**
+   * The second reference of a two-image tool (the garment, the style photo, the makeup reference).
+   * It is read for its pixels only, so it is not measured into the source size the output follows.
+   */
+  const chooseSecond = (candidate?: File) => {
+    if (!candidate) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > MAX_UPLOAD_BYTES) { setFile2Error(`Choose a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`); return; }
+    setFile2Error(''); setFile2(candidate);
+    trackEvent('image_selected', { mode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size), slot: 2 });
+    const url = URL.createObjectURL(candidate);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, mode);
+      if (tooBig) { setFile2Error(tooBig); setFile2(null); }
+    };
+    image.onerror = () => URL.revokeObjectURL(url);
+    image.src = url;
+  };
+  /**
    * Signed in: an example becomes the input File and runs like an upload.
    * Signed out: the example is previewed and the server generates it for free from its own catalog.
    */
@@ -259,6 +303,12 @@ export default function Dashboard() {
   const result = generation.operation?.outputUrl;
   const locked = generation.busy || generation.pending || !!result;
   const enhance = mode === 'enhance' && sourceSize ? enhanceOutput(sourceSize.width, sourceSize.height, factor) : null;
+  // The A-line controls are table-driven: the same tables the server validates against, so a value the
+  // page shows is a value the provider accepts, and nothing here can invent a prompt.
+  const toolReferences = isToolId(mode) ? TOOL_REFERENCES[mode] : null;
+  const toolOptions = isToolId(mode) ? (TOOL_OPTIONS[mode] || []) : [];
+  const toolExtraField = isToolId(mode) ? TOOL_EXTRA_FIELD[mode] : undefined;
+  const toolSecondRequired = isToolId(mode) && toolNeedsSecondImage(mode);
   return <>
     <SEO
       title="AI Image Studio — DLSS5NVIDIA"
@@ -324,10 +374,28 @@ export default function Dashboard() {
             <label className="block text-xs text-zinc-400 mt-3 mb-1" htmlFor="vector-edge">Long edge of the trace</label>
             <div className="grid grid-cols-3 gap-2">{VECTORIZE_EDGES.map(value => <button key={value} type="button" onClick={() => setVectorEdge(value)} disabled={locked} aria-pressed={vectorEdge === value} className={vectorEdge === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value} px</button>)}</div>
             <p className="text-xs text-zinc-500 mt-2">A larger image is traced down to this edge; the SVG keeps your colours{sourceSize ? ` (this image is ${sourceSize.width} × ${sourceSize.height})` : ''}.</p>
+          </div> : toolOptions.length || toolExtraField ? <div className="mt-3 space-y-4">
+            {TOOL_SUMMARY[mode as ToolId].audience && <p className="text-xs text-zinc-400">{TOOL_SUMMARY[mode as ToolId].audience}</p>}
+            {toolOptions.map(option => {
+              const selected = toolChoices[option.key] ?? option.default;
+              const choice = option.choices.find(candidate => candidate.value === selected);
+              return <div key={option.key}>
+                <label className="block text-xs text-zinc-400 mb-1" htmlFor={`tool-option-${option.key}`}>{option.label}</label>
+                <select id={`tool-option-${option.key}`} value={selected} disabled={locked} onChange={e => setToolChoices(current => ({ ...current, [option.key]: e.target.value }))} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary disabled:opacity-60">
+                  {option.choices.map(candidate => <option key={candidate.value} value={candidate.value}>{candidate.label}</option>)}
+                </select>
+                <p className="text-xs text-zinc-500 mt-1">{choice?.note || option.help}</p>
+              </div>;
+            })}
+            {toolExtraField && <div>
+              <label className="block text-xs text-zinc-400 mb-1" htmlFor="tool-extra">{toolExtraField.label}</label>
+              <textarea id="tool-extra" value={toolExtra} onChange={e => setToolExtra(e.target.value)} maxLength={TOOL_EXTRA_MAX} disabled={locked} rows={2} placeholder={toolExtraField.placeholder} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary resize-y disabled:opacity-60"/>
+              <p className="text-xs text-zinc-500 mt-1">{toolExtraField.help}{toolExtra.trim() ? ` · ${toolExtra.trim().length}/${TOOL_EXTRA_MAX}` : ''}</p>
+            </div>}
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
         {mode === 'edit' || mode === 'erase'
           ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{mode === 'erase' ? 'What should be removed?' : 'Describe your edit'}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? mode === 'erase' ? 'Name the object to erase. Everything else is asked to stay exactly as it is.' : 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
-          : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
+          : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
           <button type="button" onClick={() => void checkIn()} disabled={checkingIn || !profile || profile.lastCheckIn === new Date().toISOString().slice(0, 10)} className="w-full px-4 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"><Gift className="w-4 h-4"/>{profile?.lastCheckIn === new Date().toISOString().slice(0, 10) ? t('dashboard.checkedIn') : checkingIn ? t('dashboard.checkingIn') : t('dashboard.claimCredits')}</button>
@@ -358,10 +426,24 @@ export default function Dashboard() {
         {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" onClick={() => trackEvent('result_download', { mode: generation.operation?.body.mode || 'edit' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{generation.operation?.body.mode === 'vectorize' ? 'Open the SVG' : 'Open full image'}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
         {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
-          {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
+          {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">{toolReferences ? `${toolReferences.slots[0]} · ` : ''}{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
+          {user && toolReferences && toolReferences.max > 1 && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">
+            <p className="text-sm text-white mb-1">Second image · {toolReferences.slots[1]}</p>
+            <p className="text-xs text-zinc-400 mb-3">{toolSecondRequired
+              ? 'Required. The tool reads the two images in order, so the first one is the subject and this one is what it should wear.'
+              : 'Optional. Adding it steers the result — the first image is still the subject.'}</p>
+            <input ref={secondInput} type="file" accept="image/jpeg,image/png,image/webp" aria-label={`Select the ${toolReferences.slots[1]}`} onChange={e => { chooseSecond(e.target.files?.[0]); e.target.value = ''; }} className="sr-only"/>
+            <div className="flex flex-wrap items-center gap-3">
+              <button type="button" onClick={() => secondInput.current?.click()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-white">{file2 ? 'Replace this image' : 'Choose this image'}</button>
+              {file2 && <span className="text-xs text-zinc-400 break-all flex-1">{file2.name}</span>}
+              {file2 && <button type="button" onClick={() => { setFile2(null); setFile2Error(''); }} className="px-3 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm">Remove</button>}
+            </div>
+            {preview2 && <img src={preview2} alt="Second image preview" className="mt-3 max-h-52 object-contain rounded-lg"/>}
+            {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
+          </div>}
           {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
           {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
