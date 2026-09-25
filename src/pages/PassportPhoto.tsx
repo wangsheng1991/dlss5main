@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Download, FileImage, LockKeyhole, Printer, UploadCloud } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import { layoutSheet, mmToPx, specPixels } from '../lib/spec/geometry';
 import { PHOTO_SPECS, publishableSpecs } from '../lib/spec/specs';
 import type { PhotoSpec, SheetId } from '../lib/spec/types';
 import { SITE_URL } from '../config/site';
 import { trackEvent } from '../lib/analytics';
-import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_PATHS, PASSPORT_PHOTO_SPEC_SLUGS } from '../content/passportPhoto';
+import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_PATHS, PASSPORT_PHOTO_SPEC_SLUGS, passportPhotoSeoCopy } from '../content/passportPhoto';
 
 const SPECS = publishableSpecs();
 const SHEET_LABELS: Record<SheetId, string> = { '10x15cm': '10 × 15 cm', '4x6in': '4 × 6 in', a4: 'A4' };
@@ -88,7 +87,6 @@ function photoSchema(spec: PhotoSpec, canonicalPath: string) {
 
 export default function PassportPhoto() {
   const { pathname } = useLocation();
-  const { i18n } = useTranslation();
   const spec = getSpecFromPath(pathname);
   const [file, setFile] = useState<File | null>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -98,12 +96,12 @@ export default function PassportPhoto() {
   const [dpi, setDpi] = useState(spec.minDpi);
   const [sheetId, setSheetId] = useState<SheetId>('10x15cm');
   const previewRef = useRef<HTMLCanvasElement>(null);
-  const isZh = i18n.language.startsWith('zh');
   const output = useMemo(() => specPixels(spec, dpi), [spec, dpi]);
   const crop = image ? cropFor(image, spec, zoom, xPosition, yPosition) : null;
   const headMm = spec.headHeightMm ? (spec.headHeightMm.min + spec.headHeightMm.max) / 2 : null;
   const headroomMm = spec.headroomMm ? (spec.headroomMm.min + spec.headroomMm.max) / 2 : 0;
   const pagePath = pathname === '/tools/passport-photo' ? '/tools/passport-photo' : `/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[spec.id]}`;
+  const seoCopy = passportPhotoSeoCopy(pathname === '/tools/passport-photo' ? undefined : spec);
 
   useEffect(() => {
     trackEvent('micro_tool_view', { tool: 'passport-photo', spec: spec.id });
@@ -202,12 +200,12 @@ export default function PassportPhoto() {
 
   return <>
     <SEO
-      title={`Free ${spec.label} Online — Printable Passport Photo Maker`}
-      description={`Create a ${spec.sizeMm.width} × ${spec.sizeMm.height} mm ${spec.label.toLowerCase()} online. Align the head guide and download a printable sheet locally without uploading your photo.`}
+      title={seoCopy.title}
+      description={seoCopy.description}
       keywords={['free passport photo online', 'free passport photo maker', `${spec.sizeMm.width}x${spec.sizeMm.height} photo free`, ...(['passport photo', '3x4 photo online free', '35x45 passport photo free', 'фото 3 на 4 онлайн'] as const)]}
       canonical={pagePath}
       structuredData={photoSchema(spec, pagePath)}
-      language={isZh ? 'zh-CN' : 'en-US'}
+      language="en-US"
     />
     <main className="pt-28 sm:pt-32 pb-24 px-5 max-w-[1200px] mx-auto w-full">
       <nav className="mb-8 text-sm text-zinc-500" aria-label="Breadcrumb"><a href="/" className="hover:text-primary">DLSS5NVIDIA</a><span className="mx-2">/</span><span>Passport Photo</span></nav>

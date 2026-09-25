@@ -6,7 +6,7 @@ import { TOOL_LANDINGS, toolAlternates, toolLongForm, toolSchema, toolSteps, typ
 import { USE_CASES, useCaseSchema, type UseCase } from '../src/content/useCases';
 import { publishableSpecs } from '../src/lib/spec/specs';
 import type { PhotoSpec } from '../src/lib/spec/types';
-import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_SLUGS } from '../src/content/passportPhoto';
+import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_SLUGS, passportPhotoSeoCopy } from '../src/content/passportPhoto';
 import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../src/content/videoLanding';
 import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
@@ -620,10 +620,9 @@ function renderPassportPhoto(spec?: PhotoSpec): string {
   const selected = spec || specs[0];
   const selectedSlug = PASSPORT_PHOTO_SPEC_SLUGS[selected.id];
   const canonicalPath = spec ? `/tools/passport-photo/${selectedSlug}` : '/tools/passport-photo';
-  const title = spec ? `Free ${selected.label} Online — Printable Passport Photo Maker` : 'Free Passport Photo Maker — Printable 3×4 and 35×45 Photos';
-  const description = spec
-    ? `Create a free ${selected.sizeMm.width} × ${selected.sizeMm.height} mm ${selected.label.toLowerCase()} locally in your browser. Align the head guide and download a printable sheet without uploading your photo.`
-    : 'Create free printable 3×4 cm and 35×45 mm passport or document photos locally in your browser. Choose a verified format, align the guide and download a finished sheet without an account or credits.';
+  const seoCopy = passportPhotoSeoCopy(spec ? selected : undefined);
+  const title = seoCopy.title;
+  const description = seoCopy.description;
   const links = specs.map(item => `<li><a href="/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[item.id]}">${escapeHtml(item.label)}</a> — ${item.sizeMm.width} × ${item.sizeMm.height} mm, minimum ${item.minDpi} DPI</li>`).join('');
   const facts = spec ? `<dl><dt>Printed size</dt><dd>${selected.sizeMm.width} × ${selected.sizeMm.height} mm</dd><dt>Minimum resolution</dt><dd>${selected.minDpi} DPI</dd><dt>Background</dt><dd>${escapeHtml(selected.background)}</dd><dt>Head guide</dt><dd>${selected.headHeightMm ? `${selected.headHeightMm.min}–${selected.headHeightMm.max} mm` : 'Not stated'} with ${selected.headroomMm ? `${selected.headroomMm.min}–${selected.headroomMm.max} mm` : 'no stated'} headroom</dd></dl>` : `<p>Available verified formats:</p><ul>${links}</ul>`;
   const structuredData = {

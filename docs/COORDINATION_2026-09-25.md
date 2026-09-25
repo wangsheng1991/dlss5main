@@ -157,3 +157,28 @@ PY
 - `/game-character-style` 的 React 水合版加入与静态版共用的定义、不可变约束、风格变量和验收段落，避免水合后从 1,000 词级别退化为约 300 词。
 
 验证结果：`npm run lint` 通过；`npm test` 60/60；`npm run build` 通过。静态 HTML 逐页扫描确认每个预渲染路由只有 1 个 canonical，JSON-LD 均为合法 JSON；主要工具页正文为 `/image-upscaler` 953、`/tools/passport-photo` 900、`/video-upscaler` 916、`/image-quality-enhancer` 956、`/game-character-style` 1,228 词。使用系统 Chrome 对本地 `dist/` 做了水合复核：`/image-upscaler` 水合后 canonical=1、JSON-LD=2（Organization + 路由 schema）、description=1、FAQ H3=8；英文 `/game-character-style` 水合后正文约 1,063 词、canonical=1、JSON-LD=2；`/terms` 水合后 canonical=1、JSON-LD=1。
+
+## 8. Search Console 收尾记录（2026-09-26）
+
+站点地图在 Search Console 中显示“成功”，Google 发现 59 个网址。已通过“网址检查 → 请求编入索引”成功提交以下 12 个网址：
+
+- `/image-upscaler`
+- `/blog/best-ai-image-upscaler-2026-comparison`
+- `/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026`
+- `/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`
+- `/blog/what-is-dlss-5-neural-rendering-guide`
+- `/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`
+- `/en/blog/dlss-5-latest-news-september-2026`
+- `/en/blog/dlss5-artistic-vision-debate-honest-assessment`
+- `/en/blog`
+- `/en/blog/dlss-5-online-image-upscaler-guide`
+- `/game-character-style`
+- `/video-upscaler`
+
+实时检查结果显示：`/game-character-style` 尚未收录但已进入优先抓取队列；`/video-upscaler` 尚未收录且此前没有发现来源，现已进入优先抓取队列。索引报告里 3 个裸域/HTTP 地址属于正常重定向；英文比较页和证件照 `3-na-4` 规格页被 Google 选择了其他规范页，英文在线指南的“用户未选定规范网页”验证已在进行中；这几项不能靠重复提交解决。
+
+达到 Google 当日 URL Inspection 配额后，Google 返回“抱歉！我们无法处理这项请求，因为您今天已经超出了每日配额。请明天再尝试提交此网址。”因此以下事项保留为外部待办，不再在本轮重复点击：
+
+- **站长操作（配额恢复后）**：逐页提交 `/tools/passport-photo`、`/tools/passport-photo/3-na-4`、`/tools/passport-photo/35x45-ru` 及其余本次新增或改动的工具页；提交后复查“已收录/规范网址”。
+- **Google 重新评估**：等待规范页验证结果，若仍选择根证件照页，再增加规格页独有段落或将重复规格合并为一个入口。
+- **部署复核**：本地代码已把证件照工具的动态 title/description 固定为稳定英文，避免中文浏览器把俄文规格名写入 canonical 页的 `<title>`；推送部署后再用线上浏览器复核一次。该改动不需要等待 Google 配额。

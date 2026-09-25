@@ -1,3 +1,5 @@
+import type { PhotoSpec } from '../lib/spec/types';
+
 /** Stable public slugs for the verified passport/document photo specifications. */
 export const PASSPORT_PHOTO_SPEC_PATHS: Record<string, string> = {
   '3-na-4': 'ru-doc-3x4',
@@ -13,6 +15,25 @@ export const PASSPORT_PHOTO_PATHS = [
   '/tools/passport-photo',
   ...Object.values(PASSPORT_PHOTO_SPEC_SLUGS).map(slug => `/tools/passport-photo/${slug}`),
 ] as const;
+
+/**
+ * Keep the canonical tool's head metadata language-stable even when the interface is translated.
+ * The specification labels are source-language evidence, so they are useful in the UI but should
+ * not leak into an English canonical title that Google may compare with the prerendered shell.
+ */
+export function passportPhotoSeoCopy(spec?: PhotoSpec): { title: string; description: string } {
+  if (!spec) {
+    return {
+      title: 'Free Passport Photo Maker — Printable 3×4 and 35×45 Photos',
+      description: 'Create free printable 3×4 cm and 35×45 mm passport or document photos locally in your browser. Choose a verified format, align the guide and download a finished sheet without an account or credits.',
+    };
+  }
+  const format = spec.id === 'ru-doc-3x4' ? '3×4 cm' : '35×45 mm';
+  return {
+    title: `Free ${format} Passport Photo Online — Printable Maker`,
+    description: `Create a free ${format} passport photo locally in your browser. Align the head guide and download a printable sheet without uploading your photo.`,
+  };
+}
 
 export const PASSPORT_PHOTO_LONG_FORM = {
   definition: 'A passport or document photo maker prepares an image for a published physical size, resolution and head-position guide. This browser tool performs the crop and print layout locally, so the source photo stays on the device. It does not decide whether an immigration office, employer or other authority will accept the final image.',
