@@ -133,3 +133,29 @@ curl -sSL https://www.dlss5nvidia.com/sitemap.xml | grep -c '<loc>'             
 ```
 
 脚本在 agent 的共享目录 `~/.penguin/data/default_project/agents/default_agent/shared_env/seo/`（`serp-batch.mjs` / `parse-serp.py` / `fingerprint.mjs` + `competitors.json` / `ours.json`），要长期用就搬进仓库 `scripts/`。`serp-batch.mjs` 需要 `playwright`，本机只有 `~/code/ark/roomredeginv2/node_modules` 里有，且必须用系统 Chrome 的可执行文件（`executablePath`），Playwright 自带的 chromium 版本对不上。
+
+## 9. 2026-09-25 前排页面复核与下一步
+
+这次复核了当前 “DLSS 5 visual enhancer / image converter” 和 “AI image upscaler online” 的结果。DLSS 5 词簇仍以 GitHub、Reddit、新闻和教程为主；直接可用的浏览器工具主要在通用 image-upscaler 结果里竞争。可参考的页面：
+
+- [Crisp Photos](https://crisp.photos/) 把 `free / runs in your browser / no upload` 放在首屏，并把 Before/After Video Generator 做成同站入口。
+- [Upscala](https://ai-upscaler.org/) 首屏明确 2×–8×、免费每日次数、内置 before/after compare、输入限制和“无需信用卡”，随后用真实尺寸（175×175 → 1400×1400）解释结果。
+- [Real-ESRGAN Online](https://real-esrgan.org/) 把隐私、浏览器执行、格式/大小限制、模型名称、3 步流程、视频 tab 和 FAQ 全部写进可抓取正文，并说明 WebGPU/WebGL fallback。
+- [Upscaler.online](https://upscaler.online/) 用 2×/4×/8×切换、Real-ESRGAN 与 Clarity 两个模型、face enhancement、before/after slider、模型对比、FAQ 和多语言导航承接了大量长尾词。
+- [DLSS 5 Visual Enhancer](https://github.com/Merserk/dlss5-visual-enhancer) 代表 DLSS 5 的核心热度：图片 + 视频 + 批量、预览和诊断、NR Style/Intensity、Tone/Structure/Skin Protection、Mask、Frame Generation 和 RTX Video；它是 Windows/RTX 桌面工具，正好留下浏览器版“无需下载、上传一张图即可看风格对比”的机会。
+
+### 可直接复制到本站的动作
+
+1. **把结果参数写到每个工具的首屏。** 在上传区旁显示输入尺寸 → 输出尺寸、放大倍数、预计耗时、支持格式、是否需要登录和消耗积分。通用工具页采用 `2× / 4× / 8×` 的可理解选项，DLSS 5 风格页另外显示 `Natural / Cinematic / Standard` 和强度滑块的语义说明。
+2. **增加“隐私与限制”信任卡。** 明确哪些图片在浏览器本地处理，哪些任务会发到后端 API；写清最大 MB/MP、输出上限、原图不会被当作官方 NVIDIA 数据。不要使用无法证明的“完全不保存”表述。
+3. **视频单独成为可索引的功能入口。** 现有 6 秒示例应配一个 `/video-upscaler` 或 `/dlss5-video-enhancer` 页面，包含输入/输出 MP4、帧率、时长限制、前后视频播放器和“导出对比 MP4”。该页与 Seedance 2.5 文章互链，承接 `video super resolution / AI video upscaler / DLSS 5 video` 长尾。
+4. **给游戏角色场景做“保真度”对比。** 每组案例固定展示轮廓、服装、动作、身份不变，以及光照、材质、色调可变；增加 `identity drift / face change / art-style preservation` 筛选和 100% 局部放大，回应 DLSS 5 当前关于角色脸部变化与艺术意图的讨论。
+5. **做模型/用途矩阵，而不是泛泛对比。** 先做 6 个高意图页面：`DLSS 5 vs Real-ESRGAN`、`DLSS 5 vs Clarity Upscaler`、`game screenshot upscaler`、`anime screenshot upscaler`、`architecture render upscaler`、`video frame enhancement`。每页复用同一真实案例组件，避免复制薄文案。
+6. **首屏 CTA 采用“先看样例，再上传”。** 前排工具普遍提供 sample portrait / sample image；首页可以把 `Try a sample` 设为独立按钮，点击后直接载入一个本地案例并显示 before/after、输出尺寸和提示词，降低首次上传门槛。
+7. **补足国际化信息架构。** 先完善英文、中文、西班牙语的工具页 title/description/FAQ/案例 alt，再扩展俄语、日语、德语。每个翻译页保持独立 canonical、hreflang 和自然语言 FAQ，避免机械直译。
+
+### 不应照搬的做法
+
+- 不把本站写成 NVIDIA 官方 DLSS 5 下载页，也不复用官方游戏截图作为“本站生成结果”。当前页面应继续保留独立、非官方说明。
+- 不承诺与真实 DLSS 5 运行时等效；站内产品是浏览器/后端 AI 图像增强与风格参考工具，必须把“参考案例”和“官方运行时输出”分开。
+- 不为了覆盖关键词生成几千个 `convert-X-to-Y` 薄页面。先用 6 个矩阵页验证 Search Console 的 impressions、CTR 和实际上传，再扩展。

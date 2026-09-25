@@ -75,6 +75,13 @@ function photoSchema(spec: PhotoSpec, canonicalPath: string) {
           { '@type': 'HowToStep', name: 'Download a print sheet', text: 'Export the exact photo pixels or a sheet with repeated copies and cut marks.' },
         ],
       },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${SITE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: 'Free Passport Photo Maker', item: `${SITE_URL}${path}` },
+        ],
+      },
     ],
   };
 }

@@ -168,6 +168,13 @@ export function useCaseSchema(item: UseCase): object {
           acceptedAnswer: { '@type': 'Answer', text: faq.answer },
         })),
       },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${SITE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: item.heading, item: pageUrl },
+        ],
+      },
     ],
   };
 }
