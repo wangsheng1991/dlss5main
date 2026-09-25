@@ -125,6 +125,11 @@ export default function Blog() {
   const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' ? 'en-US' : undefined;
   const locale = (routeLanguage || i18n.resolvedLanguage || i18n.language || 'en-US') as BlogLocale;
   const copy = BLOG_COPY[locale] || BLOG_COPY['en-US'];
+  // The unprefixed path is the x-default canonical. Keep its head metadata in the same English
+  // language as the prerendered shell even when the visible article copy follows the visitor's UI
+  // language; /en/blog and /zh/blog remain the explicit language alternates.
+  const seoLocale = routeLocale ? locale : 'en-US';
+  const seoCopy = routeLocale ? copy : BLOG_COPY['en-US'];
   const isArticleLocaleSupported = locale === 'en-US' || locale === 'zh-CN';
   const [activeLang, setActiveLang] = useState<'en' | 'cn'>(locale.startsWith('zh') ? 'cn' : 'en');
 
@@ -148,12 +153,12 @@ export default function Blog() {
     return (
       <main className="pt-32 pb-24 px-6 max-w-[1200px] mx-auto">
         <SEO
-          title={`${copy.pageTitle} — Neural Rendering News, GPT-6 Workflows & AI Upscaling`}
-          description={copy.tagline}
+          title={`${seoCopy.pageTitle} — Neural Rendering News, GPT-6 Workflows & AI Upscaling`}
+          description={seoCopy.tagline}
           keywords={['dlss 5 latest news', 'dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 upscaling', 'dlss 5 online', 'dlss 5 gpt-6', 'gpt-6 astra image workflow', 'dlss 4.5 transformer', '3d-guided neural rendering', 'ai image upscaling guide']}
           canonical={canonicalPath}
           image="/blog/dlss5-neural-rendering.png"
-          language={locale}
+          language={seoLocale}
           alternates={alternateLinks}
         />
         <div className="mb-12">
@@ -211,14 +216,17 @@ export default function Blog() {
   const content = activeLang === 'cn' ? article.content_cn : article.content_en;
   const title = activeLang === 'cn' ? article.title_cn : article.title_en;
   const description = activeLang === 'cn' ? article.description_cn || article.title_cn : article.description_en || article.title_en;
+  const seoActiveLang = routeLocale ? activeLang : 'en';
+  const seoTitle = seoActiveLang === 'cn' ? article.title_cn : article.title_en;
+  const seoDescription = seoActiveLang === 'cn' ? article.description_cn || article.title_cn : article.description_en || article.title_en;
   const cover = ARTICLE_COVERS[article.slug] || { src: '/examples/sample1.jpg', alt: article.title_en };
   const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
-    headline: title,
-    description,
-    inLanguage: activeLang === 'cn' ? 'zh-CN' : 'en-US',
+    headline: seoTitle,
+    description: seoDescription,
+    inLanguage: seoActiveLang === 'cn' ? 'zh-CN' : 'en-US',
     dateModified: article.datePublished || undefined,
     datePublished: article.datePublished || undefined,
     author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk' },
@@ -377,13 +385,13 @@ export default function Blog() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[900px] mx-auto">
       <SEO
-        title={`${title} — DLSS 5 Blog`}
-        description={description}
-        keywords={activeLang === 'cn' ? article.target_keywords_cn : article.target_keywords_en}
+        title={`${seoTitle} — DLSS 5 Blog`}
+        description={seoDescription}
+        keywords={seoActiveLang === 'cn' ? article.target_keywords_cn : article.target_keywords_en}
         canonical={canonicalPath}
         type="article"
         image={cover.ogSrc || cover.src}
-        language={activeLang === 'cn' ? 'zh-CN' : 'en-US'}
+        language={seoActiveLang === 'cn' ? 'zh-CN' : 'en-US'}
         alternates={alternateLinks}
         structuredData={structuredData}
       />
