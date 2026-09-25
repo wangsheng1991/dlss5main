@@ -18,7 +18,7 @@ DLSS 5 NVIDIA is a browser-based AI image upscaler for enhancing and enlarging i
 
 ## Game character style references
 
-The home page includes original before-and-after image pairs and short video references for game-character style direction. They keep character pose, costume and identity as constraints while changing lighting, materials, palette and world setting. They are independent visual references, not NVIDIA DLSS 5 captures or proof of a DLSS runtime integration.
+The home page includes original before-and-after image pairs and short video references for the DLSS 5 visual enhancer search intent and game-character style direction. They keep character pose, costume and identity as constraints while changing lighting, materials, palette and world setting. They are independent visual references, not NVIDIA DLSS 5 captures or proof of a DLSS runtime integration.
 
 - Game character style conversion gallery: https://www.dlss5nvidia.com/
 - Game visual enhancer and image comparison workflow: https://www.dlss5nvidia.com/image-quality-enhancer

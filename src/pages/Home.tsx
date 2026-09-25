@@ -373,7 +373,7 @@ export default function Home() {
       <section className="mt-32" aria-labelledby="game-style-cases-heading">
         <div className="mb-12 max-w-3xl">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{isZh ? 'DLSS 5 风格参考' : 'DLSS 5 style references'}</span>
-          <h2 id="game-style-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? '游戏人物风格转换：保持角色，改变画面方向' : 'Game character style conversion: keep the character, change the visual direction'}</h2>
+          <h2 id="game-style-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? 'DLSS 5 视觉增强器：游戏人物风格转换' : 'DLSS 5 visual enhancer: game character style conversion'}</h2>
           <p className="text-zinc-400 leading-relaxed">{isZh ? '这一组才是游戏场景的重点：角色轮廓、服装、动作和身份保持稳定，再改变光照、材质、色彩和世界观方向。所有素材均为原创视觉参考，不是 NVIDIA 官方 DLSS 5 截图，也不代表已经接入 DLSS 5 运行时。' : 'This is the game-focused set: keep the character silhouette, costume, pose and identity stable while changing lighting, materials, palette and world direction. All frames are original visual references; they are not NVIDIA DLSS 5 captures or proof of a DLSS 5 runtime integration.'}</p>
         </div>
 
