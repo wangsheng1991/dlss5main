@@ -11,8 +11,10 @@ import { readFileSync } from 'node:fs';
 import {
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, STUDIO_MAX_PIXELS, buildToolTask, clampSteps, clampVectorizeEdge,
   failureNote, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, pixelCheckNote,
-  VECTORIZE_MAX_EDGE,
+  VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, isToolId, modelForTool,
+  toolNeedsSecondImage, toolOptionError, toolTakesSecondImage,
 } from '../src/config/tools';
+import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
 import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS } from '../src/config/samples';
 import { TOOL_LANDINGS } from '../src/content/toolLandings';
@@ -262,4 +264,148 @@ test('the free examples are the catalog minus the eraser, and nothing else', () 
 test('the samples route refuses an example that is not on the guest list', () => {
   const route = readFileSync(new URL('../api/image-edit/samples.ts', import.meta.url), 'utf8');
   assert.match(route, /GUEST_SAMPLE_IDS[^\n]*includes\(sampleId\)/, 'the route imports the guest list but has to guard with it');
+});
+
+/**
+ * The A-line tools (virtual try-on, interior render, portrait retouch, virtual makeup) run the same
+ * generative editor as the eraser, so everything that matters about them is the contract around the
+ * prompt: the browser may pick a name, and the prompt itself stays on the server. These tests pin the
+ * contract that the studio, the job API and the provider each read a copy of.
+ */
+test('every tool names the model it runs on, and the mode maps back to the same tool', () => {
+  const models: Record<string, string> = {
+    cutout: 'cutout-fast', vectorize: 'vectorize-fast', erase: 'erase-quality',
+    tryon: 'tryon-quality', interior: 'interior-quality', retouch: 'retouch-quality', makeup: 'makeup-quality',
+  };
+  for (const tool of TOOL_IDS) {
+    assert.equal(modelForTool(tool), models[tool], `${tool} runs the wrong model`);
+    assert.equal(modeForModel(modelForTool(tool)), tool, `${tool} does not survive the round trip through its model`);
+  }
+});
+
+test('each tool declares how many references it reads and what they are', () => {
+  // Two images, in order: the person, then the garment. A try-on cannot be asked for with one.
+  assert.deepEqual(TOOL_REFERENCES.tryon, { min: 2, max: 2, slots: ['person', 'garment'] });
+  assert.ok(toolNeedsSecondImage('tryon'), 'the try-on must require its garment image');
+  assert.ok(toolTakesSecondImage('interior') && toolTakesSecondImage('makeup'), 'these two accept an optional reference');
+  assert.ok(!toolNeedsSecondImage('interior') && !toolNeedsSecondImage('makeup'));
+  for (const tool of ['cutout', 'vectorize', 'erase', 'retouch'] as const) {
+    assert.deepEqual([TOOL_REFERENCES[tool].min, TOOL_REFERENCES[tool].max], [1, 1], `${tool} takes one image`);
+    assert.ok(!toolTakesSecondImage(tool), `${tool} must not offer a second slot`);
+  }
+  for (const tool of TOOL_IDS) {
+    assert.equal(TOOL_REFERENCES[tool].slots.length, TOOL_REFERENCES[tool].max, `${tool} names every slot`);
+    assert.ok(TOOL_REFERENCES[tool].min >= 1 && TOOL_REFERENCES[tool].min <= TOOL_REFERENCES[tool].max);
+  }
+});
+
+test('the A-line tools send named options, never a prompt and never a size', () => {
+  const tryon = buildToolTask('tryon', { imageIds: ['person', 'garment'], options: { garment_type: 'top' } });
+  assert.deepEqual(tryon, { model: 'tryon-quality', image_ids: ['person', 'garment'], garment_type: 'top' });
+  const interior = buildToolTask('interior', { imageIds: ['room'], options: { style: 'japandi', room_type: 'bedroom' }, extra: '  a linen sofa  ' });
+  assert.deepEqual(interior, { model: 'interior-quality', image_ids: ['room'], style: 'japandi', room_type: 'bedroom', extra: 'a linen sofa' });
+  const makeup = buildToolTask('makeup', { imageIds: ['portrait', 'makeup-ref'], options: { look: 'glam', intensity: 'strong' } });
+  assert.deepEqual(makeup, { model: 'makeup-quality', image_ids: ['portrait', 'makeup-ref'], look: 'glam', intensity: 'strong' });
+  // The order of the references is the meaning, so the builder must not sort or dedupe them.
+  assert.deepEqual(makeup.image_ids, ['portrait', 'makeup-ref']);
+  for (const task of [tryon, interior, makeup, buildToolTask('retouch', { imageIds: ['portrait'] })]) {
+    for (const field of ['prompt', 'width', 'height', 'output_format', 'num_inference_steps', 'max_sequence_length']) {
+      assert.ok(!(field in task), `${task.model} must not send ${field}`);
+    }
+  }
+});
+
+test('the chosen option travels with the task, and the default travels when nothing was chosen', () => {
+  // A-default-is-sent-explicitly matters: the page that showed the value and the task that runs must
+  // not be able to disagree because the provider chose a different default of its own.
+  assert.deepEqual(buildToolTask('retouch', { imageIds: ['p'] }), { model: 'retouch-quality', image_ids: ['p'], level: 'natural' });
+  assert.deepEqual(buildToolTask('interior', { imageIds: ['r'] }), { model: 'interior-quality', image_ids: ['r'], style: 'nordic', room_type: 'living_room' });
+  assert.deepEqual(buildToolTask('makeup', { imageIds: ['p'] }), { model: 'makeup-quality', image_ids: ['p'], look: 'daily', intensity: 'medium' });
+  assert.deepEqual(buildToolTask('tryon', { imageIds: ['p', 'g'] }), { model: 'tryon-quality', image_ids: ['p', 'g'], garment_type: 'outfit' });
+  // An unknown value is refused by the caller, and the builder would fall back rather than forward it.
+  assert.deepEqual(buildToolTask('retouch', { imageIds: ['p'], options: { level: 'extreme' } }), { model: 'retouch-quality', image_ids: ['p'], level: 'natural' });
+});
+
+test('the option names and values are the frozen public contract of the A-line tools', () => {
+  const values = (tool: 'tryon' | 'interior' | 'retouch' | 'makeup') =>
+    Object.fromEntries((TOOL_OPTIONS[tool] || []).map(option => [option.key, option.choices.map(choice => choice.value)]));
+  assert.deepEqual(values('tryon'), { garment_type: ['outfit', 'top', 'bottom', 'dress'] });
+  assert.deepEqual(values('interior'), { style: ['nordic', 'cream', 'japandi', 'chinese', 'industrial', 'french'], room_type: ['living_room', 'bedroom', 'dining_room', 'study', 'kitchen', 'bathroom', 'kids_room', 'balcony'] });
+  assert.deepEqual(values('retouch'), { level: ['light', 'natural', 'strong'] });
+  assert.deepEqual(values('makeup'), { look: ['daily', 'korean', 'glam', 'bridal', 'latte', 'retro'], intensity: ['light', 'medium', 'strong'] });
+  // Every default has to be one of the values, or the page would open on a state the server refuses.
+  for (const tool of TOOL_IDS) {
+    for (const option of TOOL_OPTIONS[tool] || []) {
+      assert.ok(option.choices.some(choice => choice.value === option.default), `${tool}.${option.key} defaults outside its own list`);
+      assert.ok(option.label.trim() && option.help.trim(), `${tool}.${option.key} is missing copy`);
+    }
+  }
+});
+
+test('a wrong option is refused with the values that exist, and an unknown key is refused too', () => {
+  assert.equal(toolOptionError('retouch', { level: 'natural' }), '');
+  assert.equal(toolOptionError('interior', { style: 'nordic', room_type: 'kitchen' }), '');
+  assert.equal(toolOptionError('makeup', {}), '');
+  assert.match(toolOptionError('retouch', { level: 'stronger' }), /level must be light, natural, strong/);
+  assert.match(toolOptionError('makeup', { look: 'glam', intensity: 3 }), /intensity must be/);
+  assert.match(toolOptionError('tryon', { fabric: 'silk' }), /unknown option: fabric/);
+  // The tools without options must not reject a body for carrying none.
+  assert.equal(toolOptionError('erase', { anything: 'goes' }), '');
+});
+
+test('the interior brief is capped before it can fight the instruction that holds the room in place', () => {
+  const task = buildToolTask('interior', { imageIds: ['room'], extra: 'x'.repeat(500) });
+  assert.equal((task.extra || '').length, TOOL_EXTRA_MAX);
+  // Whitespace alone is not a brief.
+  assert.ok(!('extra' in buildToolTask('interior', { imageIds: ['room'], extra: '   ' })));
+});
+
+test('every case in the studio book is a run the tools could actually have made', () => {
+  // The case book is what the studio promises visually, so it is held to the provider contract: a
+  // case cannot show a tool with a reference count that tool does not accept, an option value it
+  // does not have, or a brief longer than the one it would be allowed to send.
+  for (const entry of SHOWCASE) {
+    assert.ok(isToolId(entry.mode), `${entry.id} is filed under ${entry.mode}, which is not a tool`);
+    const references = TOOL_REFERENCES[entry.mode];
+    assert.ok(entry.inputs.length >= references.min && entry.inputs.length <= references.max,
+      `${entry.id} shows ${entry.inputs.length} reference(s) but ${entry.mode} takes ${references.min}–${references.max}`);
+    for (const input of entry.inputs) {
+      assert.match(input.src, /^\/examples\//, `${entry.id} must reference a published copy, got ${input.src}`);
+      assert.ok(input.label.trim(), `${entry.id} has an unlabelled reference`);
+    }
+    assert.ok(entry.title.trim() && entry.choices.length > 0, `${entry.id} is missing its copy`);
+    assert.ok(entry.look.length > 0, `${entry.id} does not say what to look at`);
+    assert.match(entry.seconds, /^[\d.]+ s$/, `${entry.id} must quote a measured wall clock`);
+    assert.ok(entry.output.width > 0 && entry.output.height > 0, `${entry.id} is missing the real output geometry`);
+    // The A-line size table is built from 32-px multiples under the service's own area cap, so a case
+    // quoting anything else would be quoting a number the service cannot return.
+    assert.ok(entry.output.width % 32 === 0 && entry.output.height % 32 === 0,
+      `${entry.id} quotes ${entry.output.width} × ${entry.output.height}, which is not on the service's size grid`);
+    assert.ok(entry.output.width * entry.output.height <= 4_300_800, `${entry.id} quotes a frame the service would refuse`);
+    assert.equal(toolOptionError(entry.mode, entry.options), '', `${entry.id} carries an option ${entry.mode} would refuse`);
+    if (entry.extra) assert.ok(entry.extra.length <= TOOL_EXTRA_MAX, `${entry.id} brief is over the cap the provider enforces`);
+    if (entry.prompt) assert.equal(entry.mode, 'erase', `${entry.id} may only ship a prompt for the eraser, which is the one tool with a free-text instruction`);
+  }
+  // Two cases of the same tool must not be the same run twice.
+  assert.equal(new Set(SHOWCASE.map(entry => entry.id)).size, SHOWCASE.length, 'duplicate case id');
+});
+
+test('the case book covers every tool, and every picture it shows is deployed', () => {
+  // A case whose file is not in `public/` would render a broken thumbnail on a page that is meant to
+  // prove the tools work — the worst possible place for a 404.
+  for (const entry of SHOWCASE) {
+    for (const asset of [entry.output.src, entry.output.file, ...entry.inputs.map(input => input.src)]) {
+      if (!asset) continue;
+      const bytes = readFileSync(new URL(`../public${asset.replace(/^\/examples\//, '/examples/')}`, import.meta.url));
+      assert.ok(bytes.byteLength > 0, `${entry.id}: ${asset} is empty`);
+    }
+  }
+  for (const tool of TOOL_IDS) {
+    assert.ok(casesForTool(tool).length > 0, `${tool} has no case in the book, so the panel would open empty on it`);
+  }
+  assert.deepEqual(SHOWCASE_TOOLS.slice().sort(), TOOL_IDS.slice().sort(), 'the chips and the studio must offer the same tools');
+  // The raster twin is what the card shows for a vector case, so the real SVG has to be published too.
+  const vector = casesForTool('vectorize')[0];
+  assert.match(vector.output.file || '', /\.svg$/, 'the vectorizer case must link its real SVG output');
+  assert.ok(!vector.output.file?.endsWith(vector.output.src), 'the card cannot show the deliverable it claims to show a copy of'); 
 });

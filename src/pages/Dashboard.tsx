@@ -3,6 +3,8 @@ import { UploadCloud, Download, RefreshCw, AlertCircle, Gift } from 'lucide-reac
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
+import ShowcasePanel from '../components/ShowcasePanel';
+import { type ShowcaseCase } from '../config/showcase';
 import { useAuth } from '../contexts/AuthContext';
 import { SAMPLES, SAMPLE_IDS, GUEST_SAMPLE_IDS, type SampleId } from '../config/samples';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, type EnhanceFactor } from '../config/enhance';
@@ -10,7 +12,7 @@ import {
   STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE, TOOL_IDS,
   VECTORIZE_MAX_EDGE, VECTORIZE_PRESETS, VECTORIZE_PRESET_LABEL, VECTORIZE_PRESET_NOTE,
   TOOL_OPTIONS, TOOL_EXTRA_FIELD, TOOL_EXTRA_MAX, TOOL_REFERENCES,
-  toolNeedsSecondImage, toolTakesSecondImage,
+  toolNeedsSecondImage,
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, failureNote, inputLimitNote, oversizeNote,
   type VectorizePreset, type ToolId,
 } from '../config/tools';
@@ -89,6 +91,8 @@ export default function Dashboard() {
   // The A-line tools read up to two references in a fixed order, so the second one gets its own slot
   // rather than being folded into the first: swapping them would change what the tool is asked to do.
   const [file2, setFile2] = useState<File | null>(null);
+  /** The tool the second image was picked for — see the effect below. */
+  const [file2Mode, setFile2Mode] = useState<GenerationMode | ''>('');
   const [preview2, setPreview2] = useState('');
   const [file2Error, setFile2Error] = useState('');
   /** The named options of the selected tool, keyed exactly as the provider contract names them. */
@@ -185,12 +189,16 @@ export default function Dashboard() {
   useEffect(() => { if (!file2) { setPreview2(''); return; } const url = URL.createObjectURL(file2); setPreview2(url); return () => URL.revokeObjectURL(url); }, [file2]);
   // A different account must not inherit the previous one's image, so drop the file and its measured size together.
   useEffect(() => { setFile(null); setSourceSize(null); setFile2(null); setFile2Error(''); }, [user?.uid]);
-  // A single-reference tool has no second slot, so switching away from a two-image tool clears it —
-  // otherwise a garment picked for the try-on would silently travel with a later portrait tool.
+  // The second slot does not mean the same thing in any two tools — it is the garment for the try-on,
+  // the style photo for the interior tool, the makeup photo for the makeup tool — so a file picked
+  // for one tool must not travel into another, not even when both of them accept a second image (a
+  // garment silently read as a style reference would change the render without the reader seeing it).
+  // The comparison is against the tool the file was picked for, so a case that sets the tool and its
+  // image together is not cleared by its own switch.
   useEffect(() => {
-    if (isToolId(mode) && toolTakesSecondImage(mode)) return;
-    setFile2(null); setFile2Error('');
-  }, [mode]);
+    if (!file2 || file2Mode === mode) return;
+    setFile2(null); setFile2Error(''); setFile2Mode('');
+  }, [mode, file2, file2Mode]);
   useEffect(() => {
     let active = true;
     if (!user) { setHistory([]); setHistoryToken(''); return; }
@@ -224,21 +232,26 @@ export default function Dashboard() {
       setShareNotice(cause instanceof Error ? cause.message : t('dashboard.shareFailed'));
     } finally { setShareBusy(false); }
   };
-  const choose = (candidate?: File) => {
+  /**
+   * `mode` is passed in when the caller is switching tool and image together (a case being loaded),
+   * because the state update has not been applied when this runs and the per-mode limits and the
+   * telemetry would otherwise describe the tool the reader is leaving.
+   */
+  const choose = (candidate?: File, effectiveMode: GenerationMode = mode) => {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > MAX_UPLOAD_BYTES) { setFileError(`Choose a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`); return; }
     setFileError(''); setFile(candidate); setSourceSize(null);
-    trackEvent('image_selected', { mode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size) });
+    trackEvent('image_selected', { mode: effectiveMode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size) });
     // Enhancement is sized from the original pixels, so measure the file as soon as it is picked.
     const url = URL.createObjectURL(candidate);
     const image = new Image();
     image.onload = () => {
       URL.revokeObjectURL(url);
       setSourceSize({ width: image.naturalWidth, height: image.naturalHeight });
-      trackEvent('image_measured', { mode, pixels: pixelBucket(image.naturalWidth, image.naturalHeight) });
+      trackEvent('image_measured', { mode: effectiveMode, pixels: pixelBucket(image.naturalWidth, image.naturalHeight) });
       // The studio caps the input at 16 MP; a 48 MP phone photo is only ~15 MiB, so it would pass
       // the size check above and then fail inside the service with no visible reason.
-      const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, mode);
+      const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, effectiveMode);
       if (tooBig) { setFileError(tooBig); setFile(null); setSourceSize(null); }
     };
     image.onerror = () => { URL.revokeObjectURL(url); setSourceSize(null); };
@@ -248,16 +261,16 @@ export default function Dashboard() {
    * The second reference of a two-image tool (the garment, the style photo, the makeup reference).
    * It is read for its pixels only, so it is not measured into the source size the output follows.
    */
-  const chooseSecond = (candidate?: File) => {
+  const chooseSecond = (candidate?: File, effectiveMode: GenerationMode = mode) => {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > MAX_UPLOAD_BYTES) { setFile2Error(`Choose a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`); return; }
-    setFile2Error(''); setFile2(candidate);
-    trackEvent('image_selected', { mode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size), slot: 2 });
+    setFile2Error(''); setFile2(candidate); setFile2Mode(effectiveMode);
+    trackEvent('image_selected', { mode: effectiveMode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size), slot: 2 });
     const url = URL.createObjectURL(candidate);
     const image = new Image();
     image.onload = () => {
       URL.revokeObjectURL(url);
-      const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, mode);
+      const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, effectiveMode);
       if (tooBig) { setFile2Error(tooBig); setFile2(null); }
     };
     image.onerror = () => URL.revokeObjectURL(url);
@@ -285,6 +298,40 @@ export default function Dashboard() {
       choose(new File([blob], SAMPLES[sample].fileName, { type: blob.type || SAMPLES[sample].contentType }));
     } catch {
       setFileError('That example could not be loaded. Choose your own image instead.');
+    }
+  };
+  /**
+   * A case from the panel beside the studio: its references become the input files and its controls
+   * become the settings, so the reader can see the same run happen with their own eyes (and change
+   * anything before running it). The controls are set here rather than in the panel because the
+   * provider contract lives in one place — `buildToolTask` reads the same option values the studio
+   * holds, so a case cannot invent a setting the server would refuse.
+   */
+  const loadCase = async (entry: ShowcaseCase) => {
+    if (!user) return;
+    setFileError(''); setFile2Error('');
+    sampleRun.reset();
+    setSelectedSample(null);
+    setMode(entry.mode);
+    setToolChoices(entry.options || {});
+    setToolExtra(entry.extra || '');
+    if (entry.prompt) setPrompt(entry.prompt);
+    if (entry.mode === 'vectorize') setPreset('logo');
+    try {
+      const files = await Promise.all(entry.inputs.map(async (input, index) => {
+        const response = await fetch(input.src);
+        if (!response.ok) throw new Error('unavailable');
+        const blob = await response.blob();
+        const name = input.src.split('/').pop() || `${entry.id}-${index + 1}.jpg`;
+        return new File([blob], name, { type: blob.type || 'image/jpeg' });
+      }));
+      // The order is the meaning: the first reference is the subject, the second is what it wears,
+      // or the style / makeup reference. `choose` runs first so the slots cannot be swapped.
+      choose(files[0], entry.mode);
+      if (files[1]) chooseSecond(files[1], entry.mode);
+      trackEvent('showcase_loaded', { mode: entry.mode, case: entry.id });
+    } catch {
+      setFileError('That case could not be loaded. Choose your own image instead.');
     }
   };
   const openPortal = async () => {
@@ -352,8 +399,8 @@ export default function Dashboard() {
           </div>
         </article>)}</div>}
     </section>}
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <section aria-labelledby="settings-heading" className="lg:col-span-1 bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)_minmax(320px,1.1fr)]">
+      <section aria-labelledby="settings-heading" className="bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
         <div><div className="grid grid-cols-2 gap-2">
           {MODES.map(([value, label]) => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{label}</button>)}
@@ -404,7 +451,7 @@ export default function Dashboard() {
         </div>}
         <div className="text-sm text-zinc-400 space-y-2"><p>{isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `Output: ${enhance ? `${enhance.width} × ${enhance.height}` : 'follows your image'} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `Output: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
       </section>
-      <section aria-label="Image workspace" className="lg:col-span-3 bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
+      <section aria-label="Image workspace" className="bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
         {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">The examples below are free and need no account — including the background-removal and vectorizing ones. <Link to="/login" className="text-primary underline">Sign in</Link> to upload your own image and write your own prompt.</div>}
         {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
@@ -447,6 +494,9 @@ export default function Dashboard() {
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
+      <div className="lg:col-span-2 xl:col-span-1">
+        <ShowcasePanel mode={mode} signedIn={!!user} locked={locked} onUse={loadCase}/>
+      </div>
     </div>
     </main>
   </>;
