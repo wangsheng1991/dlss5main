@@ -181,4 +181,4 @@ PY
 
 - **站长操作（配额恢复后）**：逐页提交 `/tools/passport-photo`、`/tools/passport-photo/3-na-4`、`/tools/passport-photo/35x45-ru` 及其余本次新增或改动的工具页；提交后复查“已收录/规范网址”。
 - **Google 重新评估**：等待规范页验证结果，若仍选择根证件照页，再增加规格页独有段落或将重复规格合并为一个入口。
-- **部署复核（已完成）**：`e391369` 已推送，Vercel Production Ready，`www.dlss5nvidia.com`、裸域和 `dlss5-main.vercel.app` 均指向新部署。线上浏览器复核了主页、`3-na-4` 和 `35x45-ru`：title、description、keywords、canonical 均为稳定英文且自指，`lang=en-US`；主页和规格页各保留 Organization + 路由 schema。
+- **部署复核（已完成）**：`e391369` 已推送，Vercel Production Ready，`www.dlss5nvidia.com`、裸域和 `dlss5-main.vercel.app` 均指向新部署。线上浏览器复核了主页、`3-na-4` 和 `35x45-ru`：title、description、keywords、canonical 均为稳定英文且自指，`lang=en-US`；主页和规格页各保留 Organization + 路由 schema。随后 `2271887` 固定了未加语言前缀的 `/blog` 根路径 SEO 为英文，`/zh/blog` 仍保留中文 title/lang/canonical；本地水合复核通过。
