@@ -7,6 +7,8 @@ import { USE_CASES, useCaseSchema, type UseCase } from '../src/content/useCases'
 import { publishableSpecs } from '../src/lib/spec/specs';
 import type { PhotoSpec } from '../src/lib/spec/types';
 import { PASSPORT_PHOTO_SPEC_SLUGS } from '../src/content/passportPhoto';
+import { GAME_STYLE_LANDING, gameStyleLandingSchema } from '../src/content/gameStyleLanding';
+import { VIDEO_LANDING, videoLandingSchema } from '../src/content/videoLanding';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
 
@@ -472,6 +474,36 @@ function renderUseCaseLanding(item: UseCase): string {
   }), root);
 }
 
+function renderGameStyleLanding(): string {
+  const cards = GAME_STYLE_LANDING.cases.map((item, index) => `<article class="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><figure><img src="${escapeHtml(item.after)}" alt="${escapeHtml(`${item.title} style reference`)}" width="768" height="512" ${index < 2 ? 'fetchpriority="high"' : 'loading="lazy"'} class="w-full aspect-[3/2] object-cover" /><img src="${escapeHtml(item.before)}" alt="${escapeHtml(`${item.title} base frame`)}" width="768" height="512" loading="lazy" class="w-full aspect-[3/2] object-cover" /><figcaption class="p-3 text-xs text-zinc-400">Base frame → style reference</figcaption></figure><div class="p-4"><p class="text-[10px] text-primary uppercase tracking-widest">${escapeHtml(item.style)}</p><h2 class="mt-2 text-base font-bold text-white">${escapeHtml(item.title)}</h2><p class="mt-2 text-xs leading-relaxed text-zinc-400">${escapeHtml(item.description)}</p><details class="mt-3 text-xs text-zinc-400"><summary class="cursor-pointer text-primary">View conversion prompt</summary><p class="mt-2 leading-relaxed">${escapeHtml(item.prompt)}</p></details></div></article>`).join('');
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1280px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(GAME_STYLE_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Game character style conversion</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(GAME_STYLE_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(GAME_STYLE_LANDING.intro)}</p><aside class="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-5 text-sm leading-relaxed text-zinc-200"><strong class="text-primary">Asset note: </strong>These 20 pairs are original visual references for evaluating a conversion brief. They are not NVIDIA DLSS 5 captures and do not claim a DLSS 5 runtime integration.</aside><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try your own character frame →</a> <a class="inline-block ml-3 text-primary" href="/video-upscaler">See the video enhancement workflow →</a></p></header><section class="mt-16" aria-labelledby="case-gallery-heading"><h2 id="case-gallery-heading" class="text-3xl font-bold text-white">Drag to compare: base frame → style reference</h2><p class="mt-3 text-sm text-zinc-500">Check faces, hands, gear edges and cloth folds first.</p><div class="mt-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">${cards}</div></section><section class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">01 · Lock the character</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">State that silhouette, costume, pose, camera and identity must stay stable.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">02 · Change the style</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">Use lighting, materials, color grade, environment and render direction as the variables.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-lg font-bold text-white">03 · Review the result</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">Compare the face, hands, gear edges and temporal consistency at 100%.</p></article></section></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: GAME_STYLE_LANDING.title,
+    description: GAME_STYLE_LANDING.description,
+    canonicalPath: GAME_STYLE_LANDING.path,
+    language: 'en-US',
+    image: '/examples/generated/game-cyber-1-after.jpg',
+    keywords: [...GAME_STYLE_LANDING.keywords],
+    structuredData: gameStyleLandingSchema(BASE_URL),
+  }), root);
+}
+
+function renderVideoLanding(): string {
+  const demos = VIDEO_LANDING.demos.map((demo) => `<figure class="rounded-2xl border border-primary/25 bg-surface-low overflow-hidden"><video class="w-full aspect-video object-cover bg-black" controls muted playsinline preload="metadata" poster="${escapeHtml(demo.poster)}" aria-label="${escapeHtml(demo.alt)}"><source src="${escapeHtml(demo.src)}" type="video/mp4" />Your browser does not support this video.</video><figcaption class="p-5"><h2 class="text-lg font-bold text-white">${escapeHtml(demo.name)}</h2><p class="mt-2 text-sm leading-relaxed text-zinc-400">${escapeHtml(demo.description)}</p></figcaption></figure>`).join('');
+  const steps = [['01', 'Generate a preview', 'Use 480p or 720p to iterate on prompt, camera movement, references and timing before paying for a final finish.'], ['02', 'Inspect key frames', 'Check faces, hands, typography, thin geometry, fast motion and temporal consistency at 100%.'], ['03', 'Finish the approved shot', 'Run the selected video super-resolution pass for 1080p or 4K delivery, then keep the original beside the AI-enhanced result.']].map(([number, title, text]) => `<li class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><span class="text-primary font-mono text-sm">${number}</span><h2 class="mt-4 text-xl font-bold text-white">${title}</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">${text}</p></li>`).join('');
+  const faqs = VIDEO_LANDING.faqs.map((faq) => `<details><summary>${escapeHtml(faq.question)}</summary><p>${escapeHtml(faq.answer)}</p></details>`).join('');
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(VIDEO_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Video super-resolution workflow</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(VIDEO_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(VIDEO_LANDING.intro)}</p><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try a representative frame →</a> <a class="inline-block ml-3 text-primary" href="/blog/seedance-2-5-video-super-resolution-cost-guide-2026">Read the Seedance 2.5 cost guide →</a></p><p class="mt-4 text-xs leading-relaxed text-zinc-500">The current public workspace processes still image frames. These clips are original silent reference demos for the planned video provider workflow.</p></header><section class="mt-16" aria-labelledby="video-demos-heading"><p class="text-xs uppercase tracking-widest text-primary">Original reference demos</p><h2 id="video-demos-heading" class="mt-2 text-3xl font-bold text-white">See the transition before you commit to a workflow</h2><div class="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-6">${demos}</div></section><section class="mt-20" aria-labelledby="workflow-heading"><h2 id="workflow-heading" class="text-3xl font-bold text-white">A practical 3-step video enhancement workflow</h2><ol class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-6">${steps}</ol></section><section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">Frequently asked questions</h2><div class="mt-5">${faqs}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">Continue with related workflows</h2><p class="mt-4"><a href="/game-character-style">20 game character cases</a> · <a href="/image-quality-enhancer">Image quality enhancer</a> · <a href="/comparisons">AI tools compared</a></p></section></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: VIDEO_LANDING.title,
+    description: VIDEO_LANDING.description,
+    canonicalPath: VIDEO_LANDING.path,
+    language: 'en-US',
+    image: VIDEO_LANDING.demos[0].poster,
+    keywords: [...VIDEO_LANDING.keywords],
+    structuredData: videoLandingSchema(BASE_URL),
+  }), root);
+}
+
 function renderPassportPhoto(spec?: PhotoSpec): string {
   const specs = publishableSpecs();
   const selected = spec || specs[0];
@@ -620,6 +652,10 @@ writeRoute('/register', renderPublicGuide({
 }));
 writeRoute('/dashboard', renderDashboard());
 writeRoute('/store', renderStore());
+if (profileHas('tools')) {
+  writeRoute(GAME_STYLE_LANDING.path, renderGameStyleLanding());
+  writeRoute(VIDEO_LANDING.path, renderVideoLanding());
+}
 if (profileHas('tools')) for (const tool of TOOL_LANDINGS) writeRoute(tool.path, renderToolLanding(tool));
 if (profileHas('useCases')) for (const item of USE_CASES) writeRoute(item.path, renderUseCaseLanding(item));
 if (profileHas('microTools')) {

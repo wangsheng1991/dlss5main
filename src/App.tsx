@@ -28,6 +28,8 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const Refund = lazy(() => import('./pages/Refund'));
 const UseCaseLanding = lazy(() => import('./pages/UseCaseLanding'));
 const PassportPhoto = lazy(() => import('./pages/PassportPhoto'));
+const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
+const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 
 /**
  * Renders a page, or sends the visitor home when this deployment does not publish that section. A
@@ -74,6 +76,8 @@ export default function App() {
                   <Route path="/interior-design" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/portrait-retouch" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/virtual-makeup" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/game-character-style" element={orHome('tools', <GameCharacterStyle />)} />
+                  <Route path="/video-upscaler" element={orHome('tools', <VideoUpscaler />)} />
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />

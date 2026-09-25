@@ -82,6 +82,12 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
     '/image-to-svg',
     '/remove-background',
     '/erase-object',
+    '/virtual-try-on',
+    '/interior-design',
+    '/portrait-retouch',
+    '/virtual-makeup',
+    '/game-character-style',
+    '/video-upscaler',
     '/es/mejorar-calidad-imagen',
   ],
   useCases: [

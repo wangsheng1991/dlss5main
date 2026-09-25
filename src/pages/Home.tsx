@@ -312,6 +312,14 @@ export default function Home() {
             </article>
           ))}
         </div>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Link to="/game-character-style" className="inline-flex items-center rounded-lg bg-primary px-5 py-3 text-sm font-bold text-black hover:bg-white transition-colors">
+            {isZh ? '查看 20 组完整角色案例 →' : 'Open all 20 character cases →'}
+          </Link>
+          <Link to="/video-upscaler" className="text-sm font-semibold text-primary hover:text-white transition-colors">
+            {isZh ? '进入视频增强工作流 →' : 'Explore the video enhancement workflow →'}
+          </Link>
+        </div>
       </section>
 
       {profileHas('useCases') && (

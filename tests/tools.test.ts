@@ -16,6 +16,8 @@ import {
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
 import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS } from '../src/config/samples';
 import { TOOL_LANDINGS } from '../src/content/toolLandings';
+import { GAME_STYLE_LANDING } from '../src/content/gameStyleLanding';
+import { VIDEO_LANDING } from '../src/content/videoLanding';
 
 import { test } from './harness';
 
@@ -121,6 +123,30 @@ test('the served homepage links every tool page, for the crawler and for the vis
   for (const tool of TOOL_LANDINGS) {
     assert.ok(block.includes(`href="${tool.path}"`), `${tool.path} is not linked from the homepage`);
   }
+});
+
+test('the game character gallery contains 20 complete before-and-after pairs', () => {
+  assert.equal(GAME_STYLE_LANDING.cases.length, 20);
+  for (const item of GAME_STYLE_LANDING.cases) {
+    assert.match(item.before, /^\/examples\/generated\/game-.+-before\.jpg$/);
+    assert.match(item.after, /^\/examples\/generated\/game-.+-after\.jpg$/);
+    assert.ok(item.prompt.length > 20, `${item.id} needs a usable conversion prompt`);
+  }
+  const ids = GAME_STYLE_LANDING.cases.map(item => item.id);
+  assert.equal(new Set(ids).size, ids.length);
+  const sitemap = publicFile('sitemap.xml');
+  assert.ok(sitemap.includes('<loc>https://www.dlss5nvidia.com/game-character-style</loc>'));
+  assert.ok(homepage().includes('href="/game-character-style"'));
+});
+
+test('the video workflow has crawlable demos, FAQ copy and a sitemap entry', () => {
+  assert.equal(VIDEO_LANDING.demos.length, 2);
+  assert.ok(VIDEO_LANDING.demos.every((demo) => demo.src.endsWith('.mp4')));
+  assert.ok(VIDEO_LANDING.faqs.length >= 3);
+  const sitemap = publicFile('sitemap.xml');
+  assert.ok(sitemap.includes('<loc>https://www.dlss5nvidia.com/video-upscaler</loc>'));
+  assert.ok(homepage().includes('href="/video-upscaler"'));
+  assert.ok(publicFile('llms.txt').includes('https://www.dlss5nvidia.com/video-upscaler'));
 });
 
 test('the static homepage exposes the same search intent and crawlable structured data before JavaScript runs', () => {

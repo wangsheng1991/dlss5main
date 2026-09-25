@@ -75,6 +75,8 @@ export default function Footer() {
               {profileHas('docs') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.documentation')}</Link></li>}
               {profileHas('download') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/download">{t('navbar.download')}</Link></li>}
               {profileHas('about') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/about">{t('navbar.about')}</Link></li>}
+              {profileHas('tools') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/game-character-style">Game character cases</Link></li>}
+              {profileHas('tools') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/video-upscaler">Video upscaler workflow</Link></li>}
             </ul>
           </div>
 
