@@ -25,3 +25,25 @@ Google URL Inspection 的每日配额恢复后，逐个打开以下 URL，点击
 - Sitemap 中的 53 个 URL 全部返回 200，均有唯一 title、description、keywords、canonical；新加入的 `/pricing` 和 `/comparisons` 也已上线。
 - `/login`、`/register`、`/dashboard` 均为 `noindex,nofollow`，登录页和注册页已从 Sitemap 移除。
 - 首页、模型、下载、文档、企业、比较和定价页均已预渲染独立首屏 HTML，避免 SPA fallback 把首页 metadata 当成所有页面的 metadata。
+
+## Search Console 执行记录（2026-09-25）
+
+已在已登录的 Search Console 网址检查中完成逐页复核与提交：
+
+- `https://www.dlss5nvidia.com/image-to-svg`：已请求编入索引。
+- `https://www.dlss5nvidia.com/blog/best-ai-image-upscaler-2026-comparison`：已请求编入索引。
+- `https://www.dlss5nvidia.com/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026`：已请求编入索引。
+- `https://www.dlss5nvidia.com/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`：已请求编入索引。
+- `https://www.dlss5nvidia.com/blog/what-is-dlss-5-neural-rendering-guide`：已请求编入索引。
+- `https://www.dlss5nvidia.com/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`：已请求编入索引。
+- `https://www.dlss5nvidia.com/en/blog/dlss-5-latest-news-september-2026`：已请求编入索引。
+- `https://www.dlss5nvidia.com/en/blog`：已请求编入索引。
+
+复核时发现以下页面已经收录，无需重复请求：
+
+- `/remove-background`
+- `/erase-object`
+- `/es/mejorar-calidad-imagen`
+- `/blog/dlss5-artistic-vision-debate-honest-assessment`
+
+报告中的重定向页和重复规范页不应单独提交；其规范化由站点重定向/canonical 规则处理。Google 的索引状态不会在提交后立即变更，后续只需等待抓取队列处理并观察报告刷新。
