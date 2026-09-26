@@ -36,3 +36,10 @@
 - 首页首屏默认展示原创游戏人物转换对比；三个画廊收拢到“转换会得到什么 / What the conversion produces”，标题降为 `text-2xl`/`text-3xl` 并收紧间距。
 - 首页补充 NVIDIA 官方 3D-Guided Neural Rendering 文章的事实摘要和外链。本站案例仍是原创参考，并在文案中明确“非官方 DLSS 运行时”。
 - 本地证据：`npm run lint`（`tsc --noEmit`）通过；`npm test` 72/72；`npm run build` 通过。生产部署后的真实页面复核待推送后补写。
+
+## 生产复核（2026-09-27）
+
+- Vercel Production：commit `8fb2c95`，deployment `dlss5-main-5xg8obqie`，状态 `READY`。
+- `https://www.dlss5nvidia.com/`：页面 title 为 `DLSS 5 Style Converter Online — Free AI Visual Generation`；运行后的 `h1`、`#dlss5-reference-heading` 和 `#conversion-outputs-heading` 分别出现转换生成主定位、官方参考区和“转换会得到什么”；head 中 `dlss 5 convert`、`dlss 5 effect converter`、`3d guided neural rendering` 均已生效，页面存在可拖动对比 slider。
+- `https://www.dlss5nvidia.com/dashboard`（英文会话）：运行后的 title/h1 为 `DLSS 5 convert · Character style`；主面板步骤为上传、选择方向、对比下载；下方检测到 9 个原有工具入口（Enhance & upscale、Prompt edit、Remove background、Image to SVG、Erase object、Virtual try-on、Room render、Portrait retouch、Virtual makeup）。
+- 中文会话真实复核：title/h1 为 `DLSS 5 convert · 人物风格转换`，九个入口与“更多工具”均显示中文。静态壳仍保留 `AI Image Studio` 的 no-JS 标题，这是 dashboard 的 noindex fallback；客户端水合后已替换为 convert 标题。
