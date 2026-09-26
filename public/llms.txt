@@ -55,6 +55,21 @@ Before-and-after workflow pages connect real image cases to the matching tool. E
 - Portrait photo enhancer: https://www.dlss5nvidia.com/use-cases/portrait-photo-enhancer
 <!-- end:useCases -->
 
+<!-- begin:docs -->
+## API and integration
+
+One page to read, one endpoint to call. The page is for people; the JSON files are for code generators and agents. Both are rendered from a single catalog file, so they cannot disagree.
+
+- Integration guide (read, no key): https://www.dlss5nvidia.com/docs
+- Whole catalog as JSON: https://www.dlss5nvidia.com/api-catalog.json
+- One model as JSON: https://www.dlss5nvidia.com/api-catalog/flux-klein.json — also cutout-fast, vectorize-fast, erase-quality, pixrestore-s, tryon-quality, interior-quality, retouch-quality and makeup-quality
+- Calls (a project key is required): https://dashboard.alphanetplus.com — POST /v1/tasks/alphanet-flux, then GET /v1/tasks/{task_id} and GET /v1/tasks/{task_id}/result
+
+The flow is the same for every model: open an upload ticket, put the bytes at the signed URL, submit the task with an Idempotency-Key, poll the status, then fetch a signed result (those URLs expire after 900 s). A reference image is capped at 10 MiB, a call costs $0.01, and model ids are frozen because they are billing-visible.
+
+Nine models: `cutout-fast` background removal, `vectorize-fast` image to SVG, `erase-quality` generative erase, `pixrestore-s` detail restore, `flux-klein` prompt-driven edit and upscale, `tryon-quality` virtual try-on, `interior-quality` interior render, `retouch-quality` portrait retouch, `makeup-quality` virtual makeup.
+<!-- end:docs -->
+
 <!-- begin:microTools -->
 ## Small browser tools
 
@@ -86,7 +101,7 @@ The interface supports English, Simplified Chinese, Japanese, Korean, Russian, U
 - Is this an official NVIDIA DLSS product? No. This is an independent showcase using a separate AI model inspired by neural super-resolution concepts.
 - Does it require an RTX GPU? No. The web tool runs processing on its server-side AI service and works from a modern browser.
 - What files are supported? The interface accepts common image formats such as JPEG, PNG, and WebP within the displayed size limits.
-<!-- begin:docs -->- Is there an API? API availability and integration guidance are documented at /docs and may depend on the current plan.
+<!-- begin:docs -->- Is there an API? Yes. Nine image models sit behind one asynchronous API; the integration guide is at /docs and the same facts are published as JSON.
 <!-- end:docs -->
 
 ## Preferred terminology

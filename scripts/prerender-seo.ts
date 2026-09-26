@@ -13,6 +13,10 @@ import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
 import { LEGAL } from '../src/config/legal';
+import {
+  API_BASE_URL, API_CATALOG_JSON, API_FLOW, API_MAX_UPLOAD_MIB, API_PRICE, API_RESULT_TTL_SECONDS,
+  ASPECT_SIZES, CATALOG, CATALOG_UPDATED, CATALOG_VERSION, apiCatalogDocument, apiModelJson,
+} from '../src/config/apiCatalog';
 
 /** Each deployment states its own origin through `VITE_SITE_URL`; see `src/config/site-url.ts`. */
 const BASE_URL = resolveSiteUrl(process.env.VITE_SITE_URL);
@@ -669,6 +673,95 @@ function renderPassportPhoto(spec?: PhotoSpec): string {
 }
 
 /**
+ * `/docs` is the integration page, and its static HTML comes from the same catalog the React page and
+ * the JSON files are generated from (`src/config/apiCatalog.ts`). A crawler therefore reads the real
+ * model ids, parameters and refusals — where the page used to be a placeholder whose copy named a
+ * host and a model the service has never served.
+ *
+ * The prose stays short on purpose: the tables are the data, and the JSON files carry the same facts
+ * in a form a generator prefers anyway.
+ */
+function renderApiCatalog(): string {
+  const pretty = (value: unknown) => escapeHtml(JSON.stringify(value, null, 2));
+  const code = (title: string, body: string) =>
+    `<figure class="mt-4 rounded-xl border border-outline-variant/20 overflow-hidden bg-surface-lowest"><figcaption class="bg-surface-low px-4 py-2 text-xs text-zinc-400 border-b border-outline-variant/20">${escapeHtml(title)}</figcaption><pre class="overflow-x-auto p-4 text-xs text-zinc-300"><code>${escapeHtml(body)}</code></pre></figure>`;
+
+  const facts = renderTable([
+    ['Fact', 'Value'],
+    ['---', '---'],
+    ['Calls go to', API_BASE_URL],
+    ['Authentication', 'Authorization: Bearer <project API key>'],
+    ['Price', API_PRICE],
+    ['Upload ceiling', `${API_MAX_UPLOAD_MIB} MiB per reference image`],
+    ['Result URLs', `signed, and they expire ${API_RESULT_TTL_SECONDS} s after the task finishes`],
+    ['Catalog version', `${CATALOG_VERSION} (updated ${CATALOG_UPDATED})`],
+  ]);
+
+  const flow = `<ol class="mt-5 space-y-3">${API_FLOW.map(step =>
+    `<li><strong>${step.n}. ${escapeHtml(step.title)}</strong> — <code>${step.method} ${escapeHtml(step.path)}</code><br />${escapeHtml(step.detail)}</li>`).join('')}</ol>`;
+
+  const index = `<div class="overflow-x-auto"><table><thead><tr><th>Model</th><th>What you get</th><th>References</th><th>Measured</th></tr></thead><tbody>${CATALOG.map(model =>
+    `<tr><td><a href="#${model.id}"><code>${model.id}</code></a></td><td>${escapeHtml(model.label)}</td><td>${model.inputs.min === model.inputs.max ? model.inputs.max : `${model.inputs.min}–${model.inputs.max}`}</td><td>${escapeHtml(model.latency)}</td></tr>`).join('')}</tbody></table></div>`;
+
+  const sections = CATALOG.map(model => {
+    const params = renderTable([
+      ['Field', 'Type', 'Values', 'Default', 'Notes'],
+      ['---', '---', '---', '---', '---'],
+      ...model.params.map(param => [
+        param.required ? `${param.name} (required)` : param.name,
+        param.type,
+        param.values || '—',
+        param.default || '—',
+        param.note || '',
+      ]),
+    ]);
+    const refs = `<ol class="mt-2">${model.inputs.slots.map((slot, order) =>
+      `<li><code>image_ids[${order}]</code> — ${escapeHtml(slot)}</li>`).join('')}</ol>`;
+    return `<section id="${model.id}" class="mt-12">
+      <h2><code>${model.id}</code> — ${escapeHtml(model.label)}</h2>
+      <p class="mt-3">${escapeHtml(model.summary)}</p>
+      <p class="mt-2 text-sm">Capability <code>${escapeHtml(model.capability)}</code> · verified ${escapeHtml(model.verified)} · <a href="${escapeHtml(apiModelJson(model.id))}">JSON for this model</a></p>
+      <h3 class="mt-6">References</h3>${refs}
+      <p class="mt-3"><strong>Returns:</strong> ${escapeHtml(model.output)}</p>
+      <p><strong>Measured:</strong> ${escapeHtml(model.latency)}</p>
+      <h3 class="mt-6">Parameters</h3>${params}
+      ${model.refuses.length ? `<p class="mt-4"><strong>Refused, not ignored:</strong> <code>${escapeHtml(model.refuses.join(', '))}</code> — sending one fails the call instead of being dropped.</p>` : ''}
+      <h3 class="mt-6">Where it stops</h3><ul class="mt-2">${model.limits.map(limit => `<li>${escapeHtml(limit)}</li>`).join('')}</ul>
+      ${code(`POST /v1/tasks/alphanet-flux — the body for ${model.id}`, JSON.stringify(model.body, null, 2))}
+      ${model.tryIt ? `<p class="mt-4"><a href="${escapeHtml(model.tryIt.path)}">${escapeHtml(model.tryIt.label)}</a></p>` : ''}
+    </section>`;
+  }).join('');
+
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1100px] mx-auto">
+    <nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>Integration guide</span></nav>
+    <header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">Integration</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">The image API, on one page</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">Nine image models behind one asynchronous API: open an upload ticket, put the bytes, submit the task, poll it, fetch the signed result. This page is what an integrator reads; the gateway is what it calls. Both — and the JSON below — are rendered from one catalog file, so they cannot disagree. Every number here is a measurement with its date.</p></header>
+    <section class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">Two entry points</h2><ul class="mt-4 space-y-2"><li><strong>Read</strong> — this page, <a href="${escapeHtml(API_CATALOG_JSON)}">${escapeHtml(API_CATALOG_JSON)}</a> for every model, and <code>${escapeHtml(apiModelJson('<model>'))}</code> for one. No key required.</li><li><strong>Call</strong> — <a href="${escapeHtml(API_BASE_URL)}">${escapeHtml(API_BASE_URL)}</a>: sign in, copy the project API key, then <code>GET /v1/models</code> with it to list the model ids that key may use.</li></ul><div class="prose prose-invert prose-zinc max-w-none mt-5">${facts}</div></section>
+    <section class="mt-12"><h2 class="text-2xl font-bold text-white">The four steps</h2><div class="prose prose-invert prose-zinc max-w-none">${flow}</div></section>
+    <section class="mt-12"><h2 class="text-2xl font-bold text-white">The nine models</h2><div class="prose prose-invert prose-zinc max-w-none">${index}</div></section>
+    <section class="mt-12"><h2 class="text-2xl font-bold text-white">Model by model</h2><div class="prose prose-invert prose-zinc max-w-none">${sections}</div>
+      <p class="mt-6">A worked request for <code>cutout-fast</code>: <code>${pretty({ model: 'cutout-fast', image_ids: ['<file_id>'] })}</code> submitted to <code>POST /v1/tasks/alphanet-flux</code>, polled at <code>GET /v1/tasks/{task_id}</code>, results read at <code>GET /v1/tasks/{task_id}/result</code>.</p>
+    </section>
+    <section class="mt-12"><h2 class="text-2xl font-bold text-white">Output shapes for the four productised models</h2><p class="mt-4">Omitted, <code>aspect</code> follows the first reference image instead of forcing a square: ${ASPECT_SIZES.map(bucket => `<code>${bucket.value}</code> = ${bucket.size}`).join(' · ')}.</p></section>
+    <section class="mt-12"><h2 class="text-2xl font-bold text-white">For a machine</h2><p class="mt-3">The whole catalog is at <a href="${escapeHtml(API_CATALOG_JSON)}">${escapeHtml(API_CATALOG_JSON)}</a>, one model per file at <code>${escapeHtml(apiModelJson('<model>'))}</code>. Model names are frozen: they are billing-visible, so renaming one is a breaking change.</p></section>
+  </main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: 'Image API Documentation — One Page, Nine Models | DLSS 5 Studio',
+    description: `One asynchronous image API for nine models: background removal, SVG tracing, generative erase, detail restore, prompt-driven editing, virtual try-on, interior renders, portrait retouch and virtual makeup. Base URL ${API_BASE_URL}, ${API_PRICE}.`,
+    canonicalPath: '/docs',
+    language: 'en-US',
+    keywords: ['image api documentation', 'background removal api', 'image upscaling api', 'virtual try-on api', 'image to svg api', 'erase object api'],
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: 'Image API documentation — one page, nine models',
+      description: 'Upload, submit, poll and fetch across nine image models behind one asynchronous API.',
+      dateModified: CATALOG_UPDATED,
+      inLanguage: 'en-US',
+    },
+  }), root);
+}
+
+/**
  * Only the sections this deployment serves are written out: prerendering a page that only redirects
  * home would hand a crawler an indexable dead end.
  */
@@ -707,15 +800,7 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   keywords: ['DLSS 5 download', 'DLSS download free', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'online image upscaler no download'],
   links: [{ label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
 }));
-if (profileHas('docs')) writeRoute('/docs', renderPublicGuide({
-  path: '/docs',
-  title: 'AI Image Upscaling API Docs | DLSS 5 Developer API',
-  description: 'Integrate AI image upscaling and neural super resolution into your product with the DLSS 5 developer API documentation.',
-  heading: 'AI Image Upscaling API Docs',
-  lead: 'Find the integration surface, authentication notes and image enhancement workflow guidance for developers.',
-  keywords: ['ai upscaling api', 'image enhancement api', 'dlss api', 'neural super resolution api'],
-  links: [{ label: 'Enterprise image upscaling', path: '/enterprise' }, { label: 'AI upscaling models', path: '/models' }, { label: 'Pricing and credits', path: '/pricing' }],
-}));
+if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({
   path: '/enterprise',
   title: 'Enterprise AI Image Upscaling | Private Neural Rendering API',

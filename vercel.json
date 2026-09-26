@@ -19,6 +19,7 @@
     { "source": "/unblur-image", "destination": "/unblur-image/index.html" },
     { "source": "/es/mejorar-calidad-imagen", "destination": "/es/mejorar-calidad-imagen/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/docs", "destination": "/docs/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

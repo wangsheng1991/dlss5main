@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsx scripts/prerender-seo.ts",
+    "build": "vite build && tsx scripts/export-api-catalog.ts && tsx scripts/prerender-seo.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",

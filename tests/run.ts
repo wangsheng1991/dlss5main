@@ -9,6 +9,7 @@
 import { runAll } from './harness';
 import './spec.test';
 import './tools.test';
+import './api-catalog.test';
 import './use-cases.test';
 import './passport-photo.test';
 
