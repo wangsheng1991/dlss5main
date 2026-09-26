@@ -411,7 +411,7 @@ export default function Dashboard() {
   const toolSecondRequired = isToolId(mode) && toolNeedsSecondImage(mode);
   return <>
     <SEO
-      title="AI Image Studio — DLSS5NVIDIA"
+      title={`${t(characterStyleWorkflow ? 'dashboard.styleWorkflowTitle' : 'dashboard.studioTitle')} — DLSS5NVIDIA`}
       description="Private AI image editing workspace for signed-in DLSS5NVIDIA users."
       canonical="/dashboard"
       robots="noindex,nofollow"
