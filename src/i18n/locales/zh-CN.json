@@ -111,7 +111,7 @@
     "inferenceHint": "步数越高，质量越好但速度越慢。",
     "upscaleScale": "放大倍数",
     "uploadAreaTitle": "拖拽或点击上传图片",
-    "uploadAreaHint": "支持 JPG、PNG、WEBP（最大 5MB）",
+    "uploadAreaHint": "支持 JPG、PNG、WEBP（最大 {{maxMiB}} MiB）",
     "orTryExamples": "免费试用示例",
     "clear": "清除",
     "generate": "生成 DLSS 5 风格",

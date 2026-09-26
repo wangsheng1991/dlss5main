@@ -111,7 +111,7 @@
     "inferenceHint": "Higher steps = better quality but slower.",
     "upscaleScale": "Upscale Scale",
     "uploadAreaTitle": "Drag & Drop or Click to Upload",
-    "uploadAreaHint": "Supports JPG, PNG, WEBP (Max 5MB)",
+    "uploadAreaHint": "Supports JPG, PNG, WEBP (up to {{maxMiB}} MiB)",
     "orTryExamples": "Try a free example",
     "clear": "Clear",
     "generate": "Generate DLSS 5 Meme",
