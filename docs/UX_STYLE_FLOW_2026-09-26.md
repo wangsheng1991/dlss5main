@@ -145,3 +145,35 @@ Dashboard-D_IldU0B.js   88,434 bytes   game-character-style:0   "Cyberpunk neon"
 ## 6. 我这边接下来做什么
 
 你提交并部署 R1–R3 之后告诉我，我用同一套脚本（`shared_env/ux/check-style-flow.mjs`）复测这三条的验收条件，把结果写回这份文档。SERP 与线上复核照旧归我。
+
+## 7. 收口（2026-09-26 12:56，本地）
+
+Codex 在 11:22 提交并部署了 `6d7bf64`（R5：把风格工作流从九工具页里分出来，生产已 Ready），随后在 11:40 中断，留了 4 个未提交文件。这一节记录由谁把剩下的口收掉、用什么证据、还剩什么。
+
+### 7.1 落地的改动（7 个文件）
+
+- **R3 · 旗舰功能有了免登录的第一次点击。** `src/config/samples.ts` 新增 `characterStyle`（`game-cyber-1-before.jpg` + 赛博朋克 brief），因为 `tool: null`，它自动进入 `GUEST_SAMPLE_IDS`；`/game-character-style` 页头下方新增 `FreeStyleExample`：一次点击、不跳转、不登录，直接跑这个缓存示例并给出前后对比滑块（复用 `useSampleRun`）；页头 CTA、首页的"免费试跑一个角色风格示例"都带上 `&sample=characterStyle`。
+- **深链带样例。** `Dashboard.tsx` 挂载时读取 `?sample=`：预选该示例、切到它所属的工具、写入它的 brief（`isSampleId` 校验，未知值忽略）。
+- **R4 · 工作室本地化。** 把 Codex 写进字典却没人调用的 86 个键接到 `Dashboard.tsx`：h1/描述（`studioTitle` / `styleWorkflowTitle`）、9 个模式名（`MODE_LABEL_KEY` → `mode*`，并新增 `modeCharacterStyle`）、区块标题、游客提示、上传区、第二张图槽位、示例网格与运行按钮、结果/继续任务/下载/清除、输出与费用行。示例名改读 `nameZh`。
+- **R5 的可见提示。** 切工具时清掉第二张图，现在会写一行 `secondImageChanged` 说明，而不是静默清空。
+- **R1 / R2**（Codex 已做，本次一并提交）：首页的假上传框换成诚实的"打开图片工作室"入口卡；首页"如何使用"里的上传上限改为读 `MAX_UPLOAD_MIB`。
+- `scripts/prerender-seo.ts`：`/game-character-style` 的静态快照与 React 页面同步（CTA 带 `&sample=characterStyle`，并注明有一个免费的缓存示例）。
+
+### 7.2 证据（全部在本地构建上）
+
+- `npm run lint`（tsc --noEmit）干净；`npm test` **72/72**；`npm run build` 干净，预渲染 9 篇文章 × 3 语言 + 13 个工具页 + 3 个工作流页。
+- `shared_env/ux/check-style-flow.mjs http://localhost:4321`（本地 dist，zh-CN，1440×900，未登录）：**5/5**，其中 R1 报"页面上不再有上传尺寸承诺，只剩 10 MiB"、R4 报"zh 会话里已无英文 chrome"。
+- 点击探针：`/game-character-style` 上的免费示例按钮真的发出 `POST /api/image-edit/samples {"sample":"characterStyle"}`（本地静态预览无 serverless 函数，所以如预期报错）；`?tool=game-character-style&sample=characterStyle` 打开后 h1 为"DLSS5 风格转换工作流"、示例已选中、按钮为"运行示例 · 免费"、brief 正是该示例的提示词。
+
+### 7.3 没有验证的部分
+
+- **没有部署**：本机此刻没有外网出口（`127.0.0.1:1082` 对所有 CONNECT 返 503，DNS 应答 `198.18.0.x` 假地址，直连也失败），`vercel deploy` 与 `git push` 都跑不了。7.2 的 5/5 是**本地构建**的结果，不是线上。
+- 生产上 `/game-character-style` 的免费示例是**首次运行**，会走"202 → 轮询 → 缓存"的路径，第一次点击可能等十几秒；缓存写入 Firestore 后才稳定免费（`SAMPLE_CACHE_VERSION = geometry-v2`，新样例没有旧缓存）。
+- 部署后请用同一条命令复测并把结果写回本节。
+
+### 7.4 仍然残留的英文（已知，未处理）
+
+- 案例面板 `ShowcasePanel`：`Real cases · input → output`、`What to look at`、`Where it stops`、各案例标题与"看点"文字来自 `src/config/showcase.ts`，是内容不是 chrome。
+- 工具模式下的提交按钮仍是 `TOOL_SUMMARY[mode].short · 1 credit`（provider 词汇），以及 `· second image still required` 这条行内提示。
+- 增强/擦除/矢量化/抠图四个模式下的设置说明段落（"Pick an image first…" 等）还没有键。
+- 导航栏的 `Pricing` 在 zh 会话下仍是英文（不属于工作室范围）。
