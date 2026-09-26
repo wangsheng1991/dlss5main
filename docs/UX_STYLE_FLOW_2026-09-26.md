@@ -177,3 +177,34 @@ Codex 在 11:22 提交并部署了 `6d7bf64`（R5：把风格工作流从九工�
 - 工具模式下的提交按钮仍是 `TOOL_SUMMARY[mode].short · 1 credit`（provider 词汇），以及 `· second image still required` 这条行内提示。
 - 增强/擦除/矢量化/抠图四个模式下的设置说明段落（"Pick an image first…" 等）还没有键。
 - 导航栏的 `Pricing` 在 zh 会话下仍是英文（不属于工作室范围）。
+
+## 8. 继续收口（2026-09-26 14:10，本地）
+
+Codex 从 11:40 起没有再动，网络也没有恢复，所以这一轮由我接手。新增两件用户能感觉到的事，并修掉一处让"切回来"失效的路由问题。
+
+### 8.1 R5b · 两个工作流各持有自己的提示词
+
+原先通用编辑器和风格工作流共用同一个 `prompt`。因为 `/dashboard` 与 `/dashboard?tool=game-character-style` 是同一条路由，站内跳转不会重挂组件，所以进入风格工作流会**静默**覆盖读者在通用编辑器里写的内容。现在 `stylePrompt` 与 `prompt` 分开，进入/离开互不影响，风格方向按钮只改自己的那份。
+
+顺带修了同一个根因的另一面：工作流标志原本读 `window.location`，而组件并不订阅路由，于是"查看全部工具"把地址栏改回 `/dashboard` 之后，页面**仍停在风格工作流**（实测：URL 已是 `/dashboard`，h1 还是"DLSS5 风格转换工作流"）。改为 `useLocation()`。
+
+**验收（本地探针）**：通用编辑器里 mode=提示词编辑、prompt=默认句 → 从首页 CTA 进风格工作流（h1 变、brief 变成示例提示词）→ 点"查看全部工具"回来 → prompt 仍是**默认句**、mode 仍是**提示词编辑**。PASS。
+
+### 8.2 R6 · 游客先看到能跑的，再看到要登录的
+
+未登录时，示例网格移到登录门之前；那个 300px 高的虚线大框换成一行"登录后可以上传自己的图片，并解锁全部 9 个工具"。实测游客首屏：示例标题 y=420，登录那一行 y=864，虚线框 0 个。
+
+### 8.3 案例面板的 chrome 也本地化了
+
+`ShowcasePanel` 的 `Real cases · input → output`、`What to look at`、`Where it stops:`、`Sign in to load these inputs`、`Load these inputs`、`Measured …` 走 i18n（新增 9 个键）。案例标题与"看点"文字仍在 `src/config/showcase.ts` 里是英文 —— 那是内容，不是 chrome，留待决定。
+
+### 8.4 证据（本地 dist，非线上）
+
+- `npm run lint` 干净、`npm test` **72/72**、`npm run build` 干净。
+- `check-style-flow.mjs http://localhost:4321`：**5/5**。
+- 新探针 `probe-r5b-r6.mjs`：R5b PASS、R6 PASS（见 8.1 / 8.2 的数字）。
+- 字典两语言键完全对齐（dashboard 命名空间 159 键），重复键（`generationSettings`/`orTryExamples`/`newImage` 的旧条目）已清理。
+
+### 8.5 还是没部署
+
+网络出口依旧不通（`api.github.com` 与站点都返回 000）。本地 `main` 现在比 `origin/main` 多 4 个提交；已挂一个 30 分钟一次的探针任务 `deploy_when_online`：一旦出口恢复就推送（推送即触发 Vercel 部署）、跑线上 5 条验收、把结果写回本节，然后自己撤掉。

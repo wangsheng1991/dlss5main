@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { UploadCloud, Download, RefreshCw, AlertCircle, Gift } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import ShowcasePanel from '../components/ShowcasePanel';
@@ -121,6 +121,8 @@ export default function Dashboard() {
   const [toolChoices, setToolChoices] = useState<Record<string, string>>({});
   const [toolExtra, setToolExtra] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
+  /** The style workflow's own brief — see `activePrompt`, which keeps the two from overwriting. */
+  const [stylePrompt, setStylePrompt] = useState(CHARACTER_STYLE_DEFAULT_PROMPT);
   const [characterStylePreset, setCharacterStylePreset] = useState<CharacterStylePreset>('cyberpunk');
   // Usage data shows enhancement is the primary job; make the high-intent path the default.
   const [mode, setMode] = useState<GenerationMode>('enhance');
@@ -144,17 +146,28 @@ export default function Dashboard() {
   const secondInput = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
   const isZh = i18n.language.startsWith('zh');
-  const initialTool = new URLSearchParams(window.location.search).get('tool');
+  // The router's location, not `window.location`: reading the latter during render only reflects a
+  // change when something else happens to re-render this page, so the "All tools" link stayed on
+  // the style workflow with the URL already back at /dashboard.
+  const { search } = useLocation();
+  const initialTool = new URLSearchParams(search).get('tool');
   const characterStyleWorkflow = initialTool === 'game-character-style';
+  /**
+   * The two workflows hold their briefs apart. They used to share one `prompt`, so opening the
+   * style workflow from a link replaced whatever the reader had written in the general editor —
+   * and the link does not remount the page, so the loss was silent.
+   */
+  const activePrompt = characterStyleWorkflow ? stylePrompt : prompt;
+  const setActivePrompt = (value: string) => (characterStyleWorkflow ? setStylePrompt(value) : setPrompt(value));
   // SEO tool pages link into the same studio with the matching preset already selected.
   useEffect(() => {
-    const params = new URL(window.location.href).searchParams;
+    const params = new URLSearchParams(search);
     const tool = params.get('tool');
     const preset = tool ? MODE_BY_TOOL_QUERY[tool] : undefined;
     if (preset) setMode(preset);
     if (tool === 'game-character-style') {
       setMode('edit');
-      setPrompt(CHARACTER_STYLE_DEFAULT_PROMPT);
+      setStylePrompt(CHARACTER_STYLE_DEFAULT_PROMPT);
     }
     // A landing page may hand its reader one example to run, so the free first click is a tap on
     // "Run this example" rather than a hunt through the grid. The sample's own brief wins over the
@@ -163,7 +176,7 @@ export default function Dashboard() {
     if (isSampleId(sample)) {
       setSelectedSample(sample);
       setMode(SAMPLES[sample].tool ?? 'edit');
-      setPrompt(SAMPLES[sample].prompt);
+      setActivePrompt(SAMPLES[sample].prompt);
     }
     trackEvent('studio_open', { tool: tool || 'direct' });
   }, []);
@@ -324,7 +337,7 @@ export default function Dashboard() {
     setFileError('');
     sampleRun.reset();
     setSelectedSample(sample);
-    setPrompt(SAMPLES[sample].prompt);
+    setActivePrompt(SAMPLES[sample].prompt);
     // An example may belong to a tool: picking it also selects the tool it belongs to, and the
     // vectorizer example also selects the preset it was traced with.
     const tool = SAMPLES[sample].tool;
@@ -355,7 +368,7 @@ export default function Dashboard() {
     setMode(entry.mode);
     setToolChoices(entry.options || {});
     setToolExtra(entry.extra || '');
-    if (entry.prompt) setPrompt(entry.prompt);
+    if (entry.prompt) setActivePrompt(entry.prompt);
     if (entry.mode === 'vectorize') setPreset('logo');
     try {
       const files = await Promise.all(entry.inputs.map(async (input, index) => {
@@ -463,7 +476,7 @@ export default function Dashboard() {
           {characterStyleWorkflow ? <div className="mt-3 space-y-4">
             <p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.chooseStyleHint')}</p>
             <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label={t('dashboard.styleDirection')}>
-              {CHARACTER_STYLE_PRESETS.map(preset => <button key={preset.id} type="button" role="radio" aria-checked={characterStylePreset === preset.id} onClick={() => { setCharacterStylePreset(preset.id); setPrompt(preset.prompt); }} disabled={locked} className={characterStylePreset === preset.id ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-3 text-primary font-semibold text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-3 text-zinc-300 text-left disabled:opacity-60'}>{isZh ? preset.labelZh : preset.label}</button>)}
+              {CHARACTER_STYLE_PRESETS.map(preset => <button key={preset.id} type="button" role="radio" aria-checked={characterStylePreset === preset.id} onClick={() => { setCharacterStylePreset(preset.id); setStylePrompt(preset.prompt); }} disabled={locked} className={characterStylePreset === preset.id ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-3 text-primary font-semibold text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-3 text-zinc-300 text-left disabled:opacity-60'}>{isZh ? preset.labelZh : preset.label}</button>)}
             </div>
           </div> : mode === 'enhance' ? <div className="mt-3">
             <div className="grid grid-cols-2 gap-2">{ENHANCE_FACTORS.map(value => <button key={value} type="button" onClick={() => setFactor(value)} disabled={locked} className={factor === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value}×</button>)}</div>
@@ -501,7 +514,7 @@ export default function Dashboard() {
             </div>}
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
         {mode === 'edit' || mode === 'erase'
-          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint') : t('dashboard.signInPromptHint')}</p></div>
+          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={activePrompt} onChange={e => setActivePrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint') : t('dashboard.signInPromptHint')}</p></div>
           : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
@@ -547,9 +560,12 @@ export default function Dashboard() {
             {preview2 && <img src={preview2} alt="Second image preview" className="mt-3 max-h-52 object-contain rounded-lg"/>}
             {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
           </div>}
-          {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">{t('dashboard.signInToUpload')}</span><span className="text-sm text-primary">{t('dashboard.orTryExamples')}</span></Link>)}
+          {!user && selectedSample && <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/>}
           {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">{t('dashboard.examplesHeading')}</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={sampleName(id, isZh)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{sampleName(id, isZh)}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
+          {/* The line that needs an account comes after the things that do not: a signed-out reader
+              should meet something they can run before the door. */}
+          {!user && !selectedSample && <Link to="/login" className="w-full rounded-lg border border-outline-variant/30 px-4 py-3 text-center text-sm text-zinc-300 hover:border-primary">{t('dashboard.guestUnlock', { count: MODES.length })}</Link>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !activePrompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, activePrompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">{t('dashboard.signInEditPrompt')}</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
         </div>}
       </section>

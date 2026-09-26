@@ -13,6 +13,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowRight, ExternalLink, Loader2, MousePointerClick } from 'lucide-react';
 import { SHOWCASE_NOTE, casesForTool, showcaseTools, type ShowcaseCase } from '../config/showcase';
 import { TOOL_SUMMARY, isToolId, type ToolId } from '../config/tools';
@@ -31,6 +32,7 @@ const THUMB = 'w-full h-20 xl:h-16 object-contain rounded bg-black/30 border bor
 const CAPTION = 'text-[10px] leading-tight text-zinc-500 break-words';
 
 function CaseCard({ entry, signedIn, locked, onUse }: { entry: ShowcaseCase; signedIn: boolean; locked: boolean; onUse: (entry: ShowcaseCase) => Promise<void> }) {
+  const { t } = useTranslation();
   const [pending, setPending] = useState(false);
   const load = async () => {
     setPending(true);
@@ -58,25 +60,24 @@ function CaseCard({ entry, signedIn, locked, onUse }: { entry: ShowcaseCase; sig
           <figcaption className={CAPTION}>{entry.output.label}</figcaption>
         </figure>
       </div>
-      <p className="text-[11px] text-zinc-400">
-        Measured <span className="text-zinc-200">{entry.seconds}</span> · real output <span className="text-zinc-200">{entry.output.width} × {entry.output.height}</span>
-      </p>
+      <p className="text-[11px] text-zinc-400">{t('dashboard.showcaseMeasured', { seconds: entry.seconds, width: entry.output.width, height: entry.output.height })}</p>
       <div>
-        <p className="text-[10px] font-label uppercase tracking-widest text-zinc-500 mb-1">What to look at</p>
+        <p className="text-[10px] font-label uppercase tracking-widest text-zinc-500 mb-1">{t('dashboard.showcaseLook')}</p>
         <ul className="text-xs text-zinc-300 space-y-1 list-disc pl-4">{entry.look.map(point => <li key={point}>{point}</li>)}</ul>
       </div>
-      {entry.limit && <p className="text-xs text-zinc-500">Where it stops: {entry.limit}</p>}
+      {entry.limit && <p className="text-xs text-zinc-500">{t('dashboard.showcaseLimit', { limit: entry.limit })}</p>}
       <div className="flex flex-wrap items-center gap-2 pt-1">
-        {entry.output.file && <a href={entry.output.file} target="_blank" rel="noreferrer" className="text-xs text-primary inline-flex items-center gap-1">{entry.output.fileLabel || 'Open the real file'}<ExternalLink className="w-3 h-3"/></a>}
+        {entry.output.file && <a href={entry.output.file} target="_blank" rel="noreferrer" className="text-xs text-primary inline-flex items-center gap-1">{entry.output.fileLabel || t('dashboard.showcaseOpenFile')}<ExternalLink className="w-3 h-3"/></a>}
         {signedIn
-          ? <button type="button" disabled={locked || pending} onClick={() => void load()} className="text-xs px-3 py-2 rounded-lg border border-primary/40 text-primary hover:bg-primary/10 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1">{pending ? <Loader2 className="w-3 h-3 animate-spin"/> : <MousePointerClick className="w-3 h-3"/>}{pending ? 'Loading…' : 'Load these inputs'}</button>
-          : <Link to="/login" className="text-xs px-3 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 hover:border-primary/40">Sign in to load these inputs</Link>}
+          ? <button type="button" disabled={locked || pending} onClick={() => void load()} className="text-xs px-3 py-2 rounded-lg border border-primary/40 text-primary hover:bg-primary/10 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-1">{pending ? <Loader2 className="w-3 h-3 animate-spin"/> : <MousePointerClick className="w-3 h-3"/>}{pending ? t('dashboard.showcaseLoading') : t('dashboard.showcaseLoad')}</button>
+          : <Link to="/login" className="text-xs px-3 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 hover:border-primary/40">{t('dashboard.showcaseSignIn')}</Link>}
       </div>
     </article>
   );
 }
 
 export default function ShowcasePanel({ mode, signedIn, locked, onUse }: Props) {
+  const { t } = useTranslation();
   // Follow the studio until the reader browses another tool here; switching the studio resets that.
   const [browsing, setBrowsing] = useState<ToolId | null>(null);
   useEffect(() => { setBrowsing(null); }, [mode]);
@@ -85,9 +86,9 @@ export default function ShowcasePanel({ mode, signedIn, locked, onUse }: Props) 
   const entries = casesForTool(active);
   return (
     <section aria-labelledby="showcase-heading" className="bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 h-fit">
-      <h2 id="showcase-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Real cases · input → output</h2>
+      <h2 id="showcase-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{t('dashboard.showcaseHeading')}</h2>
       <p className="text-xs text-zinc-400 mt-2">{SHOWCASE_NOTE}</p>
-      <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="Cases by tool">
+      <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label={t('dashboard.showcaseTabs')}>
         {tools.map(tool => <button key={tool.id} type="button" role="tab" aria-selected={active === tool.id} onClick={() => setBrowsing(tool.id)} className={active === tool.id ? 'px-3 py-2 rounded-lg text-xs bg-primary/15 border border-primary/40 text-primary font-semibold' : 'px-3 py-2 rounded-lg text-xs bg-surface-highest border border-outline-variant/20 text-zinc-300'}>{tool.label} · {tool.count}</button>)}
       </div>
       <p className="mt-3 text-xs text-zinc-500">{TOOL_SUMMARY[active].label} — {TOOL_SUMMARY[active].output} · {TOOL_SUMMARY[active].seconds}</p>
