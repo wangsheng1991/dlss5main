@@ -318,6 +318,9 @@ export default function Home() {
           <Link to="/game-character-style" className="inline-flex items-center rounded-lg bg-primary px-5 py-3 text-sm font-bold text-black hover:bg-white transition-colors">
             {isZh ? '查看 20 组完整角色案例 →' : 'Open all 20 character cases →'}
           </Link>
+          <Link to="/dashboard?tool=game-character-style" className="inline-flex items-center rounded-lg border border-primary/40 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors">
+            {isZh ? '直接开始人物风格转换 →' : 'Start a character style conversion →'}
+          </Link>
           <Link to="/video-upscaler" className="text-sm font-semibold text-primary hover:text-white transition-colors">
             {isZh ? '进入视频增强工作流 →' : 'Explore the video enhancement workflow →'}
           </Link>

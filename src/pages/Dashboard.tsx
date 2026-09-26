@@ -23,12 +23,14 @@ import { claimShareReward } from '../features/rewards/shareClaim';
 import { SHARE_REWARD } from '../config/promos';
 import SEO from '../components/SEO';
 import { fileSizeBucket, pixelBucket, trackEvent } from '../lib/analytics';
+import { GAME_STYLE_CASES } from '../content/gameStyleCases';
 
 type HistoryJob = { id: string; status: string; prompt: string; tool?: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
 
 /** Query values the SEO tool pages use to open the studio with a preset already selected. */
 const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
   upscale: 'enhance', enhance: 'enhance', unblur: 'enhance',
+  'game-character-style': 'edit',
   'remove-background': 'cutout', erase: 'erase', 'erase-object': 'erase',
   'image-to-svg': 'vectorize', vectorize: 'vectorize',
   // The A-line tool pages. Each path has a short alias so a hand-written link still lands right.
@@ -37,6 +39,22 @@ const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
   'portrait-retouch': 'retouch', retouch: 'retouch',
   'virtual-makeup': 'makeup', makeup: 'makeup',
 };
+
+/**
+ * The character page is a style-conversion workflow, not a generic “enhance” job. It still uses
+ * the provider's supported edit mode, but the brief is explicit about preserving identity and the
+ * user chooses a direction before uploading. Keeping these presets here makes the landing-page CTA
+ * open the same focused workflow every time instead of dropping the reader into all nine tools.
+ */
+const CHARACTER_STYLE_PRESETS = [
+  { id: 'cyberpunk', label: 'Cyberpunk neon', labelZh: '赛博朋克霓虹', prompt: GAME_STYLE_CASES[0].prompt },
+  { id: 'fantasy', label: 'Grounded fantasy', labelZh: '写实奇幻', prompt: GAME_STYLE_CASES[1].prompt },
+  { id: 'sci-fi', label: 'Hard-surface sci-fi', labelZh: '硬表面科幻', prompt: GAME_STYLE_CASES[2].prompt },
+  { id: 'anime', label: 'Anime cel shading', labelZh: '动漫赛璐璐', prompt: GAME_STYLE_CASES[9].prompt },
+  { id: 'realistic', label: 'Realistic cinematic', labelZh: '电影写实', prompt: GAME_STYLE_CASES[14].prompt },
+] as const;
+type CharacterStylePreset = (typeof CHARACTER_STYLE_PRESETS)[number]['id'];
+const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
 
 /** The presets offered in the studio, in display order. */
 const MODES: Array<[GenerationMode, string]> = [
@@ -80,7 +98,7 @@ function HistoryResult({ jobId, token, alt }: { jobId: string; token: string; al
 }
 
 export default function Dashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, profile, dailyCheckIn } = useAuth();
   const generation = useGeneration(user);
   const sampleRun = useSampleRun();
@@ -99,6 +117,7 @@ export default function Dashboard() {
   const [toolChoices, setToolChoices] = useState<Record<string, string>>({});
   const [toolExtra, setToolExtra] = useState('');
   const [prompt, setPrompt] = useState('Make the lighting more natural and preserve the composition.');
+  const [characterStylePreset, setCharacterStylePreset] = useState<CharacterStylePreset>('cyberpunk');
   // Usage data shows enhancement is the primary job; make the high-intent path the default.
   const [mode, setMode] = useState<GenerationMode>('enhance');
   const [factor, setFactor] = useState<EnhanceFactor>(2);
@@ -120,11 +139,18 @@ export default function Dashboard() {
   const input = useRef<HTMLInputElement>(null);
   const secondInput = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
+  const isZh = i18n.language.startsWith('zh');
+  const initialTool = new URLSearchParams(window.location.search).get('tool');
+  const characterStyleWorkflow = initialTool === 'game-character-style';
   // SEO tool pages link into the same studio with the matching preset already selected.
   useEffect(() => {
     const tool = new URL(window.location.href).searchParams.get('tool');
     const preset = tool ? MODE_BY_TOOL_QUERY[tool] : undefined;
     if (preset) setMode(preset);
+    if (tool === 'game-character-style') {
+      setMode('edit');
+      setPrompt(CHARACTER_STYLE_DEFAULT_PROMPT);
+    }
     trackEvent('studio_open', { tool: tool || 'direct' });
   }, []);
   useEffect(() => {
@@ -365,7 +391,15 @@ export default function Dashboard() {
     />
     <main className="pt-24 pb-24 px-4 sm:px-6 max-w-[1440px] mx-auto min-h-[80vh]">
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-      <div><h1 className="text-3xl font-headline font-bold text-white">AI Image Studio</h1><p className="text-zinc-400 text-sm mt-2 max-w-2xl">Enhance, upscale or repair a photo, render or product image. Prompt editing is available when you need a specific change.</p></div>
+      <div>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl font-headline font-bold text-white">{characterStyleWorkflow ? (isZh ? 'DLSS5 风格转换工作流' : 'DLSS5 style conversion') : 'AI Image Studio'}</h1>
+          {characterStyleWorkflow && <Link to="/dashboard" className="text-xs text-primary hover:text-white">{isZh ? '查看全部工具' : 'All tools'}</Link>}
+        </div>
+        <p className="text-zinc-400 text-sm mt-2 max-w-2xl">{characterStyleWorkflow
+          ? (isZh ? '上传一张游戏人物图，选择视觉方向，保持人物轮廓、服装、动作和身份，再改变光照、材质与世界观。' : 'Upload one game-character frame, choose a visual direction, and keep the silhouette, costume, pose and identity stable while changing light, materials and world direction.')
+          : 'Enhance, upscale or repair a photo, render or product image. Prompt editing is available when you need a specific change.'}</p>
+      </div>
       <div className="flex flex-wrap items-center gap-3">
         <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} credits` : 'Sign in to generate'}</span>
         {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? 'Change plan' : 'Upgrade'}</Link>}
@@ -373,7 +407,7 @@ export default function Dashboard() {
       </div>
     </div>
     {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}
-    {user && <section aria-labelledby="share-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
+    {user && !characterStyleWorkflow && <section aria-labelledby="share-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
       <h2 id="share-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-2">{t('dashboard.shareHeading', { count: SHARE_REWARD.credits })}</h2>
       <p className="text-sm text-zinc-300 max-w-3xl">{t('dashboard.shareBody', { count: SHARE_REWARD.credits })}</p>
       <input ref={shareInput} type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('dashboard.shareUpload')} onChange={e => { setShareFile(e.target.files?.[0] ?? null); setShareNotice(''); e.target.value = ''; }} className="sr-only"/>
@@ -384,7 +418,7 @@ export default function Dashboard() {
       </div>
       {shareNotice && <p role="status" aria-live="polite" className="text-sm text-nvidia-green mt-3">{shareNotice}</p>}
     </section>}
-    {user && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
+    {user && !characterStyleWorkflow && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
       <h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Your generations</h2>
       {history.length === 0
         ? <p className="text-sm text-zinc-500">Your images stay here after you close the page. Sign in on another device to see the same history.</p>
@@ -399,13 +433,27 @@ export default function Dashboard() {
           </div>
         </article>)}</div>}
     </section>}
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)_minmax(320px,1.1fr)]">
+    {characterStyleWorkflow && <section aria-label="Style conversion steps" className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {[
+        [isZh ? '1. 上传人物图' : '1. Upload a character frame', isZh ? '保持原始构图，JPG、PNG 或 WebP。' : 'Keep the original composition. JPG, PNG or WebP.'],
+        [isZh ? '2. 选择风格方向' : '2. Choose a style direction', isZh ? '只改变视觉变量，不重做人物。' : 'Change visual variables without redesigning the character.'],
+        [isZh ? '3. 对比并下载' : '3. Compare and download', isZh ? '检查脸部、手部、装备边缘和布料。' : 'Check the face, hands, gear edges and cloth.'],
+      ].map(([title, text], index) => <div key={title} className={`rounded-xl border p-4 ${index === 0 ? 'border-primary/40 bg-primary/10' : 'border-outline-variant/20 bg-surface-low'}`}><p className="text-sm font-semibold text-white">{title}</p><p className="text-xs text-zinc-400 mt-1">{text}</p></div>)}
+    </section>}
+    <div className={characterStyleWorkflow
+      ? 'grid grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.6fr)]'
+      : 'grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)_minmax(320px,1.1fr)]'}>
       <section aria-labelledby="settings-heading" className="bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
-        <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">Generation settings</h2>
+        <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{characterStyleWorkflow ? (isZh ? '风格转换设置' : 'Style conversion settings') : 'Generation settings'}</h2>
         <div><div className="grid grid-cols-2 gap-2">
-          {MODES.map(([value, label]) => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{label}</button>)}
+          {(characterStyleWorkflow ? ([['edit', isZh ? '人物风格转换' : 'Character style']] as Array<[GenerationMode, string]>) : MODES).map(([value, label]) => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{label}</button>)}
         </div>
-          {mode === 'enhance' ? <div className="mt-3">
+          {characterStyleWorkflow ? <div className="mt-3 space-y-4">
+            <p className="text-xs leading-relaxed text-zinc-400">{isZh ? '先选择一种视觉方向。提示词会锁定人物不变项，生成前仍可手动微调。' : 'Choose a visual direction first. The brief locks the character invariants and remains editable before you run it.'}</p>
+            <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label={isZh ? '人物风格方向' : 'Character style direction'}>
+              {CHARACTER_STYLE_PRESETS.map(preset => <button key={preset.id} type="button" role="radio" aria-checked={characterStylePreset === preset.id} onClick={() => { setCharacterStylePreset(preset.id); setPrompt(preset.prompt); }} disabled={locked} className={characterStylePreset === preset.id ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-3 text-primary font-semibold text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-3 text-zinc-300 text-left disabled:opacity-60'}>{isZh ? preset.labelZh : preset.label}</button>)}
+            </div>
+          </div> : mode === 'enhance' ? <div className="mt-3">
             <div className="grid grid-cols-2 gap-2">{ENHANCE_FACTORS.map(value => <button key={value} type="button" onClick={() => setFactor(value)} disabled={locked} className={factor === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value}×</button>)}</div>
             <p className="text-xs text-zinc-400 mt-2">{enhance
               ? <>Output <span className="text-white">{enhance.width} × {enhance.height}</span>{enhance.clamped ? ` · ${factor}× capped by the model's ${ENHANCE_MAX_EDGE} px edge, ${enhance.factor}× achieved` : ` · ${factor}× the ${sourceSize?.width} × ${sourceSize?.height} original`}</>
@@ -441,7 +489,7 @@ export default function Dashboard() {
             </div>}
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
         {mode === 'edit' || mode === 'erase'
-          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{mode === 'erase' ? 'What should be removed?' : 'Describe your edit'}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? mode === 'erase' ? 'Name the object to erase. Everything else is asked to stay exactly as it is.' : 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
+          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{characterStyleWorkflow ? (isZh ? '风格转换提示词' : 'Style conversion brief') : mode === 'erase' ? 'What should be removed?' : 'Describe your edit'}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? characterStyleWorkflow ? (isZh ? '可编辑风格变量，但请保留人物轮廓、服装、动作、镜头和身份。' : 'Edit the style variables, but keep the silhouette, costume, pose, camera and identity stable.') : mode === 'erase' ? 'Name the object to erase. Everything else is asked to stay exactly as it is.' : 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
           : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
@@ -490,13 +538,13 @@ export default function Dashboard() {
           </div>}
           {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
           {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? 'Retry · 1 credit' : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? (characterStyleWorkflow ? (isZh ? '重试转换 · 1 积分' : 'Retry conversion · 1 credit') : 'Retry · 1 credit') : characterStyleWorkflow ? (isZh ? '开始风格转换 · 1 积分' : 'Convert style · 1 credit') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
         </div>}
       </section>
-      <div className="lg:col-span-2 xl:col-span-1">
+      {!characterStyleWorkflow && <div className="lg:col-span-2 xl:col-span-1">
         <ShowcasePanel mode={mode} signedIn={!!user} locked={locked} onUse={loadCase}/>
-      </div>
+      </div>}
     </div>
     </main>
   </>;

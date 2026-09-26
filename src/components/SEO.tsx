@@ -73,20 +73,43 @@ export default function SEO({
         else seen.add(key);
       });
     };
+    const collapseJsonLd = () => {
+      const seen = new Set<string>();
+      const elements = [...document.querySelectorAll('script[type="application/ld+json"]')];
+      // A translated route has the same CollectionPage/WebPage identity as the static English
+      // shell, but a different JSON string. Keep the newest graph for each semantic page identity;
+      // this preserves the site Organization graph while replacing the stale route graph.
+      for (let index = elements.length - 1; index >= 0; index -= 1) {
+        const element = elements[index];
+        let key = element.textContent || '';
+        try {
+          const parsed = JSON.parse(key) as { '@type'?: string; '@id'?: string; url?: string; '@graph'?: Array<{ '@type'?: string; '@id'?: string; url?: string }> };
+          const nodes = parsed['@graph'] || [parsed];
+          key = nodes
+            .map(node => `${node['@type'] || ''}:${node['@id'] || node.url || ''}`)
+            .sort()
+            .join('|');
+        } catch {
+          // Keep the original text as a safe fallback for malformed third-party additions.
+        }
+        if (seen.has(key)) element.remove();
+        else seen.add(key);
+      }
+    };
     collapseManagedMeta();
     dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
-    dedupe('script[type="application/ld+json"]', element => element.textContent || '');
+    collapseJsonLd();
     const observer = new MutationObserver(() => {
       collapseManagedMeta();
       dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
-      dedupe('script[type="application/ld+json"]', element => element.textContent || '');
+      collapseJsonLd();
     });
     observer.observe(document, { childList: true, subtree: true });
     const timer = window.setTimeout(() => {
       observer.disconnect();
       dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
       collapseManagedMeta();
-      dedupe('script[type="application/ld+json"]', element => element.textContent || '');
+      collapseJsonLd();
     }, 3000);
     return () => {
       observer.disconnect();

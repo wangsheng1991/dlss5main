@@ -42,7 +42,7 @@ export default function GameCharacterStyle() {
             {isZh ? '下面 20 组是原创视觉参考，用于展示评估方法，不是 NVIDIA 官方 DLSS 5 截图，也不代表已经接入 DLSS 5 运行时。' : 'These 20 pairs are original visual references for evaluating a conversion brief. They are not NVIDIA DLSS 5 captures and do not claim a DLSS 5 runtime integration.'}
           </div>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link to="/dashboard?tool=enhance" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary">
+            <Link to="/dashboard?tool=game-character-style" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary">
               {isZh ? '上传自己的角色图' : 'Try your own character frame'} <ArrowRight aria-hidden="true" className="w-4 h-4" />
             </Link>
             <Link to="/video-upscaler" className="inline-flex items-center gap-2 rounded-lg border border-outline-variant/40 px-6 py-3 font-semibold text-zinc-200 hover:border-primary hover:text-primary">
