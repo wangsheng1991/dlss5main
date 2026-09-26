@@ -244,4 +244,11 @@ Vercel 生产部署已 Ready，线上浏览器复核结果如下：
 1. 等上游恢复：恢复后第一个访问者会触发 202 → 轮询 → 写缓存，之后永久走缓存（`SAMPLE_CACHE_VERSION` 未变，所以其它样例不受影响）；
 2. 界面上的兜底：失败时只显示"这个示例暂时无法生成"，页面下方的 20 组对比仍在，所以不是死路，但没有说明是上游问题。
 
-诊断用的临时脚本已删除，工作区干净；本地 `main` 与 `origin/main` 都在 `e0b7e69`。
+### 10.1 补证：是上游的模型通道，不是上游整体宕机，也不是我们的额度（19:25）
+
+- `POST /api/image-edit/samples {"sample":"characterStyle"}` 复测仍是 `500`，13.1 秒后返回，说明请求确实打到了上游并在上游失败；
+- provider 网关本身在线：`GET https://dashboard.alphanetplus.com/` 返回 `200`；未带 token 请求 `/v1/tasks/alphanet-flux` 返回 `401 {"error":{"code":"","message":"Invalid token (request id: 202609261124310359869998268d9d6rYoDzeHW)","type":"new_api_error"}}` —— 服务在、鉴权链路在，只是这个模型的通道在网关后面坏了；
+- 同一个 key（`ALPHANET_TOOLS_API_KEY` 缺省时回落到 `ALPHANET_API_KEY`）走工具线 `cutout-fast` 当时是 `SUCCESS`，所以**不是密钥或额度问题**；
+- 找 provider 时可以直接给：模型名 `alphanet-flux`、上面的 request id、失败时间（2026-09-26 19:20–19:25 CST）、以及"同 key 的 `cutout-fast` 正常"这一对照。
+
+诊断用的临时脚本已删除，工作区干净；本地 `main` 与 `origin/main` 都在本次提交。
