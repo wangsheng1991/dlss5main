@@ -6,7 +6,7 @@ import ImageSlider from '../components/ImageSlider';
 import ShowcasePanel from '../components/ShowcasePanel';
 import { type ShowcaseCase } from '../config/showcase';
 import { useAuth } from '../contexts/AuthContext';
-import { SAMPLES, SAMPLE_IDS, GUEST_SAMPLE_IDS, type SampleId } from '../config/samples';
+import { SAMPLES, SAMPLE_IDS, GUEST_SAMPLE_IDS, isSampleId, type SampleId } from '../config/samples';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, type EnhanceFactor } from '../config/enhance';
 import {
   STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE, TOOL_IDS,
@@ -57,17 +57,19 @@ type CharacterStylePreset = (typeof CHARACTER_STYLE_PRESETS)[number]['id'];
 const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
 
 /** The presets offered in the studio, in display order. */
-const MODES: Array<[GenerationMode, string]> = [
-  ['enhance', 'Enhance & upscale'],
-  ['edit', 'Prompt edit'],
-  ['cutout', TOOL_SUMMARY.cutout.label],
-  ['vectorize', TOOL_SUMMARY.vectorize.label],
-  ['erase', TOOL_SUMMARY.erase.label],
-  ['tryon', TOOL_SUMMARY.tryon.label],
-  ['interior', TOOL_SUMMARY.interior.label],
-  ['retouch', TOOL_SUMMARY.retouch.label],
-  ['makeup', TOOL_SUMMARY.makeup.label],
-];
+const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup'];
+
+/**
+ * The name of each mode in `dashboard.*`. The labels used to be English literals taken from the
+ * provider vocabulary, which left a Chinese session reading an English tool grid.
+ */
+const MODE_LABEL_KEY: Record<GenerationMode, string> = {
+  enhance: 'modeEnhance', edit: 'modeEdit', cutout: 'modeCutout', vectorize: 'modeVectorize', erase: 'modeErase',
+  tryon: 'modeTryon', interior: 'modeInterior', retouch: 'modeRetouch', makeup: 'modeMakeup',
+};
+
+/** The catalog carries both names of an example; the studio prints the reader's own. */
+const sampleName = (id: SampleId, isZh: boolean) => (isZh ? SAMPLES[id].nameZh : SAMPLES[id].name);
 
 const TOOL_LABEL = Object.fromEntries(TOOL_IDS.map(id => [id, TOOL_SUMMARY[id].label])) as Record<ToolId, string>;
 
@@ -111,6 +113,8 @@ export default function Dashboard() {
   const [file2, setFile2] = useState<File | null>(null);
   /** The tool the second image was picked for — see the effect below. */
   const [file2Mode, setFile2Mode] = useState<GenerationMode | ''>('');
+  /** Why the second slot is empty, when we are the ones who emptied it. Silence looked like a bug. */
+  const [file2Notice, setFile2Notice] = useState('');
   const [preview2, setPreview2] = useState('');
   const [file2Error, setFile2Error] = useState('');
   /** The named options of the selected tool, keyed exactly as the provider contract names them. */
@@ -144,12 +148,22 @@ export default function Dashboard() {
   const characterStyleWorkflow = initialTool === 'game-character-style';
   // SEO tool pages link into the same studio with the matching preset already selected.
   useEffect(() => {
-    const tool = new URL(window.location.href).searchParams.get('tool');
+    const params = new URL(window.location.href).searchParams;
+    const tool = params.get('tool');
     const preset = tool ? MODE_BY_TOOL_QUERY[tool] : undefined;
     if (preset) setMode(preset);
     if (tool === 'game-character-style') {
       setMode('edit');
       setPrompt(CHARACTER_STYLE_DEFAULT_PROMPT);
+    }
+    // A landing page may hand its reader one example to run, so the free first click is a tap on
+    // "Run this example" rather than a hunt through the grid. The sample's own brief wins over the
+    // workflow default because it is the conversion this reader was promised.
+    const sample = params.get('sample');
+    if (isSampleId(sample)) {
+      setSelectedSample(sample);
+      setMode(SAMPLES[sample].tool ?? 'edit');
+      setPrompt(SAMPLES[sample].prompt);
     }
     trackEvent('studio_open', { tool: tool || 'direct' });
   }, []);
@@ -223,7 +237,7 @@ export default function Dashboard() {
   // image together is not cleared by its own switch.
   useEffect(() => {
     if (!file2 || file2Mode === mode) return;
-    setFile2(null); setFile2Error(''); setFile2Mode('');
+    setFile2(null); setFile2Error(''); setFile2Mode(''); setFile2Notice(t('dashboard.secondImageChanged'));
   }, [mode, file2, file2Mode]);
   useEffect(() => {
     let active = true;
@@ -290,7 +304,7 @@ export default function Dashboard() {
   const chooseSecond = (candidate?: File, effectiveMode: GenerationMode = mode) => {
     if (!candidate) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > MAX_UPLOAD_BYTES) { setFile2Error(`Choose a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`); return; }
-    setFile2Error(''); setFile2(candidate); setFile2Mode(effectiveMode);
+    setFile2Error(''); setFile2(candidate); setFile2Mode(effectiveMode); setFile2Notice('');
     trackEvent('image_selected', { mode: effectiveMode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size), slot: 2 });
     const url = URL.createObjectURL(candidate);
     const image = new Image();
@@ -393,17 +407,15 @@ export default function Dashboard() {
     <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
       <div>
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-headline font-bold text-white">{characterStyleWorkflow ? (isZh ? 'DLSS5 风格转换工作流' : 'DLSS5 style conversion') : 'AI Image Studio'}</h1>
-          {characterStyleWorkflow && <Link to="/dashboard" className="text-xs text-primary hover:text-white">{isZh ? '查看全部工具' : 'All tools'}</Link>}
+          <h1 className="text-3xl font-headline font-bold text-white">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowTitle' : 'dashboard.studioTitle')}</h1>
+          {characterStyleWorkflow && <Link to="/dashboard" className="text-xs text-primary hover:text-white">{t('dashboard.allTools')}</Link>}
         </div>
-        <p className="text-zinc-400 text-sm mt-2 max-w-2xl">{characterStyleWorkflow
-          ? (isZh ? '上传一张游戏人物图，选择视觉方向，保持人物轮廓、服装、动作和身份，再改变光照、材质与世界观。' : 'Upload one game-character frame, choose a visual direction, and keep the silhouette, costume, pose and identity stable while changing light, materials and world direction.')
-          : 'Enhance, upscale or repair a photo, render or product image. Prompt editing is available when you need a specific change.'}</p>
+        <p className="text-zinc-400 text-sm mt-2 max-w-2xl">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowDescription' : 'dashboard.studioDescription')}</p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} credits` : 'Sign in to generate'}</span>
-        {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? 'Change plan' : 'Upgrade'}</Link>}
-        {user && profile?.tier && profile.tier !== 'free' && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">Manage billing</button>}
+        <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} ${t('dashboard.creditsLabel')}` : t('dashboard.signInToGenerate')}</span>
+        {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? t('dashboard.changePlan') : t('dashboard.upgrade')}</Link>}
+        {user && profile?.tier && profile.tier !== 'free' && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">{t('dashboard.manageBilling')}</button>}
       </div>
     </div>
     {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}
@@ -419,17 +431,17 @@ export default function Dashboard() {
       {shareNotice && <p role="status" aria-live="polite" className="text-sm text-nvidia-green mt-3">{shareNotice}</p>}
     </section>}
     {user && !characterStyleWorkflow && <section aria-labelledby="history-heading" className="mb-6 bg-surface-low rounded-xl border border-outline-variant/20 p-5">
-      <h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">Your generations</h2>
+      <h2 id="history-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3">{t('dashboard.historyTitle')}</h2>
       {history.length === 0
-        ? <p className="text-sm text-zinc-500">Your images stay here after you close the page. Sign in on another device to see the same history.</p>
+        ? <p className="text-sm text-zinc-500">{t('dashboard.historyEmpty')}</p>
         : <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{history.map(job => <article key={job.id} className="rounded-lg border border-outline-variant/20 p-3 flex flex-col gap-3">
           {job.status === 'SUCCEEDED' && historyToken
-            ? <HistoryResult jobId={job.id} token={historyToken} alt={job.prompt || 'Generated image'}/>
-            : <div className="aspect-video rounded-lg bg-surface-lowest border border-outline-variant/20 flex items-center justify-center px-3 text-center text-xs text-zinc-500">{job.status === 'FAILED' ? `Failed${job.errorCode ? ` · ${failureNote(job.errorCode, job.tool || 'edit')}` : ''} · credit refunded` : job.status.toLowerCase()}</div>}
+            ? <HistoryResult jobId={job.id} token={historyToken} alt={job.prompt || t('dashboard.generatedImage')}/>
+            : <div className="aspect-video rounded-lg bg-surface-lowest border border-outline-variant/20 flex items-center justify-center px-3 text-center text-xs text-zinc-500">{job.status === 'FAILED' ? `${t('dashboard.failed')}${job.errorCode ? ` · ${failureNote(job.errorCode, job.tool || 'edit')}` : ''} · ${t('dashboard.creditRefunded')}` : job.status.toLowerCase()}</div>}
           <div className="flex-1">
             <div className="flex justify-between gap-2 text-xs"><span className={job.status === 'SUCCEEDED' ? 'text-nvidia-green' : job.status === 'FAILED' ? 'text-red-300' : 'text-zinc-300'}>{job.status}</span><span className="text-zinc-500">{new Date(job.completedAt || job.createdAt).toLocaleString()}</span></div>
-            <p className="text-sm text-zinc-400 mt-2 line-clamp-2">{job.tool ? `${TOOL_LABEL[job.tool as ToolId] ?? job.tool}${job.prompt ? ` · ${job.prompt}` : ''}` : job.prompt || 'Image edit'}</p>
-            {job.width ? <p className="text-xs text-zinc-600 mt-1">{job.width} × {job.height}{job.saved ? '' : ' · copy not kept'}</p> : null}
+            <p className="text-sm text-zinc-400 mt-2 line-clamp-2">{job.tool ? `${TOOL_LABEL[job.tool as ToolId] ?? job.tool}${job.prompt ? ` · ${job.prompt}` : ''}` : job.prompt || t('dashboard.imageEdit')}</p>
+            {job.width ? <p className="text-xs text-zinc-600 mt-1">{job.width} × {job.height}{job.saved ? '' : ` · ${t('dashboard.copyNotKept')}`}</p> : null}
           </div>
         </article>)}</div>}
     </section>}
@@ -444,13 +456,13 @@ export default function Dashboard() {
       ? 'grid grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.6fr)]'
       : 'grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)_minmax(320px,1.1fr)]'}>
       <section aria-labelledby="settings-heading" className="bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
-        <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{characterStyleWorkflow ? (isZh ? '风格转换设置' : 'Style conversion settings') : 'Generation settings'}</h2>
+        <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{t(characterStyleWorkflow ? 'dashboard.styleSettings' : 'dashboard.generationSettings')}</h2>
         <div><div className="grid grid-cols-2 gap-2">
-          {(characterStyleWorkflow ? ([['edit', isZh ? '人物风格转换' : 'Character style']] as Array<[GenerationMode, string]>) : MODES).map(([value, label]) => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{label}</button>)}
+          {(characterStyleWorkflow ? (['edit'] as GenerationMode[]) : MODES).map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${characterStyleWorkflow ? 'modeCharacterStyle' : MODE_LABEL_KEY[value]}`)}</button>)}
         </div>
           {characterStyleWorkflow ? <div className="mt-3 space-y-4">
-            <p className="text-xs leading-relaxed text-zinc-400">{isZh ? '先选择一种视觉方向。提示词会锁定人物不变项，生成前仍可手动微调。' : 'Choose a visual direction first. The brief locks the character invariants and remains editable before you run it.'}</p>
-            <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label={isZh ? '人物风格方向' : 'Character style direction'}>
+            <p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.chooseStyleHint')}</p>
+            <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label={t('dashboard.styleDirection')}>
               {CHARACTER_STYLE_PRESETS.map(preset => <button key={preset.id} type="button" role="radio" aria-checked={characterStylePreset === preset.id} onClick={() => { setCharacterStylePreset(preset.id); setPrompt(preset.prompt); }} disabled={locked} className={characterStylePreset === preset.id ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-3 text-primary font-semibold text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-3 text-zinc-300 text-left disabled:opacity-60'}>{isZh ? preset.labelZh : preset.label}</button>)}
             </div>
           </div> : mode === 'enhance' ? <div className="mt-3">
@@ -489,7 +501,7 @@ export default function Dashboard() {
             </div>}
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
         {mode === 'edit' || mode === 'erase'
-          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{characterStyleWorkflow ? (isZh ? '风格转换提示词' : 'Style conversion brief') : mode === 'erase' ? 'What should be removed?' : 'Describe your edit'}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? characterStyleWorkflow ? (isZh ? '可编辑风格变量，但请保留人物轮廓、服装、动作、镜头和身份。' : 'Edit the style variables, but keep the silhouette, costume, pose, camera and identity stable.') : mode === 'erase' ? 'Name the object to erase. Everything else is asked to stay exactly as it is.' : 'Describe lighting, colors or objects to change. Results may alter details.' : 'Sign in to write your own prompt. Examples run with their own fixed prompt.'}</p></div>
+          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={prompt} onChange={e => setPrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint') : t('dashboard.signInPromptHint')}</p></div>
           : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
@@ -497,49 +509,48 @@ export default function Dashboard() {
           <p className="text-xs text-zinc-400 mt-2">{t('dashboard.checkInReward')}</p>
           {checkInNotice && <p role="status" className="text-xs text-nvidia-green mt-2">{checkInNotice}</p>}
         </div>}
-        <div className="text-sm text-zinc-400 space-y-2"><p>{isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `Output: ${enhance ? `${enhance.width} × ${enhance.height}` : 'follows your image'} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `Output: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>Cost: 1 credit per task. Confirmed failures are refunded by the server.</p> : <p>Examples are free and need no account. Uploading your own image needs one.</p>}<Link to="/pricing" className="text-primary underline inline-block">View plans</Link></div>
+        <div className="text-sm text-zinc-400 space-y-2"><p>{isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `${t('dashboard.outputLabel')}: ${enhance ? `${enhance.width} × ${enhance.height}` : t('dashboard.followsImage')} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `${t('dashboard.outputLabel')}: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>{t('dashboard.costLabel')}</p> : <p>{t('dashboard.guestCostLabel')}</p>}<Link to="/pricing" className="text-primary underline inline-block">{t('dashboard.viewPlans')}</Link></div>
       </section>
       <section aria-label="Image workspace" className="bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
-        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">The examples below are free and need no account — including the background-removal and vectorizing ones. <Link to="/login" className="text-primary underline">Sign in</Link> to upload your own image and write your own prompt.</div>}
+        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">{t('dashboard.guestNotice')}</div>}
         {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
-        {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">Preparing {SAMPLES[sampleRun.state.sample].name.toLowerCase()}…</h2><p className="text-zinc-400 text-sm max-w-md">This example is generated once and then served from cache, so it costs nothing and needs no account.</p></div>}
+        {file2Notice && <p role="status" aria-live="polite" className="mb-4 text-xs text-zinc-400">{file2Notice}</p>}
+        {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{t('dashboard.preparing', { name: sampleName(sampleRun.state.sample, isZh) })}</h2><p className="text-zinc-400 text-sm max-w-md">{t('dashboard.exampleCachedBody')}</p></div>}
         {!user && sampleRun.state.status === 'ready' && <div className="flex-1 flex flex-col gap-5">
-          <div className="flex-1 min-h-64"><ImageSlider highRes={sampleRun.state.run.result} lowRes={sampleRun.state.run.input} alt={`${SAMPLES[sampleRun.state.sample].name} example`} outputBackdrop={SAMPLES[sampleRun.state.sample].tool === 'cutout' ? '#ffffff' : undefined}/></div>
+          <div className="flex-1 min-h-64"><ImageSlider highRes={sampleRun.state.run.result} lowRes={sampleRun.state.run.input} alt={`${sampleName(sampleRun.state.sample, isZh)} example`} outputBackdrop={SAMPLES[sampleRun.state.sample].tool === 'cutout' ? '#ffffff' : undefined}/></div>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p role="status" className="text-nvidia-green text-sm">Example ready{sampleRun.state.run.cached ? ' · served from cache' : ''}</p>
+            <p role="status" className="text-nvidia-green text-sm">{t('dashboard.exampleReady')}{sampleRun.state.run.cached ? ` · ${t('dashboard.servedFromCache')}` : ''}</p>
             <div className="flex flex-wrap gap-3">
-              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.${sampleRun.state.run.extension}`} onClick={() => trackEvent('example_download', { sample: sampleRun.state.run.sample })} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download example result</a>
-              <button onClick={() => { sampleRun.reset(); setSelectedSample(null); }} className="px-4 py-3 border border-outline-variant/30 rounded-lg text-white">Try another example</button>
-              <Link to="/login" className="px-4 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10">Sign in to use your own image</Link>
+              <a href={sampleRun.state.run.result} download={`${sampleRun.state.run.sample}.${sampleRun.state.run.extension}`} onClick={() => trackEvent('example_download', { sample: sampleRun.state.run.sample })} className="px-4 py-3 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{t('dashboard.downloadExample')}</a>
+              <button onClick={() => { sampleRun.reset(); setSelectedSample(null); }} className="px-4 py-3 border border-outline-variant/30 rounded-lg text-white">{t('dashboard.tryAnother')}</button>
+              <Link to="/login" className="px-4 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10">{t('dashboard.signInOwnImage')}</Link>
             </div>
           </div>
         </div>}
-        {generation.operation && <div className="mb-4 text-xs text-zinc-400 break-all">Operation: {generation.operation.jobId || generation.operation.key}<br/>Saved on this device. Refreshing will preserve this request.</div>}
-        {generation.busy && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{generation.phase}</h2><p className="text-zinc-400 text-sm">You can leave and return. Do not submit another image for this operation.</p>{!generation.submitting && <button onClick={generation.pause} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-zinc-300">Pause checking</button>}</div>}
-        {!generation.busy && generation.pending && <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-10"><h2 className="text-white text-xl">Your operation is saved</h2><p className="text-sm text-zinc-400 max-w-md">The result is not confirmed yet. Resume the same operation to check its status without creating a new charge.</p><button onClick={() => void generation.resume()} className="px-6 py-3 bg-primary text-black rounded-lg font-bold">Resume operation</button></div>}
-        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">Image ready</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">Refresh result link</button><a href={result} target="_blank" rel="noreferrer" onClick={() => trackEvent('result_download', { mode: generation.operation?.body.mode || 'edit' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{generation.operation?.body.mode === 'vectorize' ? 'Open the SVG' : 'Open full image'}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">New image</button></div></div></div>}
+        {generation.operation && <div className="mb-4 text-xs text-zinc-400 break-all">Operation: {generation.operation.jobId || generation.operation.key}<br/>{t('dashboard.operationSaved')}</div>}
+        {generation.busy && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{generation.phase}</h2><p className="text-zinc-400 text-sm">{t('dashboard.leaveOperation')}</p>{!generation.submitting && <button onClick={generation.pause} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-zinc-300">Pause checking</button>}</div>}
+        {!generation.busy && generation.pending && <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-10"><h2 className="text-white text-xl">{t('dashboard.resumeTitle')}</h2><p className="text-sm text-zinc-400 max-w-md">{t('dashboard.resumeBody')}</p><button onClick={() => void generation.resume()} className="px-6 py-3 bg-primary text-black rounded-lg font-bold">{t('dashboard.resume')}</button></div>}
+        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">{t('dashboard.imageReady')}</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">{t('dashboard.refreshResult')}</button><a href={result} target="_blank" rel="noreferrer" onClick={() => trackEvent('result_download', { mode: generation.operation?.body.mode || 'edit' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{t(generation.operation?.body.mode === 'vectorize' ? 'dashboard.openSvg' : 'dashboard.openFullImage')}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">{t('dashboard.newImage')}</button></div></div></div>}
         {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
-          <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label="Select an image" onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
-          {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Drop an image or browse files</span><span className="text-sm text-zinc-400">{toolReferences ? `${toolReferences.slots[0]} · ` : ''}{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
+          <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('dashboard.selectImage')} onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
+          {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">{t('dashboard.dropBrowse')}</span><span className="text-sm text-zinc-400">{toolReferences ? `${toolReferences.slots[0]} · ` : ''}{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
           {user && toolReferences && toolReferences.max > 1 && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">
-            <p className="text-sm text-white mb-1">Second image · {toolReferences.slots[1]}</p>
-            <p className="text-xs text-zinc-400 mb-3">{toolSecondRequired
-              ? 'Required. The tool reads the two images in order, so the first one is the subject and this one is what it should wear.'
-              : 'Optional. Adding it steers the result — the first image is still the subject.'}</p>
+            <p className="text-sm text-white mb-1">{t('dashboard.secondImage')} · {toolReferences.slots[1]}</p>
+            <p className="text-xs text-zinc-400 mb-3">{t(toolSecondRequired ? 'dashboard.requiredSecondImage' : 'dashboard.optionalSecondImage')}</p>
             <input ref={secondInput} type="file" accept="image/jpeg,image/png,image/webp" aria-label={`Select the ${toolReferences.slots[1]}`} onChange={e => { chooseSecond(e.target.files?.[0]); e.target.value = ''; }} className="sr-only"/>
             <div className="flex flex-wrap items-center gap-3">
-              <button type="button" onClick={() => secondInput.current?.click()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-white">{file2 ? 'Replace this image' : 'Choose this image'}</button>
+              <button type="button" onClick={() => secondInput.current?.click()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-white">{t(file2 ? 'dashboard.replaceImage' : 'dashboard.chooseImage')}</button>
               {file2 && <span className="text-xs text-zinc-400 break-all flex-1">{file2.name}</span>}
-              {file2 && <button type="button" onClick={() => { setFile2(null); setFile2Error(''); }} className="px-3 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm">Remove</button>}
+              {file2 && <button type="button" onClick={() => { setFile2(null); setFile2Error(''); }} className="px-3 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm">{t('dashboard.remove')}</button>}
             </div>
             {preview2 && <img src={preview2} alt="Second image preview" className="mt-3 max-h-52 object-contain rounded-lg"/>}
             {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
           </div>}
-          {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${SAMPLES[selectedSample].name} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">Uploading your own image needs an account</span><span className="text-sm text-primary">Sign in to upload · or try an example below for free</span></Link>)}
-          {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">Or try these examples</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={SAMPLES[id].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{SAMPLES[id].name}</span></button>)}</div></div>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">Clear image</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? (characterStyleWorkflow ? (isZh ? '重试转换 · 1 积分' : 'Retry conversion · 1 credit') : 'Retry · 1 credit') : characterStyleWorkflow ? (isZh ? '开始风格转换 · 1 积分' : 'Convert style · 1 credit') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : mode === 'enhance' ? `Enhance · 1 credit` : 'Generate · 1 credit'}</button></div>}
-          {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{SAMPLES[selectedSample].name}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">Sign in to edit the prompt</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">Run this example · free</button></div>}
+          {!user && (selectedSample ? <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/> : <Link to="/login" className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">{t('dashboard.signInToUpload')}</span><span className="text-sm text-primary">{t('dashboard.orTryExamples')}</span></Link>)}
+          {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">{t('dashboard.examplesHeading')}</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={sampleName(id, isZh)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{sampleName(id, isZh)}</span></button>)}</div></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !prompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, prompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
+          {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">{t('dashboard.signInEditPrompt')}</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
         </div>}
       </section>
       {!characterStyleWorkflow && <div className="lg:col-span-2 xl:col-span-1">

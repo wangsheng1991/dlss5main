@@ -1,10 +1,49 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
+import { SAMPLES, type SampleId } from '../config/samples';
+import { useSampleRun } from '../features/generation/useSampleRun';
 import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from '../content/gameStyleLanding';
+
+/**
+ * The free first click.
+ *
+ * This page explains the workflow with twenty reference pairs and then used to send every visitor
+ * to a studio that requires an account — the one flagship tool with nothing to try. This runs the
+ * same cached, account-free example the studio offers, in place: no navigation, no sign-in, and the
+ * before/after slider the visitor already knows how to read.
+ */
+function FreeStyleExample() {
+  const { i18n } = useTranslation();
+  const isZh = i18n.language.startsWith('zh');
+  const sample = useSampleRun();
+  const id: SampleId = 'characterStyle';
+  const state = sample.state;
+  return (
+    <section aria-labelledby="free-example-heading" className="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5 sm:p-6">
+      <h2 id="free-example-heading" className="text-lg md:text-xl font-headline font-bold text-white">{isZh ? '先免费试一次：赛博朋克方向' : 'Try one conversion first: the cyberpunk direction'}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{isZh ? '不用登录，也不用先上传。这就是工作室里同一个缓存示例，服务器只算一次，所以免费。' : 'No account and no upload. It is the same cached example the studio offers, computed once on the server, so it is free.'}</p>
+      {state.status === 'error' && <p role="alert" className="mt-4 text-sm text-red-300">{state.message}</p>}
+      {state.status !== 'ready' && <button type="button" disabled={state.status === 'running'} onClick={() => void sample.run(id)} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed">
+        {state.status === 'running' ? <Loader2 aria-hidden="true" className="w-4 h-4 animate-spin"/> : <Play aria-hidden="true" className="w-4 h-4"/>}
+        {state.status === 'running' ? (isZh ? '正在准备示例…' : 'Preparing the example…') : (isZh ? '免费试用示例 · 一键运行' : 'Run this example · free')}
+      </button>}
+      {state.status === 'ready' && <div className="mt-5 flex flex-col gap-5">
+        <div className="max-w-3xl">
+          <ImageSlider highRes={state.run.result} lowRes={state.run.input} alt={isZh ? '赛博朋克人物风格转换前后对比' : 'Cyberpunk character style conversion, before and after'} inputLabel={isZh ? '原始人物帧' : 'Base frame'} outputLabel={isZh ? '风格转换结果' : 'Converted frame'} compareLabel={isZh ? '风格转换前后对比' : 'Style conversion comparison'} initialAspectRatio={1.5}/>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <p role="status" className="text-xs text-zinc-500">{isZh ? '示例结果' : 'Example result'}{state.run.cached ? (isZh ? ' · 来自缓存' : ' · served from cache') : ''}</p>
+          <a href={state.run.result} download={`${SAMPLES[id].fileName.replace(/\.[^.]+$/, '')}-style.${state.run.extension}`} className="inline-flex items-center gap-2 text-sm text-primary">{isZh ? '下载结果' : 'Download the result'}</a>
+          <Link to="/dashboard?tool=game-character-style&sample=characterStyle" className="inline-flex items-center gap-2 text-sm text-primary">{isZh ? '换成自己的角色图' : 'Use your own character frame'} <ArrowRight aria-hidden="true" className="w-4 h-4"/></Link>
+        </div>
+      </div>}
+    </section>
+  );
+}
 
 export default function GameCharacterStyle() {
   const { i18n } = useTranslation();
@@ -42,7 +81,7 @@ export default function GameCharacterStyle() {
             {isZh ? '下面 20 组是原创视觉参考，用于展示评估方法，不是 NVIDIA 官方 DLSS 5 截图，也不代表已经接入 DLSS 5 运行时。' : 'These 20 pairs are original visual references for evaluating a conversion brief. They are not NVIDIA DLSS 5 captures and do not claim a DLSS 5 runtime integration.'}
           </div>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link to="/dashboard?tool=game-character-style" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary">
+            <Link to="/dashboard?tool=game-character-style&sample=characterStyle" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary">
               {isZh ? '上传自己的角色图' : 'Try your own character frame'} <ArrowRight aria-hidden="true" className="w-4 h-4" />
             </Link>
             <Link to="/video-upscaler" className="inline-flex items-center gap-2 rounded-lg border border-outline-variant/40 px-6 py-3 font-semibold text-zinc-200 hover:border-primary hover:text-primary">
@@ -50,6 +89,8 @@ export default function GameCharacterStyle() {
             </Link>
           </div>
         </header>
+
+        <FreeStyleExample />
 
         <section className="mt-16 max-w-4xl space-y-7" aria-labelledby="definition-heading">
           <div><h2 id="definition-heading" className="text-2xl font-headline font-bold text-white">What game character style conversion means</h2><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? '游戏人物风格转换是在保持人物可识别部分的前提下改变视觉语言。轮廓、动作、服装结构、镜头和身份保持稳定，再控制光照、材质、色彩、环境与渲染方向。下面的原创参考图用于制定和验收转换需求，不是 NVIDIA 官方截图，也不宣称使用 DLSS 运行时处理。' : GAME_STYLE_LONG_FORM.definition}</p></div>

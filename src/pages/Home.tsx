@@ -14,6 +14,7 @@ import { MICRO_TOOLS } from '../content/microTools';
 import { SHOWCASE_CASES } from '../content/showcaseCases';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
 import { brandCopy, profileHas } from '../config/profile';
+import { MAX_UPLOAD_MIB } from '../config/tools';
 import { trackEvent } from '../lib/analytics';
 import { AI_OVERVIEW_DEFINITION } from '../content/seoDefinitions';
 
@@ -103,17 +104,14 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
           <div className="lg:col-span-7 bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden relative group h-full">
             <div className="p-8 h-full flex flex-col">
-              <div 
-                onClick={() => navigate('/dashboard')}
-                className="flex-1 border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center transition-all duration-500 hover:border-nvidia-green/50 hover:bg-nvidia-green/5 group-hover:scale-[1.01] cursor-pointer"
-              >
+              <div className="flex-1 rounded-xl border border-primary/20 bg-primary/5 p-10 flex flex-col items-center justify-center text-center transition-all duration-500 group-hover:border-primary/50">
                 <div className="w-16 h-16 bg-surface-high rounded-full flex items-center justify-center mb-6">
                   <UploadCloud className="w-8 h-8 text-primary" />
                 </div>
-                <h2 className="text-xl font-headline font-semibold text-white mb-2">{t('dashboard.uploadAreaTitle')}</h2>
-                <p className="text-zinc-500 text-sm mb-6 font-label">{t('home.uploadHint')}</p>
-                <button className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-primary transition-all duration-300">
-                  {t('home.uploadButton')}
+                <h2 className="text-xl font-headline font-semibold text-white mb-2">{t('home.studioEntryTitle')}</h2>
+                <p className="text-zinc-400 text-sm mb-6 max-w-md leading-relaxed">{t('home.studioEntryBody')}</p>
+                <button onClick={() => navigate('/dashboard')} className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-primary transition-all duration-300">
+                  {t('home.studioEntryButton')}
                 </button>
               </div>
               <div className="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-zinc-500 font-label">
@@ -160,7 +158,7 @@ export default function Home() {
               {isZh ? '上传图片' : 'Upload Image'}
             </h3>
             <p className="text-zinc-400 text-sm">
-              {isZh ? '选择或拖放任意 JPG、PNG、WEBP 图片（最大 5MB）' : 'Select or drag & drop any JPG, PNG, WEBP image (up to 5MB)'}
+              {isZh ? `选择或拖放任意 JPG、PNG、WEBP 图片（最大 ${MAX_UPLOAD_MIB} MiB）` : `Select or drag & drop any JPG, PNG, WEBP image (up to ${MAX_UPLOAD_MIB} MiB)`}
             </p>
           </div>
           <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
@@ -318,8 +316,8 @@ export default function Home() {
           <Link to="/game-character-style" className="inline-flex items-center rounded-lg bg-primary px-5 py-3 text-sm font-bold text-black hover:bg-white transition-colors">
             {isZh ? '查看 20 组完整角色案例 →' : 'Open all 20 character cases →'}
           </Link>
-          <Link to="/dashboard?tool=game-character-style" className="inline-flex items-center rounded-lg border border-primary/40 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors">
-            {isZh ? '直接开始人物风格转换 →' : 'Start a character style conversion →'}
+          <Link to="/dashboard?tool=game-character-style&sample=characterStyle" className="inline-flex items-center rounded-lg border border-primary/40 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors">
+            {isZh ? '免费试跑一个角色风格示例 →' : 'Run a free character style example →'}
           </Link>
           <Link to="/video-upscaler" className="text-sm font-semibold text-primary hover:text-white transition-colors">
             {isZh ? '进入视频增强工作流 →' : 'Explore the video enhancement workflow →'}
