@@ -84,9 +84,9 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 Image Upscaler & Converter Online — Free AI Visual Enhancer"
-        description="Use a browser-based DLSS-style image converter and game visual enhancer to explore character style references, upscale, sharpen and restore images to 4K. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
-        keywords={['dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
+        title="DLSS 5 Style Converter Online — Free AI Visual Generation"
+        description="Use a browser-based DLSS-style image converter and game visual enhancer to generate character style conversions, lighting and material references, then upscale and compare results. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
+        keywords={['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
       />
       <section className="text-center mb-16 relative">
@@ -124,21 +124,65 @@ export default function Home() {
           <div className="lg:col-span-5 flex flex-col gap-6 h-full">
             <div className="bg-surface-high rounded-xl p-1 overflow-hidden relative group aspect-[4/3] glow-border flex-1">
               <ImageSlider 
-                highRes="/examples/sample1-photo.webp"
-                lowRes="/examples/sample1-photo-low.webp"
-                alt="Kitchen photo restored from its low-resolution copy"
+                highRes="/examples/generated/game-cyber-1-after.jpg"
+                lowRes="/examples/generated/game-cyber-1-before.jpg"
+                alt={isZh ? '游戏角色从原始构图到 DLSS 5 风格效果转换' : 'Game character converted from a base frame to a DLSS 5-style visual reference'}
+                inputLabel={isZh ? '原始构图' : 'Base frame'}
+                outputLabel={isZh ? '转换生成' : 'Converted reference'}
+                compareLabel={isZh ? '游戏角色效果转换前后对比' : 'Game character effect conversion before and after'}
               />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-surface-low p-4 rounded-xl flex flex-col gap-1 border border-outline-variant/10">
-                <span className="text-[10px] text-primary font-label uppercase tracking-widest">Inference Time</span>
-                <div className="text-xl font-headline font-bold text-white">0.8s</div>
+                <span className="text-[10px] text-primary font-label uppercase tracking-widest">{isZh ? '转换方向' : 'Conversion mode'}</span>
+                <div className="text-xl font-headline font-bold text-white">{isZh ? '风格 + 光照' : 'Style + lighting'}</div>
               </div>
               <div className="bg-surface-low p-4 rounded-xl flex flex-col gap-1 border border-outline-variant/10">
-                <span className="text-[10px] text-primary font-label uppercase tracking-widest">Core Version</span>
-                <div className="text-xl font-headline font-bold text-white">Ada-5.0</div>
+                <span className="text-[10px] text-primary font-label uppercase tracking-widest">{isZh ? '参考依据' : 'Reference basis'}</span>
+                <div className="text-xl font-headline font-bold text-white">{isZh ? '3D 引导思路' : '3D-guided ideas'}</div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-20 mb-16" aria-labelledby="dlss5-reference-heading">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="lg:col-span-6 rounded-2xl border border-primary/30 bg-surface-low overflow-hidden">
+            <div className="h-full min-h-[320px] bg-black">
+              <ImageSlider
+                highRes="/examples/generated/game-cyber-1-after.jpg"
+                lowRes="/examples/generated/game-cyber-1-before.jpg"
+                alt={isZh ? '原创游戏人物 DLSS 5 风格转换案例' : 'Original game character DLSS 5-style effect conversion case'}
+                inputLabel={isZh ? '输入帧' : 'Input frame'}
+                outputLabel={isZh ? '转换参考' : 'Converted reference'}
+                compareLabel={isZh ? 'DLSS 5 风格效果转换对比' : 'DLSS 5-style effect conversion comparison'}
+              />
+            </div>
+          </div>
+          <div className="lg:col-span-6 rounded-2xl border border-outline-variant/20 bg-surface-low p-7 sm:p-9 flex flex-col justify-center">
+            <p className="text-[10px] text-primary font-label uppercase tracking-[0.2em] mb-3">{isZh ? '官方参考 · 独立实现' : 'Official reference · independent implementation'}</p>
+            <h2 id="dlss5-reference-heading" className="text-3xl font-headline font-bold text-white mb-5">
+              {isZh ? 'DLSS 5 思路启发的效果转换生成' : 'DLSS 5-inspired effect conversion generation'}
+            </h2>
+            <p className="text-zinc-300 leading-relaxed text-sm">
+              {isZh
+                ? 'NVIDIA 对 DLSS 5 的描述重点是 3D 引导神经渲染：以游戏帧为基础，结合颜色与运动信息，以及艺术家定义的几何、材质和灯光。这里把这套思路转成浏览器里的静态图片工作流，用于生成可审阅的角色风格、光照和材质参考；它不是官方 DLSS 运行时。'
+                : 'NVIDIA describes DLSS 5 as 3D-guided neural rendering grounded in a game frame, color and motion information, plus artist-defined geometry, materials and lighting. This browser workflow translates those ideas into a static-image conversion for reviewable character, lighting and material references; it is not the official DLSS runtime.'}
+            </p>
+            <ul className="mt-6 grid gap-3 text-sm text-zinc-300">
+              <li><strong className="text-white">01 · {isZh ? '锁定结构' : 'Lock structure'}</strong> — {isZh ? '保留轮廓、姿态、服装和身份。' : 'Keep silhouette, pose, costume and identity stable.'}</li>
+              <li><strong className="text-white">02 · {isZh ? '生成效果' : 'Generate effects'}</strong> — {isZh ? '改变光照、材质、色彩和世界观方向。' : 'Change lighting, materials, palette and world direction.'}</li>
+              <li><strong className="text-white">03 · {isZh ? '前后审阅' : 'Review before/after'}</strong> — {isZh ? '拖动对比线，检查脸部、手部、装备边缘和文字。' : 'Drag the split to check faces, hands, gear edges and text.'}</li>
+            </ul>
+            <div className="mt-7 flex flex-wrap gap-4 items-center">
+              <button onClick={() => navigate('/dashboard?tool=game-character-style&sample=characterStyle')} className="bg-primary text-black px-6 py-3 rounded-lg font-bold hover:bg-primary-container transition-colors">
+                {isZh ? '免费试用效果转换' : 'Try the free effect converter'}
+              </button>
+              <a href="https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/" target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-semibold hover:text-white">
+                {isZh ? '阅读 NVIDIA 官方文章 ↗' : 'Read NVIDIA’s official article ↗'}
+              </a>
             </div>
           </div>
         </div>
@@ -147,7 +191,7 @@ export default function Home() {
       {/* How It Works */}
       <section className="mt-20 mb-16">
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-10 text-center">
-          {brandCopy(isZh ? '如何使用 DLSS 图像放大器' : 'How to Use Our DLSS Image Upscaler')}
+          {brandCopy(isZh ? '如何使用 DLSS 5 效果转换器' : 'How to Use the DLSS 5 Effect Converter')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
@@ -166,10 +210,10 @@ export default function Home() {
               <span className="text-nvidia-green font-headline font-bold text-xl">2</span>
             </div>
             <h3 className="text-white font-semibold mb-2">
-              {isZh ? '选择放大倍数' : 'Choose Upscale Factor'}
+              {isZh ? '选择转换方向' : 'Choose a Conversion Direction'}
             </h3>
             <p className="text-zinc-400 text-sm">
-              {isZh ? '选择 2× 或 4× 放大倍数，点击"超分辨率图片"' : 'Select 2× or 4× upscale factor, click "Upscale Image"'}
+              {isZh ? '选择人物风格、光照材质方向，或使用 2× / 4× 超分辨率' : 'Choose a character style, lighting/material direction, or 2× / 4× upscaling'}
             </p>
           </div>
           <div className="bg-surface-low rounded-xl border border-outline-variant/20 p-6 text-center">
@@ -177,22 +221,29 @@ export default function Home() {
               <span className="text-nvidia-green font-headline font-bold text-xl">3</span>
             </div>
             <h3 className="text-white font-semibold mb-2">
-              {isZh ? '下载增强结果' : 'Download Enhanced Result'}
+              {isZh ? '检查并下载转换结果' : 'Review and Download the Converted Result'}
             </h3>
             <p className="text-zinc-400 text-sm">
-              {isZh ? '几秒后即可下载 AI 增强后的高分辨率图片' : 'AI-enhanced high-resolution image ready in seconds — download instantly'}
+              {isZh ? '拖动前后对比，确认结构和身份后下载生成的高分辨率结果' : 'Compare before and after, verify structure and identity, then download the generated high-resolution result'}
             </p>
           </div>
         </div>
       </section>
 
+      <section className="mt-24" aria-labelledby="conversion-outputs-heading">
+        <div className="mb-10 text-center">
+          <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-3 block">{isZh ? 'DLSS 5 convert' : 'DLSS 5 convert'}</span>
+          <h2 id="conversion-outputs-heading" className="text-3xl md:text-4xl font-headline font-bold text-white mb-3">{isZh ? '转换会得到什么' : 'What the conversion produces'}</h2>
+          <p className="text-zinc-400 max-w-2xl mx-auto leading-relaxed text-sm">{isZh ? '下面的原创参考把主流程拆成三种可检查的产出：通用图像转换、20 组细节对比和游戏人物风格生成。' : 'These original references show three reviewable outputs of the main path: general image conversion, 20 detail comparisons and game-character style generation.'}</p>
+        </div>
+
       {/* Featured Showcase Section */}
-      <section className="mt-32" aria-labelledby="before-after-cases-heading">
+      <section className="mt-10" aria-labelledby="before-after-cases-heading">
         <div className="mb-12 text-center">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('home.featuredShowcase')}</span>
-          <h2 id="before-after-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? 'AI 图片放大前后案例' : 'AI Image Upscaling Before & After Cases'}</h2>
+          <h2 id="before-after-cases-heading" className="text-2xl md:text-3xl font-headline font-bold text-white mb-4">{isZh ? 'DLSS 5 风格效果转换前后案例' : 'DLSS 5-style Effect Conversion Before & After Cases'}</h2>
           <p className="text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            {isZh ? '拖动对比线查看输入与输出；每个案例同时公开适合搜索和复用的提示词。' : 'Drag the comparison line to inspect the low-resolution input and enhanced output. Every case also shows a reusable prompt.'}
+            {isZh ? '拖动对比线查看原始构图与转换生成结果；每个案例同时公开适合搜索和复用的提示词。' : 'Drag the comparison line to inspect the base frame and converted reference. Every case also shows a reusable prompt.'}
           </p>
         </div>
 
@@ -232,10 +283,10 @@ export default function Home() {
       </section>
 
       {/* Expected-output gallery: the pairs are original illustrative references, not hidden benchmark claims. */}
-      <section className="mt-32" aria-labelledby="expected-cases-heading">
+      <section className="mt-12" aria-labelledby="expected-cases-heading">
         <div className="mb-12 max-w-3xl">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{isZh ? '预期案例展示' : 'Expected output gallery'}</span>
-          <h2 id="expected-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? '20 组前后对比：先看细节，再决定是否处理' : '20 before-and-after cases, with the checks that matter'}</h2>
+          <h2 id="expected-cases-heading" className="text-2xl md:text-3xl font-headline font-bold text-white mb-4">{isZh ? '20 组前后对比：先看细节，再决定是否处理' : '20 before-and-after cases, with the checks that matter'}</h2>
           <p className="text-zinc-400 leading-relaxed">{isZh ? '这些原创示例把低分辨率输入与参考输出放在同一张图上。拖动对比线，按 100% 检查直线、文字、脸部和材质；它们用于说明预期检查点，不代表任何具体模型的性能承诺。' : 'These original illustrative pairs put a lower-resolution input beside its reference output. Drag the split and inspect edges, text, faces and materials at 100%. They explain what to check, not a performance promise for a particular model.'}</p>
         </div>
 
@@ -273,10 +324,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-32" aria-labelledby="game-style-cases-heading">
+      <section className="mt-12" aria-labelledby="game-style-cases-heading">
         <div className="mb-12 max-w-3xl">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{isZh ? 'DLSS 5 风格参考' : 'DLSS 5 style references'}</span>
-          <h2 id="game-style-cases-heading" className="text-4xl font-headline font-bold text-white mb-6">{isZh ? 'DLSS 5 视觉增强器：游戏人物风格转换' : 'DLSS 5 visual enhancer: game character style conversion'}</h2>
+          <h2 id="game-style-cases-heading" className="text-2xl md:text-3xl font-headline font-bold text-white mb-4">{isZh ? 'DLSS 5 效果转换器：游戏人物风格生成' : 'DLSS 5 effect converter: game character style generation'}</h2>
           <p className="text-zinc-400 leading-relaxed">{isZh ? '这一组才是游戏场景的重点：角色轮廓、服装、动作和身份保持稳定，再改变光照、材质、色彩和世界观方向。所有素材均为原创视觉参考，不是 NVIDIA 官方 DLSS 5 截图，也不代表已经接入 DLSS 5 运行时。' : 'This is the game-focused set: keep the character silhouette, costume, pose and identity stable while changing lighting, materials, palette and world direction. All frames are original visual references; they are not NVIDIA DLSS 5 captures or proof of a DLSS 5 runtime integration.'}</p>
         </div>
 
@@ -323,6 +374,7 @@ export default function Home() {
             {isZh ? '进入视频增强工作流 →' : 'Explore the video enhancement workflow →'}
           </Link>
         </div>
+      </section>
       </section>
 
       {profileHas('useCases') && (

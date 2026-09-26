@@ -13,8 +13,8 @@
     "download": "Laadi alla"
   },
   "home": {
-    "title": "Kõrgresolutsiooniline AI pildi ülestäpsustus",
-    "subtitle": "Tõstke oma visuaalset sisu tööstusjuhtiva neuronaalse superresolutsiooniga. Kasutage NVIDIA Tensor Core jõudlust koheseks järelduseks.",
+    "title": "DLSS 5 stiilimuutuse genereerimine",
+    "subtitle": "Teisenda mängukaadrid ja tegelaskujude pildid DLSS 5 ideedest inspireeritud visuaalseteks viideteks. Loo stiili, valguse ja materjalide suundi ning võrdle tulemust — ilma RTX GPU või allalaadimiseta.",
     "uploadButton": "Vali pilt",
     "uploadHint": "Toetab JPG, PNG, WEBP",
     "featuredShowcase": "Esiletõstetud näited",

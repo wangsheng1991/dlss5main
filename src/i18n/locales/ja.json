@@ -13,8 +13,8 @@
     "download": "ダウンロード"
   },
   "home": {
-    "title": "高解像度 AI 画像超解像度アップスケーリング",
-    "subtitle": "業界をリードするニューラル超解像度技術でビジュアルコンテンツを向上。NVIDIA Tensor Core パフォーマンスで瞬時推論を実現。",
+    "title": "DLSS 5 スタイル変換生成",
+    "subtitle": "ゲームフレームやキャラクター画像を DLSS 5 に着想を得たビジュアルリファレンスへ変換。スタイル、ライティング、マテリアルを生成し、比較できます。RTX GPU やダウンロードは不要です。",
     "uploadButton": "画像を選択",
     "uploadHint": "JPG、PNG、WEBP 対応",
     "featuredShowcase": "注目のショーケース",

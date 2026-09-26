@@ -13,8 +13,8 @@
     "download": "다운로드"
   },
   "home": {
-    "title": "고해상도 AI 이미지 업스케일링",
-    "subtitle": "업계-leading 신경 초해상도 기술로 비주얼 콘텐츠를 향상시키세요. NVIDIA Tensor Core 성능으로 즉각적인 추론을 제공합니다.",
+    "title": "DLSS 5 스타일 변환 생성",
+    "subtitle": "게임 프레임과 캐릭터 이미지를 DLSS 5에서 영감을 받은 시각적 레퍼런스로 변환하세요. 스타일, 조명, 소재를 생성하고 비교할 수 있으며 RTX GPU나 다운로드가 필요하지 않습니다.",
     "uploadButton": "이미지 선택",
     "uploadHint": "JPG, PNG, WEBP 지원",
     "featuredShowcase": "주목할 만한 쇼케이스",

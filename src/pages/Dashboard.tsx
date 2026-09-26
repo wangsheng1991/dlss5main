@@ -29,7 +29,7 @@ type HistoryJob = { id: string; status: string; prompt: string; tool?: string; c
 
 /** Query values the SEO tool pages use to open the studio with a preset already selected. */
 const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
-  upscale: 'enhance', enhance: 'enhance', unblur: 'enhance',
+  upscale: 'enhance', enhance: 'enhance', unblur: 'enhance', edit: 'edit',
   'game-character-style': 'edit',
   'remove-background': 'cutout', erase: 'erase', 'erase-object': 'erase',
   'image-to-svg': 'vectorize', vectorize: 'vectorize',
@@ -150,7 +150,12 @@ export default function Dashboard() {
   // change when something else happens to re-render this page, so the "All tools" link stayed on
   // the style workflow with the URL already back at /dashboard.
   const { search } = useLocation();
-  const initialTool = new URLSearchParams(search).get('tool');
+  const initialParams = new URLSearchParams(search);
+  const initialSample = initialParams.get('sample');
+  // The product's primary path is DLSS 5 convert. Explicit tool links still select their own
+  // operation; a bare /dashboard opens the focused style-conversion workflow instead of a flat
+  // nine-tool picker.
+  const initialTool = initialParams.get('tool') || (!initialSample || initialSample === 'characterStyle' ? 'game-character-style' : null);
   const characterStyleWorkflow = initialTool === 'game-character-style';
   /**
    * The two workflows hold their briefs apart. They used to share one `prompt`, so opening the
@@ -162,7 +167,8 @@ export default function Dashboard() {
   // SEO tool pages link into the same studio with the matching preset already selected.
   useEffect(() => {
     const params = new URLSearchParams(search);
-    const tool = params.get('tool');
+    const sample = params.get('sample');
+    const tool = params.get('tool') || (!sample || sample === 'characterStyle' ? 'game-character-style' : undefined);
     const preset = tool ? MODE_BY_TOOL_QUERY[tool] : undefined;
     if (preset) setMode(preset);
     if (tool === 'game-character-style') {
@@ -172,7 +178,6 @@ export default function Dashboard() {
     // A landing page may hand its reader one example to run, so the free first click is a tap on
     // "Run this example" rather than a hunt through the grid. The sample's own brief wins over the
     // workflow default because it is the conversion this reader was promised.
-    const sample = params.get('sample');
     if (isSampleId(sample)) {
       setSelectedSample(sample);
       setMode(SAMPLES[sample].tool ?? 'edit');
@@ -421,7 +426,7 @@ export default function Dashboard() {
       <div>
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-3xl font-headline font-bold text-white">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowTitle' : 'dashboard.studioTitle')}</h1>
-          {characterStyleWorkflow && <Link to="/dashboard" className="text-xs text-primary hover:text-white">{t('dashboard.allTools')}</Link>}
+          {characterStyleWorkflow && <Link to="/dashboard?tool=enhance" className="text-xs text-primary hover:text-white">{t('dashboard.allTools')}</Link>}
         </div>
         <p className="text-zinc-400 text-sm mt-2 max-w-2xl">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowDescription' : 'dashboard.studioDescription')}</p>
       </div>
@@ -471,7 +476,20 @@ export default function Dashboard() {
       <section aria-labelledby="settings-heading" className="bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{t(characterStyleWorkflow ? 'dashboard.styleSettings' : 'dashboard.generationSettings')}</h2>
         <div><div className="grid grid-cols-2 gap-2">
-          {(characterStyleWorkflow ? (['edit'] as GenerationMode[]) : MODES).map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${characterStyleWorkflow ? 'modeCharacterStyle' : MODE_LABEL_KEY[value]}`)}</button>)}
+          {characterStyleWorkflow
+            ? <>
+              <button type="button" disabled={locked} className="w-full bg-primary/15 border border-primary/40 rounded-lg p-4 text-primary font-semibold text-left">
+                <span className="block text-sm">{t('dashboard.modeCharacterStyle')}</span>
+                <span className="block text-xs text-zinc-400 font-normal mt-1">{isZh ? '上传 → 选方向 → 转换 → 对比 → 下载' : 'Upload → choose direction → convert → compare → download'}</span>
+              </button>
+              <div className="mt-6 border-t border-outline-variant/20 pt-5">
+                <p className="text-[10px] text-zinc-500 font-label uppercase tracking-widest mb-3">{t('dashboard.moreTools')}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {MODES.map(value => <Link key={value} to={`/dashboard?tool=${value}`} className="rounded-lg border border-outline-variant/15 bg-surface-highest/60 px-3 py-2 text-xs text-zinc-400 hover:border-primary/40 hover:text-white transition-colors">{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</Link>)}
+                </div>
+              </div>
+            </>
+            : MODES.map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</button>)}
         </div>
           {characterStyleWorkflow ? <div className="mt-3 space-y-4">
             <p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.chooseStyleHint')}</p>
