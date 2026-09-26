@@ -15,8 +15,11 @@ export const ARTICLE_COVERS: Record<string, ArticleCover> = {
     alt: 'DLSS 5 neural rendering transforming a wireframe city into a cinematic scene',
   },
   'dlss5-vs-dlss4-vs-fsr4-comparison-2026': {
-    src: 'https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/dlss-4-5-dynamic-multi-frame-gen-6x-2nd-gen-transformer-super-res/dlss-4-5-dynamic-multi-frame-gen-6x-2nd-gen-transformer-super-res-ogimage.jpg',
-    alt: 'NVIDIA DLSS 4.5 neural rendering',
+    // Was NVIDIA's own og:image, hotlinked off their CDN — a third-party asset on an independent,
+    // non-official site, and one that can disappear without warning. Use our own artwork instead.
+    src: '/blog/dlss5-neural-rendering.webp',
+    ogSrc: '/blog/dlss5-neural-rendering.png',
+    alt: 'DLSS 5, DLSS 4.5 and FSR 4 compared over the same rendered scene',
   },
   'crimson-desert-pc-optimization-dlss-fsr-guide-2026': {
     src: '/examples/sample2.jpg',

@@ -57,11 +57,11 @@ The practical question for a production tool is not whether provider-native high
     target_keywords_cn: ['dlss5是什么', 'dlss5原理', '神经渲染', 'DLSS5怎么工作'],
     priority: 'P0',
     type: 'Evergreen Explainer — the SEO anchor page',
-    lastUpdated: 'April 2026',
+    lastUpdated: 'September 2026',
     readTime: '8 min read',
     content_en: `Every DLSS version before this one was fundamentally about the same thing: give gamers more frames per second without destroying image quality. DLSS 2 upscaled images smartly. DLSS 3 generated entirely new frames from thin air. DLSS 4 multiplied those frames further still.
 
-**DLSS 5 has a different goal entirely. It doesn't care about your frame rate. It wants to change what you see.**
+**DLSS 5 has a different goal entirely. Its job is not more frames but better ones: it changes what you see.**
 
 ## The Core Problem DLSS 5 Is Solving
 
@@ -69,17 +69,17 @@ Real-time game rendering has a hard ceiling. Every pixel of every frame must be 
 
 That's why games still look like games even when they're technically stunning. The lighting isn't quite right. Skin doesn't scatter light the way real skin does. Hair, water, fabric — they all fall short of what physics actually demands.
 
-Traditional pipelines compute every pixel explicitly. That approach is reaching its limits. The next step is to predict pixels instead of computing them. This is where DLSS 5 changes the model — it shifts rendering from deterministic computation to learned reconstruction.
+Traditional pipelines compute every pixel explicitly. That approach is reaching its limits. The next step is to predict pixels instead of computing them. This is where DLSS 5 changes the model — but not by giving up determinism. NVIDIA states that DLSS 5 "operates deterministically, delivering consistent outputs when processing identical input frames": the same frame in gives the same frame out. What changes is where the lighting and material response comes from — learned from the physical world instead of computed explicitly from the scene.
 
 ## How DLSS 5 Actually Works: Step by Step
 
 **Step 1 — The game renders normally.** Your GPU runs the traditional rasterization or ray tracing pipeline at full resolution. Nothing about this changes.
 
-**Step 2 — Color data and motion vectors are extracted.** For each frame, DLSS 5 receives two things: the rendered color output and motion vectors.
+**Step 2 — Color data and motion vectors are extracted.** For each frame, DLSS 5 receives the rendered color output and the engine's motion vectors. It is also trained to recognise further engine signals — surface albedo, detailed lighting and surface normals — which is what keeps the result anchored to what the engine actually drew.
 
-**Step 3 — The neural model analyzes scene semantics.** DLSS 5's neural network recognizes what kind of surface it's looking at: skin, hair, fabric, water, metal, glass.
+**Step 3 — The neural model analyzes scene semantics.** DLSS 5's neural network recognizes objects, materials and light sources — skin, hair, fabric, water, metal, glass — and the spatial relationships between them.
 
-**Step 4 — Photoreal lighting and materials are synthesized.** DLSS 5 reconstructs complex effects like rim lighting, subsurface scattering for realistic skin, and contact shadows with high fidelity.
+**Step 4 — Photoreal lighting and materials are synthesized.** DLSS 5 rebuilds complex effects with high fidelity: subsurface scattering so skin reads as skin, light transmission through hair and foliage, contact shadows, and global illumination.
 
 **Step 5 — Output is composited back into the frame.** The enhanced result is delivered in real time at up to 4K resolution.
 
@@ -90,7 +90,7 @@ Traditional pipelines compute every pixel explicitly. That approach is reaching 
 | DLSS 1–2 | Pixels are missing (low-res input) | AI upscaling of rendered frames | Performance |
 | DLSS 3 | Frames are missing | AI frame generation | Performance |
 | DLSS 4 / 4.5 | More frames missing, faster | Multi-frame generation (up to 6×) | Performance |
-| **DLSS 5** | **Lighting is physically wrong** | **Neural rendering replaces lighting model** | **Fidelity** |
+| **DLSS 5** | **Lighting detail is cut back for performance** | **Neural rendering rebuilds it on the engine frame** | **Fidelity** |
 
 ## The Key Technical Distinction: Anchored vs. Free Generation
 
@@ -98,36 +98,40 @@ DLSS 5 uses the game engine's scene graph as a constraint — keeping enhancemen
 
 ## Hardware Requirements
 
-DLSS 5 is currently confirmed exclusively for **NVIDIA RTX 50 Series (Blackwell architecture)** GPUs: the RTX 5060, 5060 Ti, 5070, 5070 Ti, 5080, and 5090.
+DLSS 5 shipped on **1 September 2026** for **all GeForce RTX 50 Series (Blackwell architecture) GPUs and laptop GPUs**, and for **GeForce NOW** Ultimate members streaming from NVIDIA-operated RTX 5080 rigs. It needs **GeForce Game Ready driver 616.64 WHQL** or newer, and the option appears in the game's video settings as "DLSS Neural Rendering" (F9 toggles it during play).
 
-RTX 40 series support has **not been confirmed**. RTX 30 series and older will not support DLSS 5.
+RTX 40 series support has **not been announced**. RTX 30 series and older will not support DLSS 5.
 
 ## What This Means for Online AI Image Tools
 
-DLSS 5 is a real-time, in-game technology tied to specific hardware. But the underlying idea — using AI to synthesize photoreal lighting and materials — applies equally to static image processing.
+DLSS 5 is a real-time, in-game technology tied to specific hardware, and the way it works is exactly what separates it from an online tool.
 
-The AI upscaling tools you can use online today, including ours, operate on similar principles: analyze what's in the image, understand the scene semantics, and generate detail that wasn't in the original. The difference is that we work on any image, from any source, on any device — no RTX 5090 required.
+**DLSS 5 is deterministic and grounded.** It runs inside the game, takes the engine's rendered frame, colour and motion vectors as an unyielding foundation, and NVIDIA states it produces consistent outputs for identical input frames. It can only do that because the engine already knows the scene — albedo, normals, motion, light sources. Every player runs the same fixed model, which is why a comparison screenshot is reproducible.
 
-*Sources: NVIDIA GTC 2026 official announcement · WCCFTech · VideoCardz · fxguide*
+**Our online tools are neither deterministic nor grounded.** They receive one image and no 3D data at all. They are generative models: they cannot promise the same output twice, and they can invent detail that was never in the original. That is the honest difference — DLSS 5 restores lighting the engine had already defined, while an online enhancer makes a plausible guess about it.
+
+What they do share is the access story: ours runs on any image, from any source, on any device, with no RTX 50 series GPU required. Read a comparison accordingly — with DLSS 5 the question is what changed, with an online enhancer it is also what appeared.
+
+*Sources: NVIDIA, "DLSS 5 3D-Guided Neural Rendering Debuts in NBA 2K27", 1 September 2026 (nvidia.com/geforce/news/dlss-5-3d-guided-neural-rendering) · NVIDIA GTC 2026 announcement · WCCFTech · VideoCardz · fxguide*
 
 *This site is not affiliated with or endorsed by NVIDIA Corporation.*`,
     content_cn: `在 DLSS 5 之前，历代 DLSS 的目标都是一样的：在不损害画质的情况下给玩家更高的帧率。DLSS 2 智能放大图像。DLSS 3 凭空生成全新帧。DLSS 4 将这种生成进一步倍增。
 
-**DLSS 5 的目标完全不同。它不在乎你的帧率。它想改变你看到的东西。**
+**DLSS 5 的目标完全不同。它的任务不是更多帧，而是更好的帧——它想改变你看到的东西。**
 
 ## DLSS 5 在解决什么问题
 
-实时游戏渲染有一个硬性上限：4K 60fps 下，每一帧的全部像素必须在 16 毫秒内完成计算。传统管线对每个像素进行显式计算，这种方式已接近上限。下一步是预测像素而不是计算像素。这正是 DLSS 5 改变的核心：它将渲染从确定性计算转向学习式重建。
+实时游戏渲染有一个硬性上限：4K 60fps 下，每一帧的全部像素必须在 16 毫秒内完成计算。传统管线对每个像素进行显式计算，这种方式已接近上限。下一步是预测像素而不是计算像素。DLSS 5 改的正是这一层——但它没有放弃确定性：NVIDIA 明确表示 DLSS 5 「对相同输入帧给出相同输出」（operates deterministically），同一帧进、同一帧出。变的是光照与材质响应的来源——从物理世界学来，而不是从场景里显式计算。
 
 ## DLSS 5 的工作原理（逐步拆解）
 
 **第1步 — 游戏正常渲染。** GPU 按照传统流程运行光栅化或光线追踪。
 
-**第2步 — 提取颜色数据和运动向量。** 每一帧，DLSS 5 获取渲染的颜色输出和运动向量。
+**第2步 — 提取颜色数据和运动向量。** 每一帧，DLSS 5 获取渲染的颜色输出与引擎的运动向量；训练时它还学会了识别更多引擎信号——表面反照率、光照细节、表面法线——这正是结果能锚定在引擎真实绘制内容上的原因。
 
-**第3步 — 神经网络分析场景语义。** DLSS 5 的神经网络识别正在看的是什么类型的表面：皮肤、头发、织物、水、金属、玻璃。
+**第3步 — 神经网络分析场景语义。** DLSS 5 的神经网络识别物体、材质与光源——皮肤、头发、织物、水、金属、玻璃——以及它们之间的空间关系。
 
-**第4步 — 合成光照和材质。** DLSS 5 重建复杂效果，包括轮廓光、皮肤的次表面散射、接触阴影。
+**第4步 — 合成光照和材质。** DLSS 5 高保真地重建复杂效果：让皮肤读起来像皮肤的次表面散射、光穿过头发与植被的透射、接触阴影，以及全局光照。
 
 **第5步 — 输出合成回帧中。** 增强后的结果以最高 4K 分辨率实时交付。
 
@@ -138,7 +142,7 @@ The AI upscaling tools you can use online today, including ours, operate on simi
 | DLSS 1-2 | 像素缺失（低分辨率输入） | AI 放大渲染帧 | 性能 |
 | DLSS 3 | 帧缺失 | AI 帧生成 | 性能 |
 | DLSS 4/4.5 | 更多帧缺失，速度更快 | 多帧生成（最高6×） | 性能 |
-| **DLSS 5** | **光照物理上是错的** | **神经渲染替换光照模型** | **保真度** |
+| **DLSS 5** | **光照细节被性能预算削掉** | **神经渲染在引擎帧上重建** | **保真度** |
 
 ## 关键区分：锚定生成 vs 自由生成
 
@@ -146,15 +150,21 @@ DLSS 5 将游戏引擎的场景图作为约束，使增强效果在帧间保持�
 
 ## 硬件要求
 
-DLSS 5 目前确认仅支持 **NVIDIA RTX 50 系列（Blackwell 架构）**：RTX 5060、5060 Ti、5070、5070 Ti、5080、5090。
+DLSS 5 已于 **2026 年 9 月 1 日**上线，支持**全部 GeForce RTX 50 系列（Blackwell 架构）GPU 与笔记本 GPU**，以及 **GeForce NOW** Ultimate 会员（NVIDIA 自营云端 RTX 5080 机型）。需要 **GeForce Game Ready 616.64 WHQL** 或更新驱动，游戏视频设置里会出现「DLSS Neural Rendering」选项（游戏中按 F9 切换）。
 
-RTX 40 系列支持**尚未确认**，RTX 30 系列及更早不支持。
+RTX 40 系列支持**尚未公布**，RTX 30 系列及更早不支持。
 
 ## 这对在线 AI 图像工具意味着什么
 
-DLSS 5 是绑定特定硬件的实时游戏内技术。但它的底层逻辑——用 AI 合成真实光照和材质——同样适用于静态图像处理。我们现在能处理任何图片、来自任何来源、在任何设备上——不需要 RTX 5090。
+DLSS 5 是绑定特定硬件的实时游戏内技术，而它的工作方式恰好说明了它和在线工具的区别。
 
-*来源: NVIDIA GTC 2026 官方发布 · WCCFTech · VideoCardz · fxguide*
+**DLSS 5 是确定性的、有据可依的。** 它跑在游戏内部，把引擎渲染出的帧、颜色和运动矢量当作不可动摇的底座；NVIDIA 明确表示它对相同输入帧给出相同输出。它能做到这一点，是因为引擎本来就知道场景——反照率、法线、运动、光源。所有玩家跑的是同一个固定模型，所以对比截图可复现。
+
+**我们的在线工具两者都不具备。** 它只拿到一张图，没有任何 3D 数据；它是生成模型，不能保证同输入同输出，也可能「补」出原图根本没有的细节。这就是诚实的区别：DLSS 5 恢复的是引擎早已定义好的光照，在线增强工具则是对它做一次合理的猜测。
+
+共同点只有使用门槛：我们不需要 RTX 50 系列显卡，任何图片、任何来源、任何设备都能用。看对比图时据此区分——DLSS 5 要问的是「什么被改变了」，在线增强工具还要多问一句「什么被加了进来」。
+
+*来源: NVIDIA 官方发布文章《DLSS 5 3D-Guided Neural Rendering Debuts in NBA 2K27》（2026-09-01）· NVIDIA GTC 2026 发布 · WCCFTech · VideoCardz · fxguide*
 
 *此站点不隶属于或受 NVIDIA Corporation 支持或认可。*`
   },
@@ -167,13 +177,13 @@ DLSS 5 是绑定特定硬件的实时游戏内技术。但它的底层逻辑—�
     target_keywords_cn: ['dlss5和dlss4区别', 'fsr4对比dlss5', '2026最好的超分辨率', '要升级显卡用dlss5吗'],
     priority: 'P0',
     type: 'High-intent comparison — captures upgrade decision traffic',
-    lastUpdated: 'April 2026',
+    lastUpdated: 'September 2026',
     readTime: '7 min read',
     content_en: `In 2026, the GPU you buy isn't just a question of teraflops. It's a question of which AI reconstruction ecosystem you're committing to — and what that means for how your games look and perform for the next three to four years.
 
 ## The Big Picture in One Sentence Each
 
-**DLSS 5** — NVIDIA's bet that AI can *replace* lighting calculations, not just assist them. Exclusive to RTX 50 series. Launches Fall 2026.
+**DLSS 5** — NVIDIA's bet that AI can rebuild the lighting and material detail real-time budgets forced developers to cut, not just reconstruct resolution. RTX 50 series GPUs and laptops, plus GeForce NOW. Shipping since 1 September 2026 in NBA 2K27.
 
 **DLSS 4 / 4.5** — Frame generation that multiplies your fps by up to 6x. Best upscaling tech available today.
 
@@ -187,11 +197,11 @@ DLSS 4 uses a transformer-based neural network to upscale lower-resolution frame
 - **DLSS 4**: Generate up to 4 frames for every 1 rendered frame → up to 4× fps multiplier
 - **DLSS 4.5 Dynamic MFG**: Up to 6× multiplier, automatically adjusting based on your monitor's refresh rate
 
-### DLSS 5 (Fall 2026)
+### DLSS 5 (Available Now)
 
-DLSS 5 doesn't improve frame rates. It improves what each frame *looks like* by replacing the game's lighting model with an AI-synthesized version. Think of it as a post-processing layer that understands physics.
+DLSS 5 doesn't generate extra frames. It runs as the final rendering stage of the pipeline and rebuilds the lighting and material detail the engine could not afford to compute, so the frame keeps its geometry and identity while gaining a lifelike light response. It extends the existing pipeline rather than replacing it, and it ships alongside DLSS Super Resolution and Multi Frame Generation.
 
-**RTX 50 series only.** No exceptions confirmed yet.
+**RTX 50 series GPUs and laptops.** GeForce NOW Ultimate members get it from NVIDIA's cloud RTX 5080 rigs; RTX 40 series and older are still unsupported.
 
 ### FSR 4 (Available Now, RDNA 4 only)
 
@@ -203,14 +213,14 @@ AMD has moved to machine learning–based upscaling and frame generation. The qu
 |---------|---------------------|---------------------|---------------------|-------------------|
 | Upscaling quality | Excellent | N/A (different purpose) | Very Good | Good |
 | Frame generation | Up to 6× (RTX 50), 1× (RTX 40) | Runs alongside DLSS 4.5 | 1× | 1× |
-| Neural rendering | No | **Yes — Fall 2026** | No | No |
+| Neural rendering | No | **Yes — available now** | No | No |
 | GPU lock | NVIDIA RTX only | NVIDIA RTX 50 only | AMD RDNA 4 only | Any GPU |
 | Game support | 950+ titles | 15+ confirmed | ~250+ titles | 500+ titles |
-| Available now? | Yes | No — Fall 2026 | Yes | Yes |
+| Available now? | Yes | Yes — since September 2026 (NBA 2K27) | Yes | Yes |
 
 ## Should You Upgrade for DLSS 5?
 
-**If you have an RTX 40 series:** You already have the best performance upscaling available. Wait and see how DLSS 5 looks at launch.
+**If you have an RTX 40 series:** You already have the best performance upscaling available. DLSS 5 needs RTX 50 series hardware, so there is nothing to do yet — watch how it looks now that it is shipping in NBA 2K27.
 
 **If you have an RTX 30 series or older:** DLSS 4's Multi Frame Generation is a more immediate improvement.
 
@@ -225,7 +235,7 @@ AMD has moved to machine learning–based upscaling and frame generation. The qu
 
 ## 一句话总结
 
-**DLSS 5** — 让 AI *替代* 光照计算，仅支持 RTX 50 系列，2026 年秋季发布。
+**DLSS 5** — 让 AI 重建被性能预算削掉的光照与材质细节，而不只是重建分辨率。支持 RTX 50 系列显卡与笔记本，以及 GeForce NOW。2026 年 9 月 1 日随 NBA 2K27 上线。
 
 **DLSS 4 / 4.5** — 帧生成技术，将帧率最高乘以 6 倍。当下最佳超分技术。
 
@@ -237,9 +247,11 @@ AMD has moved to machine learning–based upscaling and frame generation. The qu
 
 DLSS 4 使用 Transformer 架构神经网络放大低分辨率帧。杀手功能是多帧生成：DLSS 4 每渲染 1 帧最多生成 4 帧（4× FPS 乘数）；DLSS 4.5 动态 MFG 最高 6× 乘数。
 
-### DLSS 5（2026 年秋季）
+### DLSS 5（现已上线）
 
-DLSS 5 不提升帧率。它用 AI 合成版本替换游戏的光照模型，改变每一帧*看起来什么样*。**仅限 RTX 50 系列。**
+DLSS 5 不生成额外帧。它是渲染管线的最后一级，重建引擎算不起的光照与材质细节——帧的几何与身份保持不变，只获得更真实的光照响应。它是扩展管线而不是替换管线，并与 DLSS 超分、多帧生成叠加使用。
+
+**支持 RTX 50 系列显卡与笔记本**，GeForce NOW Ultimate 会员可在 NVIDIA 自营的云端 RTX 5080 机型上使用；RTX 40 系列及更早仍不支持。
 
 ### FSR 4（现已可用，仅限 RDNA 4）
 
@@ -251,14 +263,14 @@ AMD 转向机器学习超分和帧生成。FSR 4 与 DLSS 4 之间的质量差�
 |------|----------|--------|--------|---------|
 | 超分质量 | 优秀 | 不适用 | 非常好 | 良好 |
 | 帧生成 | 最高6× | 与DLSS4.5并行 | 1× | 1× |
-| 神经渲染 | 否 | **是，2026年秋** | 否 | 否 |
+| 神经渲染 | 否 | **是，现已上线** | 否 | 否 |
 | GPU限制 | 仅NVIDIA RTX | 仅NVIDIA RTX 50 | 仅AMD RDNA 4 | 任意GPU |
 | 游戏支持 | 950+ | 15+ | ~250+ | 500+ |
-| 现在可用？ | 是 | 否 | 是 | 是 |
+| 现在可用？ | 是 | 是（2026 年 9 月起，随 NBA 2K27） | 是 | 是 |
 
 ## 应该为了 DLSS 5 升级显卡吗？
 
-**RTX 40 系列用户：** 你已经有了当下最好的性能超分。等等看 DLSS 5 正式发布后的实际表现。
+**RTX 40 系列用户：** 你已经有了当下最好的性能超分。DLSS 5 需要 RTX 50 系列硬件，暂时无需行动——它已随 NBA 2K27 上线，可以观察实际表现。
 
 **RTX 30 系列或更老：** DLSS 4 的多帧生成是对日常游戏体验更直接的改善。
 
@@ -279,7 +291,7 @@ AMD 转向机器学习超分和帧生成。FSR 4 与 DLSS 4 之间的质量差�
     target_keywords_cn: ['绯红荒漠DLSS设置', '绯红荒漠优化', '绯红荒漠帧率', '绯红荒漠4K'],
     priority: 'P0',
     type: 'Hot game + DLSS traffic intersection — extremely high CTR potential',
-    lastUpdated: 'April 2026',
+    lastUpdated: 'September 2026',
     readTime: '6 min read',
     content_en: `Crimson Desert launched on March 19, 2026, and immediately became one of the most visually ambitious open-world games in years. Here's how to get the most out of it.
 
@@ -333,7 +345,7 @@ Reduce NPC Density to Medium, lower Shadow Distance, and enable DLSS 4. Also ens
 
 ## Will Crimson Desert Get DLSS 5 Support?
 
-DLSS 5 launches in Fall 2026. Crimson Desert is not currently on the confirmed DLSS 5 title list. However, given Pearl Abyss's deep integration with NVIDIA, DLSS 5 support in a future patch is plausible.
+DLSS 5 began shipping on 1 September 2026 with NBA 2K27. Crimson Desert is not currently on the confirmed DLSS 5 title list. However, given Pearl Abyss's deep integration with NVIDIA, DLSS 5 support in a future patch is plausible.
 
 *Sources: Pearl Abyss official · NVIDIA driver release notes · Digital Foundry launch analysis*
 
@@ -373,7 +385,7 @@ DLSS 4 质量模式 + NPC密度：中。
 
 ## 绯红荒漠会获得 DLSS 5 支持吗？
 
-DLSS 5 要到 2026 年秋季发布，《绯红荒漠》目前不在已确认支持列表中，但考虑到 Pearl Abyss 与 NVIDIA 的深度合作，后续补丁加入支持是有可能的。
+DLSS 5 已于 2026 年 9 月 1 日随 NBA 2K27 上线，《绯红荒漠》目前不在已确认支持列表中，但考虑到 Pearl Abyss 与 NVIDIA 的深度合作，后续补丁加入支持是有可能的。
 
 *来源: Pearl Abyss 官方 · NVIDIA 驱动说明 · Digital Foundry 首日分析*
 
@@ -388,7 +400,7 @@ DLSS 5 要到 2026 年秋季发布，《绯红荒漠》目前不在已确认支�
     target_keywords_cn: ['最好的AI图片放大工具', '免费在线图片超分', 'Real-ESRGAN对比', 'AI照片增强免费'],
     priority: 'P1',
     type: 'Tool comparison — direct conversion traffic for our product',
-    lastUpdated: 'April 2026',
+    lastUpdated: 'September 2026',
     readTime: '7 min read',
     content_en: `The AI image upscaling market has matured fast. In 2022, your choices were basically Topaz (expensive, good) or nothing. In 2026, there are dozens of options and the quality gap between them has narrowed dramatically.
 
@@ -439,7 +451,7 @@ Our tool adds a key differentiator that most online upscalers skip: **before/aft
 
 DLSS 5 and modern AI image upscalers are working toward the same goal from different directions. DLSS 5 enhances images generated in real time by a game engine. AI image upscalers enhance images after the fact — photographs, illustrations, screenshots, renders.
 
-The practical difference is access: DLSS 5 requires a $600+ GPU and a supported game launching in Fall 2026. A good AI image upscaler is free online, right now.
+The practical difference is access: DLSS 5 requires a supported RTX 50 series GPU and a game that integrates it. A good AI image upscaler is free online, right now.
 
 *Sources: Real-ESRGAN official · Topaz Labs · Upscayl official · AI image processing research*
 
@@ -485,7 +497,7 @@ The practical difference is access: DLSS 5 requires a $600+ GPU and a supported 
 
 DLSS 5 和现代 AI 超分工具从不同方向实现相同目标。DLSS 5 增强游戏引擎实时生成的图像。AI 超分工具事后增强照片、插画、截图、渲染图。
 
-实际区别在于访问门槛：DLSS 5 需要 $600+ 的显卡和 2026 年秋季发布的支持游戏。好的 AI 超分工具现在在网上就是免费的。
+实际区别在于访问门槛：DLSS 5 需要支持它的 RTX 50 系列显卡，以及一款集成了该技术的游戏。好的 AI 超分工具现在在网上就是免费的。
 
 *来源: Real-ESRGAN 官方 · Topaz Labs · Upscayl 官方 · AI 图像处理研究*
 
