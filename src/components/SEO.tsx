@@ -45,7 +45,26 @@ export default function SEO({
   // Some prerendered shells can be restored by React 19 as well as reconciled by Helmet. Both
   // copies carry data-rh and are valid individually, but retaining two identical canonicals or
   // JSON-LD graphs is harmful to crawlers. Collapse exact duplicates after Helmet has committed.
+  // Locale-aware pages can deliberately replace the static English shell metadata with a translated
+  // value, so metadata is also collapsed by semantic key (description, og:title, etc.) rather than
+  // only when the complete HTML happens to be identical.
   useEffect(() => {
+    const collapseManagedMeta = () => {
+      const seen = new Set<string>();
+      const elements = [...document.querySelectorAll(
+        'meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]',
+      )];
+      // Helmet appends the active route's tags after the static shell. Walking backwards keeps the
+      // newest locale-specific value and removes the stale shell value.
+      for (let index = elements.length - 1; index >= 0; index -= 1) {
+        const element = elements[index];
+        const key = element.getAttribute('name')
+          ? `name:${element.getAttribute('name')}`
+          : `property:${element.getAttribute('property')}`;
+        if (seen.has(key)) element.remove();
+        else seen.add(key);
+      }
+    };
     const dedupe = (selector: string, signature: (element: Element) => string) => {
       const seen = new Set<string>();
       document.querySelectorAll(selector).forEach(element => {
@@ -54,19 +73,19 @@ export default function SEO({
         else seen.add(key);
       });
     };
+    collapseManagedMeta();
     dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
-    dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', element => element.outerHTML);
     dedupe('script[type="application/ld+json"]', element => element.textContent || '');
     const observer = new MutationObserver(() => {
+      collapseManagedMeta();
       dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
-      dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', element => element.outerHTML);
       dedupe('script[type="application/ld+json"]', element => element.textContent || '');
     });
     observer.observe(document, { childList: true, subtree: true });
     const timer = window.setTimeout(() => {
       observer.disconnect();
       dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);
-      dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', element => element.outerHTML);
+      collapseManagedMeta();
       dedupe('script[type="application/ld+json"]', element => element.textContent || '');
     }, 3000);
     return () => {

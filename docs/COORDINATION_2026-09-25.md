@@ -195,3 +195,5 @@ PY
 静态构建核验：`dist/blog/index.html`、`dist/en/blog/index.html`、`dist/zh/blog/index.html` 均只有一个 canonical，三者互相声明 `en`、`zh-CN` 与 `x-default`；构建不会生成 `/ja/blog` 等未翻译 URL。`npm run lint` 通过，`npm test` 72/72，`npm run build` 通过。
 
 当前仍有意保持的边界：其他语言包继续翻译导航和界面文案，但没有虚构对应的 SEO URL；这些页面沿用英文规范 URL，等有完整文章/页面翻译后再增加 hreflang，避免把部分翻译内容发布成重复薄页。
+
+本轮又修正了一个由静态英文 shell 与动态中文 metadata 并存造成的边界：`src/components/SEO.tsx` 现在按 `name/property` 语义键去除旧的 description、Open Graph、Twitter 等标签，并保留当前 locale 的最新值；JSON-LD 仍按完整图去重，因此 Organization 与页面 schema 不会互相删除。线上旧部署曾出现中文 `/about` 的 title 已切换而英文 description 仍排在第一项，修复后将以单一中文 description 输出。
