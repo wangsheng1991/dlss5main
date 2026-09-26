@@ -793,11 +793,11 @@ if (profileHas('about')) writeRoute('/about', renderPublicGuide({
 }));
 if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   path: '/download',
-  title: 'DLSS 5 Download Guide — Official Sources, RTX Compatibility & Online Alternative',
-  description: 'DLSS 5 has no standalone download. Learn about the NVIDIA App, supported RTX games, compatibility, and an independent online image enhancement alternative with no download.',
-  heading: 'DLSS 5 Download Guide',
-  lead: 'Understand where DLSS is delivered, what RTX compatibility means, and when a browser-based image enhancement workflow is a better fit.',
-  keywords: ['DLSS 5 download', 'DLSS download free', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'online image upscaler no download'],
+  title: 'DLSS5 Studio — DLSS 5 download explained, plus a local neural rendering tool',
+  description: 'DLSS 5 has no standalone download: it ships inside games as nvngx_dlss.dll. DLSS5 Studio is an independent Windows tool that runs the neural rendering pipeline on your own RTX GPU. Builds are handed out by request — the address appears once you register.',
+  heading: 'DLSS 5 Studio — download by request',
+  lead: 'Understand where official DLSS is delivered, what DLSS5 Studio adds on a local RTX machine, and how to ask for the build.',
+  keywords: ['DLSS 5 download', 'DLSS download free', 'DLSS5 Studio', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
   links: [{ label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());

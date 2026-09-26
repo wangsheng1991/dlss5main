@@ -12,5 +12,6 @@ import './tools.test';
 import './api-catalog.test';
 import './use-cases.test';
 import './passport-photo.test';
+import './after-sign-in.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

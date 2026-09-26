@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { loadFirebase } from '../lib/firebase';
+import { afterSignInPath } from '../lib/after-sign-in';
 
 export default function Register() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // See `Login.tsx`: `?next=` lets the Studio download request send the reader back to itself after
+  // registering. `afterSignInPath` accepts same-site paths only.
+  const [searchParams] = useSearchParams();
+  const afterSignIn = afterSignInPath(searchParams.get('next'));
   const { signInWithGoogle } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -24,7 +29,7 @@ export default function Register() {
       if (name) {
         await updateProfile(userCredential.user, { displayName: name });
       }
-      navigate('/dashboard');
+      navigate(afterSignIn);
     } catch (err: any) {
       setError(t('register.errorRegisterFailed'));
     } finally {
@@ -37,7 +42,7 @@ export default function Register() {
     setLoading(true);
     try {
       await signInWithGoogle();
-      navigate('/dashboard');
+      navigate(afterSignIn);
     } catch (err: any) {
       setError(t('register.errorGoogleFailed'));
     } finally {

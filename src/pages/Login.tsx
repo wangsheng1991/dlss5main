@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { loadFirebase } from '../lib/firebase';
+import { afterSignInPath } from '../lib/after-sign-in';
 
 export default function Login() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // A page that needs a signed-in reader (the Studio download request) links here with `?next=`,
+  // and landing back on `/dashboard` instead would drop that reader a click short of what they came
+  // for. `afterSignInPath` accepts same-site paths only — see `src/lib/after-sign-in.ts`.
+  const [searchParams] = useSearchParams();
+  const afterSignIn = afterSignInPath(searchParams.get('next'));
   const { signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +26,7 @@ export default function Login() {
     try {
       const { auth, signInWithEmailAndPassword } = await loadFirebase();
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard');
+      navigate(afterSignIn);
     } catch (err: any) {
       setError(t('login.errorLoginFailed'));
     } finally {
@@ -33,7 +39,7 @@ export default function Login() {
     setLoading(true);
     try {
       await signInWithGoogle();
-      navigate('/dashboard');
+      navigate(afterSignIn);
     } catch (err: any) {
       setError(t('login.errorGoogleFailed'));
     } finally {
