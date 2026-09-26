@@ -65,3 +65,18 @@
 - 角色案例明确展示不变项（轮廓、服装、动作、身份）与可变项（光照、材质、调色、环境），用于承接游戏角色风格转换搜索意图。
 
 上线后需要观察：`dlss 5 visual enhancer`、`dlss 5 image converter`、`game character style conversion` 和 `dlss 5 online` 的查询—页面分布与 CTR。不要在 Google 尚未刷新数据前重复改标题。
+
+## 2026-09-26 线上复核与索引提交
+
+已使用已登录的 Search Console 逐页检查本轮新增工具页。最新 sitemap 已在 2026-09-25 成功读取，报告显示 **59 个已发现网页、0 个视频**，因此不重复提交 sitemap。
+
+URL Inspection 的当前结果：
+
+- `/virtual-try-on`：网址已收录到 Google；
+- `/interior-design`：未收录，原因是“已发现 - 尚未编入索引”；已点击“请求编入索引”，Google 返回“超出了配额，明天再尝试”；
+- `/portrait-retouch`：网址已收录到 Google；
+- `/virtual-makeup`：网址已收录到 Google；
+- `/game-character-style`：网址已收录到 Google；
+- `/video-upscaler`：网址已收录到 Google。
+
+因此今天没有可继续提交的 URL。唯一待办是 Google 每日 URL Inspection 配额重置后，再对 `/interior-design` 重试一次；其余五个新页不重复请求。站内 title、description、keywords、canonical、H1 的线上批量检查已通过，59 个 sitemap URL 均返回 200。
