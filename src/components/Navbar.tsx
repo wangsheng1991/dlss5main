@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Database, LogOut, User as UserIcon, Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
@@ -23,6 +23,7 @@ const LANGUAGES = [
 export default function Navbar() {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, profile, logout } = useAuth();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   const blogPath = i18n.language.startsWith('zh') ? '/zh/blog' : '/blog';
@@ -32,7 +33,25 @@ export default function Navbar() {
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
   const handleLanguageChange = (code: string) => {
-    i18n.changeLanguage(code);
+    // Blog editions have stable SEO URLs. Preserve the article slug while moving between the
+    // English x-default route and the Chinese edition; the other UI locales use the English
+    // source edition until translated article URLs exist.
+    const blogMatch = location.pathname.match(/^\/(en|zh)?\/?blog(?:\/([^/?#]+))?\/?$/);
+    if (blogMatch) {
+      const slug = blogMatch[2] ? `/${blogMatch[2]}` : '';
+      if (code === 'zh-CN') {
+        void i18n.changeLanguage('zh-CN');
+        navigate(`/zh/blog${slug}`);
+      } else {
+        // English is the x-default edition. Other interface languages currently read that
+        // source edition, so they also leave the translated URL space rather than creating a
+        // route whose metadata claims a translation we do not publish yet.
+        void i18n.changeLanguage(code);
+        navigate(`/blog${slug}`);
+      }
+    } else {
+      void i18n.changeLanguage(code);
+    }
     setIsLangOpen(false);
   };
 

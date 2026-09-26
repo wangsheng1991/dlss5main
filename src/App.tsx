@@ -57,8 +57,13 @@ export default function App() {
                   <Route path="/docs" element={orHome('docs', <Docs />)} />
                   <Route path="/blog" element={orHome('blog', <Blog />)} />
                   <Route path="/blog/:slug" element={orHome('blog', <Blog />)} />
-                  <Route path="/:locale/blog" element={orHome('blog', <Blog />)} />
-                  <Route path="/:locale/blog/:slug" element={orHome('blog', <Blog />)} />
+                  {/* Only these two language prefixes have translated blog editions. Keeping the
+                      routes explicit prevents /ja/blog and other UI locales from becoming duplicate
+                      crawlable pages with a misleading self-canonical. */}
+                  <Route path="/en/blog" element={orHome('blog', <Blog />)} />
+                  <Route path="/en/blog/:slug" element={orHome('blog', <Blog />)} />
+                  <Route path="/zh/blog" element={orHome('blog', <Blog />)} />
+                  <Route path="/zh/blog/:slug" element={orHome('blog', <Blog />)} />
                   <Route path="/about" element={orHome('about', <About />)} />
                   <Route path="/download" element={orHome('download', <Download />)} />
                   <Route path="/enterprise" element={orHome('enterprise', <Enterprise />)} />

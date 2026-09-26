@@ -8,7 +8,8 @@ import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
 
 export default function Footer() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const blogPath = i18n.language.startsWith('zh') ? '/zh/blog' : '/blog';
   return (
     <footer className="bg-surface-lowest w-full py-16 border-t border-outline-variant/10">
       <div className="max-w-[1440px] mx-auto px-8">
@@ -71,7 +72,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.resources')}</h4>
             <ul className="space-y-4">
-              {profileHas('blog') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/blog">{t('home.blog')}</Link></li>}
+              {profileHas('blog') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={blogPath}>{t('home.blog')}</Link></li>}
               {profileHas('docs') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.documentation')}</Link></li>}
               {profileHas('download') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/download">{t('navbar.download')}</Link></li>}
               {profileHas('about') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/about">{t('navbar.about')}</Link></li>}

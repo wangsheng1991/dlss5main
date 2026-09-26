@@ -9,15 +9,25 @@ import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from
 export default function GameCharacterStyle() {
   const { i18n } = useTranslation();
   const isZh = i18n.language.startsWith('zh');
+  const seoTitle = isZh ? '20 组游戏人物风格转换案例：前后对比' : GAME_STYLE_LANDING.title;
+  const seoDescription = isZh
+    ? '浏览 20 组原创游戏人物前后对比案例：保持姿势、服装和身份，再改变赛博朋克、奇幻、科幻、动漫与写实风格。'
+    : GAME_STYLE_LANDING.description;
   return (
     <>
       <SEO
-        title={GAME_STYLE_LANDING.title}
-        description={GAME_STYLE_LANDING.description}
+        title={seoTitle}
+        description={seoDescription}
         keywords={[...GAME_STYLE_LANDING.keywords]}
         canonical={GAME_STYLE_LANDING.path}
         image="/examples/generated/game-cyber-1-after.jpg"
-        structuredData={gameStyleLandingSchema()}
+        language={isZh ? 'zh-CN' : 'en-US'}
+        structuredData={gameStyleLandingSchema(undefined, {
+          title: seoTitle,
+          description: seoDescription,
+          heading: isZh ? '20 组游戏人物风格转换案例' : GAME_STYLE_LANDING.heading,
+          language: isZh ? 'zh-CN' : 'en-US',
+        })}
       />
       <main className="pt-28 sm:pt-32 pb-24 px-5 max-w-[1280px] mx-auto w-full">
         <nav className="mb-8 text-sm text-zinc-500" aria-label="Breadcrumb">

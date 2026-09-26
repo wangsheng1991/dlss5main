@@ -182,3 +182,16 @@ PY
 - **站长操作（配额恢复后）**：逐页提交 `/tools/passport-photo`、`/tools/passport-photo/3-na-4`、`/tools/passport-photo/35x45-ru` 及其余本次新增或改动的工具页；提交后复查“已收录/规范网址”。
 - **Google 重新评估**：等待规范页验证结果，若仍选择根证件照页，再增加规格页独有段落或将重复规格合并为一个入口。
 - **部署复核（已完成）**：`e391369` 已推送，Vercel Production Ready，`www.dlss5nvidia.com`、裸域和 `dlss5-main.vercel.app` 均指向新部署。线上浏览器复核了主页、`3-na-4` 和 `35x45-ru`：title、description、keywords、canonical 均为稳定英文且自指，`lang=en-US`；主页和规格页各保留 Organization + 路由 schema。随后 `2271887` 固定了未加语言前缀的 `/blog` 根路径 SEO 为英文，`/zh/blog` 仍保留中文 title/lang/canonical；本地水合复核通过。
+
+## 9. 多语言入口与元数据收尾（2026-09-26）
+
+本轮把语言切换和可抓取 URL 的边界收紧，避免浏览器语言、页面正文和 canonical 互相打架：
+
+- `src/App.tsx` 不再接受任意 `/:locale/blog`。博客只公开 `/blog`（英文 x-default）、`/en/blog`（英文）和 `/zh/blog`（中文），因此 `/ja/blog`、`/ko/blog` 等不会成为重复的可索引页面。
+- `Navbar` 的语言切换现在识别博客文章 slug。切换中文会进入 `/zh/blog/<slug>`，切换英文或其他尚未有独立文章翻译的界面语言会回到 `/blog/<slug>`，同时保留用户选中的界面语言。
+- `Footer` 的博客链接与当前中文/英文界面同步，不会在中文页面继续指向英文根路径。
+- `/download`、`/about` 和 `/game-character-style` 的中文界面现在同步输出 `lang=zh-CN`、中文 title/description 和对应结构化数据；英文界面继续使用稳定英文 metadata。
+
+静态构建核验：`dist/blog/index.html`、`dist/en/blog/index.html`、`dist/zh/blog/index.html` 均只有一个 canonical，三者互相声明 `en`、`zh-CN` 与 `x-default`；构建不会生成 `/ja/blog` 等未翻译 URL。`npm run lint` 通过，`npm test` 72/72，`npm run build` 通过。
+
+当前仍有意保持的边界：其他语言包继续翻译导航和界面文案，但没有虚构对应的 SEO URL；这些页面沿用英文规范 URL，等有完整文章/页面翻译后再增加 hreflang，避免把部分翻译内容发布成重复薄页。

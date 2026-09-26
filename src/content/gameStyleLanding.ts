@@ -25,16 +25,23 @@ export const GAME_STYLE_LONG_FORM = {
   review: 'Review a result at thumbnail size and at 100 percent. At a glance, the pose and visual hierarchy should read immediately. At full size, inspect eyes, fingers, facial proportions, weapon silhouettes, armour seams and cloth folds. If the image will become a video, review several frames for flicker and identity drift before calling the conversion usable.',
 } as const;
 
-export function gameStyleLandingSchema(siteUrl = 'https://www.dlss5nvidia.com') {
+export function gameStyleLandingSchema(
+  siteUrl = 'https://www.dlss5nvidia.com',
+  options: { title?: string; description?: string; heading?: string; language?: string } = {},
+) {
+  const title = options.title || GAME_STYLE_LANDING.title;
+  const description = options.description || GAME_STYLE_LANDING.description;
+  const heading = options.heading || GAME_STYLE_LANDING.heading;
+  const language = options.language || 'en-US';
   return {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'CollectionPage',
-        name: GAME_STYLE_LANDING.title,
+        name: title,
         url: `${siteUrl}${GAME_STYLE_LANDING.path}`,
-        description: GAME_STYLE_LANDING.description,
-        inLanguage: 'en-US',
+        description,
+        inLanguage: language,
         numberOfItems: GAME_STYLE_CASES.length,
         isPartOf: { '@type': 'WebSite', name: 'DLSS5NVIDIA', url: `${siteUrl}/` },
       },
@@ -42,7 +49,7 @@ export function gameStyleLandingSchema(siteUrl = 'https://www.dlss5nvidia.com') 
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${siteUrl}/` },
-          { '@type': 'ListItem', position: 2, name: GAME_STYLE_LANDING.heading, item: `${siteUrl}${GAME_STYLE_LANDING.path}` },
+          { '@type': 'ListItem', position: 2, name: heading, item: `${siteUrl}${GAME_STYLE_LANDING.path}` },
         ],
       },
     ],

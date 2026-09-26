@@ -86,6 +86,7 @@ export default function Download() {
           ? 'DLSS 5 没有独立下载包。本指南说明 NVIDIA App、支持的 RTX 游戏、显卡兼容性，以及无需下载即可在线增强图片的独立替代方案。'
           : 'DLSS 5 has no standalone download. Learn about the NVIDIA App, supported RTX games, compatibility, and an independent online image enhancement alternative with no download.'}
         canonical="/download"
+        language={isZh ? 'zh-CN' : 'en-US'}
         structuredData={structuredData}
       />
 

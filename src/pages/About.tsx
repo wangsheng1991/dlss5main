@@ -38,12 +38,19 @@ const TECH_FAQ = [
 export default function About() {
   const { t, i18n } = useTranslation();
   const isZh = i18n.language.startsWith('zh');
+  const seoTitle = isZh
+    ? 'NVIDIA DLSS 5 技术详解：神经渲染与 Tensor Core 指南'
+    : 'NVIDIA DLSS 5 — Neural Rendering Technology & Tensor Core Guide';
+  const seoDescription = isZh
+    ? '完整解析 NVIDIA DLSS 5 神经渲染技术：Tensor Core 如何驱动 AI 超分、哪些 RTX 显卡支持，以及它与 DLSS 4 和 FSR 4 的区别。'
+    : 'Complete guide to NVIDIA DLSS 5 neural rendering. Learn how DLSS 5 uses Tensor Cores for AI upscaling, supported RTX GPUs, and how it differs from DLSS 4 and FSR 4.';
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "name": "NVIDIA DLSS 5 — Complete Technical Guide",
-    "description": "In-depth explanation of NVIDIA DLSS 5 neural rendering technology. How Tensor Cores power AI upscaling, and what makes DLSS 5 different from previous generations.",
+    "name": seoTitle,
+    "description": seoDescription,
+    "inLanguage": isZh ? 'zh-CN' : 'en-US',
     "about": {
       "@type": "Thing",
       "name": "NVIDIA DLSS 5"
@@ -53,9 +60,10 @@ export default function About() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[900px] mx-auto">
       <SEO
-        title="NVIDIA DLSS 5 — Neural Rendering Technology & Tensor Core Guide"
-        description="Complete guide to NVIDIA DLSS 5 neural rendering. Learn how DLSS 5 uses Tensor Cores for AI upscaling, supported RTX GPUs, and how it differs from DLSS 4 and FSR 4."
+        title={seoTitle}
+        description={seoDescription}
         canonical="/about"
+        language={isZh ? 'zh-CN' : 'en-US'}
         structuredData={structuredData}
       />
 
