@@ -2,6 +2,15 @@
 
 自动化能完成的站内 SEO、站点地图和 URL 检查已完成。只有 Google 的抓取队列和 Search Console 报告刷新需要等待，不能通过代码强制改变。
 
+## 2026-09-27 线上复核与索引提交
+
+- 通过已登录的 Search Console 重新检查 Sitemap：`https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，上次读取 2026-09-25，已发现 59 个网页、0 个视频；无需重复提交 Sitemap。
+- 用无缓存请求逐页检查 Sitemap 中的 59 个 URL。所有页面均返回 HTTP 200，并有非空且与路由匹配的 `title`、description、keywords、canonical 和 H1；未发现缺失或错误 canonical。博客的中英文同名标题属于不同语言版本，不是重复路由。
+- URL Inspection 逐页复核新增工具：`/virtual-try-on`、`/portrait-retouch`、`/virtual-makeup`、`/game-character-style`、`/video-upscaler` 均显示“网址已编入 Google”；`/interior-design` 仍显示“已发现 - 尚未编入索引”，已在今日配额恢复后成功点击“请求编入索引”，Google 返回“已请求编入索引”，网址已进入优先抓取队列。
+- 复核 Search Console 旧的覆盖率示例时，`/blog/best-ai-image-upscaler-2026-comparison` 已显示“网址已编入 Google”，说明 2026-09-21 的 13 个未编入索引数字尚未刷新，不能据此重复提交已收录页面。
+
+当前只剩 Google 抓取队列和覆盖率报告刷新。`/interior-design` 的手动请求已完成；其余新增工具页和已收录文章不再重复请求。若报告刷新后仍有新的非规范化 URL，再按新的原因处理；在此之前没有代码侧或 Search Console 侧的自动操作可继续推进。
+
 ## 仅需等待 Google 抓取队列
 
 2026-09-25 通过已登录 Search Console 逐页复核了报告中的新文章和旧验证样本；它们当前均显示“网址已收录到 Google”，因此没有需要重复请求的 URL。报告中的“已发现—尚未编入索引”和“已抓取—尚未编入索引”数字是 2026-09-21 的历史快照，等待下一次报告刷新即可。
