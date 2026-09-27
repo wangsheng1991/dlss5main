@@ -55,6 +55,8 @@ const CHARACTER_STYLE_PRESETS = [
 ] as const;
 type CharacterStylePreset = (typeof CHARACTER_STYLE_PRESETS)[number]['id'];
 const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
+/** The default workflow must show character evidence, not examples from unrelated tools. */
+const CHARACTER_STYLE_CASE_PREVIEW = GAME_STYLE_CASES.slice(0, 5);
 
 /** The presets offered in the studio, in display order. */
 const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup'];
@@ -579,7 +581,20 @@ export default function Dashboard() {
             {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
           </div>}
           {!user && selectedSample && <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/>}
-          {!file && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">{t('dashboard.examplesHeading')}</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(user ? SAMPLE_IDS : GUEST_SAMPLE_IDS).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={sampleName(id, isZh)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{sampleName(id, isZh)}</span></button>)}</div></div>}
+          {characterStyleWorkflow && !file && !selectedSample && sampleRun.state.status === 'idle' && <section aria-labelledby="style-cases-heading" className="pt-1 space-y-4">
+            <div className="text-center">
+              <h3 id="style-cases-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{isZh ? '人物风格参考案例' : 'Character style references'}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-500">{isZh ? '默认示例都使用人物前后对比，便于先看轮廓、服装和材质是否保持，再运行免费示例。素材为原创参考，不是 NVIDIA 官方截图。' : 'Every preview here is a character before/after pair, so you can check silhouette, costume and materials before running the free example. Original references, not NVIDIA captures.'}</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {CHARACTER_STYLE_CASE_PREVIEW.map((item, index) => <article key={item.id} className="overflow-hidden rounded-lg border border-outline-variant/20 bg-surface-lowest">
+                <ImageSlider highRes={item.after} lowRes={item.before} alt={item.alt} inputLabel={isZh ? '转换前' : 'Before'} outputLabel={isZh ? '风格参考' : 'After'} compareLabel={isZh ? `${item.titleZh}前后对比` : `${item.title} before and after`} initialAspectRatio={1.5} priority={index < 2}/>
+                <div className="p-3"><p className="text-[10px] uppercase tracking-widest text-primary">{isZh ? item.styleZh : item.style}</p><h4 className="mt-1 text-sm font-bold text-white">{isZh ? item.titleZh : item.title}</h4><p className="mt-1 text-xs leading-relaxed text-zinc-500">{isZh ? item.descriptionZh : item.description}</p></div>
+              </article>)}
+            </div>
+            <button type="button" onClick={() => { setSelectedSample('characterStyle'); setActivePrompt(SAMPLES.characterStyle.prompt); void sampleRun.run('characterStyle'); }} className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-bold text-black hover:bg-white">{isZh ? '免费运行赛博朋克人物示例' : 'Run the free cyberpunk character example'}</button>
+          </section>}
+          {!file && (!characterStyleWorkflow || !!user) && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">{t('dashboard.examplesHeading')}</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(characterStyleWorkflow ? ['characterStyle' as SampleId] : (user ? SAMPLE_IDS : GUEST_SAMPLE_IDS)).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={sampleName(id, isZh)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{sampleName(id, isZh)}</span></button>)}</div></div>}
           {/* The line that needs an account comes after the things that do not: a signed-out reader
               should meet something they can run before the door. */}
           {!user && !selectedSample && <Link to="/login" className="w-full rounded-lg border border-outline-variant/30 px-4 py-3 text-center text-sm text-zinc-300 hover:border-primary">{t('dashboard.guestUnlock', { count: MODES.length })}</Link>}
