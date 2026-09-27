@@ -11,6 +11,10 @@
 
 当前只剩 Google 抓取队列和覆盖率报告刷新。`/interior-design` 的手动请求已完成；其余新增工具页和已收录文章不再重复请求。若报告刷新后仍有新的非规范化 URL，再按新的原因处理；在此之前没有代码侧或 Search Console 侧的自动操作可继续推进。
 
+## 2026-09-27 后续复核
+
+生产部署 `59eeb0d` 完成后再次检查 `/interior-design`，Search Console 已显示“网址已编入 Google”。至此本轮新增工具页（virtual-try-on、interior-design、portrait-retouch、virtual-makeup、game-character-style、video-upscaler）全部完成收录确认；不再重复请求。Sitemap 仍为成功、59 个网页、0 个视频，线上 59 个 Sitemap URL 的元数据批量复核仍为全通过。
+
 ## 仅需等待 Google 抓取队列
 
 2026-09-25 通过已登录 Search Console 逐页复核了报告中的新文章和旧验证样本；它们当前均显示“网址已收录到 Google”，因此没有需要重复请求的 URL。报告中的“已发现—尚未编入索引”和“已抓取—尚未编入索引”数字是 2026-09-21 的历史快照，等待下一次报告刷新即可。
