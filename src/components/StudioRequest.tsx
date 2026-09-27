@@ -1,8 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Check, Clock, Copy, Lock, Mail, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { loadFirebase } from '../lib/firebase';
 import { SUPPORT_EMAIL } from '../config/site';
+import GoogleSignInButton from './GoogleSignInButton';
 
 /**
  * The one thing `/download` exists for: hand the request mailbox to a signed-in visitor and nobody else.
@@ -22,8 +25,13 @@ interface StudioRequestProps {
 }
 
 export default function StudioRequest({ t }: StudioRequestProps) {
-  const { user, loading } = useAuth();
+  const { user, loading, signInWithGoogle } = useAuth();
+  const { t: ui } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
 
   const account = user?.email || user?.uid || '';
   /** Both the subject and the draft are templates: a placeholder left in either one reaches the inbox. */
@@ -48,6 +56,38 @@ export default function StudioRequest({ t }: StudioRequestProps) {
     }
   };
 
+  /**
+   * Creating the account here rather than on `/register` is the whole point: the gate exists so that
+   * a registered visitor sees the address, and a round trip through another page loses the ones who
+   * came for the download. Nothing calls navigate — `AuthContext` reports the new session and this
+   * same card re-renders as the signed-in one, with the address already in place.
+   */
+  const createAccount = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSignUpError('');
+    setBusy(true);
+    try {
+      const { auth, createUserWithEmailAndPassword } = await loadFirebase();
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch {
+      setSignUpError(ui('register.errorRegisterFailed'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const continueWithGoogle = async () => {
+    setSignUpError('');
+    setBusy(true);
+    try {
+      await signInWithGoogle();
+    } catch {
+      setSignUpError(ui('register.errorGoogleFailed'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="rounded-2xl border border-outline-variant/20 bg-surface-low p-8 md:p-10">
@@ -67,21 +107,55 @@ export default function StudioRequest({ t }: StudioRequestProps) {
         </div>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('request.locked.title')}</h2>
         <p className="text-zinc-300 leading-relaxed max-w-2xl">{t('request.locked.body')}</p>
-        <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link
-            to="/register?next=%2Fdownload"
-            className="inline-flex items-center gap-2 px-7 py-3.5 bg-nvidia-green text-black font-bold rounded-xl hover:bg-nvidia-green/90 transition-colors"
-          >
-            {t('request.locked.ctaRegister')}
-          </Link>
-          <Link
-            to="/login?next=%2Fdownload"
-            className="inline-flex items-center gap-2 px-6 py-3.5 border border-outline-variant/30 text-white font-semibold rounded-xl hover:bg-surface-high transition-colors"
-          >
-            {t('request.locked.ctaLogin')}
-          </Link>
+        {/* The account is created right here. Sending the visitor to `/register` cost two page
+            loads and lost everything this page had just told them; `AuthContext` flips this card
+            the moment the account exists, so the address appears where they are already looking. */}
+        <div className="mt-7 max-w-md space-y-3">
+          <GoogleSignInButton label={ui('register.continueGoogle')} disabled={busy} onClick={() => void continueWithGoogle()} />
+          <div className="flex items-center gap-3 text-xs text-zinc-500">
+            <span className="h-px flex-1 bg-outline-variant/30" aria-hidden="true" />
+            {ui('register.orEmail')}
+            <span className="h-px flex-1 bg-outline-variant/30" aria-hidden="true" />
+          </div>
+          <form onSubmit={createAccount} className="space-y-3">
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              aria-label={ui('register.emailLabel')}
+              placeholder={ui('register.emailPlaceholder')}
+              className="w-full rounded-lg bg-surface-lowest border border-outline-variant/30 px-4 py-3 text-white outline-none focus:border-primary"
+            />
+            <input
+              type="password"
+              required
+              minLength={6}
+              autoComplete="new-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              aria-label={ui('register.passwordLabel')}
+              placeholder={ui('register.passwordLabel')}
+              className="w-full rounded-lg bg-surface-lowest border border-outline-variant/30 px-4 py-3 text-white outline-none focus:border-primary"
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full px-7 py-3.5 bg-nvidia-green text-black font-bold rounded-xl hover:bg-nvidia-green/90 transition-colors disabled:opacity-50"
+            >
+              {busy ? ui('register.provisioning') : t('request.locked.ctaRegister')}
+            </button>
+          </form>
+          {signUpError && <p role="alert" className="text-sm text-red-300">{signUpError}</p>}
         </div>
-        <p className="mt-5 text-sm text-zinc-500">{t('request.locked.note')}</p>
+        <p className="mt-5 text-sm text-zinc-500">
+          <Link to="/login?next=%2Fdownload" className="text-nvidia-green hover:underline">
+            {ui('register.hasAccount')} {t('request.locked.ctaLogin')}
+          </Link>
+          <span className="mx-2 text-zinc-600" aria-hidden="true">·</span>
+          {t('request.locked.note')}
+        </p>
       </div>
     );
   }

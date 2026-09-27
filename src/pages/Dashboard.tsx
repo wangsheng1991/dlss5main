@@ -479,18 +479,9 @@ export default function Dashboard() {
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{t(characterStyleWorkflow ? 'dashboard.styleSettings' : 'dashboard.generationSettings')}</h2>
         <div><div className="grid grid-cols-2 gap-2">
           {characterStyleWorkflow
-            ? <>
-              <button type="button" disabled={locked} className="w-full bg-primary/15 border border-primary/40 rounded-lg p-4 text-primary font-semibold text-left">
+            ? <button type="button" disabled={locked} className="w-full bg-primary/15 border border-primary/40 rounded-lg p-4 text-primary font-semibold text-left">
                 <span className="block text-sm">{t('dashboard.modeCharacterStyle')}</span>
-                <span className="block text-xs text-zinc-400 font-normal mt-1">{isZh ? '上传 → 选方向 → 转换 → 对比 → 下载' : 'Upload → choose direction → convert → compare → download'}</span>
               </button>
-              <div className="mt-6 border-t border-outline-variant/20 pt-5">
-                <p className="text-[10px] text-zinc-500 font-label uppercase tracking-widest mb-3">{t('dashboard.moreTools')}</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {MODES.map(value => <Link key={value} to={`/dashboard?tool=${value}`} className="rounded-lg border border-outline-variant/15 bg-surface-highest/60 px-3 py-2 text-xs text-zinc-400 hover:border-primary/40 hover:text-white transition-colors">{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</Link>)}
-                </div>
-              </div>
-            </>
             : MODES.map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</button>)}
         </div>
           {characterStyleWorkflow ? <div className="mt-3 space-y-4">
@@ -533,6 +524,15 @@ export default function Dashboard() {
               <p className="text-xs text-zinc-500 mt-1">{toolExtraField.help}{toolExtra.trim() ? ` · ${toolExtra.trim().length}/${TOOL_EXTRA_MAX}` : ''}</p>
             </div>}
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
+        {/* The nine other tools keep working, but they render after the convert controls. Whichever
+            the page draws first is the one a visitor reads as the main path, so the primary panel
+            no longer has nine rival entries sitting between its own title and its own buttons. */}
+        {characterStyleWorkflow && <div className="mt-6 border-t border-outline-variant/20 pt-5">
+          <p className="text-[10px] text-zinc-500 font-label uppercase tracking-widest mb-3">{t('dashboard.moreTools')}</p>
+          <div className="grid grid-cols-2 gap-2">
+            {MODES.map(value => <Link key={value} to={`/dashboard?tool=${value}`} className="rounded-lg border border-outline-variant/15 bg-surface-highest/60 px-3 py-2 text-xs text-zinc-400 hover:border-primary/40 hover:text-white transition-colors">{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</Link>)}
+          </div>
+        </div>}
         {mode === 'edit' || mode === 'erase'
           ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={activePrompt} onChange={e => setActivePrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint') : t('dashboard.signInPromptHint')}</p></div>
           : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
@@ -582,6 +582,9 @@ export default function Dashboard() {
           </div>}
           {!user && selectedSample && <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/>}
           {characterStyleWorkflow && !file && !selectedSample && sampleRun.state.status === 'idle' && <section aria-labelledby="style-cases-heading" className="pt-1 space-y-4">
+            {/* The one control a signed-out visitor is allowed to run comes first: the reference
+                gallery only persuades someone who can already act on it. */}
+            <button type="button" onClick={() => { setSelectedSample('characterStyle'); setActivePrompt(SAMPLES.characterStyle.prompt); void sampleRun.run('characterStyle'); }} className="w-full rounded-lg bg-primary px-4 py-4 text-base font-bold text-black hover:bg-white">{isZh ? '免费运行赛博朋克人物转换 · 无需账户' : 'Run the free cyberpunk conversion · no account needed'}</button>
             <div className="text-center">
               <h3 id="style-cases-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{isZh ? '人物风格参考案例' : 'Character style references'}</h3>
               <p className="mt-2 text-xs leading-relaxed text-zinc-500">{isZh ? '默认示例都使用人物前后对比，便于先看轮廓、服装和材质是否保持，再运行免费示例。素材为原创参考，不是 NVIDIA 官方截图。' : 'Every preview here is a character before/after pair, so you can check silhouette, costume and materials before running the free example. Original references, not NVIDIA captures.'}</p>
@@ -592,7 +595,6 @@ export default function Dashboard() {
                 <div className="p-3"><p className="text-[10px] uppercase tracking-widest text-primary">{isZh ? item.styleZh : item.style}</p><h4 className="mt-1 text-sm font-bold text-white">{isZh ? item.titleZh : item.title}</h4><p className="mt-1 text-xs leading-relaxed text-zinc-500">{isZh ? item.descriptionZh : item.description}</p></div>
               </article>)}
             </div>
-            <button type="button" onClick={() => { setSelectedSample('characterStyle'); setActivePrompt(SAMPLES.characterStyle.prompt); void sampleRun.run('characterStyle'); }} className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-bold text-black hover:bg-white">{isZh ? '免费运行赛博朋克人物示例' : 'Run the free cyberpunk character example'}</button>
           </section>}
           {!file && (!characterStyleWorkflow || !!user) && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">{t('dashboard.examplesHeading')}</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(characterStyleWorkflow ? ['characterStyle' as SampleId] : (user ? SAMPLE_IDS : GUEST_SAMPLE_IDS)).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={sampleName(id, isZh)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{sampleName(id, isZh)}</span></button>)}</div></div>}
           {/* The line that needs an account comes after the things that do not: a signed-out reader
