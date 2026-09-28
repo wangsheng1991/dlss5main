@@ -14,7 +14,7 @@ export const STUDIO_REQUEST_COPY = {
     'request.locked.eyebrow': 'Registered visitors only',
     'request.locked.title': 'The request address appears after you register',
     'request.locked.body':
-      'DLSS5 Studio is handed out by email rather than posted as a public file: every build is answered by a person, so feedback goes back to the people who actually run it. Register or sign in — the address and a one-click request button appear right here.',
+      'DLSS5 Studio is handed out by email rather than posted as a public file: every build is answered by a person, so feedback goes back to the people who actually run it. Register or sign in — the address appears right here, next to a short form that files the request.',
     'request.locked.ctaRegister': 'Create a free account',
     'request.locked.ctaLogin': 'Sign in',
     'request.locked.note': 'No credit card, no subscription: an account is only how the request is tied to a person.',
@@ -76,7 +76,7 @@ What I want to process:
     'request.locked.eyebrow': '仅注册用户可见',
     'request.locked.title': '注册后才会显示索取邮箱',
     'request.locked.body':
-      'DLSS5 Studio 不公开挂文件，而是逐个用邮件发放：每一份都由人来回复，所以反馈能回到真正在用它的人手上。注册或登录之后，邮箱地址和"一键发信"按钮就出现在这里。',
+      'DLSS5 Studio 不公开挂文件，而是逐个用邮件发放：每一份都由人来回复，所以反馈能回到真正在用它的人手上。注册或登录之后，邮箱地址就出现在这里，旁边还有一张索取表单，填一行就能直接提交。',
     'request.locked.ctaRegister': '免费注册',
     'request.locked.ctaLogin': '登录',
     'request.locked.note': '不需要信用卡、不需要订阅：账号只是把这次索取对应到一个人。',
