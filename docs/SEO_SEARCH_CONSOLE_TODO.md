@@ -93,3 +93,16 @@ URL Inspection 的当前结果：
 - `/video-upscaler`：网址已收录到 Google。
 
 因此今天没有可继续提交的 URL。唯一待办是 Google 每日 URL Inspection 配额重置后，再对 `/interior-design` 重试一次；其余五个新页不重复请求。站内 title、description、keywords、canonical、H1 的线上批量检查已通过，59 个 sitemap URL 均返回 200。
+
+## 2026-09-28 线上收尾复核
+
+- 通过当前已登录的 Google Search Console 逐页检查剩余新增页面：`/virtual-try-on`、`/interior-design`、`/portrait-retouch`、`/virtual-makeup`、`/game-character-style`、`/video-upscaler`，六页均显示“网址已收录到 Google”。本轮没有重复点击“请求编入索引”，避免消耗无必要的配额。
+- Search Console 的站点地图页显示 `https://www.dlss5nvidia.com/sitemap.xml` 状态为“成功”，已发现 59 个网页、0 个视频。
+- 线上无缓存逐页审计覆盖 sitemap 的 59 个 URL：全部 HTTP 200；每页均有非空且与路由匹配的 title、description、keywords、canonical、H1。重点新页的 convert / game character / video 关键词均已生效。
+- 首页线上静态 head 已确认包含 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 等目标词；`/game-character-style`、`/video-upscaler` 及四个 A-line 工具页各自使用独立 title、description、keywords 和 canonical。
+- Search Console 概览仍显示历史的“13 个网页未编入索引 / 29 个网页已编入索引”汇总，这个汇总刷新慢于网址检查结果；当前新页面逐页结果已是已收录，不能据历史汇总重复提交。
+
+### 当前 TODO
+
+- 等待 Search Console 覆盖率汇总自然刷新；没有剩余新页面需要手动提交。
+- 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`game character style conversion`、`dlss 5 visual enhancer` 的展示、点击和 CTR，再决定是否调整标题；本轮不因未刷新数据重复改 meta。
