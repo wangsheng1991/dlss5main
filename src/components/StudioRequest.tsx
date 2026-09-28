@@ -32,6 +32,11 @@ export default function StudioRequest({ t }: StudioRequestProps) {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [signUpError, setSignUpError] = useState('');
+  const [note, setNote] = useState('');
+  const [machine, setMachine] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [sendError, setSendError] = useState('');
 
   const account = user?.email || user?.uid || '';
   /** Both the subject and the draft are templates: a placeholder left in either one reaches the inbox. */
@@ -85,6 +90,35 @@ export default function StudioRequest({ t }: StudioRequestProps) {
       setSignUpError(ui('register.errorGoogleFailed'));
     } finally {
       setBusy(false);
+    }
+  };
+
+  /**
+   * Filings happen here, on the page. The visitor writes one line and presses once: no mail client
+   * has to be configured, nothing is handed off to another program, and the request is recorded so
+   * the answer below is a fact rather than an assumption. The `mailto:` draft stays for anyone who
+   * would rather send it themselves.
+   */
+  const submitRequest = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!user) return;
+    setSendError('');
+    setSending(true);
+    try {
+      const response = await fetch('/api/studio/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await user.getIdToken()}` },
+        body: JSON.stringify({ note, machine }),
+      });
+      if (!response.ok) {
+        const detail = (await response.json().catch(() => ({}))) as { code?: string };
+        throw new Error(detail.code === 'too_soon' ? t('request.open.tooSoon') : t('request.open.sendFailed'));
+      }
+      setSent(true);
+    } catch (error) {
+      setSendError(error instanceof Error && error.message ? error.message : t('request.open.sendFailed'));
+    } finally {
+      setSending(false);
     }
   };
 
@@ -189,16 +223,61 @@ export default function StudioRequest({ t }: StudioRequestProps) {
       <div className="mt-7 flex flex-wrap items-center gap-3">
         <a
           href={mailto}
-          className="inline-flex items-center gap-2 px-7 py-3.5 bg-nvidia-green text-black font-bold rounded-xl hover:bg-nvidia-green/90 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-outline-variant/30 text-sm text-zinc-300 hover:bg-surface-high transition-colors"
         >
-          <Mail className="w-5 h-5" aria-hidden="true" />
-          {t('request.open.ctaSend')}
+          <Mail className="w-4 h-4" aria-hidden="true" />
+          {t('request.open.byMail')}
         </a>
         <span className="inline-flex items-center gap-2 text-sm text-zinc-400">
           <Clock className="w-4 h-4" aria-hidden="true" />
           {t('request.open.reply')}
         </span>
       </div>
+
+      {sent ? (
+        <div role="status" className="mt-6 rounded-xl border border-nvidia-green/30 bg-nvidia-green/10 p-5">
+          <p className="text-nvidia-green font-semibold">{t('request.open.sentTitle')}</p>
+          <p className="mt-2 text-sm text-zinc-300 leading-relaxed">
+            {t('request.open.sentBody').replace('{account}', account)}
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={submitRequest} className="mt-6 max-w-xl space-y-3">
+          <div>
+            <label htmlFor="studio-request-note" className="block text-sm text-zinc-300 mb-2">{t('request.open.noteLabel')}</label>
+            <textarea
+              id="studio-request-note"
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+              maxLength={2000}
+              rows={3}
+              placeholder={t('request.open.notePlaceholder')}
+              className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary resize-y"
+            />
+          </div>
+          <div>
+            <label htmlFor="studio-request-machine" className="block text-sm text-zinc-300 mb-2">{t('request.open.machineLabel')}</label>
+            <input
+              id="studio-request-machine"
+              type="text"
+              value={machine}
+              onChange={(event) => setMachine(event.target.value)}
+              maxLength={200}
+              placeholder={t('request.open.machinePlaceholder')}
+              className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={sending || (!note.trim() && !machine.trim())}
+            className="inline-flex items-center gap-2 px-7 py-3.5 bg-nvidia-green text-black font-bold rounded-xl hover:bg-nvidia-green/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Mail className="w-5 h-5" aria-hidden="true" />
+            {sending ? t('request.open.submitting') : t('request.open.submit')}
+          </button>
+          {sendError && <p role="alert" className="text-sm text-red-300">{sendError}</p>}
+        </form>
+      )}
 
       <ul className="mt-7 space-y-2 text-sm text-zinc-400">
         <li>{t('request.open.include1')}</li>
