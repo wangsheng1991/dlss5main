@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fail, requireUser } from '../_lib/auth.js';
-import { database } from '../../server/admin.js';
-import { JobStore } from '../../server/job-store.js';
-import { SHARE_REWARD } from '../../src/config/promos.js';
+import { fail, requireUser } from '../../_lib/auth.js';
+import { database } from '../../../server/admin.js';
+import { JobStore } from '../../../server/job-store.js';
+import { SHARE_REWARD } from '../../../src/config/promos.js';
 
 /**
  * Share reward: the account sends a screenshot of its post and gets the credits straight away —

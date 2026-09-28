@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { fail, requireUser } from '../_lib/auth.js';
-import { JobStore } from '../../server/job-store.js';
-import { database } from '../../server/admin.js';
+import { fail, requireUser } from '../../_lib/auth.js';
+import { JobStore } from '../../../server/job-store.js';
+import { database } from '../../../server/admin.js';
 
 /** Daily sign-in allowance. Credits are granted by the server only; retries for the same day are rejected. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
