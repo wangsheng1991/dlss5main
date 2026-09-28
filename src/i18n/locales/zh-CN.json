@@ -182,6 +182,7 @@
     "creditRefunded": "积分已退回",
     "copyNotKept": "副本未保留",
     "styleSettings": "风格转换设置",
+    "styleOptionsSummary": "更换风格方向",
     "moreTools": "更多工具",
     "styleDirection": "人物风格方向",
     "chooseStyleHint": "先选择一种视觉方向。提示词会锁定人物不变项，生成前仍可手动微调。",

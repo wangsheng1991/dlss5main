@@ -182,6 +182,7 @@
     "creditRefunded": "credit refunded",
     "copyNotKept": "copy not kept",
     "styleSettings": "Style conversion settings",
+    "styleOptionsSummary": "Change style direction",
     "moreTools": "More tools",
     "styleDirection": "Character style direction",
     "chooseStyleHint": "Choose a visual direction first. The brief locks the character invariants and remains editable before you run it.",

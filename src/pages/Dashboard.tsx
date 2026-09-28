@@ -465,17 +465,10 @@ export default function Dashboard() {
           </div>
         </article>)}</div>}
     </section>}
-    {characterStyleWorkflow && <section aria-label="Style conversion steps" className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-      {[
-        [isZh ? '1. 上传人物图' : '1. Upload a character frame', isZh ? '保持原始构图，JPG、PNG 或 WebP。' : 'Keep the original composition. JPG, PNG or WebP.'],
-        [isZh ? '2. 选择风格方向' : '2. Choose a style direction', isZh ? '只改变视觉变量，不重做人物。' : 'Change visual variables without redesigning the character.'],
-        [isZh ? '3. 对比并下载' : '3. Compare and download', isZh ? '检查脸部、手部、装备边缘和布料。' : 'Check the face, hands, gear edges and cloth.'],
-      ].map(([title, text], index) => <div key={title} className={`rounded-xl border p-4 ${index === 0 ? 'border-primary/40 bg-primary/10' : 'border-outline-variant/20 bg-surface-low'}`}><p className="text-sm font-semibold text-white">{title}</p><p className="text-xs text-zinc-400 mt-1">{text}</p></div>)}
-    </section>}
     <div className={characterStyleWorkflow
       ? 'grid grid-cols-1 gap-6 lg:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.6fr)]'
       : 'grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)_minmax(320px,1.1fr)]'}>
-      <section aria-labelledby="settings-heading" className="bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6">
+      <section aria-labelledby="settings-heading" className={`bg-surface-low p-6 rounded-xl border border-outline-variant/20 h-fit space-y-6 ${characterStyleWorkflow ? 'order-2 lg:order-1' : ''}`}>
         <h2 id="settings-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{t(characterStyleWorkflow ? 'dashboard.styleSettings' : 'dashboard.generationSettings')}</h2>
         <div><div className="grid grid-cols-2 gap-2">
           {characterStyleWorkflow
@@ -484,12 +477,18 @@ export default function Dashboard() {
               </button>
             : MODES.map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</button>)}
         </div>
-          {characterStyleWorkflow ? <div className="mt-3 space-y-4">
-            <p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.chooseStyleHint')}</p>
-            <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label={t('dashboard.styleDirection')}>
-              {CHARACTER_STYLE_PRESETS.map(preset => <button key={preset.id} type="button" role="radio" aria-checked={characterStylePreset === preset.id} onClick={() => { setCharacterStylePreset(preset.id); setStylePrompt(preset.prompt); }} disabled={locked} className={characterStylePreset === preset.id ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-3 text-primary font-semibold text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-3 text-zinc-300 text-left disabled:opacity-60'}>{isZh ? preset.labelZh : preset.label}</button>)}
+          {characterStyleWorkflow ? <details className="mt-3 rounded-lg border border-outline-variant/20 bg-surface-highest/40 group">
+            <summary className="cursor-pointer list-none px-3 py-3 flex items-center justify-between gap-3 text-sm text-white">
+              <span>{t('dashboard.styleOptionsSummary')}</span>
+              <span className="text-xs text-primary">{isZh ? CHARACTER_STYLE_PRESETS.find(item => item.id === characterStylePreset)?.labelZh : CHARACTER_STYLE_PRESETS.find(item => item.id === characterStylePreset)?.label}</span>
+            </summary>
+            <div className="px-3 pb-3 space-y-3">
+              <p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.chooseStyleHint')}</p>
+              <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label={t('dashboard.styleDirection')}>
+                {CHARACTER_STYLE_PRESETS.map(preset => <button key={preset.id} type="button" role="radio" aria-checked={characterStylePreset === preset.id} onClick={() => { setCharacterStylePreset(preset.id); setStylePrompt(preset.prompt); }} disabled={locked} className={characterStylePreset === preset.id ? 'bg-primary/15 border border-primary/40 rounded-lg px-3 py-3 text-primary font-semibold text-left' : 'bg-surface-highest border border-outline-variant/20 rounded-lg px-3 py-3 text-zinc-300 text-left disabled:opacity-60'}>{isZh ? preset.labelZh : preset.label}</button>)}
+              </div>
             </div>
-          </div> : mode === 'enhance' ? <div className="mt-3">
+          </details> : mode === 'enhance' ? <div className="mt-3">
             <div className="grid grid-cols-2 gap-2">{ENHANCE_FACTORS.map(value => <button key={value} type="button" onClick={() => setFactor(value)} disabled={locked} className={factor === value ? 'bg-primary/20 text-primary border border-primary font-bold rounded-lg py-2 text-sm' : 'bg-surface-highest text-white border border-outline-variant/20 rounded-lg py-2 text-sm disabled:opacity-60'}>{value}×</button>)}</div>
             <p className="text-xs text-zinc-400 mt-2">{enhance
               ? <>Output <span className="text-white">{enhance.width} × {enhance.height}</span>{enhance.clamped ? ` · ${factor}× capped by the model's ${ENHANCE_MAX_EDGE} px edge, ${enhance.factor}× achieved` : ` · ${factor}× the ${sourceSize?.width} × ${sourceSize?.height} original`}</>
@@ -527,14 +526,19 @@ export default function Dashboard() {
         {/* The nine other tools keep working, but they render after the convert controls. Whichever
             the page draws first is the one a visitor reads as the main path, so the primary panel
             no longer has nine rival entries sitting between its own title and its own buttons. */}
-        {characterStyleWorkflow && <div className="mt-6 border-t border-outline-variant/20 pt-5">
-          <p className="text-[10px] text-zinc-500 font-label uppercase tracking-widest mb-3">{t('dashboard.moreTools')}</p>
-          <div className="grid grid-cols-2 gap-2">
+        {characterStyleWorkflow && <details className="mt-6 border-t border-outline-variant/20 pt-5 group">
+          <summary className="cursor-pointer list-none flex items-center justify-between gap-3 text-xs text-zinc-400">
+            <span className="font-label uppercase tracking-widest">{t('dashboard.moreTools')}</span>
+            <span className="text-zinc-500">{MODES.length}</span>
+          </summary>
+          <div className="grid grid-cols-2 gap-2 mt-3">
             {MODES.map(value => <Link key={value} to={`/dashboard?tool=${value}`} className="rounded-lg border border-outline-variant/15 bg-surface-highest/60 px-3 py-2 text-xs text-zinc-400 hover:border-primary/40 hover:text-white transition-colors">{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</Link>)}
           </div>
-        </div>}
+        </details>}
         {mode === 'edit' || mode === 'erase'
-          ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={activePrompt} onChange={e => setActivePrompt(e.target.value)} disabled={locked || !user} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{user ? t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint') : t('dashboard.signInPromptHint')}</p></div>
+          ? user
+            ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={activePrompt} onChange={e => setActivePrompt(e.target.value)} disabled={locked} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint')}</p></div>
+            : <div className="rounded-lg border border-outline-variant/20 bg-surface-highest/40 p-3"><p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.signInPromptHint')}</p><Link to="/login" className="inline-block mt-2 text-xs text-primary hover:text-white">{t('dashboard.signInToUpload')} →</Link></div>
           : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
@@ -544,9 +548,9 @@ export default function Dashboard() {
         </div>}
         <div className="text-sm text-zinc-400 space-y-2"><p>{isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `${t('dashboard.outputLabel')}: ${enhance ? `${enhance.width} × ${enhance.height}` : t('dashboard.followsImage')} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `${t('dashboard.outputLabel')}: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>{t('dashboard.costLabel')}</p> : <p>{t('dashboard.guestCostLabel')}</p>}<Link to="/pricing" className="text-primary underline inline-block">{t('dashboard.viewPlans')}</Link></div>
       </section>
-      <section aria-label="Image workspace" className="bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px]">
+      <section aria-label="Image workspace" className={`bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px] ${characterStyleWorkflow ? 'order-1 lg:order-2' : ''}`}>
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
-        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">{t('dashboard.guestNotice')}</div>}
+        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">{t('dashboard.guestNotice')} <Link to="/login" className="ml-1 text-primary underline hover:text-white">{t('dashboard.signInToUpload')}</Link></div>}
         {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
         {file2Notice && <p role="status" aria-live="polite" className="mb-4 text-xs text-zinc-400">{file2Notice}</p>}
         {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{t('dashboard.preparing', { name: sampleName(sampleRun.state.sample, isZh) })}</h2><p className="text-zinc-400 text-sm max-w-md">{t('dashboard.exampleCachedBody')}</p></div>}
@@ -582,19 +586,24 @@ export default function Dashboard() {
           </div>}
           {!user && selectedSample && <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/>}
           {characterStyleWorkflow && !file && !selectedSample && sampleRun.state.status === 'idle' && <section aria-labelledby="style-cases-heading" className="pt-1 space-y-4">
-            {/* The one control a signed-out visitor is allowed to run comes first: the reference
-                gallery only persuades someone who can already act on it. */}
+            {/* Keep the first action above proof: a visitor can run the free conversion without
+                opening a gallery or choosing a direction that already has a sensible default. */}
             <button type="button" onClick={() => { setSelectedSample('characterStyle'); setActivePrompt(SAMPLES.characterStyle.prompt); void sampleRun.run('characterStyle'); }} className="w-full rounded-lg bg-primary px-4 py-4 text-base font-bold text-black hover:bg-white">{isZh ? '免费运行赛博朋克人物转换 · 无需账户' : 'Run the free cyberpunk conversion · no account needed'}</button>
-            <div className="text-center">
-              <h3 id="style-cases-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{isZh ? '人物风格参考案例' : 'Character style references'}</h3>
-              <p className="mt-2 text-xs leading-relaxed text-zinc-500">{isZh ? '默认示例都使用人物前后对比，便于先看轮廓、服装和材质是否保持，再运行免费示例。素材为原创参考，不是 NVIDIA 官方截图。' : 'Every preview here is a character before/after pair, so you can check silhouette, costume and materials before running the free example. Original references, not NVIDIA captures.'}</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {CHARACTER_STYLE_CASE_PREVIEW.map((item, index) => <article key={item.id} className="overflow-hidden rounded-lg border border-outline-variant/20 bg-surface-lowest">
-                <ImageSlider highRes={item.after} lowRes={item.before} alt={item.alt} inputLabel={isZh ? '转换前' : 'Before'} outputLabel={isZh ? '风格参考' : 'After'} compareLabel={isZh ? `${item.titleZh}前后对比` : `${item.title} before and after`} initialAspectRatio={1.5} priority={index < 2}/>
-                <div className="p-3"><p className="text-[10px] uppercase tracking-widest text-primary">{isZh ? item.styleZh : item.style}</p><h4 className="mt-1 text-sm font-bold text-white">{isZh ? item.titleZh : item.title}</h4><p className="mt-1 text-xs leading-relaxed text-zinc-500">{isZh ? item.descriptionZh : item.description}</p></div>
-              </article>)}
-            </div>
+            <details className="rounded-lg border border-outline-variant/20 bg-surface-highest/30 group">
+              <summary id="style-cases-heading" className="cursor-pointer list-none flex items-center justify-between gap-3 px-4 py-3 text-sm text-white">
+                <span>{isZh ? '查看人物前后案例' : 'See character before / after cases'}</span>
+                <span className="text-xs text-zinc-500">5</span>
+              </summary>
+              <div className="px-3 pb-3 space-y-3">
+                <p className="text-xs leading-relaxed text-zinc-500">{isZh ? '先检查轮廓、服装和材质是否保持。素材为原创参考，不是 NVIDIA 官方截图。' : 'Check the silhouette, costume and materials first. Original references, not NVIDIA captures.'}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {CHARACTER_STYLE_CASE_PREVIEW.map((item, index) => <article key={item.id} className="overflow-hidden rounded-lg border border-outline-variant/20 bg-surface-lowest">
+                    <ImageSlider highRes={item.after} lowRes={item.before} alt={item.alt} inputLabel={isZh ? '转换前' : 'Before'} outputLabel={isZh ? '风格参考' : 'After'} compareLabel={isZh ? `${item.titleZh}前后对比` : `${item.title} before and after`} initialAspectRatio={1.5} priority={index < 2}/>
+                    <div className="p-3"><p className="text-[10px] uppercase tracking-widest text-primary">{isZh ? item.styleZh : item.style}</p><h4 className="mt-1 text-sm font-bold text-white">{isZh ? item.titleZh : item.title}</h4><p className="mt-1 text-xs leading-relaxed text-zinc-500">{isZh ? item.descriptionZh : item.description}</p></div>
+                  </article>)}
+                </div>
+              </div>
+            </details>
           </section>}
           {!file && (!characterStyleWorkflow || !!user) && <div className="pt-1"><h3 className="text-xs font-label uppercase tracking-widest text-zinc-400 mb-3 text-center">{t('dashboard.examplesHeading')}</h3><div className="grid grid-cols-2 gap-4 max-w-md mx-auto">{(characterStyleWorkflow ? ['characterStyle' as SampleId] : (user ? SAMPLE_IDS : GUEST_SAMPLE_IDS)).map(id => <button key={id} type="button" onClick={() => void useExample(id)} className={`relative aspect-video rounded-lg overflow-hidden border transition-all group ${selectedSample === id ? 'border-primary' : 'border-outline-variant/20 hover:border-primary'}`}><img src={SAMPLES[id].src} alt={sampleName(id, isZh)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/><span className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 text-center text-xs font-bold text-white">{sampleName(id, isZh)}</span></button>)}</div></div>}
           {/* The line that needs an account comes after the things that do not: a signed-out reader
