@@ -307,3 +307,15 @@ Vercel 生产部署已 Ready，线上浏览器复核结果如下：
 ### 12.4 仍然需要基础设施侧的动作
 
 恢复要进 `flux2-klein-kv-api` 容器禁掉 `R2_PROXY`（或修 home-proxy 节点）后重启 —— 本仓库够不着那台机器：`~/code` 下没有它的部署脚本，`~/.ssh/config` 里没有指向它的别名，域名解析走 fake-ip 也看不出真实 IP。需要上游或接手方给出入口。
+
+## 13. 通道恢复（2026-09-29，独立复核）
+
+另一条线在那台机器上做了修复：`home-proxy` 的出站从旧节点 `proxy.tkip.xin:20168` 换到 AWS Oregon（`ss.alphanetplus.com:443`，VLESS + Reality），配置经 Xray 校验后重启，旧配置备份为 `/srv/home-proxy/config.json.before-aws-20260929-155042`（备份路径与容器内的成功判据来自对方报告，不在本仓库权限范围内，此处只做转述）。
+
+我按本仓库的探针独立复核（不采信对方的结论）：
+
+- 用项目 key 直连网关提交一次真实 `flux-klein` 编辑任务（`public/examples/sample1.jpg`，1024×1024）：上传 200（3s）→ **11 秒 SUCCESS**，`1024 × 1024 image/webp`；
+- 生产 `POST https://www.dlss5nvidia.com/api/image-edit/samples {"sample":"characterStyle"}`：**200 `cached:true`**（本轮之前同一个请求还是 500，说明缓存已被一次成功运行写入）；`GET` 该缓存返回 `image/webp`，`sips` 读出 1024×1024；
+- 本机出口仍为 `54.68.137.125`（AWS us-west-2 / Boardman），与第 12 节一致。
+
+第 10–12 节记录的那条故障至此关闭。仍然保留的价值是第 12.2 节的失败文案收口：通道再坏时，用户看到的会是一句人话，而不是 `[object Object]`。
