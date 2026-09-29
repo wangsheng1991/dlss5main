@@ -10,9 +10,9 @@ import { readFileSync } from 'node:fs';
 
 import {
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, SERVICE_FAILURE_NOTE, STUDIO_MAX_PIXELS, buildToolTask, clampSteps, clampVectorizeEdge,
-  failureNote, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, pixelCheckNote,
+  failureNote, fetchUrlError, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, parseFetchUrls, pixelCheckNote,
   VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, isToolId, modelForTool,
-  toolNeedsSecondImage, toolOptionError, toolTakesSecondImage,
+  toolNeedsSecondImage, toolOptionError, toolTakesSecondImage, FETCH_MAX_URLS,
 } from '../src/config/tools';
 import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
@@ -299,6 +299,7 @@ test('every tool names the model it runs on, and the mode maps back to the same 
   const models: Record<string, string> = {
     cutout: 'cutout-fast', vectorize: 'vectorize-fast', erase: 'erase-quality',
     tryon: 'tryon-quality', interior: 'interior-quality', retouch: 'retouch-quality', makeup: 'makeup-quality',
+    fetch: 'media-fetch',
   };
   for (const tool of TOOL_IDS) {
     assert.equal(modelForTool(tool), models[tool], `${tool} runs the wrong model`);
@@ -318,8 +319,51 @@ test('each tool declares how many references it reads and what they are', () => 
   }
   for (const tool of TOOL_IDS) {
     assert.equal(TOOL_REFERENCES[tool].slots.length, TOOL_REFERENCES[tool].max, `${tool} names every slot`);
-    assert.ok(TOOL_REFERENCES[tool].min >= 1 && TOOL_REFERENCES[tool].min <= TOOL_REFERENCES[tool].max);
+    assert.ok(TOOL_REFERENCES[tool].min >= 0 && TOOL_REFERENCES[tool].min <= TOOL_REFERENCES[tool].max);
   }
+  // The media downloader is the one tool that reads no image at all — its input is a list of links, so
+  // its count is 0–0 and a task for it must carry `urls` instead of `image_ids`, which the gateway
+  // refuses with a 400. Sending an empty `image_ids` array would fail the same way.
+  assert.deepEqual(TOOL_REFERENCES.fetch, { min: 0, max: 0, slots: [] });
+  assert.ok(!toolTakesSecondImage('fetch') && !toolNeedsSecondImage('fetch'));
+  const fetch = buildToolTask('fetch', { imageIds: [], urls: ['https://www.youtube.com/watch?v=x'], options: { quality: 'audio' } });
+  assert.deepEqual(fetch, { model: 'media-fetch', urls: ['https://www.youtube.com/watch?v=x'], quality: 'audio' });
+  for (const field of ['image_ids', 'prompt', 'width', 'height', 'output_format', 'num_inference_steps']) {
+    assert.ok(!(field in fetch), `the downloader must not send ${field}`);
+  }
+  // A quality the channel does not know is refused by `toolOptionError` before any task is built, and
+  // the builder itself falls back to the documented default rather than forwarding it.
+  assert.match(toolOptionError('fetch', { quality: '4k' }), /quality must be best, 1080, 720, 480, 360, audio/);
+  assert.equal(toolOptionError('fetch', { quality: '720' }), '');
+  assert.equal(buildToolTask('fetch', { imageIds: [], urls: ['  https://youtu.be/x  '] }).quality, '1080');
+  assert.deepEqual(buildToolTask('fetch', { imageIds: [], urls: ['  https://youtu.be/x  '] }).urls, ['https://youtu.be/x']);
+});
+
+/**
+ * The downloader is the one tool the browser hands a link to, which makes its intake the only place a
+ * caller can point a cloud worker somewhere. It is checked here as well as on the server, so these
+ * assertions are about the policy itself: which sites are allowed, and what a link that is not one
+ * gets told.
+ */
+test('the downloader accepts links from the sites it names and refuses the rest', () => {
+  assert.equal(fetchUrlError(['https://www.youtube.com/watch?v=aqz-KE-bpKQ']), '');
+  assert.equal(fetchUrlError(['https://youtu.be/aqz-KE-bpKQ']), '');
+  // Any subdomain of an accepted site is accepted, and a lookalike domain is not.
+  assert.equal(fetchUrlError(['https://m.youtube.com/results?q=x', 'https://www.bilibili.com/video/BV1x']), '');
+  assert.equal(fetchUrlError(['https://player.bilibili.com/player.html?bvid=x']), '');
+  assert.equal(fetchUrlError(['https://v.douyin.com/abc123/']), '');
+  assert.match(fetchUrlError(['https://youtube.com.evil.example/watch?v=x']), /do not fetch from youtube\.com\.evil\.example/);
+  assert.match(fetchUrlError(['https://example.com/video']), /do not fetch from example\.com/);
+  assert.match(fetchUrlError(['ftp://youtube.com/x']), /Only http and https/);
+  assert.match(fetchUrlError(['youtube.com/watch?v=x']), /is not a link/);
+  assert.match(fetchUrlError([]), /at least one video link/);
+  assert.match(fetchUrlError('https://youtube.com/watch?v=x'), /at least one video link/);
+  assert.match(fetchUrlError(['https://youtube.com/watch?v=x', '', 'https://youtu.be/y']), /Every entry/);
+  const tooMany = Array.from({ length: FETCH_MAX_URLS + 1 }, (_, index) => `https://youtu.be/${index}`);
+  assert.match(fetchUrlError(tooMany), new RegExp(`at most ${FETCH_MAX_URLS} links`));
+  // The textarea holds one link per line, and the blanks of a pasted column are not links.
+  assert.deepEqual(parseFetchUrls('https://youtu.be/a\n\n  https://youtu.be/b  \n'), ['https://youtu.be/a', 'https://youtu.be/b']);
+  assert.deepEqual(parseFetchUrls('   '), []);
 });
 
 test('the A-line tools send named options, never a prompt and never a size', () => {
@@ -401,10 +445,14 @@ test('every case in the studio book is a run the tools could actually have made'
     assert.match(entry.seconds, /^[\d.]+ s$/, `${entry.id} must quote a measured wall clock`);
     assert.ok(entry.output.width > 0 && entry.output.height > 0, `${entry.id} is missing the real output geometry`);
     // The A-line size table is built from 32-px multiples under the service's own area cap, so a case
-    // quoting anything else would be quoting a number the service cannot return.
-    assert.ok(entry.output.width % 32 === 0 && entry.output.height % 32 === 0,
-      `${entry.id} quotes ${entry.output.width} × ${entry.output.height}, which is not on the service's size grid`);
-    assert.ok(entry.output.width * entry.output.height <= 4_300_800, `${entry.id} quotes a frame the service would refuse`);
+    // quoting anything else would be quoting a number the service cannot return. The media downloader
+    // is the one exception, because nothing renders its frame: it quotes the geometry of a file the
+    // source site produced, and no size grid of ours applies to that.
+    if (entry.mode !== 'fetch') {
+      assert.ok(entry.output.width % 32 === 0 && entry.output.height % 32 === 0,
+        `${entry.id} quotes ${entry.output.width} × ${entry.output.height}, which is not on the service's size grid`);
+      assert.ok(entry.output.width * entry.output.height <= 4_300_800, `${entry.id} quotes a frame the service would refuse`);
+    }
     assert.equal(toolOptionError(entry.mode, entry.options), '', `${entry.id} carries an option ${entry.mode} would refuse`);
     if (entry.extra) assert.ok(entry.extra.length <= TOOL_EXTRA_MAX, `${entry.id} brief is over the cap the provider enforces`);
     if (entry.prompt) assert.equal(entry.mode, 'erase', `${entry.id} may only ship a prompt for the eraser, which is the one tool with a free-text instruction`);

@@ -228,6 +228,31 @@ export const SHOWCASE: ShowcaseCase[] = [
     limit: 'The whole frame is re-rendered at 1024 × 1024, so fine text elsewhere can drift and a larger original comes back at that size.',
     measured: '2026-09-25',
   },
+  {
+    id: 'fetch-clip-1080',
+    mode: 'fetch',
+    title: 'A video link turned into the file itself',
+    choices: ['Quality: 1080p', 'Source: one public link', 'No upload — the link is the whole input'],
+    options: { quality: '1080' },
+    // The downloader reads no image, so this case has no input thumbnail at all: the link is the input.
+    inputs: [],
+    output: {
+      src: '/examples/fetch-video-1080p-poster.jpg',
+      label: 'A frame of the returned file — “Big Buck Bunny”, Blender Foundation (CC BY 3.0)',
+      // The geometry the returned file really has, measured on the file itself (ffprobe, 2026-09-29).
+      width: 1920,
+      height: 1080,
+    },
+    seconds: '42 s',
+    look: [
+      'The file came back as the source site serves it — 1920 × 1080 AV1 in WebM, 128 MiB for a ten-minute film — with nothing re-encoded here.',
+      'Nothing was uploaded: the whole input was one link. The same clip at 360p came back in 16 s at 25 MiB, so the quality you pick decides the file.',
+      'The file arrives as a signed link that lasts about an hour, so it has to be downloaded while the link is alive.',
+    ],
+    limit:
+      'The card shows one frame of the returned file, not the file itself: a downloaded clip stays the property of whoever published it, so we do not republish it here. Fetch only what you have the right to download.',
+    measured: '2026-09-29',
+  },
 ];
 
 /** The cases of one tool, in the order the panel shows them. */

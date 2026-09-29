@@ -12,7 +12,7 @@ import {
   STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE, TOOL_IDS,
   VECTORIZE_MAX_EDGE, VECTORIZE_PRESETS, VECTORIZE_PRESET_LABEL, VECTORIZE_PRESET_NOTE,
   TOOL_OPTIONS, TOOL_EXTRA_FIELD, TOOL_EXTRA_MAX, TOOL_REFERENCES,
-  toolNeedsSecondImage,
+  toolNeedsSecondImage, FETCH_MAX_URLS, FETCH_SITES_LABEL, FETCH_QUALITY_OPTION,
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, failureNote, inputLimitNote, oversizeNote,
   type VectorizePreset, type ToolId,
 } from '../config/tools';
@@ -38,6 +38,8 @@ const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
   'interior-design': 'interior', 'room-render': 'interior', 'interior-render': 'interior', interior: 'interior',
   'portrait-retouch': 'retouch', retouch: 'retouch',
   'virtual-makeup': 'makeup', makeup: 'makeup',
+  // The downloader is the one tool the studio opens without an upload slot.
+  'video-downloader': 'fetch', 'media-downloader': 'fetch', fetch: 'fetch',
 };
 
 /**
@@ -59,7 +61,7 @@ const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
 const CHARACTER_STYLE_CASE_PREVIEW = GAME_STYLE_CASES.slice(0, 5);
 
 /** The presets offered in the studio, in display order. */
-const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup'];
+const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'fetch'];
 
 /**
  * The name of each mode in `dashboard.*`. The labels used to be English literals taken from the
@@ -67,7 +69,7 @@ const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'eras
  */
 const MODE_LABEL_KEY: Record<GenerationMode, string> = {
   enhance: 'modeEnhance', edit: 'modeEdit', cutout: 'modeCutout', vectorize: 'modeVectorize', erase: 'modeErase',
-  tryon: 'modeTryon', interior: 'modeInterior', retouch: 'modeRetouch', makeup: 'modeMakeup',
+  tryon: 'modeTryon', interior: 'modeInterior', retouch: 'modeRetouch', makeup: 'modeMakeup', fetch: 'modeFetch',
 };
 
 /** The catalog carries both names of an example; the studio prints the reader's own. */
@@ -115,6 +117,8 @@ export default function Dashboard() {
   const [file2, setFile2] = useState<File | null>(null);
   /** The tool the second image was picked for — see the effect below. */
   const [file2Mode, setFile2Mode] = useState<GenerationMode | ''>('');
+  /** The downloader's intake: one link per line. It has no file, so it has no other input state. */
+  const [links, setLinks] = useState('');
   /** Why the second slot is empty, when we are the ones who emptied it. Silence looked like a bug. */
   const [file2Notice, setFile2Notice] = useState('');
   const [preview2, setPreview2] = useState('');
@@ -416,6 +420,8 @@ export default function Dashboard() {
   const toolOptions = isToolId(mode) ? (TOOL_OPTIONS[mode] || []) : [];
   const toolExtraField = isToolId(mode) ? TOOL_EXTRA_FIELD[mode] : undefined;
   const toolSecondRequired = isToolId(mode) && toolNeedsSecondImage(mode);
+  /** The quality the downloader will submit: the reader's pick, or the documented default. */
+  const fetchQuality = toolChoices.quality ?? FETCH_QUALITY_OPTION.default;
   return <>
     <SEO
       title={`${t(characterStyleWorkflow ? 'dashboard.styleWorkflowTitle' : 'dashboard.studioTitle')} — DLSS5NVIDIA`}
@@ -523,6 +529,7 @@ export default function Dashboard() {
               <p className="text-xs text-zinc-500 mt-1">{toolExtraField.help}{toolExtra.trim() ? ` · ${toolExtra.trim().length}/${TOOL_EXTRA_MAX}` : ''}</p>
             </div>}
           </div> : mode === 'cutout' ? <p className="text-xs text-zinc-400 mt-3">The cut keeps your pixel size and returns a transparent PNG. No instruction is needed.</p> : <p className="text-xs text-zinc-400 mt-2">Edit a photo by describing the change you want.</p>}</div>
+        {mode === 'fetch' && <p className="text-xs leading-relaxed text-zinc-400">{`The file comes back exactly as the site serves it — nothing is re-encoded, and nothing is uploaded, because the whole input is the link. One task takes up to ${FETCH_MAX_URLS} links and costs 1 credit.`}</p>}
         {/* The nine other tools keep working, but they render after the convert controls. Whichever
             the page draws first is the one a visitor reads as the main path, so the primary panel
             no longer has nine rival entries sitting between its own title and its own buttons. */}
@@ -539,6 +546,7 @@ export default function Dashboard() {
           ? user
             ? <div><label htmlFor="edit-prompt" className="block text-sm text-white mb-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptLabel' : mode === 'erase' ? 'dashboard.erasePromptLabel' : 'dashboard.editPromptLabel')}</label><textarea id="edit-prompt" value={activePrompt} onChange={e => setActivePrompt(e.target.value)} disabled={locked} maxLength={4000} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary h-36 resize-y disabled:opacity-60"/><p className="text-xs text-zinc-400 mt-2">{t(characterStyleWorkflow ? 'dashboard.stylePromptHint' : mode === 'erase' ? 'dashboard.erasePromptHint' : 'dashboard.editPromptHint')}</p></div>
             : <div className="rounded-lg border border-outline-variant/20 bg-surface-highest/40 p-3"><p className="text-xs leading-relaxed text-zinc-400">{t('dashboard.signInPromptHint')}</p><Link to="/login" className="inline-block mt-2 text-xs text-primary hover:text-white">{t('dashboard.signInToUpload')} →</Link></div>
+          : mode === 'fetch' ? <div><p className="text-sm text-white mb-2">{TOOL_SUMMARY.fetch.label}</p><p className="text-xs text-zinc-400">There is nothing to write here: paste the link to the video you want in the panel, pick a quality, and the file comes back exactly as the site serves it. <span className="text-zinc-300">Download only what you have the right to download</span> — the copyright in a video stays with the person who made it, and a link being public does not make it yours to take.</p></div>
           : <div><p className="text-sm text-white mb-2">{mode === 'cutout' ? 'Background removal' : mode === 'vectorize' ? 'Vectorizing' : isToolId(mode) ? TOOL_SUMMARY[mode].label : 'Enhancement instruction'}</p><p className="text-xs text-zinc-400">{mode === 'cutout' ? 'Fixed by the server: keep the subject, drop the background, return transparency. No prompt needed.' : mode === 'vectorize' ? 'No prompt needed: the preset decides how the pixels are traced. You get an SVG file you can scale to any size and edit in a vector tool.' : isToolId(mode) ? `The instruction is written for you by the server from a versioned prompt library, so it cannot be edited here — pick the options above instead.${TOOL_REFERENCES[mode].max > 1 ? ` Your images are read in this order: ${TOOL_REFERENCES[mode].slots.join(', then ')}.` : ''}` : 'Fixed by the server: restore realistic detail, texture and sharpness at the target size while keeping the composition identical. No prompt needed.'}</p></div>}
         {user && <div>
           <p className="text-sm text-white mb-2">{t('dashboard.dailyCheckIn')}</p>
@@ -546,7 +554,7 @@ export default function Dashboard() {
           <p className="text-xs text-zinc-400 mt-2">{t('dashboard.checkInReward')}</p>
           {checkInNotice && <p role="status" className="text-xs text-nvidia-green mt-2">{checkInNotice}</p>}
         </div>}
-        <div className="text-sm text-zinc-400 space-y-2"><p>{isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `${t('dashboard.outputLabel')}: ${enhance ? `${enhance.width} × ${enhance.height}` : t('dashboard.followsImage')} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `${t('dashboard.outputLabel')}: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>{t('dashboard.costLabel')}</p> : <p>{t('dashboard.guestCostLabel')}</p>}<Link to="/pricing" className="text-primary underline inline-block">{t('dashboard.viewPlans')}</Link></div>
+        <div className="text-sm text-zinc-400 space-y-2"><p>{mode === 'fetch' ? TOOL_SUMMARY.fetch.output : isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `${t('dashboard.outputLabel')}: ${enhance ? `${enhance.width} × ${enhance.height}` : t('dashboard.followsImage')} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `${t('dashboard.outputLabel')}: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>{t('dashboard.costLabel')}</p> : <p>{t('dashboard.guestCostLabel')}</p>}<Link to="/pricing" className="text-primary underline inline-block">{t('dashboard.viewPlans')}</Link></div>
       </section>
       <section aria-label="Image workspace" className={`bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px] ${characterStyleWorkflow ? 'order-1 lg:order-2' : ''}`}>
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
@@ -568,8 +576,42 @@ export default function Dashboard() {
         {generation.operation && <div className="mb-4 text-xs text-zinc-400 break-all">Operation: {generation.operation.jobId || generation.operation.key}<br/>{t('dashboard.operationSaved')}</div>}
         {generation.busy && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{generation.phase}</h2><p className="text-zinc-400 text-sm">{t('dashboard.leaveOperation')}</p>{!generation.submitting && <button onClick={generation.pause} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-zinc-300">Pause checking</button>}</div>}
         {!generation.busy && generation.pending && <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 py-10"><h2 className="text-white text-xl">{t('dashboard.resumeTitle')}</h2><p className="text-sm text-zinc-400 max-w-md">{t('dashboard.resumeBody')}</p><button onClick={() => void generation.resume()} className="px-6 py-3 bg-primary text-black rounded-lg font-bold">{t('dashboard.resume')}</button></div>}
-        {!generation.busy && result && <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">{t('dashboard.imageReady')}</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">{t('dashboard.refreshResult')}</button><a href={result} target="_blank" rel="noreferrer" onClick={() => trackEvent('result_download', { mode: generation.operation?.body.mode || 'edit' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{t(generation.operation?.body.mode === 'vectorize' ? 'dashboard.openSvg' : 'dashboard.openFullImage')}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">{t('dashboard.newImage')}</button></div></div></div>}
+        {!generation.busy && result && (generation.operation?.body.mode === 'fetch'
+          // A downloaded file is not an image and cannot be proxied through our own API — a 25 MiB clip
+          // exceeds the response ceiling — so the studio plays it from the provider's signed link and
+          // links straight to it. The link lasts an hour, which is why the sentence says so.
+          ? <div className="flex-1 flex flex-col gap-4">
+              <div className="flex-1 min-h-64 flex items-center justify-center bg-black/40 rounded-lg p-2">
+                {generation.operation?.body.quality === 'audio'
+                  ? <audio controls src={result} className="w-full"/>
+                  : <video controls playsInline src={result} className="max-h-[600px] w-full rounded-lg"/>}
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p role="status" className="text-nvidia-green text-sm">Your file is ready · the link works for about an hour</p>
+                <div className="flex flex-wrap gap-3">
+                  <button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">{t('dashboard.refreshResult')}</button>
+                  <a href={result} download onClick={() => trackEvent('result_download', { mode: 'fetch' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>Download the file</a>
+                  <button onClick={() => { generation.reset(); setLinks(''); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">Another link</button>
+                </div>
+              </div>
+              <p className="text-xs leading-relaxed text-zinc-500">Download it now — the link is signed and expires, and the file stays in the source site&rsquo;s own format. We do not keep a copy of a downloaded video.</p>
+            </div>
+          : <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">{t('dashboard.imageReady')}</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">{t('dashboard.refreshResult')}</button><a href={result} target="_blank" rel="noreferrer" onClick={() => trackEvent('result_download', { mode: generation.operation?.body.mode || 'edit' })} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{t(generation.operation?.body.mode === 'vectorize' ? 'dashboard.openSvg' : 'dashboard.openFullImage')}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">{t('dashboard.newImage')}</button></div></div></div>)}
         {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
+          {/* The downloader takes a link, not a file, so its intake replaces the drop zone entirely:
+              there is nothing to upload and no second slot to offer. */}
+          {mode === 'fetch' && <div className="flex flex-col gap-4">
+            <div>
+              <label htmlFor="fetch-links" className="block text-sm text-white mb-2">Video links</label>
+              <textarea id="fetch-links" value={links} onChange={e => setLinks(e.target.value)} disabled={locked} rows={3} spellCheck={false} aria-describedby="fetch-links-hint" placeholder={'https://www.youtube.com/watch?v=…\nhttps://www.bilibili.com/video/…'} className="w-full bg-surface-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-primary resize-y disabled:opacity-60"/>
+              <p id="fetch-links-hint" className="text-xs text-zinc-400 mt-2">One link per line, up to {FETCH_MAX_URLS} per task. Accepted sites: {FETCH_SITES_LABEL}.</p>
+            </div>
+            <p className="text-xs leading-relaxed text-zinc-500">Only download what you have the right to download — the copyright in a video stays with whoever published it.</p>
+            {user
+              ? <button type="button" disabled={locked || !links.trim()} onClick={() => { trackEvent('generation_submit', { mode: 'fetch' }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submitFetch(links, fetchQuality); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed self-start">{generation.operation?.status === 'FAILED' ? 'Try this link again' : 'Download the file · 1 credit'}</button>
+              : <Link to="/login" className="px-5 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10 self-start">Sign in to download</Link>}
+          </div>}
+          {mode !== 'fetch' && <>
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('dashboard.selectImage')} onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
           {user && (preview ? <img src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">{t('dashboard.dropBrowse')}</span><span className="text-sm text-zinc-400">{toolReferences ? `${toolReferences.slots[0]} · ` : ''}{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
           {user && toolReferences && toolReferences.max > 1 && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">
@@ -611,6 +653,7 @@ export default function Dashboard() {
           {!user && !selectedSample && <Link to="/login" className="w-full rounded-lg border border-outline-variant/30 px-4 py-3 text-center text-sm text-zinc-300 hover:border-primary">{t('dashboard.guestUnlock', { count: MODES.length })}</Link>}
           {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !activePrompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, activePrompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">{t('dashboard.signInEditPrompt')}</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
+          </>}
         </div>}
       </section>
       {!characterStyleWorkflow && <div className="lg:col-span-2 xl:col-span-1">

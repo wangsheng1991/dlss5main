@@ -82,9 +82,12 @@ export class JobStore {
       tx.set(ref, { uid, count: n + 1 });
     });
   }
-  async claim(uid: string, key: string, input: { image_ids: string[]; [key: string]: unknown }) {
+  async claim(uid: string, key: string, input: { image_ids?: string[]; [key: string]: unknown }) {
     const id = hash(uid + ':' + key), ref = this.db.doc(`image_operations/${id}`);
     const inputJson = JSON.stringify(input), fingerprint = hash(inputJson), now = Date.now();
+    // The media downloader sends links rather than file ids, so the ownership check below has nothing
+    // to verify for it — everything else in the fingerprint (the links, the quality) still does.
+    const fileIds = input.image_ids || [];
     return this.db.runTransaction(async tx => {
       const previous = await tx.get(ref);
       if (previous.exists) {
@@ -96,7 +99,7 @@ export class JobStore {
         return { id, job: updated, submit: true };
       }
       const userRef = this.db.doc(`users/${uid}`);
-      const [user, ...uploads] = await Promise.all([tx.get(userRef), ...input.image_ids.map(fileId => tx.get(this.db.doc(`image_uploads/${hash(fileId)}`)))]);
+      const [user, ...uploads] = await Promise.all([tx.get(userRef), ...fileIds.map(fileId => tx.get(this.db.doc(`image_uploads/${hash(fileId)}`)))]);
       if (!user.exists) throw new ApiError(403, 'account_missing', 'Account is not initialized');
       if (uploads.some(u => !u.exists || u.data()!.uid !== uid)) throw new ApiError(403, 'file_not_owned', 'Input file does not belong to you');
       const account = user.data()!, plan = limits(account.tier);

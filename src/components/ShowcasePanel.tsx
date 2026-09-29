@@ -46,7 +46,9 @@ function CaseCard({ entry, signedIn, locked, onUse }: { entry: ShowcaseCase; sig
           {entry.choices.map(choice => <li key={choice} className="text-[10px] leading-tight px-2 py-1 rounded bg-surface-highest text-zinc-300 border border-outline-variant/20">{choice}</li>)}
         </ul>
       </header>
-      {/* `contain` rather than `cover`: a cropped before/after would misstate what changed. */}
+      {/* `contain` rather than `cover`: a cropped before/after would misstate what changed. The
+          downloader reads no image at all, so its case shows the output alone rather than an arrow
+          pointing away from a reference that does not exist. */}
       <div className="flex items-center gap-2">
         <div className="flex gap-2 flex-1 min-w-0">
           {entry.inputs.map(input => <figure key={input.src + input.label} className="flex flex-col gap-1 flex-1 min-w-0">
@@ -54,7 +56,7 @@ function CaseCard({ entry, signedIn, locked, onUse }: { entry: ShowcaseCase; sig
             <figcaption className={CAPTION}>{input.label}</figcaption>
           </figure>)}
         </div>
-        <ArrowRight className="w-4 h-4 text-zinc-500 shrink-0" aria-hidden="true"/>
+        {entry.inputs.length > 0 && <ArrowRight className="w-4 h-4 text-zinc-500 shrink-0" aria-hidden="true"/>}
         <figure className="flex flex-col gap-1 flex-1 min-w-0">
           <img src={entry.output.src} alt={`${entry.output.label} — the output of this case`} loading="lazy" className={THUMB}/>
           <figcaption className={CAPTION}>{entry.output.label}</figcaption>

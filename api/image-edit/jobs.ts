@@ -4,7 +4,7 @@ import { fail, requireUser } from '../_lib/auth.js';
 import { JobStore } from '../../server/job-store.js';
 import { database } from '../../server/admin.js';
 import { enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput } from '../../src/config/enhance.js';
-import { buildToolTask, isToolId, isVectorizePreset, pixelCheckNote, toolNeedsPrompt, toolOptionError, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, type ToolId } from '../../src/config/tools.js';
+import { buildToolTask, fetchUrlError, isToolId, isVectorizePreset, pixelCheckNote, toolNeedsPrompt, toolOptionError, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, type ToolId } from '../../src/config/tools.js';
 
 type Body = Record<string, unknown>;
 
@@ -27,14 +27,29 @@ function toolOptionsFromBody(mode: ToolId, body: Body): Record<string, string> {
  * field is sent — asking for one is refused upstream rather than ignored, which is exactly the
  * behaviour we want kept. The A-line tools (`tryon`, `interior`, `retouch`, `makeup`) go one step
  * further: their prompt is a server-side asset, so the browser sends named options and never text.
+ *
+ * The media downloader (`fetch`) is the exception in the other direction: it sends no references at
+ * all, only the links to fetch and the quality to fetch them at.
  */
 async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey: string, store: JobStore) {
-  const imageIds = body.image_ids;
   const references = TOOL_REFERENCES[mode];
-  // The order of the references is their meaning (person then garment, room then style), so the count
-  // is checked here and nothing is reordered.
-  if (!Array.isArray(imageIds) || imageIds.length < references.min || imageIds.length > references.max || imageIds.some((id) => typeof id !== 'string')) {
-    return { error: `image_ids must contain ${references.min === references.max ? `exactly ${references.min}` : `${references.min} to ${references.max}`} uploaded file id${references.max > 1 ? 's' : ''} (${references.slots.join(', then ')})` };
+  let imageIds: string[] = [];
+  let urls: string[] = [];
+  if (mode === 'fetch') {
+    // The downloader takes links, not files: there is no upload for this tool, and the gateway refuses
+    // a body carrying `image_ids` (or a prompt, or a size) rather than ignoring it. The links are
+    // checked here as well as in the browser, because a client can post anything.
+    const problem = fetchUrlError(body.urls);
+    if (problem) return { error: problem };
+    urls = (body.urls as unknown[]).map((value) => String(value).trim());
+  } else {
+    const sent = body.image_ids;
+    // The order of the references is their meaning (person then garment, room then style), so the count
+    // is checked here and nothing is reordered.
+    if (!Array.isArray(sent) || sent.length < references.min || sent.length > references.max || sent.some((id) => typeof id !== 'string')) {
+      return { error: `image_ids must contain ${references.min === references.max ? `exactly ${references.min}` : `${references.min} to ${references.max}`} uploaded file id${references.max > 1 ? 's' : ''} (${references.slots.join(', then ')})` };
+    }
+    imageIds = sent as string[];
   }
   const prompt = text(body.prompt);
   if (toolNeedsPrompt(mode)) {
@@ -54,7 +69,7 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
   const extra = text(body.extra);
   if (extra.length > TOOL_EXTRA_MAX) return { error: `extra must be at most ${TOOL_EXTRA_MAX} characters` };
   const task = buildToolTask(mode, {
-    imageIds: imageIds as string[], prompt,
+    imageIds, urls, prompt,
     steps: body.num_inference_steps as number | undefined,
     seed: body.seed as number | undefined,
     preset: mode === 'vectorize' && isVectorizePreset(body.preset) ? body.preset : undefined,
@@ -66,7 +81,11 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
   const claim = await store.claim(uid, idempotencyKey, { ...task, tool: mode });
   if (!claim.submit) return { jobId: claim.id, status: claim.job.status, replayed: true };
   try {
-    const accepted = await alphaNetTools.submit(task, idempotencyKey);
+    // The downloader answers under the project key rather than the C-line tools' key: it is its own
+    // channel (`alphanet-user-1-media-fetch`), and provisioning one key for the studio tools must not
+    // silently move it.
+    const client = mode === 'fetch' ? alphaNet : alphaNetTools;
+    const accepted = await client.submit(task, idempotencyKey);
     await store.accepted(claim.id, claim.job.leaseOwner, accepted.task_id);
     return { jobId: claim.id, status: 'QUEUED', tool: mode, model: task.model };
   } catch (error) {

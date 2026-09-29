@@ -4,10 +4,17 @@ import type { User } from 'firebase/auth';
 import { request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
-import { failureNote, isToolId, MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, modelForTool, oversizeNote, toolNeedsPrompt, toolNeedsSecondImage, toolTakesSecondImage, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, type VectorizePreset } from '../../config/tools';
+import { failureNote, fetchUrlError, isFetchQuality, isToolId, MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, modelForTool, oversizeNote, parseFetchUrls, toolNeedsPrompt, toolNeedsSecondImage, toolTakesSecondImage, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, FETCH_DEFAULT_QUALITY, type VectorizePreset } from '../../config/tools';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
+/**
+ * The result of one task, whichever line it ran on: an image edit answers with `result.images`, the
+ * media downloader answers with `result.artifacts` — a signed link to a file in object storage.
+ * Reading only `images` left a finished download with no link to show, and the two never coexist.
+ */
+const resultUrlOf = (result: any): string | undefined =>
+  result?.images?.[0]?.url ?? result?.artifacts?.[0]?.url;
 /** Natural pixel size of the picked file, used to size an enhancement. */
 const measureImage = (file: File) => new Promise<{ width: number; height: number }>((resolve, reject) => {
   const url = URL.createObjectURL(file);
@@ -31,7 +38,7 @@ export function useGeneration(user: User | null) {
     queryFn: async () => {
       const saved = operation!;
       const data = await request(`/api/image-edit/jobs/${encodeURIComponent(saved.jobId!)}`, await user!.getIdToken());
-      const outputUrl = data.result?.images?.[0]?.url;
+      const outputUrl = resultUrlOf(data.result);
       if (data.status === 'SUCCEEDED' && !outputUrl) throw new Error('Result link is not ready. Resume to refresh it.');
       const next = { ...saved, status: data.status, outputUrl };
       saveOperation(next);
@@ -55,7 +62,7 @@ export function useGeneration(user: User | null) {
     try {
       const data = await request('/api/image-edit/jobs', await user.getIdToken(), { method: 'POST', headers: { 'Idempotency-Key': saved.key }, body: JSON.stringify(saved.body) });
       if (!data.jobId) throw new Error('Submission response incomplete. Resume the same operation.');
-      const next = { ...saved, jobId: data.jobId, status: data.status, outputUrl: data.result?.images?.[0]?.url };
+      const next = { ...saved, jobId: data.jobId, status: data.status, outputUrl: resultUrlOf(data.result) };
       saveOperation(next);
       if (uid.current === saved.userId) { setOperation(next); setPaused(false); pollingStarted.current = Date.now(); }
     } catch (cause) { if (uid.current === saved.userId) setError(cause instanceof Error ? cause.message : 'Connection interrupted. Resume your saved operation.'); }
@@ -133,6 +140,31 @@ export function useGeneration(user: User | null) {
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not upload your image.'); }
     finally { active.current = false; setSubmitting(false); }
   }
+  /**
+   * The media downloader's own intake.
+   *
+   * It shares everything after the intake with `submit` — the saved operation, the idempotency key,
+   * the poll loop — but nothing before it: there is no file to measure, no upload ticket and no pixel
+   * ceiling, because the only input is a link. The links and the quality are what the idempotency key
+   * is bound to, which is why they are the body that gets saved.
+   */
+  async function submitFetch(links: string, quality: string) {
+    if (!user) { setError('Sign in before fetching a link.'); return; }
+    if (active.current || (operation && !terminal(operation.status))) return;
+    const urls = parseFetchUrls(links);
+    const problem = fetchUrlError(urls);
+    if (problem) { setError(problem); return; }
+    active.current = true; setSubmitting(true); setError(''); setPhase('Sending the link…');
+    try {
+      const existing = readOperation(user.uid);
+      if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
+      localStorage.setItem(`dlss:storage-check:${user.uid}`, '1'); localStorage.removeItem(`dlss:storage-check:${user.uid}`);
+      const body: GenerationBody = { mode: 'fetch', urls, quality: isFetchQuality(quality) ? quality : FETCH_DEFAULT_QUALITY };
+      const saved: SavedOperation = { version: 1, userId: user.uid, key: crypto.randomUUID(), body, createdAt: new Date().toISOString() };
+      saveOperation(saved); setOperation(saved); active.current = false; await replay(saved);
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not submit the link.'); }
+    finally { active.current = false; setSubmitting(false); }
+  }
   const resume = async () => {
     if (!operation) return;
     setError(''); pollingStarted.current = Date.now(); setPaused(false);
@@ -141,12 +173,12 @@ export function useGeneration(user: User | null) {
   };
   const pending = !!operation && !terminal(operation.status);
   const waiting = pending && !!operation.jobId && !paused && !query.isError && Date.now() - pollingStarted.current <= POLL_BUDGET_MS;
-  const statusText = operation?.status === 'SUBMISSION_UNCERTAIN' ? 'Confirming submission. Resume safely with the same saved request.' : operation?.status === 'QUEUED' ? 'Queued — waiting for processing.' : 'Processing your image…';
+  const statusText = operation?.status === 'SUBMISSION_UNCERTAIN' ? 'Confirming submission. Resume safely with the same saved request.' : operation?.status === 'QUEUED' ? 'Queued — waiting for processing.' : operation?.body?.mode === 'fetch' ? 'Fetching your file…' : 'Processing your image…';
   // The provider now reports why a task failed (the gateway used to answer with an empty reason),
   // so a refund comes with the sentence that tells the customer what to change.
   const reason = failureNote(query.data?.error, operation?.body?.mode || 'edit');
-  const failure = operation?.status === 'FAILED' ? `${query.data?.refunded ? 'Generation failed. Your credit has been refunded.' : 'Generation failed. Check your balance; refund reconciliation may still be pending.'}${reason ? ` ${reason}` : ''}` : '';
-  return { operation, busy: submitting || waiting, submitting, pending, error: error || query.error?.message || failure, phase: submitting ? phase : statusText, submit, resume,
+  const failure = operation?.status === 'FAILED' ? `${query.data?.refunded ? (operation.body.mode === 'fetch' ? 'The download failed. Your credit has been refunded.' : 'Generation failed. Your credit has been refunded.') : 'Generation failed. Check your balance; refund reconciliation may still be pending.'}${reason ? ` ${reason}` : ''}` : '';
+  return { operation, busy: submitting || waiting, submitting, pending, error: error || query.error?.message || failure, phase: submitting ? phase : statusText, submit, submitFetch, resume,
     pause: () => setPaused(true),
     reset: () => { if (user && terminal(operation?.status)) { clearOperation(user.uid); setOperation(null); setError(''); queryClient.removeQueries({ queryKey: ['generation', user.uid] }); } },
   };

@@ -11,6 +11,12 @@
  * same rule taken one step further: they run the same generative editor as `erase-quality`, but their
  * **prompt is a server-side asset** built from a versioned template library, so the browser may only
  * pick named options (`style=nordic`, `look=korean`) — a `prompt` field is refused upstream as well.
+ *
+ * The media downloader (`media-fetch`) is the one tool that reads **links instead of pixels**. There is
+ * no upload and no reference image at all: the body is the model, the links and a quality name, and
+ * `image_ids` — which every other tool sends — is refused by the gateway with a 400. Its result is a
+ * signed link to a file in object storage, not an image, so the browser fetches the file directly and
+ * the studio never proxies the bytes through a serverless function.
  */
 export const CUTOUT_MODEL = 'cutout-fast';
 export const VECTORIZE_MODEL = 'vectorize-fast';
@@ -19,6 +25,8 @@ export const TRYON_MODEL = 'tryon-quality';
 export const INTERIOR_MODEL = 'interior-quality';
 export const RETOUCH_MODEL = 'retouch-quality';
 export const MAKEUP_MODEL = 'makeup-quality';
+/** The media downloader: one link in, one file back. Measured on the live channel on 2026-09-29. */
+export const FETCH_MODEL = 'media-fetch';
 
 export const ERASE_OUTPUT_EDGE = 1024;
 /** The erase model re-renders the whole frame, which takes about a minute on the shared GPU. */
@@ -55,7 +63,7 @@ export const MAX_UPLOAD_MIB = MAX_UPLOAD_BYTES / (1024 * 1024);
 export const STUDIO_MAX_PIXELS = 16_777_216;
 /** What the copy calls that ceiling. Kept beside the number so the two can never drift apart. */
 export const STUDIO_MAX_PIXELS_LABEL = '16 MP';
-export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup', number | null> = {
+export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch', number | null> = {
   edit: STUDIO_MAX_PIXELS,        // flux-klein / editing
   enhance: STUDIO_MAX_PIXELS,     // flux-klein / HD enhance
   cutout: STUDIO_MAX_PIXELS,      // background removal (rembg)
@@ -68,6 +76,9 @@ export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize'
   interior: null,
   retouch: null,
   makeup: null,
+  // The downloader reads a link and produces a file, so no image of ours is ever measured against a
+  // ceiling. It is `null` rather than the edit ceiling so a failure message for it cannot claim one.
+  fetch: null,
 };
 /** Pixel ceiling for one mode; the strictest applies when the mode is unknown. */
 export const maxPixelsForMode = (mode: string): number | null =>
@@ -132,13 +143,13 @@ export function failureNote(reason: unknown, mode = 'edit'): string {
 
 export const STEPS_RANGE = { min: 4, max: 20, default: 8 } as const;
 
-export type ToolId = 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup';
-export const TOOL_IDS: readonly ToolId[] = ['cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup'];
+export type ToolId = 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch';
+export const TOOL_IDS: readonly ToolId[] = ['cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'fetch'];
 export const isToolId = (value: unknown): value is ToolId =>
   typeof value === 'string' && (TOOL_IDS as readonly string[]).includes(value);
 
 /** Named once so the server can reject anything else coming from a browser. */
-export const PROVIDER_MODELS = ['flux-klein', CUTOUT_MODEL, VECTORIZE_MODEL, ERASE_MODEL, TRYON_MODEL, INTERIOR_MODEL, RETOUCH_MODEL, MAKEUP_MODEL] as const;
+export const PROVIDER_MODELS = ['flux-klein', CUTOUT_MODEL, VECTORIZE_MODEL, ERASE_MODEL, TRYON_MODEL, INTERIOR_MODEL, RETOUCH_MODEL, MAKEUP_MODEL, FETCH_MODEL] as const;
 export type ProviderModel = (typeof PROVIDER_MODELS)[number];
 export const isProviderModel = (value: unknown): value is ProviderModel =>
   typeof value === 'string' && (PROVIDER_MODELS as readonly string[]).includes(value);
@@ -155,6 +166,9 @@ export const TOOL_REFERENCES: Record<ToolId, { min: number; max: number; slots: 
   interior: { min: 1, max: 2, slots: ['room', 'style reference (optional)'] },
   retouch: { min: 1, max: 1, slots: ['portrait'] },
   makeup: { min: 1, max: 2, slots: ['portrait', 'makeup reference (optional)'] },
+  // The downloader reads no image at all: its input is a list of links, checked by `fetchUrlError`.
+  // Zero on both sides is what makes the shared reference check pass a body that carries no ids.
+  fetch: { min: 0, max: 0, slots: [] },
 };
 /** The first reference is the subject; a tool whose maximum is 2 accepts a second, optional one. */
 export const toolTakesSecondImage = (tool: ToolId): boolean => TOOL_REFERENCES[tool].max > 1;
@@ -169,6 +183,7 @@ export const modelForTool = (tool: ToolId): ProviderModel => {
   if (tool === 'tryon') return TRYON_MODEL;
   if (tool === 'interior') return INTERIOR_MODEL;
   if (tool === 'retouch') return RETOUCH_MODEL;
+  if (tool === 'fetch') return FETCH_MODEL;
   return MAKEUP_MODEL;
 };
 
@@ -185,7 +200,8 @@ export const modeForModel = (model: string): string =>
           : model === INTERIOR_MODEL ? 'interior'
             : model === RETOUCH_MODEL ? 'retouch'
               : model === MAKEUP_MODEL ? 'makeup'
-                : 'edit';
+                : model === FETCH_MODEL ? 'fetch'
+                  : 'edit';
 
 /**
  * The one sentence a caller gets when its image is over a mode's ceiling, checked at upload as well
@@ -233,7 +249,7 @@ export const VECTORIZE_PRESET_NOTE: Record<VectorizePreset, string> = {
  * breaking change for every caller, so the list is frozen with the model names.
  */
 export type ToolOptionChoice = { value: string; label: string; note?: string };
-export type ToolOption = { key: 'garment_type' | 'style' | 'room_type' | 'level' | 'look' | 'intensity'; label: string; help: string; default: string; choices: ToolOptionChoice[] };
+export type ToolOption = { key: 'garment_type' | 'style' | 'room_type' | 'level' | 'look' | 'intensity' | 'quality'; label: string; help: string; default: string; choices: ToolOptionChoice[] };
 
 export const GARMENT_TYPE_OPTION: ToolOption = {
   key: 'garment_type', label: 'What the garment covers', default: 'outfit',
@@ -307,12 +323,95 @@ export const MAKEUP_INTENSITY_OPTION: ToolOption = {
   ],
 };
 
+/**
+ * The media downloader (`media-fetch`).
+ *
+ * It is the one tool whose input is not an image: the reader pastes a link to a video page and gets
+ * that site's own file back. Two things about it are therefore contractual rather than cosmetic:
+ *
+ * - The gateway refuses a body that carries `image_ids`, a `prompt` or a size — it takes exactly the
+ *   model, the links and a `quality` name, so `buildToolTask` builds that and nothing else.
+ * - The result is a signed link to a file in object storage, valid for an hour, and it is **not** an
+ *   image: the studio renders it as a `<video>`/`<audio>` element and downloads it straight from the
+ *   storage host, so no bytes travel through a serverless function (a 25 MiB clip would not fit one).
+ *
+ * The quality names are the frozen vocabulary the channel accepts; the gateway answers anything else
+ * with a 400 naming the six that exist, and `toolOptionError` refuses it a step earlier.
+ */
+export const FETCH_QUALITIES = ['best', '1080', '720', '480', '360', 'audio'] as const;
+export type FetchQuality = (typeof FETCH_QUALITIES)[number];
+export const isFetchQuality = (value: unknown): value is FetchQuality =>
+  typeof value === 'string' && (FETCH_QUALITIES as readonly string[]).includes(value);
+/** The default travels with the task explicitly, so the page and the run cannot disagree. */
+export const FETCH_DEFAULT_QUALITY: FetchQuality = '1080';
+
+export const FETCH_QUALITY_OPTION: ToolOption = {
+  key: 'quality', label: 'Quality', default: FETCH_DEFAULT_QUALITY,
+  help: 'The file the source site serves is handed back as it is — nothing is re-encoded here.',
+  choices: [
+    { value: 'best', label: 'Best available', note: 'The highest rendition the site offers, so the file can be large.' },
+    { value: '1080', label: '1080p' },
+    { value: '720', label: '720p' },
+    { value: '480', label: '480p' },
+    { value: '360', label: '360p', note: 'The smallest video rendition, and usually the quickest to fetch.' },
+    { value: 'audio', label: 'Audio only', note: 'No picture — the sound on its own.' },
+  ],
+};
+
+/**
+ * How many links one task may carry. Each link is its own download on the far side, and one task is
+ * one queue slot and one credit, so a batch of three costs a third of a single run per link.
+ */
+export const FETCH_MAX_URLS = 3;
+
+/**
+ * The sites this tool will fetch from.
+ *
+ * This is a policy list, not a technical one: the downloader behind it handles far more sites, so
+ * widening this list is the whole of what "support another site" means. It is deliberately short —
+ * the tool exists to bring readers in from the sites they actually paste links from, and a short
+ * list is the honest way to say what we do and do not fetch for them.
+ */
+export const FETCH_ALLOWED_HOSTS = ['youtube.com', 'youtu.be', 'bilibili.com', 'b23.tv', 'douyin.com', 'iesdouyin.com', 'tiktok.com'] as const;
+
+/** True for a host the tool accepts, including any subdomain of one it accepts (`m.youtube.com`). */
+export const fetchHostAllowed = (host: string): boolean => {
+  const name = host.toLowerCase();
+  return FETCH_ALLOWED_HOSTS.some(allowed => name === allowed || name.endsWith(`.${allowed}`));
+};
+
+/** The sites in one sentence, for the copy that has to name them. */
+export const FETCH_SITES_LABEL = 'YouTube, Bilibili, Douyin and TikTok';
+
+/**
+ * '' when the links may be submitted, otherwise the sentence to show. Checked in the browser (so the
+ * reader is told before a credit is spent) and again on the server (a client can post anything).
+ */
+export function fetchUrlError(urls: unknown): string {
+  if (!Array.isArray(urls) || !urls.length) return 'Paste at least one video link.';
+  if (urls.length > FETCH_MAX_URLS) return `Paste at most ${FETCH_MAX_URLS} links at a time.`;
+  for (const value of urls) {
+    const text = typeof value === 'string' ? value.trim() : '';
+    if (!text) return 'Every entry has to be a link — one link per line.';
+    let parsed: URL;
+    try { parsed = new URL(text); } catch { return `“${text.slice(0, 80)}” is not a link. Copy the whole address from the browser’s address bar.`; }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return 'Only http and https links can be fetched.';
+    if (!fetchHostAllowed(parsed.hostname)) return `We do not fetch from ${parsed.hostname}. This tool accepts links from ${FETCH_SITES_LABEL}.`;
+  }
+  return '';
+}
+
+/** The links inside one textarea: one per line, and a pasted column of blanks is not three links. */
+export const parseFetchUrls = (value: string): string[] =>
+  value.split(/[\s,]+/).map(entry => entry.trim()).filter(Boolean);
+
 /** The options a tool offers, in the order the panel shows them. Tools without options get none. */
 export const TOOL_OPTIONS: Partial<Record<ToolId, ToolOption[]>> = {
   tryon: [GARMENT_TYPE_OPTION],
   interior: [INTERIOR_STYLE_OPTION, ROOM_TYPE_OPTION],
   retouch: [RETOUCH_LEVEL_OPTION],
   makeup: [MAKEUP_LOOK_OPTION, MAKEUP_INTENSITY_OPTION],
+  fetch: [FETCH_QUALITY_OPTION],
 };
 
 /** The first option value a caller got wrong, as a sentence; '' when the body is acceptable. */
@@ -363,6 +462,8 @@ export type ToolTaskInput = {
   options?: Record<string, string>;
   /** Interior only: the short free-text brief folded into the server-side prompt. */
   extra?: string;
+  /** Media downloader only: the video links to fetch. It reads nothing else. */
+  urls?: string[];
 };
 
 /** Kept inside the range the service accepts (256–2048) so a bad value never reaches the provider. */
@@ -384,14 +485,34 @@ const optionValue = (tool: ToolId, key: ToolOption['key'], input: ToolTaskInput)
  * The provider body for one tool task. Built on the server only — the browser never talks to the
  * provider, so a client cannot invent fields the model would reject, and the A-line tools cannot
  * replace the prompt the way an editor could.
+ *
+ * Which fields are present is each tool's own contract — the downloader carries `urls`/`quality` and
+ * no `image_ids`, every other tool the reverse — so the type is the union of what any of them may
+ * send rather than a per-tool shape.
  */
-export function buildToolTask(tool: ToolId, input: ToolTaskInput) {
-  const task: {
-    model: ProviderModel; image_ids: string[]; prompt?: string; num_inference_steps?: number; seed?: number;
-    preset?: VectorizePreset; max_edge?: number;
-    garment_type?: string; style?: string; room_type?: string; level?: string; look?: string; intensity?: string;
-    extra?: string;
-  } = {
+export type ToolTask = {
+  model: ProviderModel;
+  image_ids?: string[];
+  urls?: string[];
+  quality?: FetchQuality;
+  prompt?: string; num_inference_steps?: number; seed?: number;
+  preset?: VectorizePreset; max_edge?: number;
+  garment_type?: string; style?: string; room_type?: string; level?: string; look?: string; intensity?: string;
+  extra?: string;
+};
+
+export function buildToolTask(tool: ToolId, input: ToolTaskInput): ToolTask {
+  // The downloader is the one tool with no reference image at all: the gateway answers a body that
+  // carries `image_ids` with a 400 (measured on the live channel, 2026-09-29), so the body is exactly
+  // the model, the links and the quality name — nothing else is built for it, not even an empty list.
+  if (tool === 'fetch') {
+    return {
+      model: FETCH_MODEL,
+      urls: (input.urls || []).map(url => url.trim()).filter(Boolean),
+      quality: isFetchQuality(input.options?.quality) ? input.options!.quality : FETCH_DEFAULT_QUALITY,
+    };
+  }
+  const task: ToolTask = {
     model: modelForTool(tool),
     image_ids: input.imageIds,
   };
@@ -466,5 +587,17 @@ export const TOOL_SUMMARY: Record<ToolId, { label: string; short: string; output
     output: 'Output: shaped like your portrait · PNG',
     seconds: GENERATIVE_SECONDS_NOTE,
     audience: '1–2 images — the portrait, then an optional makeup reference',
+  },
+  fetch: {
+    label: 'Video & audio downloader',
+    short: 'Download media',
+    // Nothing is re-encoded and nothing is uploaded: the file that comes back is the one the source
+    // site serves, handed over as a signed link the browser downloads from directly.
+    output: `Output: the file ${FETCH_SITES_LABEL} serve, at the quality you pick · no re-encoding`,
+    // Measured on the live channel on 2026-09-29 against the same ten-minute clip, end to end: audio
+    // only 14.5 s (10 MiB), 360p 15.7 s (25 MiB), 720p 30.0 s (81 MiB), 1080p 42.1 s (134 MiB). The
+    // download itself is nearly all of that, so the wall clock follows the size of the rendition.
+    seconds: '20–45 seconds, depending on the size of the file',
+    audience: `No upload — paste up to ${FETCH_MAX_URLS} links`,
   },
 };

@@ -57,6 +57,7 @@ export default function Terms() {
         <Section title="5. Your content">
           <p>You keep all rights to the images you upload and to the results you generate. You grant us only the limited licence needed to run the service: to store, transmit and process your files on our infrastructure and on our model providers&apos; systems, and to show a result back to you.</p>
           <p>We do not claim ownership of your images and we do not use them to train models. Uploaded files and results are kept so that you can retrieve them from your account; ask us at {LEGAL.contactEmail} if you want a specific file or your whole account history deleted.</p>
+          <p>When a tool fetches a file from a link you paste, you confirm that you have the right to download that file. We pass back what the linked site is already serving and we keep no copy of it; the copyright in that material stays with its owner, and downloading it does not give you any right to reuse or redistribute it.</p>
         </Section>
 
         <Section title="6. Our content and trademarks">

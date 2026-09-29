@@ -5,7 +5,7 @@ export type ToolLanding = {
   path: string;
   locale: 'en' | 'es';
   slug: string;
-  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup';
+  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch';
   language: 'en-US' | 'es-ES';
   title: string;
   description: string;
@@ -561,6 +561,47 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       aspectRatio: 0.75,
     },
   },
+  {
+    path: '/video-downloader',
+    locale: 'en',
+    slug: 'video-downloader',
+    dashboardTool: 'fetch',
+    language: 'en-US',
+    title: 'Video Downloader Online — Save a Video or Its Audio from a Link',
+    description: 'Paste a YouTube, Bilibili, Douyin or TikTok link and download the file that site serves — up to 1080p, the best available, or the audio on its own. Sign in, 1 credit per task, and save the file while the link lasts.',
+    eyebrow: 'Media tool',
+    heading: 'Video Downloader',
+    intro: 'Paste the link to a video and get the file itself back — the rendition that site serves, at the quality you choose, with nothing re-encoded in between. One task takes up to three links, and nothing is uploaded: the link is the whole input.',
+    cta: 'Paste a video link',
+    ctaNote: 'YouTube, Bilibili, Douyin and TikTok · up to 3 links per task · 1 credit · the download link lasts about an hour',
+    resultLabel: 'The downloaded file',
+    originalLabel: 'Your link',
+    prompt: '',
+    useCases: ['Your own upload, kept as a file', 'A clip you have permission to reuse', 'Audio for transcribing or subtitling your own video', 'Offline copies where the platform and the licence allow it'],
+    keywords: ['video downloader online', 'download youtube video', 'bilibili video download', 'douyin video download', 'tiktok video download', 'download video audio only', 'save video from link'],
+    whenToUse: 'Use it when you already have the link to a video you have the right to download: your own upload, a clip you are licensed to reuse, or a copy the platform lets you keep. It fetches the file that is already being served at that address — it does not unlock a private video, a paid stream or a member-only page, and a long or high-resolution video takes longer because the file itself is large.',
+    sharedNote: 'The file comes back in the site’s own container and codec — a YouTube 1080p video as WebM with AV1 video and Opus audio, for example — so a player or editor that accepts that format may be needed. Nothing is re-encoded and nothing is uploaded.',
+    disclaimer: 'The copyright in a video belongs to whoever made it. Download only what you are allowed to download, and do not use this tool to redistribute someone else’s work. We are not affiliated with YouTube, Bilibili, Douyin or TikTok, and we do not keep or host the files we fetch.',
+    stepsHeading: 'How to download a video from a link',
+    steps: [
+      { name: 'Copy the link', text: 'Open the video and copy the address from the browser, or use the app’s share menu. A short link such as youtu.be, b23.tv or v.douyin.com works as well.' },
+      { name: 'Paste it and pick a quality', text: 'Paste up to three links, one per line, then choose 1080p, 720p, 480p, 360p, the best available or audio only. The task costs 1 credit.' },
+      { name: 'Check the file and save it', text: 'The studio plays what came back so you can check picture and sound, then download it. The signed link expires after about an hour, and a later run fetches the file again.' },
+    ],
+    checks: ['Play the file and confirm the picture and the sound are complete.', 'Compare the resolution with the quality you asked for.', 'Save the file before the signed link expires — about an hour.'],
+    featureList: ['YouTube, Bilibili, Douyin and TikTok links', 'Up to 1080p, best available, or audio only', 'Up to three links in one task', 'The file itself comes back — no re-encode, no upload'],
+    faqs: [
+      { question: 'Which sites can I paste a link from?', answer: 'YouTube, Bilibili, Douyin and TikTok, including their short-link and mobile addresses. Other sites are refused with a message that names the four rather than attempted: the downloader behind this tool could handle more, but we choose which sites we fetch from.' },
+      { question: 'Is downloading a video legal?', answer: 'It depends on the video and on where you are. Download only material you have the right to download — your own uploads, clips you have permission to reuse, or work offered under a licence that allows it. We do not host the file and we cannot give you rights in someone else’s work.' },
+      { question: 'Why does the download link expire?', answer: 'The finished file is handed to your browser as a signed link to our storage, valid for about an hour. That is deliberate: it is a delivery channel rather than a library. If it expires before you save the file, run the link again and download the fresh copy.' },
+      { question: 'What format and resolution do I get?', answer: 'Whatever the site serves for the quality you chose, with nothing re-encoded. A YouTube 1080p video arrives as WebM with AV1 video and Opus audio, 360p as the smaller rendition of the same clip, and audio-only as the sound track on its own. Your own container choice is therefore not on offer — the source decides it.' },
+      { question: 'What happens if the download fails?', answer: 'A confirmed failure refunds the credit automatically and shows the reason. The worker that fetches the file is a machine that is not always reachable, so a task can fail quickly with a plain reason instead of hanging; running the same link again is the fix.' },
+    ],
+    related: [
+      { path: '/image-upscaler', label: 'AI Image Upscaler' },
+      { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
+    ],
+  },
 ];
 
 export const TOOL_LANDING_BY_PATH = Object.fromEntries(TOOL_LANDINGS.map(tool => [tool.path, tool])) as Record<string, ToolLanding>;
@@ -608,6 +649,20 @@ export type ToolLongForm = {
  */
 export function toolLongForm(tool: ToolLanding): ToolLongForm {
   const mode = tool.dashboardTool;
+  // The downloader is not an image workflow at all, and the shared paragraphs below are written for
+  // one: they talk about pixels, aspect ratios and 100 % zoom, none of which apply to a file fetched
+  // from a link. So it brings its own rather than stretching copy written for the editor.
+  if (mode === 'fetch') {
+    return {
+      definition: `${tool.heading} takes a video’s address and hands back the file that is being served there: the rendition the site holds, at the quality you choose, or the sound track on its own. It is not a player and not a converter — nothing is re-encoded, no frame is regenerated, and no image is uploaded, because the link is the entire input. What comes back is therefore decided by the source: it is the resolution, the frame rate and the container the platform itself publishes at that address.`,
+      workflow: `Copy the link from the browser, or from the app’s share menu. Paste up to three links in the studio, one per line, and choose a quality: best available, 1080p, 720p, 480p, 360p, or audio only. The task costs one credit, runs on a downloader outside this site’s own servers, and finishes in anything from fifteen seconds to a minute — the file has to be transferred, so the wait follows its size. What returns is a signed link, which the page plays back so you can check the picture and the sound before you save it.`,
+      inputs: `The input is a link, not a file: nothing from your device is uploaded, and no image is measured against a size limit. Accepted addresses are YouTube, Bilibili, Douyin and TikTok, including their short-link and mobile forms (youtu.be, b23.tv, v.douyin.com). A link from anywhere else is refused with a message naming those four rather than attempted, which is a deliberate choice about the sites we serve — the downloader behind the tool knows more places than we are willing to fetch from.`,
+      fit: `This is a good fit for your own uploads, for a clip you have permission to reuse, for audio you need as a file in order to transcribe or subtitle your own video, and for an offline copy where the platform and the licence allow one. It is the wrong tool for a private, paid or member-only video, for a live stream, for anything you would have to redistribute to make useful, and for the case where you need one particular container or codec — the source site decides the format, not this page.`,
+      limits: `The machine that performs the download is not ours and is not always reachable, so a task can fail quickly with a plain reason where another tool might hang; a confirmed failure refunds the credit. The finished file is delivered as a signed link that lasts about an hour, and we keep no copy of it afterwards — if you miss the window, run the link again and save the fresh copy. Sizes are real: a ten-minute clip measured 134 MiB at 1080p, 81 MiB at 720p, 25 MiB at 360p and 10 MiB as audio only. And the rights in the video never move: what you may do with the file afterwards is between you, the platform and the person who made it.`,
+      cost: `Every task costs 1 credit and accepts up to three links, so a batch of three is no dearer than one. A confirmed failure is refunded automatically under the account workflow, and the size of the video does not change the price — a ten-minute 1080p file and an audio-only track cost the same. Your allowance is shown before a signed-in task starts.`,
+      review: `Play what came back before you rely on it: check that the picture and the sound run to the end, that the resolution matches the quality you asked for, and that the frame rate and the audio are the ones you need. Check the container as well — a YouTube 1080p file arrives as WebM with AV1 video and Opus audio — and convert it yourself if your editor wants something else. Then save the file, because the signed link expires about an hour after the task finished.`,
+    };
+  }
   const modeCopy: Record<ToolLanding['dashboardTool'], { verb: string; noun: string; risk: string }> = {
     upscale: { verb: 'enlarge', noun: 'image upscaling', risk: 'large edges, repeated geometry and output dimensions' },
     enhance: { verb: 'improve', noun: 'image quality enhancement', risk: 'faces, labels, text and uncertain texture' },
@@ -619,6 +674,7 @@ export function toolLongForm(tool: ToolLanding): ToolLongForm {
     interior: { verb: 'visualize an interior from', noun: 'interior render generation', risk: 'walls, windows, perspective and furniture scale' },
     retouch: { verb: 'refine', noun: 'portrait retouching', risk: 'skin texture, face shape and expression' },
     makeup: { verb: 'preview makeup on', noun: 'virtual makeup', risk: 'face shape, expression and colour spill' },
+    fetch: { verb: 'download from', noun: 'media downloading', risk: 'the site’s own container, the resolution that was really served, and the rights in the file' },
   };
   const copy = modeCopy[mode];
   const targets = tool.useCases.join(', ');

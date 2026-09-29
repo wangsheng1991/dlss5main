@@ -203,6 +203,7 @@
     "modeInterior": "房间渲染",
     "modeRetouch": "人像修饰",
     "modeMakeup": "虚拟化妆",
+    "modeFetch": "视频/音频下载",
     "guestNotice": "免费示例无需账户。登录后可以上传自己的图片并填写提示词。",
     "signInToUpload": "登录后上传自己的图片",
     "guestUnlock": "登录后可以上传自己的图片，并解锁全部 {{count}} 个工具",

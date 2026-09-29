@@ -203,6 +203,7 @@
     "modeInterior": "Room render",
     "modeRetouch": "Portrait retouch",
     "modeMakeup": "Virtual makeup",
+    "modeFetch": "Video & audio download",
     "guestNotice": "Free examples need no account. Sign in to upload your own image and write a prompt.",
     "signInToUpload": "Sign in to upload your own image",
     "guestUnlock": "Sign in to upload your own image and unlock all {{count}} tools",
