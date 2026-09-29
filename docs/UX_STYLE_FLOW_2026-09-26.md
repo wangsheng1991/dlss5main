@@ -279,3 +279,31 @@ Vercel 生产部署已 Ready，线上浏览器复核结果如下：
 ### 11.4 仍需基础设施侧处理
 
 2026-09-28 的生产排障报告显示 `alphanet-flux` 任务全部失败，原因是 GPU 容器的 `R2_PROXY=http://127.0.0.1:10809` 指向失效代理，R2 直连正常但经代理 TLS EOF。前端本轮没有掩盖这个问题；要恢复免费示例和登录后的生成，需在 Alphanet 的 `flux2-klein-kv-api` 容器侧禁用 `R2_PROXY`（或修复 home-proxy 节点）后重启并复测。该动作不在本仓库权限范围内，暂记为基础设施 TODO。
+
+## 12. 上游故障复测与失败文案收口（2026-09-29）
+
+### 12.1 通道仍然坏（今天的实测）
+
+- 用仓库自己的 provider 客户端 + 项目 key（直连网关，不经本站）提交一次真实 `flux-klein` 编辑任务：上传 `200`（4s）→ 提交 → **19 秒后 FAILURE**，原始返回 `{"status":"FAILURE","fail_reason":"[object Object]","platform":"alphanet-flux"}`；
+- 同 key 对照：`cutout-fast` 14 秒 SUCCESS、`retouch-quality`（另一个 GPU 模型）78 秒 SUCCESS —— 因此仍不是整台 GPU 机器坏、也不是 key/额度，而是 `flux2-klein-kv-api` 这一个容器（与第 11.4 节结论一致）；
+- 网关 `dashboard.alphanetplus.com` 仍在线；项目 key 请求 `/api/channel/` 返回 401，没有管理员凭据可用；
+- 该 key 可见的模型共 10 个，其中 `flux-klein` 是**唯一**的编辑模型，没有可临时替换的编辑通道。
+
+### 12.2 我们这侧能修的：失败原因不再原样透传
+
+网关把容器返回的 JSON 对象字符串化成 `fail_reason`，所以用户在“生成失败”后面读到的是字面的 `[object Object]`（历史行与实时轮询两处）。
+
+- `src/config/tools.ts`：新增 `SERVICE_FAILURE_NOTE` 与 `unusableReason()`。`failureNote()` 现在把**没有信息量**的原因（字符串化的对象、裸 JSON、只有状态码/标点）换成一句诚实的话，其余原文照旧；413 分支不变；
+- `api/image-edit/samples.ts`：`warm()` 原先只读 `task.error`，现在读 `fail_reason` 并走同一个映射，免登录示例失败时也给访客一句人话（不再抛 `Example generation failed`）；
+- 影响面：`useGeneration.ts` 与 `Dashboard.tsx` 都调用 `failureNote()`，所以实时失败与历史记录一并修好。
+
+### 12.3 证据
+
+- `npm run lint`：通过（tsc）。
+- `npm test`：85/85 通过（新增两条：不可读原因被替换、示例 warm-up 读 `fail_reason`）。
+- `npm run build`：通过。
+- 生产复验（`www.dlss5nvidia.com`，部署 `dlss5-main-4rtalu5s8`，两个域名均已 Ready）：`sample1`、`sample2` 仍 `200 cached:true`；未缓存的 `characterStyle` 现在返回 `500 {"error":"The image service could not finish this request. Please try again in a few minutes."}`，且线上 `index-*.js` 里已带上这句话。
+
+### 12.4 仍然需要基础设施侧的动作
+
+恢复要进 `flux2-klein-kv-api` 容器禁掉 `R2_PROXY`（或修 home-proxy 节点）后重启 —— 本仓库够不着那台机器：`~/code` 下没有它的部署脚本，`~/.ssh/config` 里没有指向它的别名，域名解析走 fake-ip 也看不出真实 IP。需要上游或接手方给出入口。
