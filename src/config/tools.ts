@@ -98,9 +98,26 @@ export function oversizeNote(width: number, height: number, mode = 'edit'): stri
 }
 
 /**
+ * What a customer reads when the provider failed without a reason we can show. The GPU container
+ * answers with JSON, and the gateway stringifies that object into the task's `fail_reason`, so the
+ * only thing that reaches us is the useless `[object Object]` — the real cause is already gone by
+ * then. A failure we cannot explain is a failure on our side, so the sentence says so instead of
+ * pretending the customer's image or prompt was the problem.
+ */
+export const SERVICE_FAILURE_NOTE = 'The image service could not finish this request. Please try again in a few minutes.';
+
+/** True for the shapes a provider reason arrives in when it carries no information at all. */
+function unusableReason(text: string): boolean {
+  if (/^\[object \w+\]$/.test(text)) return true;   // an object the gateway stringified on the way out
+  if (/^[[{]/.test(text)) return true;              // a bare JSON fragment rather than a sentence
+  return !/[a-z]/i.test(text);                      // a status code, a bare number, punctuation only
+}
+
+/**
  * Turns a provider failure into something a customer can act on. The provider's own words are kept
  * when they are already meaningful; the over-size case is the one worth translating, because the
- * raw text is `backend_413: ... exceeds 20000000 pixels`.
+ * raw text is `backend_413: ... exceeds 20000000 pixels`, and an unreadable reason is replaced
+ * rather than shown, because `[object Object]` next to "Generation failed" tells nobody anything.
  */
 export function failureNote(reason: unknown, mode = 'edit'): string {
   const text = typeof reason === 'string' ? reason.trim() : '';
@@ -109,6 +126,7 @@ export function failureNote(reason: unknown, mode = 'edit'): string {
     const limit = maxPixelsForMode(mode);
     return `The image is too large for this service (up to ${MAX_UPLOAD_MIB} MiB${limit ? ` and ${pixelLimitLabel(mode)}` : ''}). Shrink it and try again.`;
   }
+  if (unusableReason(text)) return SERVICE_FAILURE_NOTE;
   return text.length > 160 ? `${text.slice(0, 157)}…` : text;
 }
 

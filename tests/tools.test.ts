@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import {
-  MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, STUDIO_MAX_PIXELS, buildToolTask, clampSteps, clampVectorizeEdge,
+  MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, SERVICE_FAILURE_NOTE, STUDIO_MAX_PIXELS, buildToolTask, clampSteps, clampVectorizeEdge,
   failureNote, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, pixelCheckNote,
   VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, isToolId, modelForTool,
   toolNeedsSecondImage, toolOptionError, toolTakesSecondImage,
@@ -84,6 +84,29 @@ test('the upstream 413 is translated, so a failure still reads like advice', () 
   assert.doesNotMatch(note, /413/);
   // Anything the provider says that is not about size is kept as it is.
   assert.equal(failureNote('prompt was rejected by the safety filter', 'edit'), 'prompt was rejected by the safety filter');
+});
+
+/**
+ * A reason that carries no information must never reach the page as it arrived. The gateway
+ * stringifies the GPU container's JSON answer, so a failed generation comes back as the literal
+ * `[object Object]` — which is what a customer was reading next to "Generation failed".
+ */
+test('a failure reason nobody can read is replaced instead of shown', () => {
+  for (const reason of ['[object Object]', '{"platform":"alphanet-flux","status":"FAILURE"}', '[{"code":500}]', '500', '', '   ', undefined, null, {}]) {
+    const note = failureNote(reason, 'enhance');
+    assert.ok(note === SERVICE_FAILURE_NOTE || note === '', `unreadable reason ${JSON.stringify(reason)} must not be shown, got ${JSON.stringify(note)}`);
+  }
+  assert.match(failureNote('[object Object]', 'edit'), /image service could not finish this request/);
+  assert.doesNotMatch(failureNote('[object Object]', 'edit'), /\[object/);
+  // A real sentence still survives untouched, including one about the size limit.
+  assert.equal(failureNote('The model refused this prompt.', 'edit'), 'The model refused this prompt.');
+});
+
+/** The guest examples run through their own handler, which must map the cause the same way. */
+test('the example warm-up reads the failure reason the gateway actually fills', () => {
+  const source = readFileSync(new URL('../api/image-edit/samples.ts', import.meta.url), 'utf8');
+  assert.match(source, /task\.fail_reason/, 'the warm-up must read fail_reason, not only error');
+  assert.match(source, /failureNote\(/, 'the warm-up must show the mapped sentence');
 });
 
 /**

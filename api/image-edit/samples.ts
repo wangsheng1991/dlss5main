@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet, alphaNetTools } from '../_lib/alphanet.js';
 import { fail } from '../_lib/auth.js';
 import { SAMPLES, SAMPLE_CACHE_VERSION, GUEST_SAMPLE_IDS, isSampleId } from '../../src/config/samples.js';
-import { buildToolTask, modelForTool } from '../../src/config/tools.js';
+import { SERVICE_FAILURE_NOTE, buildToolTask, failureNote, modelForTool } from '../../src/config/tools.js';
 import { SampleStore } from '../../server/sample-store.js';
 import { database } from '../../server/admin.js';
 import { resolveSiteUrl } from '../../src/config/site-url.js';
@@ -84,8 +84,11 @@ async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
   const deadline = Date.now() + POLL_BUDGET_MS;
   while (Date.now() < deadline) {
     await sleep(POLL_INTERVAL_MS);
-    const task = await client.poll((accepted as { task_id: string }).task_id) as { status?: string; result?: { images?: Array<{ url: string; content_type?: string; width?: number; height?: number; sha256?: string }> }; error?: string };
-    if (task.status === 'FAILURE') throw new Error(task.error || 'Example generation failed');
+    const task = await client.poll((accepted as { task_id: string }).task_id) as { status?: string; result?: { images?: Array<{ url: string; content_type?: string; width?: number; height?: number; sha256?: string }> }; error?: string; fail_reason?: string };
+    // The gateway keeps the provider's cause in fail_reason, so reading only `error` threw away the
+    // one line that explains a failure; failureNote turns whatever is there into what a visitor can
+    // read, and answers with the honest sentence when the reason is unusable.
+    if (task.status === 'FAILURE') throw new Error(failureNote(task.fail_reason || task.error) || SERVICE_FAILURE_NOTE);
     const image = task.result?.images?.[0];
     if (task.status === 'SUCCESS' && image?.url) return store.save(sampleId, sample.prompt, image, SAMPLE_CACHE_VERSION);
   }
