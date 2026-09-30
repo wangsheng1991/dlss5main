@@ -120,3 +120,15 @@ URL Inspection 的当前结果：
 - 等待 Google 抓取队列和覆盖率汇总刷新；没有可再提交的同一 URL。
 - 观察 `/video-downloader` 是否进入索引，以及 `/tools/passport-photo/3-na-4` 是否接受自指 canonical；若仍被归并，再基于新的抓取证据决定是否增加该规格页的独有内容。
 - 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`game character style conversion`、`dlss 5 visual enhancer` 的展示、点击和 CTR；本轮线上 metadata 已生效，无需重复改标题。
+
+## 2026-09-30 追加索引复核
+
+- Search Console 站点地图实时页面仍显示 `https://www.dlss5nvidia.com/sitemap.xml` 为“成功”，已发现 60 个网页、0 个视频。
+- 线上批量复核 sitemap 内 60 个 URL：60/60 返回 HTTP 200，60/60 的 title、description、keywords、H1 和自指 canonical 均通过；首页、`/video-downloader`、`/game-character-style` 和证件照规格页的线上关键词与页面内容一致。
+- URL Inspection 实时复核：此前覆盖率报告里的 6 个博客样本当前均显示“网址已收录到 Google”；`/tools/passport-photo/3-na-4` 也已显示“网址已收录到 Google”。覆盖率报告仍停留在 2026-09-21，属于历史汇总，不能拿它重复提交已收录页面。
+- `/video-downloader` 仍是唯一实际未收录的新页，状态为“已发现 - 尚未编入索引”；本轮在每日配额可用后再次点击“请求编入索引”，Google 返回“已请求编入索引”，已加入优先抓取队列。
+
+### 当前 TODO
+
+- 等待 Google 抓取 `/video-downloader` 并刷新覆盖率汇总；在状态变化前不重复提交同一 URL。
+- 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`game character style conversion`、`dlss 5 visual enhancer` 的展示、点击和 CTR；线上 metadata 已生效，不因历史报告延迟重复改标题。
