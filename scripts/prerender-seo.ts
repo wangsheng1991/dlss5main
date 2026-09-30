@@ -9,6 +9,7 @@ import type { PhotoSpec } from '../src/lib/spec/types';
 import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_SLUGS, passportPhotoSeoCopy } from '../src/content/passportPhoto';
 import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../src/content/videoLanding';
+import { STUDIO_COPY } from '../src/content/studioPage';
 import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
@@ -375,6 +376,7 @@ type PublicGuideOptions = {
   lead: string;
   keywords: string[];
   links?: Array<{ label: string; path: string }>;
+  extraHtml?: string;
   noindex?: boolean;
 };
 
@@ -383,7 +385,7 @@ function renderPublicGuide(options: PublicGuideOptions): string {
   const links = options.links?.length
     ? `<nav class="mt-10 border-t border-outline-variant/20 pt-7" aria-label="Related pages"><h2 class="text-xl font-bold text-white">Continue exploring</h2><ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">${options.links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(link.label)} →</a></li>`).join('')}</ul></nav>`
     : '';
-  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">DLSS5NVIDIA · independent guide</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">What this page covers</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${links}</main>`;
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">DLSS5NVIDIA · independent guide</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">What this page covers</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${options.extraHtml || ''}${links}</main>`;
   return withRoot(withHead(TEMPLATE, {
     title: options.title,
     description: options.description,
@@ -791,6 +793,13 @@ if (profileHas('about')) writeRoute('/about', renderPublicGuide({
   keywords: ['NVIDIA DLSS 5', 'DLSS 5 neural rendering', 'Tensor Core upscaling', 'DLSS 5 vs DLSS 4', 'DLSS 5 vs FSR 4'],
   links: [{ label: 'DLSS 5 latest news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'DLSS 5 technical guide', path: '/blog/what-is-dlss-5-neural-rendering-guide' }, { label: 'AI image tools compared', path: '/comparisons' }],
 }));
+const studioStatic = STUDIO_COPY['en-US'];
+const studioStaticCases = [
+  { id: 'night', image: 'studio-overview.jpg', extra: 'studio-night-lens.jpg', extraAlt: studioStatic['shots.nightLens.alt'] },
+  { id: 'photo', image: 'studio-photo-restore.jpg' },
+  { id: 'video', image: 'studio-video-compare.jpg', extra: 'studio-queue.jpg', extraAlt: studioStatic['showcase.video.queueAlt'] },
+] as const;
+const studioStaticShowcase = `<section id="showcase" class="mt-12"><h2 class="text-2xl font-bold text-white">${escapeHtml(studioStatic['showcase.title'])}</h2><p class="mt-4 text-zinc-300 leading-relaxed">${studioStatic['showcase.intro']}</p>${studioStaticCases.map((item) => `<article class="mt-8 rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><img src="/studio/${item.image}" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStatic[`showcase.${item.id}.alt`])}" class="w-full" />${'extra' in item ? `<img src="/studio/${item.extra}" width="1440" height="778" loading="lazy" alt="${escapeHtml(item.extraAlt)}" class="w-full" />` : ''}<div class="p-5"><h3 class="text-xl font-bold text-white">${escapeHtml(studioStatic[`showcase.${item.id}.title`])}</h3><p class="mt-2 text-zinc-300 leading-relaxed">${studioStatic[`showcase.${item.id}.body`]}</p></div></article>`).join('')}<figure class="mt-8"><img src="/studio/studio-diff.jpg" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStatic['shots.diff.alt'])}" class="w-full rounded-xl" /><figcaption class="mt-2 text-sm text-zinc-400">${escapeHtml(studioStatic['shots.diff.cap'])}</figcaption></figure></section>`;
 if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   path: '/download',
   title: 'DLSS5 Studio — DLSS 5 download explained, plus a local neural rendering tool',
@@ -799,6 +808,7 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   lead: 'Understand where official DLSS is delivered, what DLSS5 Studio adds on a local RTX machine, and how to ask for the build.',
   keywords: ['DLSS 5 download', 'DLSS download free', 'DLSS5 Studio', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
   links: [{ label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
+  extraHtml: studioStaticShowcase,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({

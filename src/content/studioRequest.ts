@@ -65,10 +65,6 @@ What I want to process:
 (One line is enough — images, video, or both.)
 `,
 
-    'showcase.title': 'Before and after, from a real session',
-    'showcase.pending':
-      'The wipe comparison and the 8-second video clip are being recorded on the test machine. Previews on this page are real captures — never renders — so the slots stay empty until the footage exists.',
-
     'honest.title': 'What it does not do',
     'honest.1': 'It does not claim to be NVIDIA DLSS. Official DLSS has no standalone installer; it ships inside games as nvngx_dlss.dll. This is an independent tool, not affiliated with or endorsed by NVIDIA.',
     'honest.2': 'It does not upload your material. There is no server-side rendering here, and no online version of the pipeline — everything runs on your own GPU.',
@@ -129,10 +125,6 @@ What I want to process:
 
 （一句话就够 —— 图片、视频，或都要。）
 `,
-
-    'showcase.title': '真实会话的前后对比',
-    'showcase.pending':
-      '擦除对比与 8 秒视频正在测试机上录制。这一页只放真实录制的素材、不放渲染示意图，所以素材没就位之前这些位置先空着。',
 
     'honest.title': '它不做什么',
     'honest.1': '不冒充 NVIDIA 官方 DLSS。官方 DLSS 没有独立安装包，它随游戏以 nvngx_dlss.dll 分发。这是一个独立工具，与 NVIDIA 无隶属、也无授权关系。',

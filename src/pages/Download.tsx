@@ -11,7 +11,6 @@ import {
   Monitor,
   Package,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import StudioRequest from '../components/StudioRequest';
@@ -29,10 +28,13 @@ import { SITE_URL } from '../config/site';
  */
 
 const STUDIO_SHOTS = {
-  hero: { src: '/studio/studio-overview.jpg', width: 1440, height: 794 },
+  hero: { src: '/studio/studio-overview.jpg', width: 1440, height: 778 },
+  nightLens: { src: '/studio/studio-night-lens.jpg', width: 1440, height: 778 },
+  diff: { src: '/studio/studio-diff.jpg', width: 1440, height: 778 },
+  photoRestore: { src: '/studio/studio-photo-restore.jpg', width: 1440, height: 778 },
   live: { src: '/studio/live-panel.jpg', width: 1424, height: 789 },
-  video: { src: '/studio/studio-video-compare.jpg', width: 1440, height: 772 },
-  diff: { src: '/studio/studio-diff.jpg', width: 1440, height: 772 },
+  video: { src: '/studio/studio-video-compare.jpg', width: 1440, height: 778 },
+  queue: { src: '/studio/studio-queue.jpg', width: 1440, height: 778 },
   keys: { src: '/studio/studio-shortcuts.jpg', width: 1440, height: 772 },
 };
 
@@ -284,8 +286,11 @@ export default function Download() {
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
           {([
+            ['nightLens', STUDIO_SHOTS.nightLens],
+            ['photoRestore', STUDIO_SHOTS.photoRestore],
             ['video', STUDIO_SHOTS.video],
             ['diff', STUDIO_SHOTS.diff],
+            ['queue', STUDIO_SHOTS.queue],
             ['keys', STUDIO_SHOTS.keys],
           ] as const).map(([id, shot]) => (
             <figure key={id}>
@@ -303,12 +308,43 @@ export default function Download() {
         </div>
       </section>
 
-      {/* ── 效果对比（等真实素材） ───────────────────────────────────── */}
+      {/* ── 真实业务展示 ─────────────────────────────────────────────── */}
       <section id="showcase" className="mb-16 scroll-mt-28">
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-4">{t('showcase.title')}</h2>
-        <div className="rounded-2xl border border-dashed border-outline-variant/40 bg-surface-low p-8 text-center">
-          <Sparkles className="w-6 h-6 text-zinc-500 mx-auto mb-3" aria-hidden="true" />
-          <p className="text-sm text-zinc-400 leading-relaxed max-w-2xl mx-auto">{t('showcase.pending')}</p>
+        <p className="text-zinc-400 leading-relaxed max-w-3xl mb-8 [&_a]:text-primary [&_a]:underline" {...rich('showcase.intro')} />
+        <div className="grid grid-cols-1 gap-8">
+          {([
+            ['night', STUDIO_SHOTS.hero],
+            ['photo', STUDIO_SHOTS.photoRestore],
+            ['video', STUDIO_SHOTS.video],
+          ] as const).map(([id, shot]) => (
+            <article key={id} className="overflow-hidden rounded-2xl border border-outline-variant/20 bg-surface-low">
+              <img
+                src={shot.src}
+                width={shot.width}
+                height={shot.height}
+                loading="lazy"
+                decoding="async"
+                alt={t(`showcase.${id}.alt`)}
+                className="w-full"
+              />
+              {id === 'video' && (
+                <img
+                  src={STUDIO_SHOTS.queue.src}
+                  width={STUDIO_SHOTS.queue.width}
+                  height={STUDIO_SHOTS.queue.height}
+                  loading="lazy"
+                  decoding="async"
+                  alt={t('showcase.video.queueAlt')}
+                  className="w-full border-t border-outline-variant/20"
+                />
+              )}
+              <div className="p-5 md:p-6">
+                <h3 className="text-xl font-headline font-bold text-white mb-2">{t(`showcase.${id}.title`)}</h3>
+                <p className="text-sm text-zinc-300 leading-relaxed [&_a]:text-primary [&_a]:underline" {...rich(`showcase.${id}.body`)} />
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
