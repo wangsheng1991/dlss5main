@@ -27,3 +27,58 @@
 - `npx tsc --noEmit`、`npm test`、`npm run build` 全绿。
 - 生产部署后，用真实页面复核最高频关键词指向的那几页：首屏之内即可看到并完成第一个行动。
 - 把逐步证据、本轮修了什么、以及特意不做的事项，写回本文件。
+
+## 2026-09-30 实测与收口
+
+### 入口依据
+
+本轮复核前重新查看了 Search Console，数据窗口为 2026-08-31 至 2026-09-27（28 天，页面显示约 4 小时前更新）。当前主要查询为：
+
+| 查询 | 点击 | 展示 |
+| --- | ---: | ---: |
+| `dlss 5 image converter` | 50 | 246 |
+| `dlss 5 download` | 31 | 588 |
+| `dlss 5 online` | 26 | 143 |
+| `dlss 5 visual enhancer` | 18 | 784 |
+| `dlss image upscaler` | 18 | 53 |
+| `dlss 5 upscaler` | 16 | 155 |
+| `dlss 5 image enhancer` | 15 | 71 |
+| `dlss 5 upscaling` | 14 | 365 |
+| `dlss 5 image generator` | 13 | 44 |
+| `dlss5 upscaler` | 10 | 51 |
+
+因此实际走了两个可操作入口：`/` 的 DLSS 5 convert 人物风格转换，以及 `/game-character-style` 的免费示例；`/download` 只作为关键词落地页核对范围，本轮没有改动它的索取或付费流程。
+
+### 线上路径证据
+
+在正式域名 `https://www.dlss5nvidia.com` 上，用未登录状态分别跑了英文/中文、桌面 1440×900 和窄屏 375×812 四组：
+
+1. 打开 `/`，首屏直接看到唯一绿色主行动（英文 `Try character style conversion free`，中文 `免费试用人物风格转换`）。点击一次进入 `/dashboard?tool=game-character-style`。
+2. 工作室入口进入后自动回到页面顶部（四组 `scrollY = 0`），标题明确是 `DLSS 5 convert · Character style` / 对应中文标题；游客只看到一个免费示例主行动，通用登录提示与积分入口降为次级链接。
+3. 点击一次免费示例，等待示例完成；四组均记录 `errors: []`，没有黑屏、无响应或错误页。结果区域显示前后对比、完成状态和下载/下一步操作；窄屏中下载操作也在结果区域内可见。
+4. 同样复核 `/game-character-style`：英文/中文桌面和窄屏均可在首屏较早位置看到免费示例，点击一次得到结果，`runCount = 1`、`ready = true`、无浏览器错误；自己的图片与视频流程保留为次级文字入口。
+
+逐步截图（本次生产复核的临时证据目录）：
+
+- [英文桌面结果](/tmp/dlss5-ux-flow-prod/en-desktop-result.png)
+- [中文桌面结果](/tmp/dlss5-ux-flow-prod/zh-desktop-result.png)
+- [英文窄屏结果](/tmp/dlss5-ux-flow-prod/en-mobile-result.png)
+- [中文窄屏结果](/tmp/dlss5-ux-flow-prod/zh-mobile-result.png)
+- [人物风格页四种尺寸汇总](/tmp/dlss5-landing/summary.json)
+- [游客路径四种尺寸逐步记录](/tmp/dlss5-ux-flow-prod/summary.json)
+
+桌面结果图中大尺寸对比图会把下载链接推到首屏下方，这是内容高度造成的正常滚动，不是卡住；窄屏结果图已同时看到完成状态、下载和下一步链接。
+
+### 本轮修复
+
+- `src/pages/Home.tsx`：把人物风格转换免费入口提升为首屏唯一主 CTA；原卡片按钮降为同一路径的文字链接。
+- `src/pages/Dashboard.tsx`：根据 URL 变化把工作室滚动位置重置到顶部；游客人物风格路径隐藏重复的积分/登录主提示；示例运行按钮与示例内容就近放置，登录改为次级链接。
+- `src/pages/GameCharacterStyle.tsx`：把免费示例前移到标题后；自有图片与视频工作流改为次级文字入口，避免同屏出现多个同权重主 CTA。
+
+提交为 `41ab8d5 fix(ux): focus guest conversion entry`，已推送并由 Vercel 部署到正式域名。部署后检查：`npm run lint`、`npm test`（87/87）、`npm run build`（含 `export-api-catalog` 与 `prerender-seo`）均通过。
+
+### 特意不做
+
+- 没有重做视觉设计、删除工具、改 API 契约、改 sitemap 或调整多工具能力。
+- 没有修改 `/download` 的素材、索取邮箱、登录和付费链路；它只被列入入口核对范围。
+- 没有把免费示例改成强制注册，也没有用全站共享状态影响其他工具；本轮只收紧游客人物风格路径的页面层级。
