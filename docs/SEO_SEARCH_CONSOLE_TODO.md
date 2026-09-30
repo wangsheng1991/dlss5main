@@ -132,3 +132,16 @@ URL Inspection 的当前结果：
 
 - 等待 Google 抓取 `/video-downloader` 并刷新覆盖率汇总；在状态变化前不重复提交同一 URL。
 - 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`game character style conversion`、`dlss 5 visual enhancer` 的展示、点击和 CTR；线上 metadata 已生效，不因历史报告延迟重复改标题。
+
+## 2026-09-30 晚间：Studio 素材上线后的 SEO 收尾
+
+- `1038a18` 已在 `origin/main`；Vercel Production 部署 `dpl_9pfA4WCt79jhTScaqjpeXopJ7qvj` 为 `READY`，正式别名指向 `https://www.dlss5nvidia.com`。正式域名 `/download` 的无缓存静态 HTML 已出现三段真实案例、六张截图、26.6s / 7.4s / 87.4s 与 2.43s/frame，不再是占位内容。
+- `/download` 的线上静态 title 为 `DLSS5 Studio — DLSS 5 download explained, plus a local neural rendering tool`；description 和关键词列表非空，canonical 唯一且自指 `https://www.dlss5nvidia.com/download`，H1 与三段案例 H2 可抓取。正文明确预设名与实际 2560×1440 输出。此次内容更新后，通过已登录 Search Console 对该 URL 提交重新抓取请求；第一次 Google 返回临时错误，部署后重试得到 **“已请求编入索引”**，已进入优先抓取队列。不要再重复提交同一 URL。
+- URL Inspection 实时结果：`/video-downloader` 已从“已发现 - 尚未编入索引”变为 **“网址已收录到 Google”**。此前待办因此关闭；已收录页面不重复提交。
+- Search Console 站点地图仍为“成功”，2026-09-30 已读取，发现 **60 个网页、0 个视频**。正式域名无缓存审计重新覆盖 sitemap 中全部 60 个 URL：**60/60 HTTP 200，60/60 有非空 title、description、keywords、H1 和自指 canonical**。站点地图无需再次提交。
+- “网页索引编制”汇总的更新时间仍为 **2026-09-21**（13 个未编入、29 个已编入）；这是旧报告，不能推翻当前网址检查结果，也不作为再次提交的理由。
+
+### 当前 TODO
+
+- 等待 Google 重新抓取 `/download` 的新素材并刷新汇总；此前已请求优先抓取。其余已知新页均已收录，没有剩余 URL 要提交，也没有需要用户本人决定的步骤。
+- 在新的效果数据回补后，再看 `dlss 5 convert` 等目标词的展示、点击与 CTR；当前无依据再次调整标题或关键词。
