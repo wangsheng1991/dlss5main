@@ -19,13 +19,12 @@ import {
 import type { GenerationMode } from '../features/generation/operation';
 import { useGeneration } from '../features/generation/useGeneration';
 import { useSampleRun } from '../features/generation/useSampleRun';
+import { useHistory } from '../features/generation/useHistory';
 import { claimShareReward } from '../features/rewards/shareClaim';
 import { SHARE_REWARD } from '../config/promos';
 import SEO from '../components/SEO';
 import { fileSizeBucket, pixelBucket, trackEvent } from '../lib/analytics';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
-
-type HistoryJob = { id: string; status: string; prompt: string; tool?: string; createdAt: number; completedAt?: number; errorCode?: string; saved?: boolean; width?: number; height?: number };
 
 /** Query values the SEO tool pages use to open the studio with a preset already selected. */
 const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
@@ -137,9 +136,6 @@ export default function Dashboard() {
   const [preset, setPreset] = useState<VectorizePreset>('logo');
   const [vectorEdge, setVectorEdge] = useState<number>(VECTORIZE_MAX_EDGE.default);
   const [sourceSize, setSourceSize] = useState<{ width: number; height: number } | null>(null);
-  const [history, setHistory] = useState<HistoryJob[]>([]);
-  const [historyToken, setHistoryToken] = useState('');
-  const [historyVersion, setHistoryVersion] = useState(0);
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkInNotice, setCheckInNotice] = useState('');
   const [billingNotice, setBillingNotice] = useState('');
@@ -163,6 +159,7 @@ export default function Dashboard() {
   // nine-tool picker.
   const initialTool = initialParams.get('tool') || (!initialSample || initialSample === 'characterStyle' ? 'game-character-style' : null);
   const characterStyleWorkflow = initialTool === 'game-character-style';
+  const { history, historyToken } = useHistory(user, !characterStyleWorkflow, generation.operation);
   /**
    * The two workflows hold their briefs apart. They used to share one `prompt`, so opening the
    * style workflow from a link replaced whatever the reader had written in the general editor —
@@ -263,20 +260,6 @@ export default function Dashboard() {
     if (!file2 || file2Mode === mode) return;
     setFile2(null); setFile2Error(''); setFile2Mode(''); setFile2Notice(t('dashboard.secondImageChanged'));
   }, [mode, file2, file2Mode]);
-  useEffect(() => {
-    let active = true;
-    if (!user) { setHistory([]); setHistoryToken(''); return; }
-    user.getIdToken().then(async (token) => {
-      if (!active) return;
-      setHistoryToken(token);
-      const response = await fetch('/api/image-edit/history', { headers: { Authorization: `Bearer ${token}` } });
-      const data = response.ok ? await response.json() : null;
-      if (active && data?.jobs) setHistory(data.jobs);
-    }).catch(() => {});
-    return () => { active = false; };
-  }, [user?.uid, historyVersion]);
-  // A finished generation belongs in the history immediately.
-  useEffect(() => { if (generation.operation?.status === 'SUCCEEDED') setHistoryVersion(v => v + 1); }, [generation.operation?.status, generation.operation?.jobId]);
   const checkIn = async () => {
     setCheckingIn(true); setCheckInNotice('');
     const outcome = await dailyCheckIn();
