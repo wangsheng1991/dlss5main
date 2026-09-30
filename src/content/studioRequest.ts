@@ -42,6 +42,10 @@ export const STUDIO_REQUEST_COPY = {
       'The reply goes to {account}. Nothing else is needed — answer that mail to add anything.',
     'request.open.sentBodyPending':
       'The request is recorded for {account}, but the notification mailbox did not confirm delivery. Please use “send from your own mail app” above so the request is not missed.',
+    'request.open.sentBodyPendingUnrecorded':
+      'The site could not save the request or confirm mailbox delivery for {account}. Please use “send from your own mail app” above so the request is not missed.',
+    'request.open.sentBodyUnrecorded':
+      'The notification was accepted for {account}, but the site could not save its request record. Please keep this confirmation and reply to the notification if you need to add anything.',
     'request.open.include1': 'The form already carries your account address and user ID.',
     'request.open.include2': 'A GPU and an OS in the machine field are enough — that decides which build you get.',
     'request.open.include3': 'If you already own a Visual Enhancer build, say which version; that saves a round trip.',
@@ -105,6 +109,8 @@ What I want to process:
     'request.open.sentTitle': '已收到',
     'request.open.sentBody': '回复会发到 {account}。不需要别的材料；想补充的话直接回那封邮件就行。',
     'request.open.sentBodyPending': '请求已经记录在 {account} 名下，但通知邮箱没有确认送达。请使用上方“用自己的邮件客户端发送”，避免漏掉申请。',
+    'request.open.sentBodyPendingUnrecorded': '网站暂时没能保存申请，也没有确认通知邮箱送达给 {account}。请使用上方“用自己的邮件客户端发送”，避免漏掉申请。',
+    'request.open.sentBodyUnrecorded': '通知邮箱已经接受了 {account} 的申请，但网站暂时没能保存申请记录。请保留这条确认；需要补充时直接回复通知邮件即可。',
     'request.open.include1': '表单会自动带上你的账号邮箱和用户 ID。',
     'request.open.include2': '机器那栏写清显卡和系统就够 —— 它决定发你哪个版本。',
     'request.open.include3': '如果你已经有 Visual Enhancer 的某个版本，写一下版本号，可以少一轮来回。',

@@ -36,6 +36,7 @@ export default function StudioRequest({ t }: StudioRequestProps) {
   const [machine, setMachine] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [recorded, setRecorded] = useState(false);
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const [sendError, setSendError] = useState('');
 
@@ -121,11 +122,12 @@ export default function StudioRequest({ t }: StudioRequestProps) {
         body: JSON.stringify({ note, machine }),
         signal: controller.signal,
       });
-      const detail = (await response.json().catch(() => ({}))) as { code?: string; ok?: boolean; delivered?: boolean };
+      const detail = (await response.json().catch(() => ({}))) as { code?: string; ok?: boolean; recorded?: boolean; delivered?: boolean };
       if (!response.ok) {
         throw new Error(detail.code === 'too_soon' ? t('request.open.tooSoon') : t('request.open.sendFailed'));
       }
       if (!detail.ok) throw new Error(t('request.open.sendFailed'));
+      setRecorded(Boolean(detail.recorded));
       setDeliveryConfirmed(Boolean(detail.delivered));
       setSent(true);
     } catch (error) {
@@ -254,7 +256,14 @@ export default function StudioRequest({ t }: StudioRequestProps) {
         <div role="status" className="mt-6 rounded-xl border border-nvidia-green/30 bg-nvidia-green/10 p-5">
           <p className="text-nvidia-green font-semibold">{t('request.open.sentTitle')}</p>
           <p className="mt-2 text-sm text-zinc-300 leading-relaxed">
-            {(deliveryConfirmed ? t('request.open.sentBody') : t('request.open.sentBodyPending')).replace('{account}', account)}
+            {(deliveryConfirmed && recorded
+              ? t('request.open.sentBody')
+              : deliveryConfirmed
+                ? t('request.open.sentBodyUnrecorded')
+                : recorded
+                  ? t('request.open.sentBodyPending')
+                  : t('request.open.sentBodyPendingUnrecorded')
+            ).replace('{account}', account)}
           </p>
         </div>
       ) : (

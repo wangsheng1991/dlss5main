@@ -38,19 +38,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const machine = text(body.machine, MAX_MACHINE);
     if (!note && !machine) return res.status(400).json({ error: 'Say what you want to process, or which machine you are on', code: 'empty_request' });
 
-    const db = database();
-    const requests = db.collection('studioRequests');
-
-    const recent = await requests.where('uid', '==', uid).orderBy('createdAt', 'desc').limit(1).get();
-    const last = recent.docs[0]?.data()?.createdAt as { toMillis?: () => number } | undefined;
-    const lastMs = last?.toMillis?.() ?? 0;
-    if (lastMs && Date.now() - lastMs < RATE_LIMIT_SECONDS * 1000) {
-      return res.status(429).json({ error: 'That request was just sent', code: 'too_soon' });
-    }
-
     const createdAt = new Date();
     const record = { uid, email, machine, note, createdAt, status: 'new', notified: false, notifyError: '' };
-    const ref = await requests.add(record);
+    let ref: { id: string; update: (value: unknown) => Promise<unknown> } | undefined;
+    let recorded = false;
+
+    // Firestore is the audit trail, but it must not be the only path to the mailbox. A database
+    // quota or transient read outage used to abort before the Worker was called, leaving the user
+    // watching “Sending…” while their request never reached the inbox. Rate limiting and recording
+    // are now best effort; notification remains the user-facing operation.
+    try {
+      const db = database();
+      const requests = db.collection('studioRequests');
+      const recent = await requests.where('uid', '==', uid).orderBy('createdAt', 'desc').limit(1).get();
+      const last = recent.docs[0]?.data()?.createdAt as { toMillis?: () => number } | undefined;
+      const lastMs = last?.toMillis?.() ?? 0;
+      if (lastMs && Date.now() - lastMs < RATE_LIMIT_SECONDS * 1000) {
+        return res.status(429).json({ error: 'That request was just sent', code: 'too_soon' });
+      }
+      ref = await requests.add(record);
+      recorded = true;
+    } catch (error) {
+      console.error('Unable to record Studio request; continuing to notification:', error);
+    }
 
     const webhook = process.env.STUDIO_NOTIFY_WEBHOOK;
     const secret = process.env.STUDIO_NOTIFY_SECRET;
@@ -63,15 +73,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           signal: AbortSignal.timeout(10000),
         });
         if (!response.ok) throw new Error(`mailer answered ${response.status}`);
-        await ref.update({ notified: true });
+        if (ref) await ref.update({ notified: true });
       } catch (error) {
         // The request is already stored, so a mail failure is recorded rather than reported as a
         // failure to the visitor: their part is done, and the queue is what we read from.
-        await ref.update({ notifyError: String((error as Error)?.message || error).slice(0, 300) });
+        if (ref) await ref.update({ notifyError: String((error as Error)?.message || error).slice(0, 300) });
       }
     }
 
-    return res.status(200).json({ ok: true, id: ref.id, delivered: Boolean(webhook && secret) });
+    return res.status(200).json({ ok: true, id: ref?.id ?? null, recorded, delivered: Boolean(webhook && secret) });
   } catch (error) {
     return fail(res, error);
   }
