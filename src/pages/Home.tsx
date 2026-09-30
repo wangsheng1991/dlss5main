@@ -99,6 +99,13 @@ export default function Home() {
           {t('home.subtitle').split('.')[0]}. <br/>
           {t('home.subtitle').split('.').slice(1).join('.').trim()}
         </p>
+        <button
+          type="button"
+          onClick={() => navigate('/dashboard?tool=game-character-style')}
+          className="-mt-6 mb-8 bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
+        >
+          {isZh ? '免费试用人物风格转换' : 'Try character style conversion free'}
+        </button>
         <p className="max-w-3xl mx-auto -mt-5 mb-10 text-sm leading-relaxed text-zinc-400">{AI_OVERVIEW_DEFINITION}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
@@ -110,9 +117,9 @@ export default function Home() {
                 </div>
                 <h2 className="text-xl font-headline font-semibold text-white mb-2">{t('home.studioEntryTitle')}</h2>
                 <p className="text-zinc-400 text-sm mb-6 max-w-md leading-relaxed">{t('home.studioEntryBody')}</p>
-                <button onClick={() => navigate('/dashboard')} className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-primary transition-all duration-300">
-                  {t('home.studioEntryButton')}
-                </button>
+                <Link to="/dashboard?tool=game-character-style" className="text-primary text-sm font-semibold hover:text-white transition-colors">
+                  {isZh ? '在工作室打开同一示例 →' : 'Open the same example in the studio →'}
+                </Link>
               </div>
               <div className="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-zinc-500 font-label">
                 <span>{t('home.faqProfessionalWorkflows')}</span>

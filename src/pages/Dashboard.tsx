@@ -154,7 +154,7 @@ export default function Dashboard() {
   // The router's location, not `window.location`: reading the latter during render only reflects a
   // change when something else happens to re-render this page, so the "All tools" link stayed on
   // the style workflow with the URL already back at /dashboard.
-  const { search } = useLocation();
+  const { pathname, search } = useLocation();
   const initialParams = new URLSearchParams(search);
   const initialSample = initialParams.get('sample');
   // The product's primary path is DLSS 5 convert. Explicit tool links still select their own
@@ -170,6 +170,11 @@ export default function Dashboard() {
    */
   const activePrompt = characterStyleWorkflow ? stylePrompt : prompt;
   const setActivePrompt = (value: string) => (characterStyleWorkflow ? setStylePrompt(value) : setPrompt(value));
+  // A CTA can be clicked after the visitor has scrolled deep into another page. Reset the new
+  // studio route to its own first screen so the title, primary workflow and result panel are visible.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname, search]);
   // SEO tool pages link into the same studio with the matching preset already selected.
   useEffect(() => {
     const params = new URLSearchParams(search);
@@ -425,7 +430,7 @@ export default function Dashboard() {
         <p className="text-zinc-400 text-sm mt-2 max-w-2xl">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowDescription' : 'dashboard.studioDescription')}</p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} ${t('dashboard.creditsLabel')}` : t('dashboard.signInToGenerate')}</span>
+        {(user || !characterStyleWorkflow) && <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} ${t('dashboard.creditsLabel')}` : t('dashboard.signInToGenerate')}</span>}
         {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? t('dashboard.changePlan') : t('dashboard.upgrade')}</Link>}
         {user && profile?.tier && profile.tier !== 'free' && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">{t('dashboard.manageBilling')}</button>}
       </div>
@@ -544,7 +549,7 @@ export default function Dashboard() {
       </section>
       <section aria-label="Image workspace" className={`bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px] ${characterStyleWorkflow ? 'order-1 lg:order-2' : ''}`}>
         {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
-        {!user && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">{t('dashboard.guestNotice')} <Link to="/login" className="ml-1 text-primary underline hover:text-white">{t('dashboard.signInToUpload')}</Link></div>}
+        {!user && !characterStyleWorkflow && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">{t('dashboard.guestNotice')} <Link to="/login" className="ml-1 text-primary underline hover:text-white">{t('dashboard.signInToUpload')}</Link></div>}
         {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
         {file2Notice && <p role="status" aria-live="polite" className="mb-4 text-xs text-zinc-400">{file2Notice}</p>}
         {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{t('dashboard.preparing', { name: sampleName(sampleRun.state.sample, isZh) })}</h2><p className="text-zinc-400 text-sm max-w-md">{t('dashboard.exampleCachedBody')}</p></div>}
@@ -612,6 +617,7 @@ export default function Dashboard() {
             {preview2 && <img src={preview2} alt="Second image preview" className="mt-3 max-h-52 object-contain rounded-lg"/>}
             {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
           </div>}
+          {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
           {!user && selectedSample && <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/>}
           {characterStyleWorkflow && !file && !selectedSample && sampleRun.state.status === 'idle' && <section aria-labelledby="style-cases-heading" className="pt-1 space-y-4">
             {/* Keep the first action above proof: a visitor can run the free conversion without
@@ -638,7 +644,7 @@ export default function Dashboard() {
               should meet something they can run before the door. */}
           {!user && !selectedSample && <Link to="/login" className="w-full rounded-lg border border-outline-variant/30 px-4 py-3 text-center text-sm text-zinc-300 hover:border-primary">{t('dashboard.guestUnlock', { count: MODES.length })}</Link>}
           {user && file && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !activePrompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, activePrompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
-          {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><Link to="/login" className="px-4 py-3 rounded-lg border border-outline-variant/30 text-zinc-300">{t('dashboard.signInEditPrompt')}</Link><button onClick={() => void sampleRun.run(selectedSample)} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
+          {!user && selectedSample && <Link to="/login" className="text-sm text-zinc-400 underline hover:text-primary">{t('dashboard.signInEditPrompt')}</Link>}
           </>}
         </div>}
       </section>

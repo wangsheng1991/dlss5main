@@ -75,22 +75,21 @@ export default function GameCharacterStyle() {
         <header className="max-w-4xl">
           <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">{isZh ? '游戏人物风格转换案例' : 'Game character style conversion'}</p>
           <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight text-white leading-[1.05]">{isZh ? '20 组游戏人物前后对比案例' : GAME_STYLE_LANDING.heading}</h1>
+          <FreeStyleExample />
           <p className="mt-6 text-lg leading-relaxed text-zinc-300">{isZh ? '保持人物轮廓、服装、动作和身份，再改变光照、材质、色彩和世界观。拖动每组对比线，直接检查风格转换是否保留了真正重要的细节。' : GAME_STYLE_LANDING.intro}</p>
           <div className="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-5 text-sm leading-relaxed text-zinc-200">
             <strong className="text-primary">{isZh ? '素材说明：' : 'Asset note: '}</strong>
             {isZh ? '下面 20 组是原创视觉参考，用于展示评估方法，不是 NVIDIA 官方 DLSS 5 截图，也不代表已经接入 DLSS 5 运行时。' : 'These 20 pairs are original visual references for evaluating a conversion brief. They are not NVIDIA DLSS 5 captures and do not claim a DLSS 5 runtime integration.'}
           </div>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link to="/dashboard?tool=game-character-style&sample=characterStyle" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary">
-              {isZh ? '上传自己的角色图' : 'Try your own character frame'} <ArrowRight aria-hidden="true" className="w-4 h-4" />
+          <div className="mt-7 flex flex-wrap gap-5 text-sm">
+            <Link to="/dashboard?tool=game-character-style" className="inline-flex items-center gap-2 font-semibold text-primary hover:text-white">
+              {isZh ? '在工作室使用自己的角色图' : 'Use your own character frame in the studio'} <ArrowRight aria-hidden="true" className="w-4 h-4" />
             </Link>
-            <Link to="/video-upscaler" className="inline-flex items-center gap-2 rounded-lg border border-outline-variant/40 px-6 py-3 font-semibold text-zinc-200 hover:border-primary hover:text-primary">
+            <Link to="/video-upscaler" className="inline-flex items-center gap-2 text-zinc-400 hover:text-primary">
               {isZh ? '查看视频增强工作流' : 'See the video workflow'} <ArrowRight aria-hidden="true" className="w-4 h-4" />
             </Link>
           </div>
         </header>
-
-        <FreeStyleExample />
 
         <section className="mt-16 max-w-4xl space-y-7" aria-labelledby="definition-heading">
           <div><h2 id="definition-heading" className="text-2xl font-headline font-bold text-white">What game character style conversion means</h2><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? '游戏人物风格转换是在保持人物可识别部分的前提下改变视觉语言。轮廓、动作、服装结构、镜头和身份保持稳定，再控制光照、材质、色彩、环境与渲染方向。下面的原创参考图用于制定和验收转换需求，不是 NVIDIA 官方截图，也不宣称使用 DLSS 运行时处理。' : GAME_STYLE_LONG_FORM.definition}</p></div>
