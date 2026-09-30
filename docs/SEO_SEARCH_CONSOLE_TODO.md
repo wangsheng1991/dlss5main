@@ -106,3 +106,17 @@ URL Inspection 的当前结果：
 
 - 等待 Search Console 覆盖率汇总自然刷新；没有剩余新页面需要手动提交。
 - 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`game character style conversion`、`dlss 5 visual enhancer` 的展示、点击和 CTR，再决定是否调整标题；本轮不因未刷新数据重复改 meta。
+
+## 2026-09-30 线上收尾复核
+
+- 已在已登录的 Search Console 中重新提交 `https://www.dlss5nvidia.com/sitemap.xml`。提交结果为“成功”，Google 已发现 **60 个网页、0 个视频**。
+- 线上无缓存批量审计覆盖 sitemap 的 60 个 URL：**60/60 HTTP 200，60/60 metadata 通过**。每页均有非空 title、description、keywords、H1，且 canonical 路径与 URL 一致。
+- URL Inspection 结果：`/download`、`/tools/passport-photo`、`/tools/passport-photo/35x45-ru` 已收录；此前已收录的六个新增工具页（`/virtual-try-on`、`/interior-design`、`/portrait-retouch`、`/virtual-makeup`、`/game-character-style`、`/video-upscaler`）不重复提交。
+- `/video-downloader` 原状态为“已发现 - 尚未编入索引”，已点击“请求编入索引”，Google 返回“已请求编入索引”，加入优先抓取队列。
+- `/tools/passport-photo/3-na-4` 原状态为“重复网页，Google 选择的规范网页与用户指定的不同”，用户声明 canonical 和线上 title/description/keywords 均正确；已点击“请求编入索引”，Google 返回“已请求编入索引”。Google 当前选择 `/tools/passport-photo` 作为规范页，属于第三方抓取/规范化判定，等待下一轮抓取后再观察，不重复提交。
+
+### 当前 TODO
+
+- 等待 Google 抓取队列和覆盖率汇总刷新；没有可再提交的同一 URL。
+- 观察 `/video-downloader` 是否进入索引，以及 `/tools/passport-photo/3-na-4` 是否接受自指 canonical；若仍被归并，再基于新的抓取证据决定是否增加该规格页的独有内容。
+- 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`game character style conversion`、`dlss 5 visual enhancer` 的展示、点击和 CTR；本轮线上 metadata 已生效，无需重复改标题。
