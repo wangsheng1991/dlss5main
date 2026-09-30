@@ -72,7 +72,10 @@ const MODE_LABEL_KEY: Record<GenerationMode, string> = {
 };
 
 /** The catalog carries both names of an example; the studio prints the reader's own. */
-const sampleName = (id: SampleId, isZh: boolean) => (isZh ? SAMPLES[id].nameZh : SAMPLES[id].name);
+const sampleName = (id: unknown, isZh: boolean) => {
+  const sample = typeof id === 'string' && isSampleId(id) ? SAMPLES[id] : undefined;
+  return sample ? (isZh ? sample.nameZh : sample.name) : (isZh ? '示例' : 'Example');
+};
 
 const TOOL_LABEL = Object.fromEntries(TOOL_IDS.map(id => [id, TOOL_SUMMARY[id].label])) as Record<ToolId, string>;
 
@@ -546,7 +549,7 @@ export default function Dashboard() {
         {file2Notice && <p role="status" aria-live="polite" className="mb-4 text-xs text-zinc-400">{file2Notice}</p>}
         {!user && sampleRun.state.status === 'running' && <div role="status" aria-live="polite" className="flex-1 flex flex-col items-center justify-center gap-4 text-center py-12"><RefreshCw className="w-8 h-8 animate-spin text-primary"/><h2 className="text-xl text-white">{t('dashboard.preparing', { name: sampleName(sampleRun.state.sample, isZh) })}</h2><p className="text-zinc-400 text-sm max-w-md">{t('dashboard.exampleCachedBody')}</p></div>}
         {!user && sampleRun.state.status === 'ready' && <div className="flex-1 flex flex-col gap-5">
-          <div className="flex-1 min-h-64"><ImageSlider highRes={sampleRun.state.run.result} lowRes={sampleRun.state.run.input} alt={`${sampleName(sampleRun.state.sample, isZh)} example`} outputBackdrop={SAMPLES[sampleRun.state.sample].tool === 'cutout' ? '#ffffff' : undefined}/></div>
+          <div className="flex-1 min-h-64"><ImageSlider highRes={sampleRun.state.run.result} lowRes={sampleRun.state.run.input} alt={`${sampleName(sampleRun.state.sample, isZh)} example`} outputBackdrop={isSampleId(sampleRun.state.sample) && SAMPLES[sampleRun.state.sample].tool === 'cutout' ? '#ffffff' : undefined}/></div>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p role="status" className="text-nvidia-green text-sm">{t('dashboard.exampleReady')}{sampleRun.state.run.cached ? ` · ${t('dashboard.servedFromCache')}` : ''}</p>
             <div className="flex flex-wrap gap-3">
