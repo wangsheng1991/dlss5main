@@ -267,7 +267,6 @@ export default function Download() {
               src={STUDIO_SHOTS.live.src}
               width={STUDIO_SHOTS.live.width}
               height={STUDIO_SHOTS.live.height}
-              loading="lazy"
               decoding="async"
               alt={t('live.shot.alt')}
               className="w-full rounded-2xl border border-outline-variant/20"
@@ -294,7 +293,6 @@ export default function Download() {
                 src={shot.src}
                 width={shot.width}
                 height={shot.height}
-                loading="lazy"
                 decoding="async"
                 alt={t(`shots.${id}.alt`)}
                 className="w-full rounded-xl border border-outline-variant/20"

@@ -36,6 +36,7 @@ export default function StudioRequest({ t }: StudioRequestProps) {
   const [machine, setMachine] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [deliveryConfirmed, setDeliveryConfirmed] = useState(false);
   const [sendError, setSendError] = useState('');
 
   const account = user?.email || user?.uid || '';
@@ -104,20 +105,35 @@ export default function StudioRequest({ t }: StudioRequestProps) {
     if (!user) return;
     setSendError('');
     setSending(true);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
     try {
+      // Firebase token refresh and the request API are separate network hops. Bound both so a
+      // stale session or a sleeping function turns into a useful retry message instead of a button
+      // that says “Sending…” forever.
+      const token = await Promise.race([
+        user.getIdToken(),
+        new Promise<never>((_, reject) => window.setTimeout(() => reject(new Error('request_timeout')), 10000)),
+      ]);
       const response = await fetch('/api/studio/request', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await user.getIdToken()}` },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ note, machine }),
+        signal: controller.signal,
       });
+      const detail = (await response.json().catch(() => ({}))) as { code?: string; ok?: boolean; delivered?: boolean };
       if (!response.ok) {
-        const detail = (await response.json().catch(() => ({}))) as { code?: string };
         throw new Error(detail.code === 'too_soon' ? t('request.open.tooSoon') : t('request.open.sendFailed'));
       }
+      if (!detail.ok) throw new Error(t('request.open.sendFailed'));
+      setDeliveryConfirmed(Boolean(detail.delivered));
       setSent(true);
     } catch (error) {
-      setSendError(error instanceof Error && error.message ? error.message : t('request.open.sendFailed'));
+      setSendError(error instanceof DOMException && error.name === 'AbortError' || error instanceof Error && error.message === 'request_timeout'
+        ? t('request.open.timeout')
+        : error instanceof Error && error.message ? error.message : t('request.open.sendFailed'));
     } finally {
+      window.clearTimeout(timeout);
       setSending(false);
     }
   };
@@ -238,7 +254,7 @@ export default function StudioRequest({ t }: StudioRequestProps) {
         <div role="status" className="mt-6 rounded-xl border border-nvidia-green/30 bg-nvidia-green/10 p-5">
           <p className="text-nvidia-green font-semibold">{t('request.open.sentTitle')}</p>
           <p className="mt-2 text-sm text-zinc-300 leading-relaxed">
-            {t('request.open.sentBody').replace('{account}', account)}
+            {(deliveryConfirmed ? t('request.open.sentBody') : t('request.open.sentBodyPending')).replace('{account}', account)}
           </p>
         </div>
       ) : (
@@ -270,6 +286,7 @@ export default function StudioRequest({ t }: StudioRequestProps) {
           <button
             type="submit"
             disabled={sending || (!note.trim() && !machine.trim())}
+            aria-busy={sending}
             className="inline-flex items-center gap-2 px-7 py-3.5 bg-nvidia-green text-black font-bold rounded-xl hover:bg-nvidia-green/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Mail className="w-5 h-5" aria-hidden="true" />

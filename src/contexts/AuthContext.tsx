@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let profileUnsubscribe: (() => void) | null = null;
     let authUnsubscribe: (() => void) | null = null;
     let cancelled = false;
+    let authEvent = 0;
 
     /**
      * The provider is always mounted, but the SDK behind it is not: visitors read the page first and
@@ -52,38 +53,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { auth, db, onAuthStateChanged, doc, getDoc, onSnapshot } = await loadFirebase();
         if (cancelled) return;
 
-        authUnsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        authUnsubscribe = onAuthStateChanged(auth, (currentUser) => {
+          const event = ++authEvent;
           setUser(currentUser);
-          if (currentUser) {
-            // Fetch or create user profile
-            const userRef = doc(db, 'users', currentUser.uid);
-            const userSnap = await getDoc(userRef);
-
-            // Profile creation and signup credits are server-owned and idempotent.
-            // Never grant or mutate credits from the browser.
-            const idToken = await currentUser.getIdToken();
-            const bootstrap = await fetch('/api/me/bootstrap', { method: 'POST', headers: { Authorization: `Bearer ${idToken}` } });
-            if (!bootstrap.ok) throw new Error('Unable to initialize your account. Please try again.');
-            const data = (await bootstrap.json()) as Partial<UserProfile>;
-            if (!userSnap.exists()) {
-              // The server response is authoritative; snapshot listener will hydrate the full profile.
-              setProfile({ email: currentUser.email || '', tier: data.tier || 'free', createdAt: new Date().toISOString(), name: currentUser.displayName || undefined, image: currentUser.photoURL || undefined, credits: data.credits ?? 0 });
-            }
-
-            // Listen for profile changes (e.g., credits deduction)
-            profileUnsubscribe = onSnapshot(userRef, (docSnap) => {
-              if (docSnap.exists()) {
-                setProfile(docSnap.data() as UserProfile);
-              }
-            });
-          } else {
-            setProfile(null);
-            if (profileUnsubscribe) {
-              profileUnsubscribe();
-              profileUnsubscribe = null;
-            }
-          }
+          // `loading` describes Firebase auth, not Firestore/profile bootstrap. The old code kept
+          // this true while getDoc, getIdToken or /api/me/bootstrap ran, so one slow dependency
+          // left `/download`'s request card as a skeleton forever even though Firebase had restored
+          // the signed-in user. Release the gate as soon as auth has settled; hydrate the profile
+          // independently and keep failures from becoming an unhandled async callback exception.
           setLoading(false);
+          if (profileUnsubscribe) {
+            profileUnsubscribe();
+            profileUnsubscribe = null;
+          }
+          if (!currentUser) {
+            setProfile(null);
+            return;
+          }
+
+          setProfile(null);
+          void (async () => {
+            try {
+              const userRef = doc(db, 'users', currentUser.uid);
+              const userSnap = await getDoc(userRef);
+
+              // Profile creation and signup credits are server-owned and idempotent.
+              // Never grant or mutate credits from the browser.
+              const idToken = await currentUser.getIdToken();
+              const bootstrap = await fetch('/api/me/bootstrap', { method: 'POST', headers: { Authorization: `Bearer ${idToken}` } });
+              if (!bootstrap.ok) throw new Error('Unable to initialize your account. Please try again.');
+              const data = (await bootstrap.json()) as Partial<UserProfile>;
+              if (cancelled || event !== authEvent) return;
+              if (!userSnap.exists()) {
+                // The server response is authoritative; snapshot listener will hydrate the full profile.
+                setProfile({ email: currentUser.email || '', tier: data.tier || 'free', createdAt: new Date().toISOString(), name: currentUser.displayName || undefined, image: currentUser.photoURL || undefined, credits: data.credits ?? 0 });
+              }
+
+              // Listen for profile changes (e.g., credits deduction)
+              profileUnsubscribe = onSnapshot(
+                userRef,
+                (docSnap) => {
+                  if (docSnap.exists() && !cancelled && event === authEvent) {
+                    setProfile(docSnap.data() as UserProfile);
+                  }
+                },
+                (error) => console.error('Unable to read your account profile:', error),
+              );
+            } catch (error) {
+              // Authentication is still valid when profile bootstrap fails. Keep the request form
+              // usable and let account surfaces show their own empty/loading state instead of
+              // trapping the whole site behind an indefinite auth skeleton.
+              console.error('Unable to initialize account profile:', error);
+            }
+          })();
         });
       })().catch((error) => {
         console.error('Unable to start authentication:', error);
