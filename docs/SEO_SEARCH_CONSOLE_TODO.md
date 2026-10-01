@@ -164,3 +164,15 @@ URL Inspection 的当前结果：
 - 本地证据：`npm run lint`、`npm test`（87/87）、`npm run build` 均通过；桌面与 390px 窄屏截图复核通过；两个首屏按钮实际分别进入带示例参数和普通上传路径，Studio 入口进入 `/download`。
 - 已推送并部署 Production：GitHub `e9f13fa`，Vercel `dpl_6hZoWxdB3UcZKaxmxLuXxdpMJSUk`，正式别名为 `https://www.dlss5nvidia.com`。线上静态 HTML 已复核 title、H1、示例入口和 `/download` 链接。
 - 首页在更新后仍显示“网址已收录到 Google”；已在 2026-10-01 再次点击“请求编入索引”，Google 返回“已请求编入索引，已将网址添加到优先抓取队列”。不要重复提交同一首页，等待 Google 抓取更新后的 metadata 和首屏文案。
+
+## 2026-10-01 晚间：剩余公开页复核
+
+- 已登录 Search Console 逐页复核 `/marketing/reddit/dlss5-reddit-comparisons.html`、`/marketing/reddit/dlss5-studio-kit.html` 和 `/video-downloader`；三页均显示“网址已收录到 Google”，不再重复请求编入索引。
+- 正式域名 `sitemap.xml` 当前公开返回 62 个唯一 URL；线上逐页检查确认页面均可访问，前一轮并发请求出现的 4 次 `IncompleteRead` 在带重试的顺序请求中均恢复为 HTTP 200，属于边缘网络读取抖动，不是页面故障。
+- Search Console 站点地图页仍显示上次读取发现 60 个网页（上次读取 2026-09-30）；这是 Google 尚未重新读取最新 62 条 sitemap 的延迟。站点地图已在 2026-10-01 提交成功，当前不重复提交，等待下一次读取即可。
+- `/video-downloader` 已从此前的“已发现 - 尚未编入索引”变为已收录；两个营销展示页也已收录。当前没有剩余可手动提交的新 URL。
+
+### 当前 TODO
+
+- 等待 Google 重新读取 sitemap 并刷新覆盖率汇总；这一步只能由 Google 抓取队列完成。
+- 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 和 `dlss 5 download` 的展示、点击与 CTR；线上 metadata 已生效，不因历史报告延迟重复改标题。
