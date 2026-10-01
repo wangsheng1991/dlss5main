@@ -76,6 +76,8 @@ const SEARCH_CASES = [
   },
 ] as const;
 
+const AI_OVERVIEW_DEFINITION_ZH = 'DLSS5NVIDIA 是一个独立的浏览器端 DLSS 5 风格效果转换工具：上传游戏帧或人物图片，在保持结构、姿态和身份可检查的前提下改变风格、光照和材质，也提供独立的超分辨率与修复流程。它不是 NVIDIA 官方 DLSS 运行时。';
+
 export default function Home() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -99,14 +101,31 @@ export default function Home() {
           {t('home.subtitle').split('.')[0]}. <br/>
           {t('home.subtitle').split('.').slice(1).join('.').trim()}
         </p>
-        <button
-          type="button"
-          onClick={() => navigate('/dashboard?tool=game-character-style')}
-          className="-mt-6 mb-8 bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
-        >
-          {isZh ? '免费试用人物风格转换' : 'Try character style conversion free'}
-        </button>
-        <p className="max-w-3xl mx-auto -mt-5 mb-10 text-sm leading-relaxed text-zinc-400">{AI_OVERVIEW_DEFINITION}</p>
+        <div className="-mt-6 mb-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard?tool=game-character-style&sample=characterStyle')}
+            className="w-full sm:w-auto bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
+          >
+            {t('home.tryExample')}
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard?tool=game-character-style')}
+            className="w-full sm:w-auto rounded-lg border border-primary/50 px-8 py-3 font-semibold text-primary hover:bg-primary/10 transition-all duration-300"
+          >
+            {t('home.uploadOwnImage')}
+          </button>
+        </div>
+        <div className="mb-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-zinc-500">
+          <span>{t('home.freeDemoNote')}</span>
+          <span className="hidden sm:inline text-zinc-700">·</span>
+          <span>{t('home.ownUploadNote')}</span>
+        </div>
+        <Link to="/download" className="mb-10 inline-flex text-sm font-semibold text-primary hover:text-white transition-colors">
+          {t('home.requestStudio')}
+        </Link>
+        <p className="max-w-3xl mx-auto -mt-5 mb-10 text-sm leading-relaxed text-zinc-400">{isZh ? AI_OVERVIEW_DEFINITION_ZH : AI_OVERVIEW_DEFINITION}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
           <div className="lg:col-span-7 bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden relative group h-full">
@@ -115,10 +134,11 @@ export default function Home() {
                 <div className="w-16 h-16 bg-surface-high rounded-full flex items-center justify-center mb-6">
                   <UploadCloud className="w-8 h-8 text-primary" />
                 </div>
+                <p className="text-[10px] text-primary font-label uppercase tracking-[0.2em] mb-3">{t('home.onlineLabel')}</p>
                 <h2 className="text-xl font-headline font-semibold text-white mb-2">{t('home.studioEntryTitle')}</h2>
                 <p className="text-zinc-400 text-sm mb-6 max-w-md leading-relaxed">{t('home.studioEntryBody')}</p>
                 <Link to="/dashboard?tool=game-character-style" className="text-primary text-sm font-semibold hover:text-white transition-colors">
-                  {isZh ? '在工作室打开同一示例 →' : 'Open the same example in the studio →'}
+                  {t('home.studioEntryButton')} →
                 </Link>
               </div>
               <div className="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-zinc-500 font-label">
@@ -149,6 +169,13 @@ export default function Home() {
                 <span className="text-[10px] text-primary font-label uppercase tracking-widest">{isZh ? '参考依据' : 'Reference basis'}</span>
                 <div className="text-xl font-headline font-bold text-white">{isZh ? '3D 引导思路' : '3D-guided ideas'}</div>
               </div>
+            </div>
+            <div className="rounded-xl border border-outline-variant/20 bg-surface-low p-5 text-left">
+              <p className="text-[10px] text-zinc-500 font-label uppercase tracking-[0.2em] mb-2">{t('home.studioLabel')}</p>
+              <p className="text-sm leading-relaxed text-zinc-400 mb-3">{t('home.studioBody')}</p>
+              <Link to="/download" className="text-sm font-semibold text-primary hover:text-white transition-colors">
+                {t('home.requestStudio')}
+              </Link>
             </div>
           </div>
         </div>
@@ -447,7 +474,7 @@ export default function Home() {
         <div className="mb-12">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{t('home.performanceMetrics')}</span>
           <h2 className="text-4xl font-headline font-bold text-white mb-6">{t('home.dlssVsStandard')}</h2>
-          <p className="text-zinc-400 max-w-2xl leading-relaxed">Our proprietary neural engine outperforms traditional methods by reconstructing missing data using trained AI models rather than simple pixel stretching.</p>
+          <p className="text-zinc-400 max-w-2xl leading-relaxed">{t('home.performanceIntro')}</p>
         </div>
         
         <div className="bg-surface-low rounded-xl border border-outline-variant/10 overflow-hidden">
