@@ -12,6 +12,7 @@ import { MICRO_TOOLS } from '../content/microTools';
 const LANGUAGES = [
   { code: 'en-US', label: 'English', flag: '🇺🇸' },
   { code: 'zh-CN', label: '中文', flag: '🇨🇳' },
+  { code: 'es-ES', label: 'Español', flag: '🇪🇸' },
   { code: 'ja', label: '日本語', flag: '🇯🇵' },
   { code: 'ko', label: '한국어', flag: '🇰🇷' },
   { code: 'ru', label: 'Русский', flag: '🇷🇺' },

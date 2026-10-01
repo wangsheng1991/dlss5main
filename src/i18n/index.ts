@@ -7,11 +7,13 @@ import enUS from './locales/en-US.json';
 
 /**
  * English is the fallback and ships inside the bundle, so a visitor always has a language to read.
- * Every other locale is fetched only when the browser asks for it — eight packs walked into the
+ * Every other locale is fetched only when the browser asks for it — nine packs walked into the
  * entry bundle before, which is a hundred kilobytes nobody who reads the site in one language needs.
  */
 const LOCALES: Record<string, () => Promise<Record<string, unknown>>> = {
   'zh-CN': () => import('./locales/zh-CN.json').then((module) => module.default),
+  'es-ES': () => import('./locales/es-ES.json').then((module) => module.default),
+  es: () => import('./locales/es-ES.json').then((module) => module.default),
   ja: () => import('./locales/ja.json').then((module) => module.default),
   ko: () => import('./locales/ko.json').then((module) => module.default),
   ru: () => import('./locales/ru.json').then((module) => module.default),
@@ -65,7 +67,7 @@ export const i18nReady: Promise<unknown> = i18n
     // The bundled English above and the packs fetched by `localeLoader` are one set of resources.
     partialBundledLanguages: true,
     fallbackLng: 'en-US',
-    supportedLngs: ['en-US', 'zh-CN', 'ja', 'ko', 'ru', 'uk', 'id', 'et'],
+    supportedLngs: ['en-US', 'zh-CN', 'es-ES', 'es', 'ja', 'ko', 'ru', 'uk', 'id', 'et'],
     interpolation: {
       escapeValue: false,
     },
