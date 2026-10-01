@@ -163,3 +163,4 @@ URL Inspection 的当前结果：
 - 英文/中文旧的 H100、Tensor Core 和“官方性能”暗示已改为可审阅的独立参考口径；首页不再把独立实现包装成 NVIDIA 官方运行时或基准测试。
 - 本地证据：`npm run lint`、`npm test`（87/87）、`npm run build` 均通过；桌面与 390px 窄屏截图复核通过；两个首屏按钮实际分别进入带示例参数和普通上传路径，Studio 入口进入 `/download`。
 - 已推送并部署 Production：GitHub `e9f13fa`，Vercel `dpl_6hZoWxdB3UcZKaxmxLuXxdpMJSUk`，正式别名为 `https://www.dlss5nvidia.com`。线上静态 HTML 已复核 title、H1、示例入口和 `/download` 链接。
+- 首页在更新后仍显示“网址已收录到 Google”；已在 2026-10-01 再次点击“请求编入索引”，Google 返回“已请求编入索引，已将网址添加到优先抓取队列”。不要重复提交同一首页，等待 Google 抓取更新后的 metadata 和首屏文案。
