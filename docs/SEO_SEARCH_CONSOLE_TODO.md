@@ -145,3 +145,9 @@ URL Inspection 的当前结果：
 
 - 等待 Google 重新抓取 `/download` 的新素材并刷新汇总；此前已请求优先抓取。其余已知新页均已收录，没有剩余 URL 要提交，也没有需要用户本人决定的步骤。
 - 在新的效果数据回补后，再看 `dlss 5 convert` 等目标词的展示、点击与 CTR；当前无依据再次调整标题或关键词。
+
+## 2026-10-01：公开对比/Studio 素材页补入抓取入口
+
+- 新增的 `/marketing/reddit/dlss5-reddit-comparisons.html` 与 `/marketing/reddit/dlss5-studio-kit.html` 已完成线上检查：均返回 HTTP 200，拥有独立 title、description、keywords、`index,follow`、自指 canonical 和可抓取 H1；Studio 页的 9 张图片、MP4 与 GIF 资源也均返回 200。
+- URL Inspection 对 Studio 页曾显示“Google 无法识别此网址”，原因是页面此前没有引荐 sitemap；已将两个公开展示页加入 `public/sitemap.xml`，并在 `public/llms.txt` 增加明确入口。部署后 sitemap 预期从 60 个网址变为 62 个。
+- 待部署完成后，重新提交 sitemap；再逐页检查两个展示页，只对仍未收录的页面点击一次“请求编入索引”。若 Google 返回每日配额限制，保留 sitemap 和 `llms.txt` 的自然抓取路径，并把配额限制记录在本节，不重复点击。
