@@ -1,5 +1,11 @@
 # DLSS5NVIDIA Reddit / 飞书宣传包
 
+## 2026-10-01：Studio 实测包
+
+网盘新增的 DLSS5 Studio Reddit 素材已整理为独立页面：[九组实测案例与轻量短片](../../public/marketing/reddit/dlss5-studio-kit.html)。页面只放 CC0 / Public domain / CC BY 的可分享素材，并把毛线微距的 CC BY 2.0 署名、输入输出尺寸、耗时和“不代表 NVIDIA 官方”的边界写在素材旁边。准备发帖的完整英文文案和来源表在 [`docs/marketing/dlss5-studio-reddit/`](./dlss5-studio-reddit/)。
+
+这组素材与下面的 20 组 NVIDIA 公开参考图是两类内容：不要把 Studio 实测写成 NVIDIA 的基准，也不要在同一帖里把两类图片混成一套结果。
+
 这份文案按 90/10 比例写：先给出可检查的前后对比和限制，再透明说明项目链接。每次只发一个主题，避免同一天跨多个社区重复投放。
 
 ## 可上传的对比图
