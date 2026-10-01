@@ -150,4 +150,7 @@ URL Inspection 的当前结果：
 
 - 新增的 `/marketing/reddit/dlss5-reddit-comparisons.html` 与 `/marketing/reddit/dlss5-studio-kit.html` 已完成线上检查：均返回 HTTP 200，拥有独立 title、description、keywords、`index,follow`、自指 canonical 和可抓取 H1；Studio 页的 9 张图片、MP4 与 GIF 资源也均返回 200。
 - URL Inspection 对 Studio 页曾显示“Google 无法识别此网址”，原因是页面此前没有引荐 sitemap；已将两个公开展示页加入 `public/sitemap.xml`，并在 `public/llms.txt` 增加明确入口。部署后 sitemap 预期从 60 个网址变为 62 个。
-- 待部署完成后，重新提交 sitemap；再逐页检查两个展示页，只对仍未收录的页面点击一次“请求编入索引”。若 Google 返回每日配额限制，保留 sitemap 和 `llms.txt` 的自然抓取路径，并把配额限制记录在本节，不重复点击。
+- 已部署 `0990df2`（Vercel Production `dpl_AtHow8G3NHxzA2RYvzX5ygiHR7Gh`）。正式域名的 sitemap 现为 62 个唯一 URL；两个展示页的 title、description、keywords、canonical、H1 与静态正文均已复核。
+- 2026-10-01 在已登录 Search Console 重新提交 `https://www.dlss5nvidia.com/sitemap.xml`，Google 返回“已成功提交站点地图”；报告已记录提交时间，网页发现数等待下一次读取刷新。
+- URL Inspection 对 `/marketing/reddit/dlss5-studio-kit.html` 和 `/marketing/reddit/dlss5-reddit-comparisons.html` 各执行一次“请求编入索引”，两次均返回“已请求编入索引”，已进入优先抓取队列。
+- 若 Google 尚未立即显示 62 个网页或 URL 仍未收录，不再重复提交；保留 sitemap、`llms.txt` 和页面间链接作为自然抓取路径，等待 Google 抓取队列。
