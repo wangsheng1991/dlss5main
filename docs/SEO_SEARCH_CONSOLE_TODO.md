@@ -154,3 +154,12 @@ URL Inspection 的当前结果：
 - 2026-10-01 在已登录 Search Console 重新提交 `https://www.dlss5nvidia.com/sitemap.xml`，Google 返回“已成功提交站点地图”；报告已记录提交时间，网页发现数等待下一次读取刷新。
 - URL Inspection 对 `/marketing/reddit/dlss5-studio-kit.html` 和 `/marketing/reddit/dlss5-reddit-comparisons.html` 各执行一次“请求编入索引”，两次均返回“已请求编入索引”，已进入优先抓取队列。
 - 若 Google 尚未立即显示 62 个网页或 URL 仍未收录，不再重复提交；保留 sitemap、`llms.txt` 和页面间链接作为自然抓取路径，等待 Google 抓取队列。
+
+## 2026-10-01：首页首屏转化路径收口
+
+- `e9f13fa` 将首页首屏从单一“人物风格转换”按钮改为两个明确动作：`Try a free example`（带 `sample=characterStyle`，游客可运行）和 `Upload your image`（进入普通上传路径，登录后提交自己的图片）。
+- 首屏直接补上 `Request DLSS5 Studio access`，并在视觉案例旁把 `ONLINE CONVERTER` 与 `LOCAL WINDOWS STUDIO` 分开说明，避免把浏览器转换器和邮件申请的本地 Studio 混成同一个下载流程。
+- 英文运行时 H1、静态 HTML H1 与首页搜索标题已统一为 `DLSS 5 Style Converter Online`；中文首屏同步说明“免费缓存示例无需账户、上传自己的图片需要登录”。
+- 英文/中文旧的 H100、Tensor Core 和“官方性能”暗示已改为可审阅的独立参考口径；首页不再把独立实现包装成 NVIDIA 官方运行时或基准测试。
+- 本地证据：`npm run lint`、`npm test`（87/87）、`npm run build` 均通过；桌面与 390px 窄屏截图复核通过；两个首屏按钮实际分别进入带示例参数和普通上传路径，Studio 入口进入 `/download`。
+- 已推送并部署 Production：GitHub `e9f13fa`，Vercel `dpl_6hZoWxdB3UcZKaxmxLuXxdpMJSUk`，正式别名为 `https://www.dlss5nvidia.com`。线上静态 HTML 已复核 title、H1、示例入口和 `/download` 链接。
