@@ -32,6 +32,7 @@ type MailopsPayload = {
   requestId: string;
   userId: string;
   email: string;
+  recipientName: string;
   machine: string;
   note: string;
   createdAt: string;
@@ -70,6 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           requestId: doc.id,
           userId: text(data.uid, 200),
           email: text(data.email, 320).toLowerCase(),
+          recipientName: text(data.recipientName || data.displayName, 200),
           machine: text(data.machine, MAX_MACHINE),
           note: text(data.note, MAX_NOTE),
           createdAt: createdAt?.toDate?.().toISOString() || new Date().toISOString(),
@@ -86,7 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: failed === 0, total: payloads.length, synced, failed });
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-    const { uid, email } = await requireUser(req);
+    const { uid, email, displayName } = await requireUser(req);
 
     const body = (req.body || {}) as Record<string, unknown>;
     const note = text(body.note, MAX_NOTE);
@@ -94,7 +96,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!note && !machine) return res.status(400).json({ error: 'Say what you want to process, or which machine you are on', code: 'empty_request' });
 
     const createdAt = new Date();
-    const record = { uid, email, machine, note, createdAt, status: 'new', notified: false, notifyError: '' };
+    const recipientName = text(displayName, 200);
+    const record = { uid, email, recipientName, machine, note, createdAt, status: 'new', notified: false, notifyError: '' };
     let ref: { id: string; update: (value: unknown) => Promise<unknown> } | undefined;
     let recorded = false;
 
@@ -149,6 +152,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           requestId: ref?.id ?? `${uid}-${createdAt.getTime()}`,
           userId: uid,
           email,
+          recipientName,
           machine,
           note,
           createdAt: createdAt.toISOString(),
