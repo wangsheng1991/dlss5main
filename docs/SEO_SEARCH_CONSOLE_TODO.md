@@ -196,8 +196,8 @@ URL Inspection 的当前结果：
 
 - 全站 62 条 sitemap URL 顺序复核：**62/62 HTTP 200**；首页、下载页、营销展示页和其余页面的 title、description、keywords、canonical、H1 均可抓取。
 - 发现 3 篇中文博客的 description 退回文章标题，长度过短：`what-is-dlss-5-neural-rendering-guide`、`dlss5-artistic-vision-debate-honest-assessment`、`dlss-5-online-image-upscaler-guide`。已为中英文补充独立摘要，分别覆盖神经渲染原理、艺术控制、浏览器转换与在线放大流程。
-- 本地 `npx tsc --noEmit`、`npm test`（87/87）与 `npm run build` 通过；摘要改动待本次生产部署后复核。
+- 本地 `npx tsc --noEmit`、`npm test`（87/87）与 `npm run build` 通过；已部署 Production（Vercel `dpl_BNXXXrPJzCawUroR2LhAYJPEus81`，READY）。正式域名复核结果为 **62/62 HTTP 200，62/62 metadata 通过**；三篇中文摘要均已生效。
 
 ### 当前 TODO
 
-- 部署后再做一次 62 URL metadata 审计；若全部通过，不再对单页重复请求编入索引，等待 Google 自然重抓。
+- 62 URL metadata 审计已通过；不再对单页重复请求编入索引，等待 Google 自然重抓并回传新的查询数据。
