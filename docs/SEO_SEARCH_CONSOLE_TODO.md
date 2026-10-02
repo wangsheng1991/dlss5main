@@ -215,3 +215,14 @@ URL Inspection 的当前结果：
 - 部署后复核 68 个 sitemap URL 的 HTTP、metadata、H1 和静态正文，并把 Production deployment ID 写回本节。
 - 音频成片后再加入真实 MP3、`AudioObject` 和 RSS feed；在此之前不向搜索引擎宣称可播放音频。
 - 等待 Google 重新读取 sitemap 和自然抓取播客页；不要在 Search Console 配额未变化时逐页重复提交。
+
+### Production verification addendum
+
+- 已推送 commit `1167426` 并部署 Production：Vercel `dpl_FPCR6QkTyn8uXoXaifN4iZCRgZhZ`，正式别名为 `https://www.dlss5nvidia.com`，状态 `READY`。
+- 正式 sitemap 当前 68 个唯一 URL；带重试的线上复核为 **68/68 HTTP 200**。`/podcast` 与 5 个节目页均通过 title、description（>40 字符）、自指 canonical、H1 检查，且分别输出 CollectionPage / PodcastEpisode 结构化数据。
+- 由于音频尚未录制，没有向 Search Console 提交不存在的 MP3，也没有重复请求已有 URL；新页先通过 sitemap、首页、导航、页脚和 `llms.txt` 进入自然抓取路径。
+
+### 当前 TODO（线上验证后）
+
+- 等待 Google 重新读取 68 条 sitemap URL 和自然抓取 6 个播客页；Search Console 连接器当前不可用时不重复提交。
+- 音频成片后再加入真实 MP3、`AudioObject` 和 RSS feed；在此之前保持 transcript-first 口径。
