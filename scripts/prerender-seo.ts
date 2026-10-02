@@ -800,15 +800,16 @@ const studioStaticCases = [
   { id: 'video', image: 'studio-video-compare.jpg', extra: 'studio-queue.jpg', extraAlt: studioStatic['showcase.video.queueAlt'] },
 ] as const;
 const studioStaticShowcase = `<section id="showcase" class="mt-12"><h2 class="text-2xl font-bold text-white">${escapeHtml(studioStatic['showcase.title'])}</h2><p class="mt-4 text-zinc-300 leading-relaxed">${studioStatic['showcase.intro']}</p>${studioStaticCases.map((item) => `<article class="mt-8 rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><img src="/studio/${item.image}" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStatic[`showcase.${item.id}.alt`])}" class="w-full" />${'extra' in item ? `<img src="/studio/${item.extra}" width="1440" height="778" loading="lazy" alt="${escapeHtml(item.extraAlt)}" class="w-full" />` : ''}<div class="p-5"><h3 class="text-xl font-bold text-white">${escapeHtml(studioStatic[`showcase.${item.id}.title`])}</h3><p class="mt-2 text-zinc-300 leading-relaxed">${studioStatic[`showcase.${item.id}.body`]}</p></div></article>`).join('')}<figure class="mt-8"><img src="/studio/studio-diff.jpg" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStatic['shots.diff.alt'])}" class="w-full rounded-xl" /><figcaption class="mt-2 text-sm text-zinc-400">${escapeHtml(studioStatic['shots.diff.cap'])}</figcaption></figure></section>`;
+const studioStaticAndroid = '<section class="mt-12 max-w-4xl"><h2 class="text-2xl font-bold text-white">Looking for a DLSS 5 Android download?</h2><p class="mt-4 text-zinc-300 leading-relaxed">There is no standalone Android APK for DLSS 5. Use the browser-based online converter on a phone or desktop; DLSS5 Studio is a separate Windows RTX tool available by request.</p></section>';
 if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   path: '/download',
-  title: 'DLSS5 Studio — DLSS 5 download explained, plus a local neural rendering tool',
-  description: 'DLSS 5 has no standalone download: it ships inside games as nvngx_dlss.dll. DLSS5 Studio is an independent Windows tool that runs the neural rendering pipeline on your own RTX GPU. Builds are handed out by request — the address appears once you register.',
+  title: studioStatic['meta.title'],
+  description: studioStatic['meta.desc'],
   heading: 'DLSS 5 Studio — download by request',
-  lead: 'Understand where official DLSS is delivered, what DLSS5 Studio adds on a local RTX machine, and how to ask for the build.',
-  keywords: ['DLSS 5 download', 'DLSS download free', 'DLSS5 Studio', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
+  lead: 'Understand where official DLSS is delivered, why there is no Android APK, what DLSS5 Studio adds on a local RTX machine, and how to ask for the build.',
+  keywords: ['DLSS 5 download', 'DLSS 5 download android', 'DLSS 5 android', 'DLSS download free', 'DLSS5 Studio', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
   links: [{ label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
-  extraHtml: studioStaticShowcase,
+  extraHtml: `${studioStaticAndroid}${studioStaticShowcase}`,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({

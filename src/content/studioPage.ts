@@ -15,7 +15,7 @@
 export const STUDIO_COPY = {
   'en-US': {
     'meta.title': 'DLSS5 Studio — “DLSS download” explained, and a local DLSS 5 neural rendering tool',
-    'meta.desc': 'Looking for a DLSS download? NVIDIA’s DLSS has no standalone installer — it ships inside games. DLSS5 Studio is an independent local GUI for NVIDIA’s Visual Enhancer DLSS 5 neural rendering pipeline: batch images and video, wipe compare, difference view and a Live enhanced preview.',
+    'meta.desc': 'Looking for a DLSS download? NVIDIA’s DLSS has no standalone installer — it ships inside games. There is no standalone Android APK either: use the browser-based online converter on mobile, or request DLSS5 Studio, an independent local GUI for NVIDIA’s Visual Enhancer DLSS 5 neural rendering pipeline on Windows RTX.',
     'nav.which': 'Which DLSS?',
     'nav.features': 'Features',
     'nav.live': 'Live',
@@ -36,7 +36,7 @@ export const STUDIO_COPY = {
     'hero.shot.cap': 'Real application capture: Night Noise on a 3538×2318 night street frame, output 7076×4636; the queue records completed · 26.6s.',
     'which.eyebrow': 'First things first',
     'which.title': 'Which “DLSS download” are you looking for?',
-    'which.sub': 'Two different things are called DLSS here. Picking the right one first saves a wasted download.',
+    'which.sub': 'Two different things are called DLSS here. If you searched for an Android download, there is no APK: use the online converter in a browser or request the Windows Studio build. Picking the right path first saves a wasted download.',
     'which.official.tag': 'NVIDIA official',
     'which.official.title': 'NVIDIA’s DLSS — Super Resolution, Frame Generation, Ray Reconstruction',
     'which.official.body': 'There is no standalone DLSS download. DLSS ships inside games as <code>nvngx_dlss.dll</code> and arrives with the game or its updater. For the official technology overview, drivers and the NVIDIA App, go to NVIDIA’s own site.',
@@ -168,7 +168,7 @@ export const STUDIO_COPY = {
   },
   'zh-CN': {
     'meta.title': 'DLSS5 Studio — 「DLSS 下载」到底该下什么，以及一套本地 DLSS 5 神经渲染工具',
-    'meta.desc': '在找 DLSS 下载？NVIDIA 的 DLSS 没有独立安装包，它随游戏以 nvngx_dlss.dll 分发。DLSS5 Studio 是 NVIDIA Visual Enhancer（含 DLSS 5 神经渲染）的一套独立、纯本地的图形界面：批量处理图片与视频、擦除对比、差值视图、Live 增强预览。',
+    'meta.desc': '在找 DLSS 下载？NVIDIA 的 DLSS 没有独立安装包，它随游戏以 nvngx_dlss.dll 分发；目前也没有独立的 Android APK。手机请直接使用浏览器在线转换器，Windows RTX 用户可申请 DLSS5 Studio，这是一套面向 NVIDIA Visual Enhancer（含 DLSS 5 神经渲染）的独立本地图形界面。',
     'nav.which': '哪个 DLSS',
     'nav.features': '功能',
     'nav.live': 'Live',
@@ -189,7 +189,7 @@ export const STUDIO_COPY = {
     'hero.shot.cap': '真实运行截图：3538×2318 夜景素材使用夜景降噪，输出 7076×4636；队列记录为完成 · 26.6s。',
     'which.eyebrow': '先说清楚',
     'which.title': '你要找的「DLSS 下载」是哪一个？',
-    'which.sub': '这一页上有两个东西都叫 DLSS。先分清是哪个，能省掉一次白下。',
+    'which.sub': '这一页上有两个东西都叫 DLSS。如果你在找 Android 下载包，目前没有 Android APK：请直接使用浏览器在线转换器，或申请 Windows Studio。先选对路径，可以避免下载错误文件。',
     'which.official.tag': 'NVIDIA 官方',
     'which.official.title': 'NVIDIA 的 DLSS —— 超分辨率、帧生成、光线重建',
     'which.official.body': 'DLSS 没有独立安装包。它是编译进游戏里的库 <code>nvngx_dlss.dll</code>，随游戏本体或游戏更新器一起到达。想看官方技术说明、下载驱动和 NVIDIA App，请去 NVIDIA 官网。',

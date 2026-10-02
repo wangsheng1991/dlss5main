@@ -100,7 +100,7 @@ export default function Download() {
         description={t('meta.desc')}
         canonical="/download"
         language={locale}
-        keywords={['dlss 5 studio', 'dlss 5 download', 'dlss 5 neural rendering tool', 'local dlss pipeline']}
+        keywords={['dlss 5 studio', 'dlss 5 download', 'dlss 5 download android', 'dlss 5 android', 'dlss 5 neural rendering tool', 'local dlss pipeline']}
         structuredData={structuredData}
       />
 

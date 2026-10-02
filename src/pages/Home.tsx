@@ -76,7 +76,7 @@ const SEARCH_CASES = [
   },
 ] as const;
 
-const AI_OVERVIEW_DEFINITION_ZH = 'DLSS5NVIDIA 是一个独立的浏览器端 DLSS 5 风格效果转换工具：上传游戏帧或人物图片，在保持结构、姿态和身份可检查的前提下改变风格、光照和材质，也提供独立的超分辨率与修复流程。它不是 NVIDIA 官方 DLSS 运行时。';
+const AI_OVERVIEW_DEFINITION_ZH = 'DLSS5NVIDIA 是一个独立的浏览器端 DLSS 5 风格效果转换器、在线视觉增强器和 AI 图像生成器：上传游戏帧或人物图片，在保持结构、姿态和身份可检查的前提下改变风格、光照和材质，也提供独立的超分辨率与修复流程。它不是 NVIDIA 官方 DLSS 运行时。';
 
 export default function Home() {
   const { t, i18n } = useTranslation();
@@ -86,9 +86,9 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 Style Converter Online — Free AI Visual Generation"
-        description="Use a browser-based DLSS-style image converter and game visual enhancer to generate character style conversions, lighting and material references, then upscale and compare results. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
-        keywords={['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
+        title="DLSS 5 Style Converter Online — Free AI Image Generator"
+        description="Use a browser-based DLSS 5-style image converter, online visual enhancer and AI image generator to create game-character style, lighting and material references, then compare and upscale them. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
+        keywords={['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 image generator', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
       />
       <section className="text-center mb-16 relative">
@@ -614,6 +614,16 @@ export default function Home() {
             </summary>
             <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
               {t('home.faqProfessionalAns')}
+            </div>
+          </details>
+
+          <details className="group bg-surface-low rounded-xl border border-outline-variant/10">
+            <summary className="flex justify-between items-center p-6 cursor-pointer list-none">
+              <h3 className="text-white font-medium text-base">{t('home.faqAndroidDownload')}</h3>
+              <ChevronDown className="w-5 h-5 text-primary group-open:rotate-180 transition-transform" />
+            </summary>
+            <div className="px-6 pb-6 text-zinc-400 text-sm leading-relaxed">
+              {t('home.faqAndroidDownloadAns')}
             </div>
           </details>
 
