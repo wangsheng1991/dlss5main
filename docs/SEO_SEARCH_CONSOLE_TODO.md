@@ -226,3 +226,14 @@ URL Inspection 的当前结果：
 
 - 等待 Google 重新读取 68 条 sitemap URL 和自然抓取 6 个播客页；Search Console 连接器当前不可用时不重复提交。
 - 音频成片后再加入真实 MP3、`AudioObject` 和 RSS feed；在此之前保持 transcript-first 口径。
+
+### 2026-10-02 Search Console fallback audit
+
+- 正式域名 sitemap 逐页全量复核：**68/68** 页面通过 HTTP 200、唯一 title、description（>40 字符）、keywords、自指 canonical 和 H1 检查；不是只抽查播客页。
+- `robots.txt` 正常允许抓取并声明 `https://www.dlss5nvidia.com/sitemap.xml`；正式 sitemap 返回 68 个 `<loc>`。
+- 尝试使用 Google 公开 sitemap ping 作为 Search Console 的替代提交方式，Google 返回 HTTP 404，并明确提示该接口已废弃；因此不再重复调用无效接口。
+- 当前没有可用的 Search Console 自动化连接器，无法代替账号点击“请求编入索引”；新页已经通过 sitemap、robots、首页、导航、页脚和 `llms.txt` 建立抓取入口。
+
+### 当前 TODO（唯一外部等待项）
+
+- 等待 Google 重新读取 sitemap、自然抓取 6 个播客页并刷新覆盖率数据；不要重复提交相同 URL，也不要继续调用已废弃的 sitemap ping。
