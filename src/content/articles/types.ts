@@ -59,6 +59,8 @@ The practical question for a production tool is not whether provider-native high
     type: 'Evergreen Explainer — the SEO anchor page',
     lastUpdated: 'September 2026',
     readTime: '8 min read',
+    description_en: 'A technical guide to DLSS 5 neural rendering, its engine signals, lighting synthesis, determinism, and the practical difference from DLSS 4, FSR 4 and browser AI tools.',
+    description_cn: '从神经渲染原理、输入信号到实时合成，系统解释 DLSS 5 如何工作，以及它与 DLSS 4、FSR 4 和浏览器 AI 工具的区别。',
     content_en: `Every DLSS version before this one was fundamentally about the same thing: give gamers more frames per second without destroying image quality. DLSS 2 upscaled images smartly. DLSS 3 generated entirely new frames from thin air. DLSS 4 multiplied those frames further still.
 
 **DLSS 5 has a different goal entirely. Its job is not more frames but better ones: it changes what you see.**
@@ -514,6 +516,8 @@ DLSS 5 和现代 AI 超分工具从不同方向实现相同目标。DLSS 5 增�
     type: 'Opinion/analysis — high shareability, builds site authority and trust',
     lastUpdated: 'April 2026',
     readTime: '9 min read',
+    description_en: 'An honest analysis of DLSS 5 and artistic control in games, including faces, stylized characters, default settings and reviewable before-and-after checks.',
+    description_cn: '从画面一致性、角色细节和创作者控制出发，分析 DLSS 5 对游戏艺术方向的影响，并说明玩家应如何检查转换结果。',
     content_en: `The debate around DLSS 5 has been loud, messy, and frequently reductive. Here's an honest attempt at the actual question.
 
 ## What "Artistic Vision" Actually Means in a Game
@@ -609,6 +613,8 @@ DLSS 5 不是从定义上威胁艺术灵魂。它是在默认配置、当前实�
     target_keywords_en: ['dlss 5 online image upscaler', 'ai upscaler no gpu', '4k image enhancer online'],
     target_keywords_cn: ['dlss5在线图片放大', '无需显卡AI超分', '在线4K图片增强'],
     priority: 'P1', type: 'Search-intent guide', lastUpdated: 'September 2026', readTime: '5 min read',
+    description_en: 'A practical guide to browser-based DLSS 5-style conversion and AI image upscaling, including input preparation, comparison checks and what an online tool can and cannot recover.',
+    description_cn: '了解浏览器里的 DLSS 5 风格转换与 AI 图片放大能做什么、如何准备输入，并在下载前检查人脸、文字、边缘和纹理。',
     content_en: `## DLSS and browser-based AI upscaling are different tools\n\nNVIDIA DLSS is an in-game rendering technology tied to supported RTX hardware. A browser-based AI upscaler processes uploaded images on a server, so it can work from a phone, Mac, or PC without an RTX card.\n\n## What an online upscaler can do\n\nIt can enlarge a photo, recover apparent detail, reduce softness, and produce a higher-resolution image for review or download. Results depend on the source image and the model; AI cannot recover information that was never captured.\n\n## A simple workflow\n\n1. Upload a JPEG, PNG, or WebP.\n2. Choose the requested enhancement or style.\n3. Compare the input and output.\n4. Download only after checking faces, text, edges, and repeated patterns.\n\nThis site is an independent, non-official showcase inspired by neural super-resolution concepts and is not an NVIDIA product.`,
     content_cn: `## DLSS 与浏览器 AI 超分是两种工具\n\nNVIDIA DLSS 是绑定支持 RTX 硬件的游戏渲染技术。浏览器 AI 放大器则在服务端处理上传图片，因此手机、Mac 或普通 PC 也可以使用。\n\n## 在线放大器能做什么\n\n它可以放大照片、改善观感细节、减少模糊，并输出更高分辨率的图片。但效果取决于原图和模型，AI 无法真正恢复原图从未记录的信息。\n\n## 使用流程\n\n1. 上传 JPEG、PNG 或 WebP；2. 选择增强模式；3. 对比前后结果；4. 检查人脸、文字、边缘和重复纹理后再下载。\n\n本站是受神经超分理念启发的独立非官方展示，并非 NVIDIA 产品。`
   },

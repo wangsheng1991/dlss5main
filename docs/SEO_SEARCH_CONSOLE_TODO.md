@@ -191,3 +191,13 @@ URL Inspection 的当前结果：
 
 - 等待 Google 重新抓取首页与 `/download` 的 metadata，观察这六个查询的展示、点击和 CTR；不重复提交已经在抓取队列中的 URL。
 - 若 `dlss 5 download android` 后续仍有展示但点击低，再考虑将 Android 说明提升到 `/download` title；当前 description、可抓取正文和 FAQ 已足够回答意图。
+
+## 2026-10-02：博客中文 description 收口
+
+- 全站 62 条 sitemap URL 顺序复核：**62/62 HTTP 200**；首页、下载页、营销展示页和其余页面的 title、description、keywords、canonical、H1 均可抓取。
+- 发现 3 篇中文博客的 description 退回文章标题，长度过短：`what-is-dlss-5-neural-rendering-guide`、`dlss5-artistic-vision-debate-honest-assessment`、`dlss-5-online-image-upscaler-guide`。已为中英文补充独立摘要，分别覆盖神经渲染原理、艺术控制、浏览器转换与在线放大流程。
+- 本地 `npx tsc --noEmit`、`npm test`（87/87）与 `npm run build` 通过；摘要改动待本次生产部署后复核。
+
+### 当前 TODO
+
+- 部署后再做一次 62 URL metadata 审计；若全部通过，不再对单页重复请求编入索引，等待 Google 自然重抓。
