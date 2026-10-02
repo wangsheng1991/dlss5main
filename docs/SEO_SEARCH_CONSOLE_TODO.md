@@ -176,3 +176,18 @@ URL Inspection 的当前结果：
 
 - 等待 Google 重新读取 sitemap 并刷新覆盖率汇总；这一步只能由 Google 抓取队列完成。
 - 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 和 `dlss 5 download` 的展示、点击与 CTR；线上 metadata 已生效，不因历史报告延迟重复改标题。
+
+## 2026-10-02：按最新查询补齐生成器、在线增强器与 Android 下载意图
+
+最新 Search Console 数据显示：`dlss 5 online` 5 次点击 / 10 次展示，`dlss 5 image generator` 2 / 4，`dlss 5 visual enhancer` 1 / 17，`dlss 5 download android` 1 / 6，`dlss 5 image converter` 1 / 5，`dlss 5 visual enhancer online` 1 次点击。信号很明确：在线入口已有较高匹配度；生成器与在线增强器需要在首屏和结构化数据中使用完整语义；Android 下载词需要直接解释产品边界，避免把浏览器工具误解成 APK。
+
+- 首页 title 改为 `DLSS 5 Style Converter Online — Free AI Image Generator`；description、OG/Twitter、WebApplication JSON-LD 和静态 fallback 同步加入 `AI image generator`、`online visual enhancer` 语义，并保留独立、非官方口径。
+- 首页中英西文案加入 AI 图像生成器 / 在线视觉增强器的自然表达；新增 FAQ 结构化问答，明确没有独立 DLSS 5 Android APK，手机和桌面都直接使用浏览器在线转换器。
+- `/download` 的动态与预渲染 metadata、可抓取正文和关键词加入 `dlss 5 download android`，明确 Android 无 APK、Windows RTX 的 DLSS5 Studio 需要申请；没有改动 Studio 索取流程。
+- 本地 `npx tsc --noEmit`、`npm test`（87/87）和 `npm run build` 全部通过；线上正式域名复核 `/` 与 `/download` 静态 title、description、关键词、Android FAQ 和正文均已生效。
+- 已推送 `b50b1f3` 并部署 Production（Vercel `dpl_C71vWM3z3RCVeHaDgQQxG6HtCFRk`，READY）。
+
+### 当前 TODO
+
+- 等待 Google 重新抓取首页与 `/download` 的 metadata，观察这六个查询的展示、点击和 CTR；不重复提交已经在抓取队列中的 URL。
+- 若 `dlss 5 download android` 后续仍有展示但点击低，再考虑将 Android 说明提升到 `/download` title；当前 description、可抓取正文和 FAQ 已足够回答意图。
