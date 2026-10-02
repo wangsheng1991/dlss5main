@@ -81,7 +81,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    return res.status(200).json({ ok: true, id: ref?.id ?? null, recorded, delivered: Boolean(webhook && secret) });
+    // Mirror the request into AlphaNet MailOps. The original Firestore record and notification
+    // remain authoritative fallbacks, so a control-plane outage never makes the visitor retry a
+    // request that was already accepted. `requestId` is stable when Firestore succeeded and still
+    // unique for the best-effort path when it did not.
+    const mailopsWebhook = process.env.MAILOPS_WEBHOOK_URL;
+    const mailopsSecret = process.env.MAILOPS_WEBHOOK_SECRET;
+    let mailopsQueued = false;
+    if (mailopsWebhook && mailopsSecret) {
+      try {
+        const response = await fetch(mailopsWebhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-mailops-secret': mailopsSecret },
+          body: JSON.stringify({
+            requestId: ref?.id ?? `${uid}-${createdAt.getTime()}`,
+            userId: uid,
+            email,
+            machine,
+            note,
+            createdAt: createdAt.toISOString(),
+            source: 'dlss5nvidia.com/download',
+          }),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok) throw new Error(`MailOps answered ${response.status}`);
+        mailopsQueued = true;
+        if (ref) await ref.update({ mailopsQueued: true });
+      } catch (error) {
+        console.error('Unable to mirror Studio request into MailOps:', error);
+        if (ref) await ref.update({ mailopsError: String((error as Error)?.message || error).slice(0, 300) });
+      }
+    }
+
+    return res.status(200).json({ ok: true, id: ref?.id ?? null, recorded, delivered: Boolean(webhook && secret), mailopsQueued });
   } catch (error) {
     return fail(res, error);
   }
