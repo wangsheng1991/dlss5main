@@ -28,8 +28,63 @@ const RATE_LIMIT_SECONDS = 60;
 const text = (value: unknown, limit: number): string =>
   typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, limit) : '';
 
+type MailopsPayload = {
+  requestId: string;
+  userId: string;
+  email: string;
+  machine: string;
+  note: string;
+  createdAt: string;
+  source: string;
+};
+
+async function mirrorToMailops(payload: MailopsPayload): Promise<void> {
+  const webhook = process.env.MAILOPS_WEBHOOK_URL;
+  const secret = process.env.MAILOPS_WEBHOOK_SECRET;
+  if (!webhook || !secret) throw new Error('MailOps is not configured');
+  const response = await fetch(webhook, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-mailops-secret': secret },
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(10000),
+  });
+  if (!response.ok) throw new Error(`MailOps answered ${response.status}`);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    // A secret-protected maintenance call imports recent Firestore records into a newly deployed
+    // MailOps instance. It deliberately reuses this function so the project keeps the same number
+    // of serverless functions.
+    if (req.method === 'PUT') {
+      const supplied = String(req.headers['x-mailops-secret'] || '');
+      const expected = process.env.MAILOPS_WEBHOOK_SECRET || '';
+      if (!expected || supplied !== expected) return res.status(401).json({ error: 'Unauthorized' });
+      if (!process.env.MAILOPS_WEBHOOK_URL) return res.status(503).json({ error: 'MailOps is not configured' });
+
+      const snapshot = await database().collection('studioRequests').orderBy('createdAt', 'desc').limit(250).get();
+      const payloads = snapshot.docs.map((doc) => {
+        const data = doc.data() as Record<string, unknown>;
+        const createdAt = data.createdAt as { toDate?: () => Date } | undefined;
+        return {
+          requestId: doc.id,
+          userId: text(data.uid, 200),
+          email: text(data.email, 320).toLowerCase(),
+          machine: text(data.machine, MAX_MACHINE),
+          note: text(data.note, MAX_NOTE),
+          createdAt: createdAt?.toDate?.().toISOString() || new Date().toISOString(),
+          source: 'dlss5nvidia.com/download-import',
+        };
+      }).filter((item) => item.email);
+
+      let synced = 0;
+      let failed = 0;
+      for (let index = 0; index < payloads.length; index += 20) {
+        const results = await Promise.allSettled(payloads.slice(index, index + 20).map(mirrorToMailops));
+        for (const result of results) result.status === 'fulfilled' ? synced++ : failed++;
+      }
+      return res.status(200).json({ ok: failed === 0, total: payloads.length, synced, failed });
+    }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     const { uid, email } = await requireUser(req);
 
@@ -90,21 +145,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let mailopsQueued = false;
     if (mailopsWebhook && mailopsSecret) {
       try {
-        const response = await fetch(mailopsWebhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-mailops-secret': mailopsSecret },
-          body: JSON.stringify({
-            requestId: ref?.id ?? `${uid}-${createdAt.getTime()}`,
-            userId: uid,
-            email,
-            machine,
-            note,
-            createdAt: createdAt.toISOString(),
-            source: 'dlss5nvidia.com/download',
-          }),
-          signal: AbortSignal.timeout(10000),
+        await mirrorToMailops({
+          requestId: ref?.id ?? `${uid}-${createdAt.getTime()}`,
+          userId: uid,
+          email,
+          machine,
+          note,
+          createdAt: createdAt.toISOString(),
+          source: 'dlss5nvidia.com/download',
         });
-        if (!response.ok) throw new Error(`MailOps answered ${response.status}`);
         mailopsQueued = true;
         if (ref) await ref.update({ mailopsQueued: true });
       } catch (error) {
