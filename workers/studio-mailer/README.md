@@ -7,7 +7,7 @@ the Vercel app. `/api/studio/request` records the request in Firestore and then 
 
 `[[send_email]]` carries a `destination_address`, and Cloudflare only delivers to an address that is
 verified on the account. That is the whole point: the Worker cannot be turned into a relay that
-mails anyone else, no matter what a caller sends. The visitor's own address is passed as `reply_to`,
+mails anyone else, no matter what a caller sends. The visitor's own address is passed as `replyTo`,
 so answering the notification answers them.
 
 ## Deploy

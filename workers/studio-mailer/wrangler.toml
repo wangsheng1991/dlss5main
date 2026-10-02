@@ -5,7 +5,7 @@ compatibility_date = "2025-09-01"
 workers_dev = true
 
 # Cloudflare only delivers to a destination address that is verified on the account, so this binding
-# — not the caller — decides who can be mailed. The visitor goes in `reply_to` at send time.
+# — not the caller — decides who can be mailed. The visitor goes in `replyTo` at send time.
 [[send_email]]
 name = "STUDIO_EMAIL"
 destination_address = "wustwangsheng@gmail.com"

@@ -7,7 +7,7 @@
  *
  * Registering the binding also fixes the recipient: Cloudflare only lets `send_email` deliver to a
  * verified destination address on the account, which is exactly the one person who replies to these
- * requests. The visitor's own address goes in `reply_to`, so answering the mail answers them.
+ * requests. The visitor's own address goes in `replyTo`, so answering the mail answers them.
  *
  * Deploy: see README.md. The secret is `STUDIO_SHARED_SECRET` and must match the Vercel variable.
  */
@@ -73,7 +73,9 @@ export default {
       await env.STUDIO_EMAIL.send({
         to: env.STUDIO_NOTIFY_TO,
         from: { email: env.STUDIO_FROM, name: 'DLSS5 Studio requests' },
-        reply_to: fields.email || env.STUDIO_NOTIFY_TO,
+        // Cloudflare Email Service uses camelCase for the structured Reply-To field.
+        // Using reply_to silently omits the header, so Gmail replies to STUDIO_FROM instead.
+        replyTo: fields.email || env.STUDIO_NOTIFY_TO,
         subject: `Studio request · ${fields.email || fields.uid}`,
         text: buildBody(fields, receivedAt),
       });
