@@ -201,3 +201,17 @@ URL Inspection 的当前结果：
 ### 当前 TODO
 
 - 62 URL metadata 审计已通过；不再对单页重复请求编入索引，等待 Google 自然重抓并回传新的查询数据。
+
+## 2026-10-02：GPT-6 / Claude 工作流播客首版
+
+- 新增 `/podcast` 索引页和 5 个英文 transcript-first 节目页，覆盖 GPT-6 Astra、Claude Opus 5.5、Claude Sonnet 5.5、DLSS 5 convert、image generator / visual enhancer / converter 意图，以及可复查的公平评估方法。
+- 每一期都有独立 title、description、keywords、canonical、PodcastEpisode JSON-LD、封面、章节、5 段以上正文文字稿、来源链接和免费转换 CTA；正文明确这是独立 DLSS 5-style 参考工作流，不是 NVIDIA 官方运行时或官方基准。
+- 播客入口已接入桌面/移动导航、页脚、首页研究区、静态首页 fallback、`public/llms.txt` 和 sitemap；sitemap 从 62 条扩展为 68 条。
+- 音频尚未录制，因此没有伪造 MP3、AudioObject 或不可播放的 RSS enclosure；节目页保留稳定 URL，录制完成后可直接加入 `audioSrc` 并生成音频版本。
+- 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test`（89/89）、`npm run build` 均通过；构建后 6 个播客静态页均有自指 canonical、唯一 title、正文 H1 与对应结构化数据。
+
+### 当前 TODO
+
+- 部署后复核 68 个 sitemap URL 的 HTTP、metadata、H1 和静态正文，并把 Production deployment ID 写回本节。
+- 音频成片后再加入真实 MP3、`AudioObject` 和 RSS feed；在此之前不向搜索引擎宣称可播放音频。
+- 等待 Google 重新读取 sitemap 和自然抓取播客页；不要在 Search Console 配额未变化时逐页重复提交。

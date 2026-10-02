@@ -15,5 +15,6 @@ import './passport-photo.test';
 import './after-sign-in.test';
 import './api-routes.test';
 import './history.test';
+import './podcast.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

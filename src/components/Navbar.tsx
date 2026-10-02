@@ -99,6 +99,7 @@ export default function Navbar() {
               {profileHas('microTools') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={MICRO_TOOLS[0].path}>{t('navbar.smallTools')}</Link>}
               {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>}
               {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>}
+              {profileHas('podcast') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/podcast">{t('navbar.podcast')}</Link>}
               {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>}
               {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/download">{t('navbar.download')}</Link>}
               {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>}
@@ -190,6 +191,7 @@ export default function Navbar() {
               {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>}
               {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/about">{t('navbar.about')}</Link>}
               {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to={blogPath}>{t('navbar.blog')}</Link>}
+              {profileHas('podcast') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/podcast">{t('navbar.podcast')}</Link>}
               {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/docs">{t('navbar.docs')}</Link>}
               {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/download">{t('navbar.download')}</Link>}
               {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>}

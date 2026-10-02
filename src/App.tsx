@@ -19,6 +19,7 @@ const Models = lazy(() => import('./pages/Models'));
 const Docs = lazy(() => import('./pages/Docs'));
 const Enterprise = lazy(() => import('./pages/Enterprise'));
 const Blog = lazy(() => import('./pages/Blog'));
+const Podcast = lazy(() => import('./pages/Podcast'));
 const About = lazy(() => import('./pages/About'));
 const Download = lazy(() => import('./pages/Download'));
 const Pricing = lazy(() => import('./pages/Pricing'));
@@ -57,6 +58,8 @@ export default function App() {
                   <Route path="/docs" element={orHome('docs', <Docs />)} />
                   <Route path="/blog" element={orHome('blog', <Blog />)} />
                   <Route path="/blog/:slug" element={orHome('blog', <Blog />)} />
+                  <Route path="/podcast" element={orHome('podcast', <Podcast />)} />
+                  <Route path="/podcast/:slug" element={orHome('podcast', <Podcast />)} />
                   {/* Only these two language prefixes have translated blog editions. Keeping the
                       routes explicit prevents /ja/blog and other UI locales from becoming duplicate
                       crawlable pages with a misleading self-canonical. */}

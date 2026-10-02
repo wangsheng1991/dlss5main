@@ -574,9 +574,14 @@ export default function Home() {
               {isZh ? '从 Seedance 2.5 视频超分，到 GPT-6 图像工作流，阅读有来源、有成本拆解的实用内容。' : 'Source-led guides covering Seedance 2.5 video super-resolution, GPT-6 workflows and practical image upscaling.'}
             </p>
           </div>
-          <Link to={isZh ? '/zh/blog' : '/blog'} className="text-primary text-sm font-semibold hover:text-white transition-colors">
-            {isZh ? '查看全部文章 →' : 'View all articles →'}
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link to={isZh ? '/zh/blog' : '/blog'} className="text-primary text-sm font-semibold hover:text-white transition-colors">
+              {isZh ? '查看全部文章 →' : 'View all articles →'}
+            </Link>
+            {profileHas('podcast') && <Link to="/podcast" className="text-primary text-sm font-semibold hover:text-white transition-colors">
+              {isZh ? '听工作流播客脚本 →' : 'Listen to the workflow podcast →'}
+            </Link>}
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {FEATURED_ARTICLES.map(article => (

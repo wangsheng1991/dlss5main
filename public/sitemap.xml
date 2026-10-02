@@ -20,6 +20,42 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://www.dlss5nvidia.com/podcast</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dlss5nvidia.com/podcast/gpt-6-astra-vs-claude-opus-5-5-dlss-5-style-prompts</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dlss5nvidia.com/podcast/gpt-6-dlss-5-convert-game-frame-workflow</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dlss5nvidia.com/podcast/claude-sonnet-5-5-character-identity-preservation</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dlss5nvidia.com/podcast/ai-image-generator-vs-visual-enhancer-vs-converter</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dlss5nvidia.com/podcast/gpt-6-claude-dlss-5-evaluation-method</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.dlss5nvidia.com/models</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>

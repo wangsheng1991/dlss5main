@@ -73,6 +73,7 @@ export default function Footer() {
             <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('home.resources')}</h4>
             <ul className="space-y-4">
               {profileHas('blog') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={blogPath}>{t('home.blog')}</Link></li>}
+              {profileHas('podcast') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/podcast">{t('navbar.podcast')}</Link></li>}
               {profileHas('docs') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/docs">{t('home.documentation')}</Link></li>}
               {profileHas('download') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/download">{t('navbar.download')}</Link></li>}
               {profileHas('about') && <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to="/about">{t('navbar.about')}</Link></li>}

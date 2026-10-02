@@ -11,6 +11,7 @@ import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from
 import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../src/content/videoLanding';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
+import { PODCAST_EPISODES, PODCAST_INDEX_DESCRIPTION, type PodcastEpisode } from '../src/content/podcast';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
 import { LEGAL } from '../src/config/legal';
@@ -365,6 +366,71 @@ function renderBlogIndex(locale?: 'en' | 'zh'): string {
     language: isChinese ? 'zh-CN' : 'en-US',
     image: '/blog/dlss5-neural-rendering.png',
     keywords: ['dlss 5 latest news', 'dlss 5 image converter', 'dlss 5 visual enhancer', 'dlss 5 upscaling', 'dlss 5 online', 'dlss 5 gpt-6'],
+  }), root);
+}
+
+const PODCAST_SERIES_SCHEMA = {
+  '@type': 'PodcastSeries',
+  name: 'DLSS 5 AI Workflow Podcast',
+  url: `${BASE_URL}/podcast`,
+  description: PODCAST_INDEX_DESCRIPTION,
+  author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: BASE_URL },
+};
+
+function podcastEpisodeSchema(episode: PodcastEpisode) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'PodcastEpisode',
+    name: episode.title,
+    description: episode.description,
+    datePublished: episode.published,
+    timeRequired: episode.duration,
+    url: `${BASE_URL}/podcast/${episode.slug}`,
+    image: absoluteUrl(episode.cover),
+    partOfSeries: PODCAST_SERIES_SCHEMA,
+    ...(episode.audioSrc ? { associatedMedia: { '@type': 'AudioObject', contentUrl: absoluteUrl(episode.audioSrc), encodingFormat: 'audio/mpeg' } } : {}),
+  };
+}
+
+function renderPodcastIndex(): string {
+  const cards = PODCAST_EPISODES.map((episode) => `<article class="bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden"><a href="/podcast/${episode.slug}"><img src="${escapeHtml(episode.cover)}" alt="${escapeHtml(episode.coverAlt)}" width="1600" height="700" loading="lazy" class="w-full aspect-[16/7] object-cover" /><div class="p-6"><p class="text-xs uppercase tracking-widest text-primary">Episode · ${escapeHtml(episode.published)} · ${escapeHtml(episode.duration.replace('PT', '').toLowerCase())}</p><h2 class="text-xl font-headline font-bold text-white mt-3">${escapeHtml(episode.title)}</h2><p class="text-sm text-zinc-400 leading-relaxed mt-3">${escapeHtml(episode.description)}</p><span class="inline-block mt-5 text-primary text-sm font-semibold">Read the transcript →</span></div></a></article>`).join('');
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'DLSS 5 AI Workflow Podcast',
+    description: PODCAST_INDEX_DESCRIPTION,
+    url: `${BASE_URL}/podcast`,
+    mainEntity: { '@type': 'ItemList', itemListElement: PODCAST_EPISODES.map((episode, index) => ({ '@type': 'ListItem', position: index + 1, url: `${BASE_URL}/podcast/${episode.slug}`, name: episode.title })) },
+  };
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1200px] mx-auto"><header class="max-w-3xl mb-14"><p class="text-primary text-xs uppercase tracking-[0.2em] mb-4">DLSS 5 AI workflow podcast</p><h1 class="text-4xl md:text-6xl font-headline font-bold tracking-tight text-white leading-tight">GPT-6, Claude and visual conversion — explained with real checks</h1><p class="mt-6 text-lg leading-relaxed text-zinc-300">${escapeHtml(PODCAST_INDEX_DESCRIPTION)} Every episode has a crawlable transcript, chapters, sources and a practical conversion path. The audio edition is being produced from these reviewed scripts.</p><p class="mt-7"><a href="/dashboard?tool=game-character-style&amp;sample=characterStyle" class="inline-flex rounded-lg bg-primary px-5 py-3 font-bold text-black">Try a free conversion →</a> <a href="/blog" class="inline-flex rounded-lg border border-outline-variant/30 px-5 py-3 font-semibold text-zinc-200">Read the research desk</a></p></header><section aria-labelledby="episodes-heading"><p class="text-xs uppercase tracking-widest text-zinc-500">Season 1 · editorial scripts</p><h2 id="episodes-heading" class="mt-2 text-3xl font-headline font-bold text-white">Episodes</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-7">${cards}</div></section><section class="mt-16 rounded-xl border border-primary/20 bg-primary/5 p-7 max-w-3xl"><h2 class="text-2xl font-headline font-bold text-white">How to use these episodes</h2><p class="mt-3 text-zinc-300 leading-relaxed">Use the transcript as the source of truth: model names and capabilities are dated, vendor claims stay separate from our visual checks, and every conversion can be inspected before download. We never present this independent workflow as the official NVIDIA DLSS runtime.</p></section></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: 'DLSS 5 AI Workflow Podcast — GPT-6, Claude and Visual Conversion',
+    description: PODCAST_INDEX_DESCRIPTION,
+    canonicalPath: '/podcast',
+    language: 'en-US',
+    image: '/blog/gpt6-dlss5-workflow.png',
+    keywords: ['dlss 5 podcast', 'gpt-6 dlss 5', 'claude dlss 5', 'ai image workflow podcast', 'dlss 5 image converter'],
+    structuredData,
+  }), root);
+}
+
+function renderPodcastEpisode(episode: PodcastEpisode): string {
+  const transcript = episode.transcript.map((paragraph) => `<p class="text-zinc-300 leading-relaxed my-5">${escapeHtml(paragraph)}</p>`).join('');
+  const chapters = episode.chapters.map((chapter) => `<li class="rounded-lg border border-outline-variant/20 bg-surface-low px-4 py-3 text-sm"><span class="font-mono text-primary mr-3">${escapeHtml(chapter.start)}</span><span class="text-zinc-300">${escapeHtml(chapter.title)}</span></li>`).join('');
+  const sources = episode.sources.map((source) => `<li><a class="text-primary" href="${escapeHtml(source.url)}"${source.url.startsWith('http') ? ' rel="noreferrer"' : ''}>${escapeHtml(source.label)}</a></li>`).join('');
+  const audio = episode.audioSrc
+    ? `<audio controls preload="none" src="${escapeHtml(episode.audioSrc)}">Your browser does not support audio playback.</audio>`
+    : '<p class="mt-2 text-sm leading-relaxed text-zinc-400">The reviewed audio edition is being produced from this script. Read the full transcript now; the episode URL will stay the same when the MP3 is attached.</p>';
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[980px] mx-auto"><nav class="mb-8 text-sm"><a href="/podcast" class="text-zinc-400">← Back to the podcast</a></nav><article><header class="mb-10"><p class="text-primary text-xs uppercase tracking-[0.2em] mb-4">Episode · ${escapeHtml(episode.published)}</p><h1 class="text-3xl md:text-5xl font-headline font-bold text-white leading-tight">${escapeHtml(episode.title)}</h1><p class="mt-5 text-lg text-zinc-300 leading-relaxed">${escapeHtml(episode.description)}</p><p class="mt-5 text-sm text-zinc-500">${escapeHtml(episode.duration.replace('PT', '').toLowerCase())} · Script verified ${escapeHtml(episode.published)}</p></header><figure class="rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10"><img src="${escapeHtml(episode.cover)}" alt="${escapeHtml(episode.coverAlt)}" width="1600" height="700" fetchpriority="high" class="w-full object-cover" /><figcaption class="px-5 py-3 text-xs text-zinc-400">Independent visual reference · not an official NVIDIA capture</figcaption></figure><section class="rounded-xl border border-outline-variant/20 bg-surface-low p-5 mb-10" aria-labelledby="listen-heading"><h2 id="listen-heading" class="text-lg font-semibold text-white">Listen or read</h2>${audio}</section><section class="mb-10" aria-labelledby="chapters-heading"><h2 id="chapters-heading" class="text-2xl font-headline font-bold text-white mb-4">Chapters</h2><ol class="grid grid-cols-1 sm:grid-cols-2 gap-3">${chapters}</ol></section><section aria-labelledby="transcript-heading" class="prose prose-invert max-w-none"><h2 id="transcript-heading" class="text-2xl font-headline font-bold text-white mb-5">Transcript</h2>${transcript}</section><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6" aria-labelledby="sources-heading"><h2 id="sources-heading" class="text-xl font-headline font-bold text-white">Sources and related workflows</h2><ul class="mt-4 space-y-3">${sources}</ul></section><section class="mt-10 rounded-xl border border-primary/25 bg-primary/5 p-6 text-center"><h2 class="text-xl font-headline font-bold text-white">Continue with a reviewable conversion</h2><p class="mt-3 text-sm text-zinc-300">Try the free cached example first, compare the original and converted reference, then decide whether to upload your own image.</p><a href="${escapeHtml(episode.ctaPath)}" class="mt-5 inline-flex rounded-lg bg-primary px-5 py-3 font-bold text-black">${escapeHtml(episode.ctaLabel)} →</a></section></article></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: `${episode.title} — DLSS 5 AI Workflow Podcast`,
+    description: episode.description,
+    canonicalPath: `/podcast/${episode.slug}`,
+    language: 'en-US',
+    image: episode.cover,
+    keywords: episode.keywords,
+    type: 'article',
+    structuredData: podcastEpisodeSchema(episode),
   }), root);
 }
 
@@ -775,6 +841,10 @@ if (profileHas('blog')) {
     }
   }
 }
+if (profileHas('podcast')) {
+  writeRoute('/podcast', renderPodcastIndex());
+  for (const episode of PODCAST_EPISODES) writeRoute(`/podcast/${episode.slug}`, renderPodcastEpisode(episode));
+}
 if (profileHas('models')) writeRoute('/models', renderPublicGuide({
   path: '/models',
   title: 'AI Upscaling Models | DLSS 5 Neural Super Resolution',
@@ -893,4 +963,4 @@ for (const file of ['llms.txt', 'sitemap.xml', 'robots.txt']) {
   if (tidied !== original) writeFileSync(target, tidied);
 }
 
-console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${TOOL_LANDINGS.length} SEO tools, ${USE_CASES.length} workflow guides and ${publishableSpecs().length + 1} micro tool routes, blog indexes and dashboard noindex.`);
+console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${PODCAST_EPISODES.length + 1} podcast routes, ${TOOL_LANDINGS.length} SEO tools, ${USE_CASES.length} workflow guides and ${publishableSpecs().length + 1} micro tool routes, blog indexes and dashboard noindex.`);

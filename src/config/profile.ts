@@ -15,6 +15,7 @@ import { readBuildEnv } from './build-env';
 export type SiteSection =
   /** The research-desk blog and its articles. */
   | 'blog'
+  | 'podcast'
   | 'about'
   | 'download'
   | 'models'
@@ -67,6 +68,7 @@ export type SiteProfile = {
 /** The paths each section owns, so any list of URLs can be filtered the way the router is. */
 const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
   blog: ['/blog', '/en/blog', '/zh/blog'],
+  podcast: ['/podcast'],
   about: ['/about'],
   download: ['/download'],
   models: ['/models'],

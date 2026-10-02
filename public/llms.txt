@@ -96,6 +96,19 @@ Free exact-format utilities run locally in the browser. The passport photo maker
 English and Simplified Chinese crawlable blog indexes are available at https://www.dlss5nvidia.com/en/blog and https://www.dlss5nvidia.com/zh/blog. Each localized article URL exposes reciprocal `hreflang` links and its own canonical URL.
 <!-- end:blog -->
 
+<!-- begin:podcast -->
+## Podcast
+
+The DLSS 5 AI Workflow Podcast is transcript-first: each episode has dated model references, chapters, source links, a before-and-after review method and a free conversion path. Audio files are added only after an episode is recorded; the pages never invent an audio enclosure or an official NVIDIA benchmark.
+
+- Podcast index: https://www.dlss5nvidia.com/podcast
+- GPT-6 Astra vs Claude Opus 5.5 for DLSS 5 style prompts: https://www.dlss5nvidia.com/podcast/gpt-6-astra-vs-claude-opus-5-5-dlss-5-style-prompts
+- GPT-6 + DLSS 5 convert game-frame workflow: https://www.dlss5nvidia.com/podcast/gpt-6-dlss-5-convert-game-frame-workflow
+- Claude Sonnet 5.5 character identity review: https://www.dlss5nvidia.com/podcast/claude-sonnet-5-5-character-identity-preservation
+- AI image generator vs visual enhancer vs converter: https://www.dlss5nvidia.com/podcast/ai-image-generator-vs-visual-enhancer-vs-converter
+- Fair GPT-6, Claude and DLSS 5 evaluation method: https://www.dlss5nvidia.com/podcast/gpt-6-claude-dlss-5-evaluation-method
+<!-- end:podcast -->
+
 ## Language coverage
 
 The interface supports English, Simplified Chinese, Japanese, Korean, Russian, Ukrainian, Indonesian and Estonian. The technical article body is currently maintained in English and Simplified Chinese; other interface languages display the English source edition until a human-reviewed translation is published.
