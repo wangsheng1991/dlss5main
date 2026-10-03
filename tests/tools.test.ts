@@ -151,6 +151,17 @@ test('every tool page is in the sitemap, so a crawler finds it without a link', 
   }
 });
 
+test('high-intent tool pages show a matching free case and ship every referenced asset', () => {
+  for (const path of ['/image-upscaler', '/image-quality-enhancer', '/unblur-image', '/es/mejorar-calidad-imagen', '/video-downloader']) {
+    const tool = TOOL_LANDINGS.find((landing) => landing.path === path);
+    assert.ok(tool?.demo, `${path} needs a visible case instead of the generic fallback`);
+    for (const asset of [tool.demo.before, tool.demo.after]) {
+      assert.doesNotThrow(() => readFileSync(new URL(`../public${asset}`, import.meta.url)), `${path} references missing demo asset ${asset}`);
+    }
+  }
+  assert.equal(TOOL_LANDINGS.find((landing) => landing.path === '/video-downloader')?.demo?.kind, 'poster');
+});
+
 test('the served homepage links every tool page, for the crawler and for the visitor who runs no scripts', () => {
   const html = homepage();
   const block = html.match(/<!-- begin:tools -->[\s\S]*?<!-- end:tools -->/)?.[0] ?? '';

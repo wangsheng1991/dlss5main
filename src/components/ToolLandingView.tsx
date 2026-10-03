@@ -16,6 +16,7 @@ export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
     <a href={`/dashboard?tool=${tool.dashboardTool}`} onClick={() => trackEvent('tool_cta_click', { tool: tool.dashboardTool, locale: tool.locale })} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.cta}</a>
     <p className="mt-3 text-xs leading-relaxed text-zinc-400">{es ? 'O arrastra una imagen aquí. La vista previa permanece en tu navegador.' : 'Or drop an image here. Your preview stays in your browser.'}</p>
     <p className="mt-2 text-xs text-zinc-400">{tool.ctaNote}</p>
+    <p className="mt-3 text-xs font-semibold text-primary">{es ? 'Caso de referencia gratuito abajo · tus propias cargas requieren iniciar sesión.' : 'Free reference case below · your own upload requires sign-in.'}</p>
   </div>;
 }
 
@@ -45,7 +46,12 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <p className="mt-4 text-xs leading-relaxed text-zinc-400">{tool.sharedNote ?? (es ? `Objetivos de 2× / 4×; máximo ${ENHANCE_MAX_EDGE} px por lado. La IA puede cambiar detalles. No garantiza recuperar información perdida.` : `2× / 4× targets; maximum ${ENHANCE_MAX_EDGE} px per edge. AI can alter details and cannot guarantee recovery of lost information.`)}</p>
         </div>
         {tool.demo ? <figure className="lg:col-span-6 rounded-2xl border border-outline-variant/20 bg-surface-low p-2 overflow-hidden">
-          <ImageSlider highRes={tool.demo.after} lowRes={tool.demo.before} alt={`${tool.heading} — before and after`} inputLabel={tool.demo.beforeLabel} outputLabel={tool.demo.afterLabel} compareLabel={es ? 'Arrastra o usa las flechas para comparar' : 'Drag or use arrow keys to compare'} initialAspectRatio={tool.demo.aspectRatio} outputBackdrop={tool.demo.backdrop} priority />
+          <div className="relative">
+            {tool.demo.kind === 'poster'
+              ? <img src={tool.demo.after} alt={`${tool.heading} — ${tool.demo.afterLabel}`} className="w-full rounded-xl object-cover" style={{ aspectRatio: tool.demo.aspectRatio }} fetchPriority="high" />
+              : <ImageSlider highRes={tool.demo.after} lowRes={tool.demo.before} alt={`${tool.heading} — before and after`} inputLabel={tool.demo.beforeLabel} outputLabel={tool.demo.afterLabel} compareLabel={es ? 'Arrastra o usa las flechas para comparar' : 'Drag or use arrow keys to compare'} initialAspectRatio={tool.demo.aspectRatio} outputBackdrop={tool.demo.backdrop} priority />}
+            <span className="absolute left-3 top-3 rounded-full border border-primary/50 bg-black/75 px-2.5 py-1 text-[10px] font-label uppercase tracking-widest text-primary">{es ? 'Caso gratuito' : 'Free reference case'}</span>
+          </div>
           <figcaption className="px-3 py-4 text-xs leading-relaxed text-zinc-400">{tool.demo.caption}</figcaption>
         </figure> : <figure className="lg:col-span-6 rounded-2xl border border-outline-variant/20 bg-surface-low p-2 overflow-hidden">
           <ImageSlider highRes="/examples/sample1-photo.webp" lowRes="/examples/sample1-photo-low.webp" alt={es ? 'Comparación ilustrativa de calidad de imagen' : 'Illustrative image quality comparison'} inputLabel={es ? 'Baja resolución' : 'Low resolution'} outputLabel={es ? 'Referencia' : 'Reference'} compareLabel={es ? 'Arrastra o usa las flechas para comparar' : 'Drag or use arrow keys to compare'} initialAspectRatio={1.5} priority />

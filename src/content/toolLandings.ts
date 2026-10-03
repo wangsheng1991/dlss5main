@@ -30,7 +30,7 @@ export type ToolLanding = {
   checks?: string[];
   featureList?: string[];
   /** A worked example… or two real frames of one, for the result slider. */
-  demo?: { before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number; /** A transparent result needs an opaque surface under it, or the input shows through. */
+  demo?: { kind?: 'compare' | 'poster'; before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number; /** A transparent result needs an opaque surface under it, or the input shows through. */
     backdrop?: string; /** Social cards cannot render an SVG, so a vector demo names a raster twin for og:image. */
     social?: string };
 };
@@ -63,6 +63,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
       { path: '/unblur-image', label: 'Unblur Image' },
     ],
+    demo: {
+      before: '/examples/case-architecture-low.jpg', after: '/examples/case-architecture.jpg',
+      beforeLabel: 'Small architecture render', afterLabel: 'Upscaled architecture reference',
+      caption: 'Free reference case: compare the same architecture render before and after enlargement. It is an illustrative case, not a benchmark or a promise of recovered detail.',
+      aspectRatio: 1.5,
+    },
   },
   {
     path: '/image-quality-enhancer',
@@ -92,6 +98,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
       { path: '/unblur-image', label: 'Unblur Image' },
     ],
+    demo: {
+      before: '/examples/case-product-low.jpg', after: '/examples/case-product.jpg',
+      beforeLabel: 'Compressed product image', afterLabel: 'Enhanced product reference',
+      caption: 'Free reference case: inspect texture, edges and labels before and after enhancement. Keep the original because generative detail is an estimate.',
+      aspectRatio: 1.5,
+    },
   },
   {
     path: '/unblur-image',
@@ -120,6 +132,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
     ],
+    demo: {
+      before: '/examples/case-portrait-low.jpg', after: '/examples/case-portrait.jpg',
+      beforeLabel: 'Soft portrait', afterLabel: 'Unblurred portrait reference',
+      caption: 'Free reference case: compare a soft portrait with the clearer reference output. Review eyes, hair and identity before sharing an enhanced image.',
+      aspectRatio: 0.8,
+    },
   },
   {
     path: '/old-photo-restoration',
@@ -238,6 +256,12 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
     ],
+    demo: {
+      before: '/examples/case-product-low.jpg', after: '/examples/case-product.jpg',
+      beforeLabel: 'Imagen de producto comprimida', afterLabel: 'Referencia mejorada',
+      caption: 'Caso de referencia gratuito: compara textura, bordes y etiquetas antes y después. Conserva el original porque los detalles generados son una estimación.',
+      aspectRatio: 1.5,
+    },
   },
   {
     path: '/remove-background',
@@ -602,6 +626,13 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
     ],
+    demo: {
+      kind: 'poster',
+      before: '/examples/fetch-video-1080p-poster.jpg', after: '/examples/fetch-video-1080p-poster.jpg',
+      beforeLabel: 'Returned video frame', afterLabel: 'Returned video frame',
+      caption: 'Free reference frame: the downloader returns the file served by the source link. Download only videos you own or are allowed to reuse.',
+      aspectRatio: 16 / 9,
+    },
   },
 ];
 
