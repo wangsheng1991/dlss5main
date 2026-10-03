@@ -159,7 +159,7 @@ export default function Download() {
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('which.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('which.sub')}</p>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="p-6 bg-surface-low rounded-2xl border border-outline-variant/20">
             <span className="inline-block text-[11px] font-label uppercase tracking-widest text-zinc-500 mb-3">
               {t('which.official.tag')}
@@ -284,7 +284,7 @@ export default function Download() {
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('shots.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('shots.sub')}</p>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-5">
           {([
             ['nightLens', STUDIO_SHOTS.nightLens],
             ['photoRestore', STUDIO_SHOTS.photoRestore],
@@ -354,7 +354,7 @@ export default function Download() {
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('req.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('req.sub')}</p>
 
-        <dl className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <dl className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
           {REQUIREMENTS.map((key) => (
             <div key={key} className="p-5 bg-surface-low rounded-xl border border-outline-variant/20">
               <dt className="flex items-center gap-2 text-white font-bold mb-1.5">

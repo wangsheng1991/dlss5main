@@ -14,8 +14,8 @@
 
 export const STUDIO_COPY = {
   'en-US': {
-    'meta.title': 'DLSS5 Studio — “DLSS download” explained, and a local DLSS 5 neural rendering tool',
-    'meta.desc': 'Looking for a DLSS download? NVIDIA’s DLSS has no standalone installer — it ships inside games. There is no standalone Android APK either: use the browser-based online converter on mobile, or request DLSS5 Studio, an independent local GUI for NVIDIA’s Visual Enhancer DLSS 5 neural rendering pipeline on Windows RTX.',
+    'meta.title': 'DLSS 5 Download — Mobile, Windows and Studio Explained',
+    'meta.desc': 'Looking for a DLSS 5 download on mobile or Windows? There is no standalone Android APK or official DLSS installer. Use the browser converter on your phone, or request DLSS5 Studio, an independent Windows RTX front-end for NVIDIA’s Visual Enhancer pipeline.',
     'nav.which': 'Which DLSS?',
     'nav.features': 'Features',
     'nav.live': 'Live',
@@ -167,8 +167,8 @@ export const STUDIO_COPY = {
     'foot.year': 'DLSS5 Studio · 2026',
   },
   'zh-CN': {
-    'meta.title': 'DLSS5 Studio — 「DLSS 下载」到底该下什么，以及一套本地 DLSS 5 神经渲染工具',
-    'meta.desc': '在找 DLSS 下载？NVIDIA 的 DLSS 没有独立安装包，它随游戏以 nvngx_dlss.dll 分发；目前也没有独立的 Android APK。手机请直接使用浏览器在线转换器，Windows RTX 用户可申请 DLSS5 Studio，这是一套面向 NVIDIA Visual Enhancer（含 DLSS 5 神经渲染）的独立本地图形界面。',
+    'meta.title': 'DLSS 5 下载 — 手机、Windows 与 Studio 使用说明',
+    'meta.desc': '在找 DLSS 5 下载？手机和 Android 没有独立 APK，Windows 也没有单独的官方 DLSS 安装包。手机可直接使用浏览器转换器，Windows RTX 用户可申请 DLSS5 Studio，这是一套独立的本地图形界面。',
     'nav.which': '哪个 DLSS',
     'nav.features': '功能',
     'nav.live': 'Live',

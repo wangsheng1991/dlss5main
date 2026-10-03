@@ -18,6 +18,7 @@ import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
 import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS } from '../src/config/samples';
 import { TOOL_LANDINGS } from '../src/content/toolLandings';
+import { STUDIO_COPY } from '../src/content/studioPage';
 import { GAME_STYLE_LANDING } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING } from '../src/content/videoLanding';
 
@@ -36,6 +37,15 @@ test('every provider model maps back to the mode it was uploaded for', () => {
   // An unknown model never reaches the provider from the upload API, but the check must still pick
   // the strictest ceiling rather than none.
   assert.equal(maxPixelsForMode(modeForModel('something-else')), STUDIO_MAX_PIXELS);
+});
+
+test('the current search intents stay explicit in the download and visual enhancer metadata', () => {
+  const enhancer = TOOL_LANDINGS.find((landing) => landing.path === '/image-quality-enhancer');
+  assert.ok(enhancer);
+  assert.match(enhancer.title.toLowerCase(), /dlss 5 visual enhancer/);
+  assert.ok(enhancer.keywords.includes('dlss 5 visual enhancer online'));
+  assert.match(STUDIO_COPY['en-US']['meta.title'].toLowerCase(), /dlss 5 download/);
+  assert.match(STUDIO_COPY['en-US']['meta.desc'].toLowerCase(), /mobile|android/);
 });
 
 test('the upload check refuses a 48 MP photo under every mode that has a ceiling', () => {
