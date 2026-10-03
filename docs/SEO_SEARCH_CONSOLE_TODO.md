@@ -252,3 +252,13 @@ URL Inspection 的当前结果：
 
 - 等待 Google 重新抓取新 metadata，再比较 `dlss 5 download` 与 `dlss 5 visual enhancer` 的 CTR；24 小时数据不重复请求同一 URL。
 - 下一轮优先把 `/download` 的西班牙语 metadata 与首屏说明补齐，并在西语国家有稳定展示后再决定是否增加独立页面；暂不复制英文页面造成关键词稀释。
+
+### Search Console 编入索引收口（2026-10-03）
+
+- 已在 Search Console 重新提交当前正式 `https://www.dlss5nvidia.com/sitemap.xml`；Google 返回“已成功提交站点地图”，提交日期更新为 2026-10-03。报告里的“已发现网页 60”仍是 2026-09-30 的旧读取值，等待 Google 下一次处理，不重复提交。
+- 旧覆盖率报告（更新时间 2026-09-21）列出的 6 个“已发现 - 尚未编入索引”博客 URL 已逐一做 URL Inspection，实际状态全部为“网址已收录到 Google”，无需再次请求。
+- 新增播客索引页及 5 个节目页此前均为“网址尚未收录到 Google”，已逐页执行请求编入索引：`/podcast`、`gpt-6-astra-vs-claude-opus-5-5-dlss-5-style-prompts`、`gpt-6-dlss-5-convert-game-frame-workflow`、`claude-sonnet-5-5-character-identity-preservation`、`ai-image-generator-vs-visual-enhancer-vs-converter`、`gpt-6-claude-dlss-5-evaluation-method` **6/6 已请求成功**。Google 已明确提示已加入优先抓取队列；不重复点击。
+
+### 当前 TODO
+
+- 等待 Google 抓取 6 个播客页并刷新 sitemap/网页索引报告；这是第三方队列等待，当前没有可继续提交的 URL。
