@@ -237,3 +237,17 @@ URL Inspection 的当前结果：
 ### 当前 TODO（唯一外部等待项）
 
 - 等待 Google 重新读取 sitemap、自然抓取 6 个播客页并刷新覆盖率数据；不要重复提交相同 URL，也不要继续调用已废弃的 sitemap ping。
+
+## 2026-10-03：24 小时国家、设备与下载意图复核
+
+- 已在已登录的 Google Search Console（`wustwangsheng@gmail.com`）读取 24 小时报告；报告标注“上次更新日期：3 小时前”。全站为 **77 次点击 / 926 次展示 / 8.3% CTR / 平均排名 7.7**。
+- 设备拆分：桌面 **39 / 621（6.3% CTR）**，移动 **38 / 297（12.8% CTR）**，平板 **0 / 8（0% CTR）**。移动只拿到约一半展示，却带来几乎相同的点击，移动 CTR 约为桌面的 **2.0 倍**；保留移动首屏的单一转换 CTA，不把它改成下载页。平板样本很小，当前只做可读性修正，不做独立产品分流。
+- 国家点击集中在印度尼西亚 **11 / 45（24.4%）**、巴西 **9 / 62（14.5%）**、印度 **6 / 41（14.6%）**、美国 **5 / 95（5.3%）**、德国 **4 / 44（9.1%）**、俄罗斯 **4 / 29（13.8%）**、西班牙 **4 / 20（20.0%）**；乌克兰 **3 / 11**、韩国 **3 / 11**、哥伦比亚 **3 / 6（50.0%）**。国家分布已经是多区域长尾，不能用美国单一口径改首页；西语国家（西班牙、哥伦比亚，另有萨尔瓦多/智利/阿根廷各有展示）值得继续补齐西语落地文案，但 24 小时样本不足以单独建大量新页。
+- 查询与页面的对应关系仍清楚：`dlss 5 mobile download` **3 / 7（42.9%）**、`dlss 5 download` **2 / 26（7.7%）**、`dlss 5 visual enhancer` **1 / 38（2.6%）**、`dlss 5 image converter` **1 / 5（20.0%）**。低 CTR 的两个词说明搜索结果需要更直接的语义承接；不新增重复 URL，以现有 `/download` 和 `/image-quality-enhancer` 集中权重。
+- 已将 `/download` 的中英文 title/description 前置为 `DLSS 5 Download`、`mobile/Android` 与 Windows Studio 边界；已将 `/image-quality-enhancer` 的 title/H1/description/keywords 前置为 `DLSS 5 Visual Enhancer Online`，FAQ 明确这是独立浏览器工具，不是 NVIDIA 官方运行时。`/download` 平板断点从 `md` 调整为 `lg`，截图与要求卡片在窄平板上改为单列，避免三列挤压。
+- 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test` **90/90**、`npm run build` 全部通过。已推送 `a1c806a` 并部署 Production：Vercel `dpl_BcGTWzgaMp9j77Q5L4kZzxjS6xnu`，状态 `READY`；正式域名 `/download` 与 `/image-quality-enhancer` 均已复核 HTTP 200、title、description、keywords 生效。
+
+### 当前 TODO
+
+- 等待 Google 重新抓取新 metadata，再比较 `dlss 5 download` 与 `dlss 5 visual enhancer` 的 CTR；24 小时数据不重复请求同一 URL。
+- 下一轮优先把 `/download` 的西班牙语 metadata 与首屏说明补齐，并在西语国家有稳定展示后再决定是否增加独立页面；暂不复制英文页面造成关键词稀释。
