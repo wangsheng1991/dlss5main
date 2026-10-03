@@ -439,7 +439,7 @@ export default function Dashboard() {
       <div>
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-3xl font-headline font-bold text-white">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowTitle' : 'dashboard.studioTitle')}</h1>
-          {characterStyleWorkflow && <Link to="/image-quality-enhancer" className="text-xs text-primary hover:text-white">{t('dashboard.browseToolPages')}</Link>}
+          {characterStyleWorkflow && <a href="/image-quality-enhancer" className="text-xs text-primary hover:text-white">{t('dashboard.browseToolPages')}</a>}
         </div>
         <p className="text-zinc-400 text-sm mt-2 max-w-2xl">{t(characterStyleWorkflow ? 'dashboard.styleWorkflowDescription' : 'dashboard.studioDescription')}</p>
       </div>
@@ -545,7 +545,7 @@ export default function Dashboard() {
           </summary>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
             {MODES.map(value => <div key={value} className="rounded-lg border border-outline-variant/15 bg-surface-highest/60 px-3 py-2 flex items-center justify-between gap-2">
-              <Link to={TOOL_PAGE_BY_MODE[value] ?? `/dashboard?tool=${value}`} className="min-w-0 text-xs text-zinc-300 hover:text-primary transition-colors truncate">{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</Link>
+              <a href={TOOL_PAGE_BY_MODE[value] ?? `/dashboard?tool=${value}`} className="min-w-0 text-xs text-zinc-300 hover:text-primary transition-colors truncate">{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</a>
               <Link to={`/dashboard?tool=${value}`} className="shrink-0 text-[11px] text-zinc-500 hover:text-white transition-colors">{t('dashboard.useInStudio')}</Link>
             </div>)}
           </div>
