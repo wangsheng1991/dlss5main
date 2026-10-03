@@ -205,7 +205,9 @@ export default function Dashboard() {
     // workflow default because it is the conversion this reader was promised.
     if (isSampleId(sample)) {
       setSelectedSample(sample);
-      setMode(SAMPLES[sample].tool ?? 'edit');
+      // A landing page can choose a mode and a cached example together. Productised samples such
+      // as cutout/vectorize carry their own tool; the generic image examples inherit the URL mode.
+      setMode(SAMPLES[sample].tool ?? preset ?? 'edit');
       setActivePrompt(SAMPLES[sample].prompt);
     }
     trackEvent('studio_open', { tool: tool || 'direct' });

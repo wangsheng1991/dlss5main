@@ -29,6 +29,8 @@ export type ToolLanding = {
   steps?: Array<{ name: string; text: string }>;
   checks?: string[];
   featureList?: string[];
+  /** A cached example that a visitor can run without an account. */
+  freeSample?: string;
   /** A worked example… or two real frames of one, for the result slider. */
   demo?: { kind?: 'compare' | 'poster'; before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number; /** A transparent result needs an opaque surface under it, or the input shows through. */
     backdrop?: string; /** Social cards cannot render an SVG, so a vector demo names a raster twin for og:image. */
@@ -63,6 +65,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
       { path: '/unblur-image', label: 'Unblur Image' },
     ],
+    freeSample: 'sample1',
     demo: {
       before: '/examples/case-architecture-low.jpg', after: '/examples/case-architecture.jpg',
       beforeLabel: 'Small architecture render', afterLabel: 'Upscaled architecture reference',
@@ -98,6 +101,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
       { path: '/unblur-image', label: 'Unblur Image' },
     ],
+    freeSample: 'sample1',
     demo: {
       before: '/examples/case-product-low.jpg', after: '/examples/case-product.jpg',
       beforeLabel: 'Compressed product image', afterLabel: 'Enhanced product reference',
@@ -132,6 +136,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
     ],
+    freeSample: 'sample1',
     demo: {
       before: '/examples/case-portrait-low.jpg', after: '/examples/case-portrait.jpg',
       beforeLabel: 'Soft portrait', afterLabel: 'Unblurred portrait reference',
@@ -302,6 +307,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/erase-object', label: 'Erase Object' },
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
     ],
+    freeSample: 'teapot',
     demo: {
       before: '/examples/cutout-teapot.jpg', after: '/examples/cutout-teapot-after.jpg',
       beforeLabel: 'Your photo', afterLabel: 'Cutout (transparency shown on white)',
@@ -395,6 +401,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/remove-background', label: 'Remove Background' },
       { path: '/erase-object', label: 'Erase Object' },
     ],
+    freeSample: 'badge',
     demo: {
       before: '/examples/vectorize-badge.png', after: '/examples/vectorize-badge-after.svg',
       beforeLabel: 'Bitmap logo (1024 × 1024 PNG)', afterLabel: 'Traced SVG (24 KB of paths)',
