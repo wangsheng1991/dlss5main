@@ -246,6 +246,7 @@ URL Inspection 的当前结果：
 - 查询与页面的对应关系仍清楚：`dlss 5 mobile download` **3 / 7（42.9%）**、`dlss 5 download` **2 / 26（7.7%）**、`dlss 5 visual enhancer` **1 / 38（2.6%）**、`dlss 5 image converter` **1 / 5（20.0%）**。低 CTR 的两个词说明搜索结果需要更直接的语义承接；不新增重复 URL，以现有 `/download` 和 `/image-quality-enhancer` 集中权重。
 - 已将 `/download` 的中英文 title/description 前置为 `DLSS 5 Download`、`mobile/Android` 与 Windows Studio 边界；已将 `/image-quality-enhancer` 的 title/H1/description/keywords 前置为 `DLSS 5 Visual Enhancer Online`，FAQ 明确这是独立浏览器工具，不是 NVIDIA 官方运行时。`/download` 平板断点从 `md` 调整为 `lg`，截图与要求卡片在窄平板上改为单列，避免三列挤压。
 - 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test` **90/90**、`npm run build` 全部通过。已推送 `a1c806a` 并部署 Production：Vercel `dpl_BcGTWzgaMp9j77Q5L4kZzxjS6xnu`，状态 `READY`；正式域名 `/download` 与 `/image-quality-enhancer` 均已复核 HTTP 200、title、description、keywords 生效。
+- 为避免把 24 小时小样本当成长期趋势，又核对了 7 天报告（421 / 4,619 / 9.1% CTR）：美国 **55 / 580**、印度尼西亚 **41 / 216**、巴西 **28 / 213**、印度 **28 / 195**、德国 **26 / 246**、俄罗斯 **21 / 152**、西班牙 **13 / 112**。美国承担最多展示但 CTR 约 9.5%，东南亚、拉美和西语流量的点击效率更高；这支持“英文主站 + 西语重点入口 + 不做美国单一化”的方向。
 
 ### 当前 TODO
 
