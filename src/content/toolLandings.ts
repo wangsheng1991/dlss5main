@@ -261,6 +261,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
     ],
+    freeSample: 'sample1',
     demo: {
       before: '/examples/case-product-low.jpg', after: '/examples/case-product.jpg',
       beforeLabel: 'Imagen de producto comprimida', afterLabel: 'Referencia mejorada',
