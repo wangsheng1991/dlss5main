@@ -262,3 +262,13 @@ URL Inspection 的当前结果：
 ### 当前 TODO
 
 - 等待 Google 抓取 6 个播客页并刷新 sitemap/网页索引报告；这是第三方队列等待，当前没有可继续提交的 URL。
+
+## 2026-10-03：工具页案例更新后的 Search Console 复核
+
+- 正式 sitemap 仍为 68 个唯一 URL。对每个正式 URL 重新抓取并检查 HTTP 状态、`title`、description（>40 字符）、keywords、自指 canonical 和 H1，结果 **68/68 通过**。
+- 逐页检查 6 个播客 URL（索引页 + 5 个节目页）后，Google 均返回“网址已收录到 Google”；此前覆盖率报告中的“已发现 - 尚未编入索引”6 条记录是 2026-09-21 的旧快照，不再重复请求。
+- 本轮改动涉及工具页案例图片和免费示例入口，没有新增 sitemap URL；工具页仍由现有 sitemap、首页、导航、页脚和 `llms.txt` 发现。生产域名已复核 `/image-quality-enhancer`：独立 H1、`Free reference case`、对应案例图片和 `Try free example` 链接均已生效。
+
+### 当前 TODO
+
+- 等待 Search Console 刷新旧的网页索引报告；当前没有需要再次提交的 sitemap URL。若 Google 报告出现新的未收录 URL，再逐页检查后处理。
