@@ -272,3 +272,18 @@ URL Inspection 的当前结果：
 ### 当前 TODO
 
 - 等待 Search Console 刷新旧的网页索引报告；当前没有需要再次提交的 sitemap URL。若 Google 报告出现新的未收录 URL，再逐页检查后处理。
+
+## 2026-10-04：7 天查询与页面 CTR 收口
+
+- 已读取 Search Console 最新 7 天报告（2026-09-23—2026-09-29，最近更新约 6.5 小时前）：全站 **421 次点击 / 4,619 次展示 / 9.1% CTR / 平均排名 7.5**。
+- 主要查询：`dlss 5 online` 17/80、`dlss 5 image converter` 14/43、`dlss 5 image generator` 13/40、`dlss 5 image enhancer` 11/43、`dlss 5 download` 6/106、`dlss 5 upscaler` 5/30。下载词的展示量最高但 CTR 只有约 5.7%，是本轮优先优化的摘要入口。
+- 主要页面：`/` 321/2,079、`/download` 49/1,042（4.7% CTR）、在线放大指南 18/234、英文指南 10/155、`/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 3/618（0.49% CTR）、`/image-quality-enhancer` 3/50（6% CTR）。对比文章和下载页的高展示低点击信号明确，不新增重复 URL，直接提升现有页面的搜索摘要承接。
+- `/download` 英文/中文 title 与 description 改为以 `DLSS 5 Download` 开头，明确“免费在线转换器、手机/桌面、Windows Studio”三条路径和“没有官方 Android APK/独立安装包”的边界；keywords 同步补齐 `dlss 5 online`、`dlss 5 download mobile`、`free dlss 5 converter` 与 `dlss 5 studio download`。
+- `/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 的英文/中文标题改为 2026 对比指南，补充独立 description，并在正文首段加入可抓取的快速结论，直接区分 DLSS 5 神经渲染、DLSS 4/4.5 超分/帧生成与 FSR 4。
+- `/image-quality-enhancer` 摘要改为以 `free DLSS 5-style visual enhancer online` 开头，直接说明可先试免费前后案例，再处理自己的图片；保持独立第三方与无安装口径。
+- 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test` **91/91**、`npm run build` 均通过；预渲染页确认 `/download`、英文/中文对比文章和 `/image-quality-enhancer` 的 title、description、H1 已同步。
+
+### 当前 TODO
+
+- 推送并部署后，对 `/download`、`/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`、`/image-quality-enhancer` 做一次正式域名静态 HTML 复核；若 URL Inspection 仍显示已收录，不重复请求编入索引。
+- 等 Google 重新抓取新摘要，再比较 `dlss 5 download`、`dlss 5 visual enhancer` 与对比文章的 CTR；Search Console 的报告存在延迟，不把旧快照当成失败。

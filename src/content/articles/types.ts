@@ -172,8 +172,8 @@ DLSS 5 是绑定特定硬件的实时游戏内技术，而它的工作方式恰�
   },
   {
     slug: 'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
-    title_en: 'DLSS 5 vs DLSS 4 vs FSR 4: The 2026 Upscaling War, Explained',
-    title_cn: 'DLSS 5 vs DLSS 4 vs FSR 4：2026 超分辨率大战完全解析',
+    title_en: 'DLSS 5 vs DLSS 4 vs FSR 4: 2026 Comparison Guide',
+    title_cn: 'DLSS 5 vs DLSS 4 vs FSR 4：2026 对比指南与升级建议',
     tags: ['dlss5 vs dlss4', 'fsr4', 'upscaling comparison', 'nvidia vs amd 2026'],
     target_keywords_en: ['dlss 5 vs dlss 4', 'dlss 5 vs fsr 4', 'best upscaling 2026', 'should I upgrade for dlss 5'],
     target_keywords_cn: ['dlss5和dlss4区别', 'fsr4对比dlss5', '2026最好的超分辨率', '要升级显卡用dlss5吗'],
@@ -181,7 +181,11 @@ DLSS 5 是绑定特定硬件的实时游戏内技术，而它的工作方式恰�
     type: 'High-intent comparison — captures upgrade decision traffic',
     lastUpdated: 'September 2026',
     readTime: '7 min read',
+    description_en: 'DLSS 5 vs DLSS 4 vs FSR 4 in 2026: compare neural rendering, upscaling, frame generation, GPU support and upgrade advice in an independent, source-led guide.',
+    description_cn: 'DLSS 5、DLSS 4 与 FSR 4 的 2026 对比：从神经渲染、超分、帧生成、显卡支持到升级建议，按来源拆解实际差异。',
     content_en: `In 2026, the GPU you buy isn't just a question of teraflops. It's a question of which AI reconstruction ecosystem you're committing to — and what that means for how your games look and perform for the next three to four years.
+
+**Quick answer:** DLSS 5 focuses on neural rendering and lighting detail inside supported games; DLSS 4 and 4.5 focus on upscaling and frame generation; FSR 4 is AMD's machine-learning alternative. The right choice depends on your GPU, game support and whether you need fidelity or more frames.
 
 ## The Big Picture in One Sentence Each
 
@@ -234,6 +238,8 @@ AMD has moved to machine learning–based upscaling and frame generation. The qu
 
 *This site is not affiliated with or endorsed by NVIDIA Corporation.*`,
     content_cn: `在 2026 年，买什么显卡已经不只是 TFLOPS 的问题，而是你要押注哪个 AI 重建生态。
+
+**快速结论：** DLSS 5 重点是受支持游戏里的神经渲染与光照细节；DLSS 4/4.5 重点是超分和帧生成；FSR 4 是 AMD 的机器学习替代方案。选择哪一个，取决于你的显卡、游戏支持情况，以及你更需要保真度还是更高帧率。
 
 ## 一句话总结
 

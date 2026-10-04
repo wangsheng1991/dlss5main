@@ -14,8 +14,8 @@
 
 export const STUDIO_COPY = {
   'en-US': {
-    'meta.title': 'DLSS 5 Download — Mobile, Windows and Studio Explained',
-    'meta.desc': 'Looking for a DLSS 5 download on mobile or Windows? There is no standalone Android APK or official DLSS installer. Use the browser converter on your phone, or request DLSS5 Studio, an independent Windows RTX front-end for NVIDIA’s Visual Enhancer pipeline.',
+    'meta.title': 'DLSS 5 Download (2026) — Free Online Converter, Mobile & Windows Studio',
+    'meta.desc': 'DLSS 5 download guide: use the free online converter on mobile or desktop, or request the independent Windows RTX Studio build. No official Android APK or standalone installer.',
     'nav.which': 'Which DLSS?',
     'nav.features': 'Features',
     'nav.live': 'Live',
@@ -167,8 +167,8 @@ export const STUDIO_COPY = {
     'foot.year': 'DLSS5 Studio · 2026',
   },
   'zh-CN': {
-    'meta.title': 'DLSS 5 下载 — 手机、Windows 与 Studio 使用说明',
-    'meta.desc': '在找 DLSS 5 下载？手机和 Android 没有独立 APK，Windows 也没有单独的官方 DLSS 安装包。手机可直接使用浏览器转换器，Windows RTX 用户可申请 DLSS5 Studio，这是一套独立的本地图形界面。',
+    'meta.title': 'DLSS 5 下载（2026）— 免费在线转换器、手机与 Windows Studio',
+    'meta.desc': 'DLSS 5 下载指南：手机或桌面端可直接使用免费在线转换器，也可申请独立的 Windows RTX Studio。没有官方 Android APK 或独立安装包。',
     'nav.which': '哪个 DLSS',
     'nav.features': '功能',
     'nav.live': 'Live',

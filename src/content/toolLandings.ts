@@ -80,7 +80,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     dashboardTool: 'enhance',
     language: 'en-US',
     title: 'DLSS 5 Visual Enhancer Online — AI Image Quality Enhancer',
-    description: 'Use an independent DLSS 5-style visual enhancer online to improve blurry, noisy or compressed images. Compare the before and after, inspect details, and download a clearer reference without installing a GPU tool.',
+    description: 'Try a free DLSS 5-style visual enhancer online: compare a before-and-after example, then improve a blurry or compressed image in the browser. Independent and no install.',
     eyebrow: 'AI image tool',
     heading: 'DLSS 5 Visual Enhancer Online',
     intro: 'Improve practical image quality in the browser with an independent DLSS 5-style visual enhancer. The workflow preserves the scene while improving texture and edges; inspect the result before downloading.',
@@ -90,7 +90,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     originalLabel: 'Original input',
     prompt: 'Enhance image quality 4x, restore realistic texture and sharpness, preserve the original colors, lighting, framing and subject identity, remove JPEG artifacts, do not invent text.',
     useCases: ['Compressed social photos', 'Marketplace product images', 'Old family photos', 'Slides and screenshots'],
-    keywords: ['dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'image quality enhancer', 'make image clearer', 'improve photo quality', 'ai photo enhancer', 'enhance image online'],
+    keywords: ['dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'free dlss 5 visual enhancer', 'image quality enhancer', 'make image clearer', 'improve photo quality', 'ai photo enhancer', 'enhance image online'],
     faqs: [
       { question: 'What images benefit from quality enhancement?', answer: 'Compressed photos, small product images, screenshots and older scans are good candidates. Start with the original file when available because repeated downloads lose detail.' },
       { question: 'Will the enhancer add fake details?', answer: 'The enhancement instruction asks to preserve the scene, but AI enhancement can make uncertain detail look plausible. Check logos, faces, numbers and other information-sensitive areas at 100%.' },
