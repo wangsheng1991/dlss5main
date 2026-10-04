@@ -285,5 +285,10 @@ URL Inspection 的当前结果：
 
 ### 当前 TODO
 
-- 推送并部署后，对 `/download`、`/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`、`/image-quality-enhancer` 做一次正式域名静态 HTML 复核；若 URL Inspection 仍显示已收录，不重复请求编入索引。
 - 等 Google 重新抓取新摘要，再比较 `dlss 5 download`、`dlss 5 visual enhancer` 与对比文章的 CTR；Search Console 的报告存在延迟，不把旧快照当成失败。
+
+### Production verification
+
+- 已推送 `506f6cb` 并部署 Production：Vercel `dpl_6aG2ZDrqt1EDo3D59s5s5tqVAd5Y`，状态 `READY`，正式别名为 `https://www.dlss5nvidia.com`。
+- 正式域名静态 HTML 已复核 `/download`、英文/中文对比文章和 `/image-quality-enhancer`：4/4 HTTP 200，title、description、canonical、H1 均与新版本一致；下载页和增强器页的免费在线路径已出现在可抓取摘要中。
+- 没有重复请求编入索引：这些 URL 原本已在 Google 索引中，当前等待 Google 自然重抓 metadata。Search Console 报告的 7 天数据仍可能滞后于本次部署。
