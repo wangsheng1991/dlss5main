@@ -302,6 +302,11 @@ URL Inspection 的当前结果：
 - 本轮按证据修复：首页 title 改为 `DLSS 5 Converter Online — Free Image Generator & Visual Enhancer`，description/OG/Twitter/静态壳同步，覆盖首页实际承接的 visual enhancer 查询；`/download` 的 React H1、静态 H1、首段和关键词统一为 `DLSS 5 Download Guide — DLSS5 Studio by Request`，并增加到视觉增强器的静态内链；没有增加重复 URL，也没有改付费或 Studio 索取流程。
 - 本地验证：`npx tsc --noEmit`、`npm test` **91/91**、`npm run build`、`git diff --check` 均通过；预渲染确认首页和下载页的 title、description、H1 与动态页面一致。
 
+### Production verification
+
+- 已推送 `e941d99` 并部署 Production：Vercel `dpl_98GaF699GhpZzjbYLWcH6aBzsAY7`，状态 `READY`，正式别名为 `https://www.dlss5nvidia.com`。
+- 正式域名静态 HTML 已复核 `/`、`/download`、`/image-quality-enhancer`：3/3 HTTP 200；title、description、canonical、H1 均与预渲染版本一致。首页 title 现在直接包含 `Visual Enhancer`，下载页 H1 现在直接包含 `DLSS 5 Download`。
+
 ### 当前 TODO
 
 - 部署后复核首页、`/download` 的正式静态 HTML，并等待至少一个完整 Search Console 窗口（新报告覆盖 2026-10-06 之后）再比较 `dlss 5 visual enhancer` 和 `dlss 5 download` CTR；本轮部署前的旧窗口不能作为新标题的结论。
