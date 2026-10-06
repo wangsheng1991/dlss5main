@@ -324,6 +324,12 @@ URL Inspection 的当前结果：
   - 中英文 `onlineBody` 改为先描述 DLSS 5 style converter，再明确已有图片清晰化应使用独立 visual enhancer；没有改 API、计费或 Studio 索取流程。
 - 本地验证：`npx tsc --noEmit`、`npm test` **91/91**、`npm run build`、`git diff --check` 全部通过。构建后首页和 `/image-quality-enhancer` 均有唯一 title、description、canonical、H1；首页静态 HTML 含完整 visual enhancer 内链。
 
+### Production verification
+
+- 已推送 commit `2868929` 并部署 Production：Vercel `dpl_DQa1JhiekapEzK9jFYnPMsVkffpt`，状态 `READY`，正式别名为 `https://www.dlss5nvidia.com`。
+- 正式域名静态 HTML 复核通过：`/` 与 `/image-quality-enhancer` 均 HTTP 200；首页 title 已是 `DLSS 5 Style Converter Online — Free AI Image Converter`，首页 H1、canonical 和首屏 `Open the free DLSS 5 visual enhancer online` 内链均生效；增强器页 title、description、H1 和自指 canonical 均保持独立且准确。
+- 本次部署遇到一次 Vercel CLI 上传 TLS 重试，但部署已创建并最终 Ready；没有产生重复 URL 或重复索引请求。
+
 ### 当前 TODO
 
 - 等 Production 部署并让 Google 重抓首页与 `/image-quality-enhancer`；24 小时报告的“12 小时前更新”意味着不能在本次部署后立即判断 CTR。下一窗口重点看该词是否从首页转移到 `/image-quality-enhancer`，以及首页 `dlss 5 online` 是否保持点击。
