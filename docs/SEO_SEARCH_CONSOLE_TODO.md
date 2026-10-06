@@ -306,6 +306,7 @@ URL Inspection 的当前结果：
 
 - 已推送 `e941d99` 并部署 Production：Vercel `dpl_98GaF699GhpZzjbYLWcH6aBzsAY7`，状态 `READY`，正式别名为 `https://www.dlss5nvidia.com`。
 - 正式域名静态 HTML 已复核 `/`、`/download`、`/image-quality-enhancer`：3/3 HTTP 200；title、description、canonical、H1 均与预渲染版本一致。首页 title 现在直接包含 `Visual Enhancer`，下载页 H1 现在直接包含 `DLSS 5 Download`。
+- 已在 Search Console URL Inspection 复核首页与 `/download`：两页均显示“网址已收录到 Google”；因本轮确实更新了 metadata 和静态正文，已各点击一次“请求编入索引”，Google 均返回“已将网址添加到优先抓取队列”。不再重复提交这两个 URL。
 
 ### 当前 TODO
 
