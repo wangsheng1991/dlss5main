@@ -24,7 +24,7 @@
     "freeDemoNote": "Free cached example · no account needed",
     "ownUploadNote": "Your own upload · sign-in required",
     "onlineLabel": "ONLINE CONVERTER",
-    "onlineBody": "Use the online DLSS 5 visual enhancer with a cached example for free, then upload your own image after signing in.",
+    "onlineBody": "Use the online DLSS 5 style converter with a cached example for free, then upload your own image after signing in. For sharpening an existing image, use the separate visual enhancer.",
     "studioLabel": "LOCAL WINDOWS STUDIO",
     "studioBody": "Run the DLSS5 Studio workflow on your own RTX machine. Access is requested by email.",
     "requestStudio": "Request DLSS5 Studio access →",

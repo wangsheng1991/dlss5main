@@ -24,7 +24,7 @@
     "freeDemoNote": "免费缓存示例 · 无需账户",
     "ownUploadNote": "上传自己的图片 · 需要登录",
     "onlineLabel": "在线转换器",
-    "onlineBody": "使用在线 DLSS 5 视觉增强器先免费试跑缓存示例，准备好后登录并上传自己的图片。",
+    "onlineBody": "使用在线 DLSS 5 风格转换器先免费试跑缓存示例，准备好后登录并上传自己的图片。已有图片需要变清晰时，请打开独立的视觉增强器。",
     "studioLabel": "本地 Windows Studio",
     "studioBody": "在自己的 RTX 电脑上运行 DLSS5 Studio；通过邮件申请访问。",
     "requestStudio": "申请 DLSS5 Studio →",

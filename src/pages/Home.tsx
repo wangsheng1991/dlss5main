@@ -86,8 +86,8 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 Converter Online — Free Image Generator & Visual Enhancer"
-        description="Free DLSS 5-style image converter, visual enhancer and AI image generator. Try a cached game-character example, compare before and after, and upscale online without an RTX GPU or download. Independent, non-official showcase."
+        title="DLSS 5 Style Converter Online — Free AI Image Converter"
+        description="Free DLSS 5-style image converter for game frames and character references. Try a cached example, compare before and after, and create a new visual direction online without an RTX GPU or download. Need sharpening instead? Use the separate visual enhancer."
         keywords={['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 image generator', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
       />
@@ -117,6 +117,12 @@ export default function Home() {
             {t('home.uploadOwnImage')}
           </button>
         </div>
+        <p className="mb-3 text-xs leading-relaxed text-zinc-500">
+          {isZh ? '只想让已有图片更清晰？' : 'Only need to make an existing image clearer?'}{' '}
+          <Link to="/image-quality-enhancer" className="font-semibold text-primary hover:text-white transition-colors">
+            {isZh ? '打开免费的 DLSS 5 视觉增强器 →' : 'Open the free DLSS 5 visual enhancer →'}
+          </Link>
+        </p>
         <div className="mb-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-zinc-500">
           <span>{t('home.freeDemoNote')}</span>
           <span className="hidden sm:inline text-zinc-700">·</span>
@@ -139,6 +145,9 @@ export default function Home() {
                 <p className="text-zinc-400 text-sm mb-6 max-w-md leading-relaxed">{t('home.studioEntryBody')}</p>
                 <Link to="/dashboard?tool=game-character-style" className="text-primary text-sm font-semibold hover:text-white transition-colors">
                   {t('home.studioEntryButton')} →
+                </Link>
+                <Link to="/image-quality-enhancer" className="mt-3 text-xs text-zinc-400 hover:text-primary transition-colors">
+                  {isZh ? '已有图片需要清晰化？打开视觉增强器 →' : 'Have an existing image to sharpen? Open the visual enhancer →'}
                 </Link>
               </div>
               <div className="mt-4 flex justify-between items-center text-[10px] uppercase tracking-widest text-zinc-500 font-label">

@@ -312,3 +312,19 @@ URL Inspection 的当前结果：
 
 - 已完成正式域名复核；等待至少一个完整 Search Console 窗口（新报告覆盖 2026-10-06 之后）再比较 `dlss 5 visual enhancer` 和 `dlss 5 download` CTR。本轮部署前的旧窗口不能作为新标题的结论。
 - 对比文章目前平均排名已在第一页，先等待新标题/description 被 Google 重抓；若下一窗口仍低于 1% CTR，再考虑缩短 `— DLSS 5 Blog` 后缀或增加可见的“快速对比结论”摘要，不提前重复改写。
+
+## 2026-10-06：24 小时 visual enhancer 查询仍由首页承接
+
+- 已在已登录的 Search Console 读取 24 小时报告（报告更新时间约 12 小时前）：全站 **57 次点击 / 534 次展示 / 10.7% CTR / 平均排名 6.7**。查询表中 `dlss 5 online` 为 **4/7**、`dlss 5 visual enhancer` 为 **1/31**、`dlss5 visual enhancer` 为 **1/7**。
+- 对 `dlss 5 visual enhancer` 加查询过滤后切到“网页”维度，31 次展示 **全部落在 `https://www.dlss5nvidia.com/`**（1 次点击）；`/image-quality-enhancer` 没有成为该词的主要落地页。此前 7 天报告已经显示 206/207 次展示落在首页，本轮证实错配仍在持续。
+- 根因不是没有内容，而是首页 title、首段和在线入口把 converter、generator、visual enhancer 写成同一主意图，Google 因此继续把首页视为这个词的权威答案；独立增强器页虽然有正确 H1/title/案例，内部链接和页面分工仍不够清楚。
+- 本轮修复：
+  - 首页 SEO title 改为 `DLSS 5 Style Converter Online — Free AI Image Converter`，把 convert 作为唯一主意图；description、OG/Twitter 和静态 shell 同步，visual enhancer 改为“需要锐化时转到独立页面”的次级意图。
+  - 首页首屏两个主按钮下新增明确的次级内链 `Open the free DLSS 5 visual enhancer`，在线入口卡片也提供同一链接；静态 fallback 同步加入可抓取的完整锚文本，避免无 JS 或爬虫只看到首页 converter。
+  - 中英文 `onlineBody` 改为先描述 DLSS 5 style converter，再明确已有图片清晰化应使用独立 visual enhancer；没有改 API、计费或 Studio 索取流程。
+- 本地验证：`npx tsc --noEmit`、`npm test` **91/91**、`npm run build`、`git diff --check` 全部通过。构建后首页和 `/image-quality-enhancer` 均有唯一 title、description、canonical、H1；首页静态 HTML 含完整 visual enhancer 内链。
+
+### 当前 TODO
+
+- 等 Production 部署并让 Google 重抓首页与 `/image-quality-enhancer`；24 小时报告的“12 小时前更新”意味着不能在本次部署后立即判断 CTR。下一窗口重点看该词是否从首页转移到 `/image-quality-enhancer`，以及首页 `dlss 5 online` 是否保持点击。
+- 不重复提交已在索引中的 URL；若 Search Console 仍把 visual enhancer 全部归到首页，再考虑仅在增强器页增加独立 use-case 入口，不再把首页 title 加回 visual enhancer。
