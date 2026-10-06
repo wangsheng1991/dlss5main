@@ -309,5 +309,5 @@ URL Inspection 的当前结果：
 
 ### 当前 TODO
 
-- 部署后复核首页、`/download` 的正式静态 HTML，并等待至少一个完整 Search Console 窗口（新报告覆盖 2026-10-06 之后）再比较 `dlss 5 visual enhancer` 和 `dlss 5 download` CTR；本轮部署前的旧窗口不能作为新标题的结论。
+- 已完成正式域名复核；等待至少一个完整 Search Console 窗口（新报告覆盖 2026-10-06 之后）再比较 `dlss 5 visual enhancer` 和 `dlss 5 download` CTR。本轮部署前的旧窗口不能作为新标题的结论。
 - 对比文章目前平均排名已在第一页，先等待新标题/description 被 Google 重抓；若下一窗口仍低于 1% CTR，再考虑缩短 `— DLSS 5 Blog` 后缀或增加可见的“快速对比结论”摘要，不提前重复改写。
