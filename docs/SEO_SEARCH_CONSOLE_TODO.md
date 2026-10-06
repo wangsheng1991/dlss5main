@@ -292,3 +292,17 @@ URL Inspection 的当前结果：
 - 已推送 `506f6cb` 并部署 Production：Vercel `dpl_6aG2ZDrqt1EDo3D59s5s5tqVAd5Y`，状态 `READY`，正式别名为 `https://www.dlss5nvidia.com`。
 - 正式域名静态 HTML 已复核 `/download`、英文/中文对比文章和 `/image-quality-enhancer`：4/4 HTTP 200，title、description、canonical、H1 均与新版本一致；下载页和增强器页的免费在线路径已出现在可抓取摘要中。
 - 没有重复请求编入索引：这些 URL 原本已在 Google 索引中，当前等待 Google 自然重抓 metadata。Search Console 报告的 7 天数据仍可能滞后于本次部署。
+
+## 2026-10-06：查询—落地页错配复盘与第二轮修复
+
+- 已读取 Search Console 最新 7 天报告（2026-09-27—2026-10-03，约 8.5 小时前更新）：全站 **542 次点击 / 5,662 次展示 / 9.6% CTR / 平均排名 7.2**。相比上一窗口 421/4,619/9.1%/7.5，整体已经上升；“最近改进没有作用”的判断主要来自个别页面，而不是全站趋势。
+- `/download` 当前 **84/1,286（6.5% CTR）**，较上一窗口 49/1,042（4.7%）已有改善，但 `dlss 5 download` 仍只有 **6/114、平均排名 14.6**。根因是页面原来的静态 H1 是 `DLSS 5 Studio — download by request`，与搜索标题中的 download/converter/mobile 意图不完全一致，且页面仍像 Studio 产品介绍而不是下载决策页。
+- `dlss 5 visual enhancer` 为 **4/207（1.9% CTR）**，其中 **206 次展示落在首页，只有 1 次落在博客页**；`/image-quality-enhancer` 的摘要修改单独无法改变这个词的结果。根因是 Google 已把首页当成该查询的权威落地页，而首页 title 没有写出 visual enhancer。
+- 对比文章为 **3/725（0.4% CTR，平均排名 6.9）**。查询拆分为 `dlss 5 vs fsr 4` 1/57、`fsr 4 vs dlss 5` 1/41、`fsr vs dlss 5` 1/6；`dlss 5 vs dlss 4` 与反向词合计有展示但无点击。上一轮对比标题与 description 在 2026-10-04 才部署，因此完全不在本窗口，不能用这份报告判断新摘要失败。
+- 本轮按证据修复：首页 title 改为 `DLSS 5 Converter Online — Free Image Generator & Visual Enhancer`，description/OG/Twitter/静态壳同步，覆盖首页实际承接的 visual enhancer 查询；`/download` 的 React H1、静态 H1、首段和关键词统一为 `DLSS 5 Download Guide — DLSS5 Studio by Request`，并增加到视觉增强器的静态内链；没有增加重复 URL，也没有改付费或 Studio 索取流程。
+- 本地验证：`npx tsc --noEmit`、`npm test` **91/91**、`npm run build`、`git diff --check` 均通过；预渲染确认首页和下载页的 title、description、H1 与动态页面一致。
+
+### 当前 TODO
+
+- 部署后复核首页、`/download` 的正式静态 HTML，并等待至少一个完整 Search Console 窗口（新报告覆盖 2026-10-06 之后）再比较 `dlss 5 visual enhancer` 和 `dlss 5 download` CTR；本轮部署前的旧窗口不能作为新标题的结论。
+- 对比文章目前平均排名已在第一页，先等待新标题/description 被 Google 重抓；若下一窗口仍低于 1% CTR，再考虑缩短 `— DLSS 5 Blog` 后缀或增加可见的“快速对比结论”摘要，不提前重复改写。

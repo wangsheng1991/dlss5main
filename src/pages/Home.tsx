@@ -86,8 +86,8 @@ export default function Home() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 Style Converter Online — Free AI Image Generator"
-        description="Use a browser-based DLSS 5-style image converter, online visual enhancer and AI image generator to create game-character style, lighting and material references, then compare and upscale them. Free online tool with no RTX GPU or download required. Independent, non-official showcase."
+        title="DLSS 5 Converter Online — Free Image Generator & Visual Enhancer"
+        description="Free DLSS 5-style image converter, visual enhancer and AI image generator. Try a cached game-character example, compare before and after, and upscale online without an RTX GPU or download. Independent, non-official showcase."
         keywords={['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 image generator', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
         canonical="/"
       />

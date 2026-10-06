@@ -876,10 +876,10 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   path: '/download',
   title: studioStatic['meta.title'],
   description: studioStatic['meta.desc'],
-  heading: 'DLSS 5 Studio — download by request',
-  lead: 'Understand where official DLSS is delivered, why there is no Android APK, what DLSS5 Studio adds on a local RTX machine, and how to ask for the build.',
-  keywords: ['DLSS 5 download', 'DLSS 5 download android', 'DLSS 5 android', 'DLSS download free', 'DLSS5 Studio', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
-  links: [{ label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
+  heading: 'DLSS 5 Download Guide — DLSS5 Studio by Request',
+  lead: 'Choose the right DLSS 5 path: use the free online converter on mobile or desktop, or understand why DLSS5 Studio is a separate Windows RTX build requested by email. There is no official Android APK or standalone NVIDIA DLSS installer.',
+  keywords: ['DLSS 5 download', 'DLSS 5 download mobile', 'DLSS 5 download android', 'DLSS 5 online', 'free DLSS 5 converter', 'DLSS 5 Studio download', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
+  links: [{ label: 'Free DLSS 5 visual enhancer', path: '/image-quality-enhancer' }, { label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
   extraHtml: `${studioStaticAndroid}${studioStaticShowcase}`,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
