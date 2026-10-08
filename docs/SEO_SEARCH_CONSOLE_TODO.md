@@ -349,3 +349,15 @@ URL Inspection 的当前结果：
 
 - 等 Google 重抓首页、增强器页和新增相关项目入口，下一窗口重点观察 `dlss 5 visual enhancer` 是否从首页转移到 `/image-quality-enhancer`，以及相关页面是否获得自然展示；不重复请求已经在索引中的 URL。
 - 外部项目的反向入口需要各自 Vercel 自动部署完成后再做线上 HTML 复核；若某项目未发布该链接，只保留主站的相关项目入口，不继续扩展互链数量。
+
+## 2026-10-08：Search Console 重复网页验证
+
+- Search Console 的网页索引编制报告（数据更新时间 2026-10-04）目前只有 **1** 个“重复网页，用户未选定规范网页”：`https://www.dlss5nvidia.com/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`，上次抓取为 2026-10-02。URL 检查明确显示当时“用户声明的规范网址：无”，Google 选择了默认英文路径 `/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`。
+- 这不是当前线上 HTML 仍缺 canonical：正式域名抓取和本地预渲染都已确认该 `/en/blog/...` 页面输出自指 canonical，并输出 `en`、`zh-CN`、`x-default` 三组 hreflang；当前页面与默认路径的语义关系已经明确。问题报告使用的是 10 月 2 日的旧抓取快照。
+- 已在 Search Console 对该 URL 执行“测试实际网址”：Google 在 2026-10-08 10:48 显示“网址可编入 Google 索引”；随后再次请求编入索引，并在“验证详情”中点击“开始新的验证”。验证状态现在为“已开始”，待定样本为 1，仍指向同一旧抓取 URL。
+- 线上 sitemap 68 个 URL 的 canonical 审计结果：已读取的页面均有自指 canonical；3 个博客请求出现 `IncompleteRead` 是网络读取超时，不是页面 HTTP 或 canonical 错误，重试可正常返回。当前不改 URL 结构、不删除 `/en` 本地化入口，等待 Google 用新抓取结果完成验证。
+
+### 当前 TODO
+
+- 等 Google 验证队列重新抓取这 1 个 URL；验证完成前不重复请求同一 URL，也不把报告里的旧快照误判为当前缺陷。
+- 若验证重新失败，下一步只检查该 URL 的实际抓取 HTML 与 Google 选择 canonical 的差异，再决定是否将英文博客默认路径收敛为单一 canonical；在有新证据前不改现有 hreflang 结构。
