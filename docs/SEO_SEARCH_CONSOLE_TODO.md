@@ -407,3 +407,19 @@ URL Inspection 的当前结果：
 
 - 等 Google 完成 `/comparisons` 和 3 个 canonical 验证队列；验证期间没有可替代的代码或 Search Console 提交动作。
 - 下一次报告刷新后再判断旧快照是否消失；不重复请求已收录或已在验证队列中的 URL。
+
+## 2026-10-08：路由收敛、游客漏斗与入口页复核
+
+- 本地提交 `ce2ac3d` 收口三类工作：
+  - SEO 路由：`/en/blog/dlss-5-online-image-upscaler-guide` 单跳 301 到已选定的 `/blog/...`；预渲染、博客内链和 sitemap 不再产生新的重复英文地址；移除 SPA catch-all 并加入真实 404 外壳，避免 `/image2lego` 等不存在路径返回首页 200。
+  - 漏斗统计：复用现有 GA4/dataLayer，记录 `page_view → experience_click → generation_start → generation_success/failure → download_click`，带页面、工具、UTM、语言和匿名/登录状态；不记录图片、邮箱、文件名、UID 或完整 URL。
+  - 入口内容：视觉增强页和下载页首屏补“用途 / 输出 / 限制”三点；对比文章改为来源可核验的 DLSS 5 / DLSS 4 / FSR 4 口径，并保留官方来源链接。
+- QA 证据已写入 [`docs/qa/guest-flow-20261008.md`](./qa/guest-flow-20261008.md)：英文/中文、桌面/375px 窄屏游客示例均从入口跑到前后对比和下载；缓存示例约 0.99–1.39 秒，下载 HTTP 200、WebP 1024×1024；注入失败会显示错误和重试按钮。登录后的自有图片与付费链路不在本轮范围。
+- 本地构建验证：`npx tsc --noEmit`、`npm test` **94/94**、`npm run build`、`git diff --check` 均通过。生成的 `/download` 静态 HTML 已包含与 React 相同的 At a glance 文案；正式文章和增强器页的 title、description、canonical、H1 均唯一。构建后随机不存在路径均为真实 404，弃用 `/en` 文章不再生成静态副本。
+- 5 个真实 Studio 案例与 10 份分发素材的来源、参数、局限和入口见 [`docs/marketing/materials-20261008.md`](./marketing/materials-20261008.md)。Image2LEGO 仍缺真实运行和授权证据，明确列为待补，没有把说明性插画冒充实测。
+
+### 当前 TODO
+
+- `ce2ac3d` 尚未推送/部署；正式上线前需确认发布窗口。上线后再在线复核 301、3 个随机 404、3 个入口页的静态 metadata 与 GA4 事件。
+- 部署后仅对新变更或仍未收录的 URL 做一次 URL 检查；不重复提交已在验证队列中的 canonical 问题，也不把 Google 抓取延迟当作代码失败。
+- 外部平台发布、创作者联系、付费推广和公开下载仍需人工版规检查与产品负责人确认，本轮只准备素材。
