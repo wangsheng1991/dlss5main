@@ -462,6 +462,66 @@ function renderPublicGuide(options: PublicGuideOptions): string {
   }), root);
 }
 
+/**
+ * The comparison page has a real task path and evidence gallery, so keep the static shell aligned
+ * with the hydrated React page. A generic one-paragraph guide would hide the runnable examples from
+ * crawlers and from visitors whose JavaScript bundle is delayed.
+ */
+function renderComparisonsPage(): string {
+  const rows = [
+    ['DLSS 5 (official technology)', 'Game neural rendering', 'RTX 50 series games', 'Game frames, lighting and materials'],
+    ['GPT Image 2', 'Image generation and editing', 'Complex prompts and edits', 'API and ChatGPT workflows'],
+    ['ChatGPT Images 2.5', 'Conversational image creation', 'Iterative revisions', 'Natural-language editing'],
+    ['Midjourney', 'Creative image generation', 'Concept art and style', 'Visual exploration'],
+    ['FLUX', 'Hosted image generation', 'Developer pipelines', 'Custom workflows'],
+    ['Browser AI upscaler', 'Image enhancement', 'Existing photos and renders', 'Fast enlargement without a GPU'],
+  ];
+  const checks = [
+    ['Structure', 'Does the output keep the pose, silhouette, perspective and repeated geometry?'],
+    ['Identity', 'Do faces, hands, logos and product labels stay recognisable against the source?'],
+    ['Texture', 'Are edges and materials clearer, or has the model invented plausible detail?'],
+    ['Workflow', 'Can a visitor run a comparable input, inspect the result and keep the original?'],
+  ];
+  const faqs = [
+    ['Is DLSS 5 the same thing as an AI image generator?', 'No. Official DLSS is an in-game neural-rendering technology. Image generators create or edit images from prompts, while the independent browser workflow on this site converts a supplied frame or reference into a reviewable visual direction.'],
+    ['How can I compare tools fairly?', 'Keep the source image, aspect ratio, target direction and review checks fixed. Compare structure, identity, texture and workflow separately instead of judging two unrelated prompts from different models.'],
+    ['Are the examples on this page a benchmark?', 'No. The gallery combines publicly published NVIDIA reference pairs with independent browser examples. A local Studio run is reported as one measured snapshot, not a universal speed or quality claim.'],
+    ['Can I try a result before creating an account?', 'Yes. The character conversion and visual-enhancer examples use cached sample runs. You can inspect the before-and-after result first, then sign in when you want to upload your own image.'],
+  ];
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${BASE_URL}/comparisons#article`,
+        headline: 'AI Image Tools Compared: GPT Image 2, ChatGPT Images, Midjourney & DLSS 5',
+        description: 'An independent, source-led comparison of image generation, editing, neural rendering and browser enhancement workflows.',
+        dateModified: '2026-10-08',
+        mainEntityOfPage: `${BASE_URL}/comparisons`,
+        author: { '@type': 'Organization', name: 'DLSS5NVIDIA' },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${BASE_URL}/comparisons#faq`,
+        mainEntity: faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })),
+      },
+    ],
+  };
+  const table = `<div class="overflow-x-auto rounded-xl border border-outline-variant/20"><table class="w-full text-left min-w-[760px]"><thead><tr class="bg-surface-high"><th class="p-4 text-primary">Tool</th><th class="p-4 text-primary">Primary role</th><th class="p-4 text-primary">Best for</th><th class="p-4 text-primary">Typical workflow</th></tr></thead><tbody>${rows.map(row => `<tr class="border-t border-outline-variant/10">${row.map((cell, index) => `<${index === 0 ? 'th' : 'td'} class="p-4 ${index === 0 ? 'text-white font-semibold' : 'text-zinc-300'}">${escapeHtml(cell)}</${index === 0 ? 'th' : 'td'}>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const checkCards = checks.map(([name, text], index) => `<div class="flex gap-4 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><span class="text-primary font-headline font-bold text-xl">0${index + 1}</span><div><h3 class="text-white font-semibold">${escapeHtml(name)}</h3><p class="text-sm text-zinc-400 leading-relaxed mt-1">${escapeHtml(text)}</p></div></div>`).join('');
+  const faqHtml = faqs.map(([question, answer]) => `<article class="rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h3 class="text-white font-semibold">${escapeHtml(question)}</h3><p class="text-sm leading-relaxed text-zinc-400 mt-3 max-w-3xl">${escapeHtml(answer)}</p></article>`).join('');
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1200px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>AI Image Tools Compared</span></nav><header class="mb-12 max-w-4xl"><span class="text-primary text-xs uppercase tracking-[0.2em]">Independent guide · updated October 2026</span><h1 class="text-4xl md:text-5xl font-headline font-bold text-white mt-4 mb-5">AI image tools compared</h1><p class="text-zinc-400 text-lg leading-relaxed">DLSS 5 is an in-game neural rendering technology. GPT Image, ChatGPT Images, Midjourney and FLUX create or edit images. This guide compares their jobs instead of treating them as interchangeable products, then gives you a real sample and a checklist to run yourself.</p></header><section class="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8 mb-14"><p class="text-xs uppercase tracking-[0.2em] text-primary font-label">Try before you choose</p><h2 class="text-2xl md:text-3xl font-headline font-bold text-white mt-3">Run a conversion, inspect the pixels, then read the table</h2><p class="text-zinc-300 leading-relaxed mt-4 max-w-3xl">The examples are cached so you can see the workflow before signing in. Use the character sample for style conversion, the enhancer sample for existing images, or open the source-led gallery when you want to audit published references.</p><p class="mt-6"><a class="inline-block bg-primary text-black px-5 py-3 rounded-lg font-bold" href="/dashboard?tool=game-character-style&amp;sample=characterStyle">Try character conversion →</a> <a class="inline-block ml-2 border border-primary/50 text-primary px-5 py-3 rounded-lg font-semibold" href="/dashboard?tool=enhance&amp;sample=sample1">Try visual enhancer →</a> <a class="inline-block ml-2 text-primary" href="/marketing/reddit/dlss5-reddit-comparisons.html">Open 20-pair gallery →</a></p></section><section aria-labelledby="tools-heading"><p class="text-xs uppercase tracking-[0.2em] text-primary font-label">Choose by task</p><h2 id="tools-heading" class="text-2xl md:text-3xl font-headline font-bold text-white mt-2 mb-5">What each workflow is actually for</h2>${table}</section><section class="mt-16" aria-labelledby="evidence-heading"><p class="text-xs uppercase tracking-[0.2em] text-primary font-label">Evidence, not a leaderboard</p><h2 id="evidence-heading" class="text-2xl md:text-3xl font-headline font-bold text-white mt-2">Three ways to inspect the claim</h2><p class="text-zinc-400 leading-relaxed mt-4 max-w-3xl">A useful comparison lets a reader see the source, run a related task and understand the boundary of the result. These are independent references, not a claim that one model wins every prompt.</p><div class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><img src="/marketing/reddit/dlss5-official-contact-sheet.jpg" alt="Twenty publicly published DLSS 5 reference pairs arranged as a contact sheet" width="1600" height="1000" loading="lazy" class="w-full aspect-[16/10] object-cover" /><div class="p-5"><h3 class="text-lg font-headline font-bold text-white">20 source-linked reference pairs</h3><p class="text-sm leading-relaxed text-zinc-400 mt-3">Keep the NVIDIA source link beside every pair and inspect faces, hair, thin geometry, materials and shadows at 100%.</p><a href="/marketing/reddit/dlss5-reddit-comparisons.html">Open the source-led gallery →</a></div></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><div class="grid grid-cols-2"><img src="/examples/case-product-low.jpg" alt="Compressed product image before enhancement" width="1200" height="800" loading="lazy" class="w-full aspect-[3/2] object-cover" /><img src="/examples/case-product.jpg" alt="Product image after independent browser enhancement" width="1200" height="800" loading="lazy" class="w-full aspect-[3/2] object-cover" /></div><div class="p-5"><h3 class="text-lg font-headline font-bold text-white">A browser result you can inspect</h3><p class="text-sm leading-relaxed text-zinc-400 mt-3">Use the same before-and-after checks for product labels, faces and straight edges before deciding whether an enhancement is useful.</p><a href="/image-quality-enhancer">Open the free enhancer →</a></div></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><div class="grid grid-cols-2"><img src="/examples/generated/game-cyber-1-before.jpg" alt="Game character base frame before style conversion" width="768" height="512" loading="lazy" class="w-full aspect-[3/2] object-cover" /><img src="/examples/generated/game-cyber-1-after.jpg" alt="Game character after independent style conversion" width="768" height="512" loading="lazy" class="w-full aspect-[3/2] object-cover" /></div><div class="p-5"><h3 class="text-lg font-headline font-bold text-white">Style conversion keeps the source visible</h3><p class="text-sm leading-relaxed text-zinc-400 mt-3">The independent workflow changes style, lighting and material direction while keeping the original frame available for review.</p><a href="/game-character-style">See the character cases →</a></div></article></div></section><section class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8" aria-labelledby="method-heading"><div><p class="text-xs uppercase tracking-[0.2em] text-primary font-label">Repeatable review</p><h2 id="method-heading" class="text-2xl md:text-3xl font-headline font-bold text-white mt-2">Use the same four checks every time</h2><div class="mt-6 grid gap-4">${checkCards}</div></div><div class="rounded-xl border border-outline-variant/20 bg-surface-low p-6 sm:p-8"><h2 class="text-2xl font-headline font-bold text-white">One measured snapshot</h2><p class="text-sm leading-relaxed text-zinc-400 mt-4">The local DLSS5 Studio workflow processed one 3-second, 720p public-domain clip as 36 frames in 87.4 seconds on an RTX 4090 reference machine — about 2.43 seconds per frame. That is a batch-workflow observation, not a real-time promise or a cross-provider benchmark.</p><a class="inline-block mt-6 text-primary" href="/download#showcase">Read the full Studio evidence →</a></div></section><section class="mt-16" id="faq"><h2 class="text-2xl md:text-3xl font-headline font-bold text-white mb-6">Comparison questions</h2><div class="grid gap-4">${faqHtml}</div></section><p class="text-zinc-500 text-xs mt-12">DLSS and NVIDIA are trademarks of NVIDIA Corporation. This site is independent and non-official. Public NVIDIA reference images remain the property of their respective owners; the browser examples are independent references.</p></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: 'AI Image Tools Compared: GPT Image 2, ChatGPT Images, Midjourney & DLSS 5',
+    description: 'Compare AI image generation, editing and upscaling tools by quality, structure preservation, speed, cost, API access and best use case. Run a free visual sample before choosing a workflow.',
+    canonicalPath: '/comparisons',
+    language: 'en-US',
+    image: '/marketing/reddit/dlss5-official-contact-sheet.jpg',
+    keywords: ['GPT Image 2 vs Midjourney', 'ChatGPT Images vs FLUX', 'DLSS 5 vs AI upscaler', 'best AI image generator comparison', 'AI image tool benchmark', 'image conversion workflow'],
+    structuredData: schema,
+  }), root);
+}
+
 type LegalDocument = 'terms' | 'privacy' | 'refund';
 
 /** Keep the policy routes useful before React hydrates (payment reviewers and crawlers often do not run JS). */
@@ -892,15 +952,7 @@ if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({
   keywords: ['enterprise ai upscaling', 'private image upscaling api', 'on premise neural rendering', 'custom image enhancement model'],
   links: [{ label: 'Developer API docs', path: '/docs' }, { label: 'AI upscaling models', path: '/models' }, { label: 'Contact and plans', path: '/pricing' }],
 }));
-if (profileHas('comparisons')) writeRoute('/comparisons', renderPublicGuide({
-  path: '/comparisons',
-  title: 'AI Image Tools Compared: GPT Image 2, ChatGPT Images, Midjourney & DLSS 5',
-  description: 'Compare AI image generation, editing and upscaling tools by quality, structure preservation, speed, cost, API access and best use case.',
-  heading: 'AI Image Tools Compared',
-  lead: 'Choose the right job for a renderer-grounded upscaler, a generative image model or a conversational editing workflow.',
-  keywords: ['GPT Image 2 vs Midjourney', 'ChatGPT Images vs FLUX', 'DLSS 5 vs AI upscaler', 'best AI image generator comparison'],
-  links: [{ label: 'AI Image Upscaler', path: '/image-upscaler' }, { label: 'DLSS 5 and GPT-6 workflow', path: '/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026' }, { label: 'Pricing and credits', path: '/pricing' }],
-}));
+if (profileHas('comparisons')) writeRoute('/comparisons', renderComparisonsPage());
 writeRoute('/pricing', renderPublicGuide({
   path: '/pricing',
   title: 'AI Image Upscaling Plans | DLSS 5 Credits',
