@@ -429,3 +429,16 @@ URL Inspection 的当前结果：
 - 当前正式域名仍是上一版 Production：线上 sitemap 返回 **68** 条 URL，仍包含待收敛的 `/en/blog/dlss-5-online-image-upscaler-guide`；本地新构建的 sitemap 为 **67** 条，已移除该重复地址。未知路径线上仍会落到首页 200，这也与本地新 404 行为不同。
 - 对线上 sitemap 当前可抓取的 67 个 URL 做了带浏览器 User-Agent 的并发复核：67/67 返回 HTTP 200，且每页均有非空 title、description、canonical 和 H1。线上 `/`、`/image-quality-enhancer`、`/download`、`/comparisons` 与对比文章的现有 metadata 可读；本地新版本的 title、路由和 404 修复尚未进入正式域名。
 - 因此本轮没有对 Google 重复提交 sitemap 或 URL；在新构建正式部署前提交只会让 Google 继续抓旧壳。部署需要产品负责人确认，已保留在 TODO。
+
+## 2026-10-09：生产部署与 Search Console 收尾复核
+
+- `bb2e733` 已推送到 `origin/main`；Vercel Production 部署 `dlss5-main-4rkniffgb-wangsheng1991s-projects.vercel.app` 状态为 **READY**，提交信息与该 commit 一致。
+- 正式域名路由复核：`/en/blog/dlss-5-online-image-upscaler-guide` 返回单跳 **301** 到 `/blog/dlss-5-online-image-upscaler-guide`；`/image2lego`、`/does-not-exist-404`、`/blog/not-a-real-article` 均返回真实 **404**，不再把不存在路径伪装成首页 200。
+- 正式 `sitemap.xml` 返回 **67** 个 `<loc>`，不再包含已弃用的 `/en/blog/dlss-5-online-image-upscaler-guide`。首页、`/image-quality-enhancer`、`/download`、对比文章和 `/comparisons` 均返回 200，title、description、keywords、canonical 与 H1 均非空且 canonical 自指。
+- Search Console 网页索引报告仍是旧快照（2026-10-04）：69 个已编入索引、9 个未编入索引。打开“已发现 - 尚未编入索引”的明细后发现 `/comparisons` 已进入验证队列；随后 URL Inspection 实时结果显示 **“网址已收录到 Google”**，因此不重复提交。其余 8 条为预期重定向/noindex 或已在进行中的 canonical 验证。
+- 站点地图界面仍显示 2026-10-03 读取、68 个已发现网页，这是 Google 尚未重新读取 67 条新 sitemap 的延迟；尝试提交相对路径时被界面判为无效，没有改变现有成功的 sitemap 记录，也没有重复提交同一 URL。
+
+### 当前 TODO
+
+- 等 Google 重新读取 67 条 sitemap 并完成 3 个 canonical/发现类验证；在状态变化前不重复请求同一 URL。
+- 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 和 `dlss 5 download` 的新窗口数据；当前线上 metadata 已验证，无代码侧 SEO 阻塞。
