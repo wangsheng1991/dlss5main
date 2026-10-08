@@ -2,50 +2,141 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/gpu/:match*", "destination": "https://gpu-api.alphanetplus.com/:match*" },
-    { "source": "/api/oss/:match*", "destination": "https://oss.alphanetplus.com/:match*" },
-    { "source": "/api/me/:route", "destination": "/api/me/[route]" },
-    { "source": "/api/image-edit/jobs/:id", "destination": "/api/image-edit/jobs/[id]" },
-    { "source": "/api/image-edit/results/:id", "destination": "/api/image-edit/results/[id]" },
-    { "source": "/api/billing/:route", "destination": "/api/billing/[route]" },
-    { "source": "/blog", "destination": "/blog/index.html" },
-    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
-    { "source": "/en/blog", "destination": "/en/blog/index.html" },
-    { "source": "/en/blog/:slug", "destination": "/en/blog/:slug/index.html" },
-    { "source": "/zh/blog", "destination": "/zh/blog/index.html" },
-    { "source": "/zh/blog/:slug", "destination": "/zh/blog/:slug/index.html" },
-    { "source": "/store", "destination": "/store/index.html" },
-    { "source": "/image-upscaler", "destination": "/image-upscaler/index.html" },
-    { "source": "/image-quality-enhancer", "destination": "/image-quality-enhancer/index.html" },
-    { "source": "/unblur-image", "destination": "/unblur-image/index.html" },
-    { "source": "/es/mejorar-calidad-imagen", "destination": "/es/mejorar-calidad-imagen/index.html" },
-    { "source": "/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/docs", "destination": "/docs/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/gpu/:match*",
+      "destination": "https://gpu-api.alphanetplus.com/:match*"
+    },
+    {
+      "source": "/api/oss/:match*",
+      "destination": "https://oss.alphanetplus.com/:match*"
+    },
+    {
+      "source": "/api/me/:route",
+      "destination": "/api/me/[route]"
+    },
+    {
+      "source": "/api/image-edit/jobs/:id",
+      "destination": "/api/image-edit/jobs/[id]"
+    },
+    {
+      "source": "/api/image-edit/results/:id",
+      "destination": "/api/image-edit/results/[id]"
+    },
+    {
+      "source": "/api/billing/:route",
+      "destination": "/api/billing/[route]"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug/index.html"
+    },
+    {
+      "source": "/en/blog",
+      "destination": "/en/blog/index.html"
+    },
+    {
+      "source": "/en/blog/:slug",
+      "destination": "/en/blog/:slug/index.html"
+    },
+    {
+      "source": "/zh/blog",
+      "destination": "/zh/blog/index.html"
+    },
+    {
+      "source": "/zh/blog/:slug",
+      "destination": "/zh/blog/:slug/index.html"
+    },
+    {
+      "source": "/store",
+      "destination": "/store/index.html"
+    },
+    {
+      "source": "/image-upscaler",
+      "destination": "/image-upscaler/index.html"
+    },
+    {
+      "source": "/image-quality-enhancer",
+      "destination": "/image-quality-enhancer/index.html"
+    },
+    {
+      "source": "/unblur-image",
+      "destination": "/unblur-image/index.html"
+    },
+    {
+      "source": "/es/mejorar-calidad-imagen",
+      "destination": "/es/mejorar-calidad-imagen/index.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard/index.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/fonts/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/examples/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
     },
     {
       "source": "/blog/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
     },
     {
       "source": "/sitemap.xml",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
     }
   ],
   "functions": {
-    "api/image-edit/samples.ts": { "maxDuration": 60 }
-  }
+    "api/image-edit/samples.ts": {
+      "maxDuration": 60
+    }
+  },
+  "redirects": [
+    {
+      "source": "/en/blog/dlss-5-online-image-upscaler-guide",
+      "destination": "/blog/dlss-5-online-image-upscaler-guide",
+      "statusCode": 301,
+      "preserveQueryParams": true
+    }
+  ]
 }

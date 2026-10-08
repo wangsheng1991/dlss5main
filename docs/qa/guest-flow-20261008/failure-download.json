@@ -1,0 +1,10 @@
+{
+  "errorText": "Simulated upstream timeout for QA",
+  "retryVisible": true,
+  "retryReady": true,
+  "downloadPath": "/var/folders/t_/w927xmx974x4v1v8r1gyrl7c0000gn/T/playwright-artifacts-03S4cY/2e4ac3b8-9b2e-412a-8bea-dd8ae086fae1",
+  "readyText": "Example ready · served from cache",
+  "errors": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  ]
+}

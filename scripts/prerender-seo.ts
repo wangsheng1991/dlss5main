@@ -167,7 +167,13 @@ function absoluteUrl(path: string): string {
   return path.startsWith('http') ? path : `${BASE_URL}${path}`;
 }
 
+const DEFAULT_ENGLISH_ARTICLE_SLUG = 'dlss-5-online-image-upscaler-guide';
+
 function articlePath(slug: string, locale?: 'en' | 'zh'): string {
+  // Keep the already indexed unprefixed English article as the canonical address. The old
+  // /en/blog URL is redirected at the edge; all generated cards and related links use this helper
+  // so we do not create fresh internal links to the deprecated duplicate.
+  if (locale === 'en' && slug === DEFAULT_ENGLISH_ARTICLE_SLUG) return `/blog/${slug}`;
   return `${locale ? `/${locale}` : ''}/blog/${slug}`;
 }
 
@@ -191,6 +197,9 @@ function pageHead(options: {
     : options.canonicalPath.startsWith('/zh/')
       ? options.canonicalPath.replace(/^\/zh/, '/en')
       : `/en${options.canonicalPath}`;
+  const normalizedEnglishBlogPath = englishBlogPath === `/en/blog/${DEFAULT_ENGLISH_ARTICLE_SLUG}`
+    ? `/blog/${DEFAULT_ENGLISH_ARTICLE_SLUG}`
+    : englishBlogPath;
   const chineseBlogPath = options.canonicalPath.startsWith('/zh/')
     ? options.canonicalPath
     : options.canonicalPath.startsWith('/en/')
@@ -198,7 +207,7 @@ function pageHead(options: {
       : `/zh${options.canonicalPath}`;
   const blogAlternates = options.canonicalPath.includes('/blog')
     ? [
-        `<link rel="alternate" hreflang="en" href="${BASE_URL}${englishBlogPath}" data-rh="true" />`,
+        `<link rel="alternate" hreflang="en" href="${BASE_URL}${normalizedEnglishBlogPath}" data-rh="true" />`,
         `<link rel="alternate" hreflang="zh-CN" href="${BASE_URL}${chineseBlogPath}" data-rh="true" />`,
         `<link rel="alternate" hreflang="x-default" href="${BASE_URL}${baseBlogPath}" data-rh="true" />`,
       ].join('\n    ')
@@ -898,7 +907,10 @@ if (profileHas('blog')) {
   for (const locale of [undefined, 'en', 'zh'] as const) {
     writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
     for (const article of ARTICLES) {
-      writeRoute(articlePath(article.slug, locale), renderArticle(article, locale).html);
+      const route = articlePath(article.slug, locale);
+      // The English upscaler article is served once at /blog/<slug>; /en/blog/<slug> is a 301.
+      if (locale === 'en' && route === articlePath(article.slug)) continue;
+      writeRoute(route, renderArticle(article, locale).html);
     }
   }
 }
@@ -931,6 +943,7 @@ const studioStaticCases = [
   { id: 'video', image: 'studio-video-compare.jpg', extra: 'studio-queue.jpg', extraAlt: studioStatic['showcase.video.queueAlt'] },
 ] as const;
 const studioStaticShowcase = `<section id="showcase" class="mt-12"><h2 class="text-2xl font-bold text-white">${escapeHtml(studioStatic['showcase.title'])}</h2><p class="mt-4 text-zinc-300 leading-relaxed">${studioStatic['showcase.intro']}</p>${studioStaticCases.map((item) => `<article class="mt-8 rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><img src="/studio/${item.image}" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStatic[`showcase.${item.id}.alt`])}" class="w-full" />${'extra' in item ? `<img src="/studio/${item.extra}" width="1440" height="778" loading="lazy" alt="${escapeHtml(item.extraAlt)}" class="w-full" />` : ''}<div class="p-5"><h3 class="text-xl font-bold text-white">${escapeHtml(studioStatic[`showcase.${item.id}.title`])}</h3><p class="mt-2 text-zinc-300 leading-relaxed">${studioStatic[`showcase.${item.id}.body`]}</p></div></article>`).join('')}<figure class="mt-8"><img src="/studio/studio-diff.jpg" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStatic['shots.diff.alt'])}" class="w-full rounded-xl" /><figcaption class="mt-2 text-sm text-zinc-400">${escapeHtml(studioStatic['shots.diff.cap'])}</figcaption></figure></section>`;
+const studioStaticAtAGlance = '<section class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="At a glance"><article class="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4"><p class="text-[11px] uppercase tracking-widest text-zinc-500">What it does</p><p class="mt-2 text-sm leading-relaxed text-zinc-200">A local Windows interface for batch image and video processing through the Visual Enhancer release.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4"><p class="text-[11px] uppercase tracking-widest text-zinc-500">What you get</p><p class="mt-2 text-sm leading-relaxed text-zinc-200">Wipe comparison, measured queue results and downloadable files that stay on your machine.</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4"><p class="text-[11px] uppercase tracking-widest text-zinc-500">Limit</p><p class="mt-2 text-sm leading-relaxed text-zinc-200">RTX hardware and the NVIDIA release package are required; Live is an enhanced preview, not real-time video.</p></article></section>';
 const studioStaticAndroid = '<section class="mt-12 max-w-4xl"><h2 class="text-2xl font-bold text-white">Looking for a DLSS 5 Android download?</h2><p class="mt-4 text-zinc-300 leading-relaxed">There is no standalone Android APK for DLSS 5. Use the browser-based online converter on a phone or desktop; DLSS5 Studio is a separate Windows RTX tool available by request.</p></section>';
 if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   path: '/download',
@@ -940,7 +953,7 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   lead: 'Choose the right DLSS 5 path: use the free online converter on mobile or desktop, or understand why DLSS5 Studio is a separate Windows RTX build requested by email. There is no official Android APK or standalone NVIDIA DLSS installer.',
   keywords: ['DLSS 5 download', 'DLSS 5 download mobile', 'DLSS 5 download android', 'DLSS 5 online', 'free DLSS 5 converter', 'DLSS 5 Studio download', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
   links: [{ label: 'Free DLSS 5 visual enhancer', path: '/image-quality-enhancer' }, { label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }],
-  extraHtml: `${studioStaticAndroid}${studioStaticShowcase}`,
+  extraHtml: `${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}`,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({

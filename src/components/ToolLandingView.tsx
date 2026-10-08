@@ -14,10 +14,10 @@ export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
   return <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-6 text-center">
     <UploadCloud aria-hidden="true" className="w-8 h-8 mx-auto mb-3 text-primary" />
     <div className="flex flex-wrap items-center justify-center gap-3">
-      <a href={`/dashboard?tool=${tool.dashboardTool}`} onClick={() => trackEvent('tool_cta_click', { tool: tool.dashboardTool, locale: tool.locale })} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.cta}</a>
-      {tool.freeSample && <a href={`/dashboard?tool=${tool.dashboardTool}&sample=${tool.freeSample}`} onClick={() => trackEvent('tool_sample_click', { tool: tool.dashboardTool, sample: tool.freeSample, locale: tool.locale })} className="inline-flex items-center rounded-lg border border-primary/50 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{es ? 'Probar ejemplo gratis' : 'Try free example'}</a>}
+      {tool.freeSample && <a href={`/dashboard?tool=${tool.dashboardTool}&sample=${tool.freeSample}`} onClick={() => { trackEvent('experience_click', { tool: tool.dashboardTool, sample: tool.freeSample, intent: 'sample', locale: tool.locale }); trackEvent('tool_sample_click', { tool: tool.dashboardTool, sample: tool.freeSample, locale: tool.locale }); }} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{es ? 'Probar ejemplo gratis' : 'Try free example'}</a>}
+      <a href={`/dashboard?tool=${tool.dashboardTool}`} onClick={() => { trackEvent('experience_click', { tool: tool.dashboardTool, intent: 'upload', locale: tool.locale }); trackEvent('tool_cta_click', { tool: tool.dashboardTool, locale: tool.locale }); }} className="inline-flex items-center rounded-lg border border-primary/50 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.freeSample ? (es ? 'Subir mi imagen' : 'Upload my image') : tool.cta}</a>
     </div>
-    <p className="mt-3 text-xs leading-relaxed text-zinc-400">{es ? 'O arrastra una imagen aquí. La vista previa permanece en tu navegador.' : 'Or drop an image here. Your preview stays in your browser.'}</p>
+    <p className="mt-3 text-xs leading-relaxed text-zinc-400">{es ? 'Prueba el caso gratuito primero; para subir tu propia imagen se abrirá el estudio y se te pedirá iniciar sesión.' : 'Try the free case first; uploading your own image opens the studio and asks you to sign in.'}</p>
     <p className="mt-2 text-xs text-zinc-400">{tool.ctaNote}</p>
     <p className="mt-3 text-xs font-semibold text-primary">{es ? 'Caso de referencia gratuito abajo · tus propias cargas requieren iniciar sesión.' : 'Free reference case below · your own upload requires sign-in.'}</p>
   </div>;
@@ -60,6 +60,21 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <ImageSlider highRes="/examples/sample1-photo.webp" lowRes="/examples/sample1-photo-low.webp" alt={es ? 'Comparación ilustrativa de calidad de imagen' : 'Illustrative image quality comparison'} inputLabel={es ? 'Baja resolución' : 'Low resolution'} outputLabel={es ? 'Referencia' : 'Reference'} compareLabel={es ? 'Arrastra o usa las flechas para comparar' : 'Drag or use arrow keys to compare'} initialAspectRatio={1.5} priority />
           <figcaption className="px-3 py-4 text-xs leading-relaxed text-zinc-400">{es ? 'Demostración ilustrativa: copia de baja resolución frente a la imagen de referencia. No es una medición del resultado del modelo. Tu resultado dependerá de la imagen original.' : 'Illustrative demo: a low-resolution copy compared with its reference image. This is not a measured model output. Your result depends on the source image.'}</figcaption>
         </figure>}
+      </section>
+
+      <section className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={es ? 'Resumen de la herramienta' : 'Tool at a glance'}>
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-low px-5 py-4">
+          <p className="text-[11px] uppercase tracking-widest text-zinc-500">{es ? 'Uso principal' : 'Use it for'}</p>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-200">{tool.useCases.slice(0, 2).join(' · ')}</p>
+        </div>
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-low px-5 py-4">
+          <p className="text-[11px] uppercase tracking-widest text-zinc-500">{es ? 'Qué obtienes' : 'Output'}</p>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-200">{tool.resultLabel} · {es ? `hasta ${ENHANCE_MAX_EDGE} px por lado` : `up to ${ENHANCE_MAX_EDGE}px per edge`}</p>
+        </div>
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-low px-5 py-4">
+          <p className="text-[11px] uppercase tracking-widest text-zinc-500">{es ? 'Límite' : 'Limit'}</p>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-200">{es ? 'La IA puede reconstruir detalles inciertos; revisa antes de descargar.' : 'AI may reconstruct uncertain detail; review before downloading.'}</p>
+        </div>
       </section>
 
       <section className="mt-16 max-w-4xl space-y-7" aria-labelledby="definition-heading">

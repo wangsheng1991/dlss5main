@@ -16,5 +16,6 @@ import './after-sign-in.test';
 import './api-routes.test';
 import './history.test';
 import './podcast.test';
+import './seo-routes.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

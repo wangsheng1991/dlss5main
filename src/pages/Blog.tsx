@@ -140,13 +140,20 @@ export default function Blog() {
     setActiveLang((routeLanguage || i18n.resolvedLanguage || i18n.language || '').startsWith('zh') ? 'cn' : 'en');
   }, [i18n, i18n.language, i18n.resolvedLanguage, routeLanguage]);
 
-  const localizedBlogPath = (language: 'en' | 'zh') => `/${language}/blog${slug ? `/${slug}` : ''}`;
+  // This article was historically emitted at both /blog and /en/blog even though the
+  // English body, title and purpose were identical. Keep the already indexed unprefixed URL as
+  // the only English address; the edge redirect in vercel.json handles old inbound links.
+  const DEFAULT_ENGLISH_ARTICLE_SLUG = 'dlss-5-online-image-upscaler-guide';
+  const localizedBlogPath = (language: 'en' | 'zh') => {
+    if (language === 'en' && slug === DEFAULT_ENGLISH_ARTICLE_SLUG) return `/blog/${slug}`;
+    return `/${language}/blog${slug ? `/${slug}` : ''}`;
+  };
   const canonicalPath = routeLocale ? localizedBlogPath(routeLocale) : `/blog${slug ? `/${slug}` : ''}`;
   const alternateLinks = [
     { hrefLang: 'en', href: `${SITE_URL}${localizedBlogPath('en')}` },
     { hrefLang: 'zh-CN', href: `${SITE_URL}${localizedBlogPath('zh')}` },
     { hrefLang: 'x-default', href: `${SITE_URL}${slug ? `/blog/${slug}` : '/blog'}` },
-  ];
+  ].filter((link, index, links) => links.findIndex(candidate => candidate.href === link.href) === index);
 
   // Blog index page
   if (!slug) {

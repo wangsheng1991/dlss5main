@@ -179,116 +179,108 @@ DLSS 5 是绑定特定硬件的实时游戏内技术，而它的工作方式恰�
     target_keywords_cn: ['dlss5和dlss4区别', 'fsr4对比dlss5', '2026最好的超分辨率', '要升级显卡用dlss5吗'],
     priority: 'P0',
     type: 'High-intent comparison — captures upgrade decision traffic',
-    lastUpdated: 'September 2026',
+    lastUpdated: 'October 2026',
     readTime: '7 min read',
-    description_en: 'DLSS 5 vs DLSS 4 vs FSR 4 in 2026: compare neural rendering, upscaling, frame generation, GPU support and upgrade advice in an independent, source-led guide.',
-    description_cn: 'DLSS 5、DLSS 4 与 FSR 4 的 2026 对比：从神经渲染、超分、帧生成、显卡支持到升级建议，按来源拆解实际差异。',
-    content_en: `In 2026, the GPU you buy isn't just a question of teraflops. It's a question of which AI reconstruction ecosystem you're committing to — and what that means for how your games look and perform for the next three to four years.
+    description_en: 'DLSS 5 vs DLSS 4 vs FSR 4 in 2026: compare neural rendering, upscaling, frame generation and hardware support using current NVIDIA and AMD sources, with clear caveats instead of a synthetic winner.',
+    description_cn: 'DLSS 5、DLSS 4 与 FSR 4 的 2026 对比：按 NVIDIA 与 AMD 当前资料区分神经渲染、超分、帧生成和硬件支持，避免把不同用途混成一个“画质排名”。',
+    content_en: `DLSS 5, DLSS 4 and AMD FSR answer different questions. DLSS 5 is a renderer-grounded neural rendering stage for supported games. DLSS 4 and later updates combine upscaling, ray reconstruction, anti-aliasing and frame generation features. AMD's current documentation uses FSR Upscaling as the name for its machine-learning upscaling inside the FSR Redstone family; older launch material still calls that mode FSR 4.
 
-**Quick answer:** DLSS 5 focuses on neural rendering and lighting detail inside supported games; DLSS 4 and 4.5 focus on upscaling and frame generation; FSR 4 is AMD's machine-learning alternative. The right choice depends on your GPU, game support and whether you need fidelity or more frames.
+**Quick answer:** choose by the game and the GPU you actually own. DLSS 5 currently targets GeForce RTX 50 Series GPUs and GeForce NOW, and launched in NBA 2K27 on September 1, 2026. DLSS 4 features cover more than one function and have different hardware requirements. FSR Upscaling is an AMD in-game technology that requires game integration; it is not a browser image converter. None of these facts makes a universal quality winner without a same-game, same-input test.
 
-## The Big Picture in One Sentence Each
+## The big picture
 
-**DLSS 5** — NVIDIA's bet that AI can rebuild the lighting and material detail real-time budgets forced developers to cut, not just reconstruct resolution. RTX 50 series GPUs and laptops, plus GeForce NOW. Shipping since 1 September 2026 in NBA 2K27.
+**DLSS 5** — NVIDIA describes 3D-Guided Neural Rendering as a final neural rendering stage that uses the rendered frame and engine data to add lifelike lighting and material detail while keeping the game as the foundation. NVIDIA says it is available on GeForce RTX 50 Series GPUs and laptops, and through GeForce NOW. The launch article names NBA 2K27 as the first release on September 1, 2026.
 
-**DLSS 4 / 4.5** — Frame generation that multiplies your fps by up to 6x. Best upscaling tech available today.
+**DLSS 4 and later updates** — NVIDIA's DLSS suite includes Super Resolution, Ray Reconstruction, DLAA and Frame Generation. DLSS 4 introduced Multi Frame Generation for GeForce RTX 50 Series; NVIDIA also documents an upgraded Frame Generation model for RTX 40 and RTX 50 Series. Treat “DLSS 4.5” as a version label that must be checked against the specific game, driver and GPU rather than as one universal mode.
 
-**FSR 4** — AMD finally went fully AI-powered. Now genuinely competitive with DLSS 4 in image quality.
+**FSR 4 / FSR Upscaling** — AMD's current FSR page describes FSR Redstone as a suite that includes FSR Upscaling, FSR Frame Generation and FSR Ray Regeneration. The same page notes that the machine-learning upscaling may still appear as “FSR 4” in some game interfaces. Support depends on the game integration and AMD hardware listed by AMD.
 
-## What Each Technology Actually Does
+## What each technology actually does
 
-### DLSS 4 / 4.5 (Available Now)
+### DLSS 5: renderer-grounded neural rendering
 
-DLSS 4 uses a transformer-based neural network to upscale lower-resolution frames. The killer feature is Multi Frame Generation:
-- **DLSS 4**: Generate up to 4 frames for every 1 rendered frame → up to 4× fps multiplier
-- **DLSS 4.5 Dynamic MFG**: Up to 6× multiplier, automatically adjusting based on your monitor's refresh rate
+DLSS 5 is not a downloadable image filter. It runs inside a supported game pipeline and uses engine information such as the rendered frame, motion and scene data. NVIDIA highlights developer controls for model selection, structure intensity, tone intensity and masking. That is why a DLSS 5 screenshot should be discussed as a game-rendering result, not as proof that a separate browser model will reproduce the same pixels.
 
-### DLSS 5 (Available Now)
+### DLSS 4: reconstruction and generated frames
 
-DLSS 5 doesn't generate extra frames. It runs as the final rendering stage of the pipeline and rebuilds the lighting and material detail the engine could not afford to compute, so the frame keeps its geometry and identity while gaining a lifelike light response. It extends the existing pipeline rather than replacing it, and it ships alongside DLSS Super Resolution and Multi Frame Generation.
+DLSS 4 combines several features. Super Resolution reconstructs a higher-resolution image from a lower-resolution render. Ray Reconstruction improves ray-traced effects. DLAA targets anti-aliasing at native resolution. Frame Generation and Multi Frame Generation create additional frames under their own hardware and latency trade-offs. Read the in-game feature names and the GPU support together; do not reduce the suite to “an upscaler.”
 
-**RTX 50 series GPUs and laptops.** GeForce NOW Ultimate members get it from NVIDIA's cloud RTX 5080 rigs; RTX 40 series and older are still unsupported.
+### FSR 4 / FSR Upscaling: AMD's game-integrated alternative
 
-### FSR 4 (Available Now, RDNA 4 only)
+AMD's current documentation says ML-based FSR Upscaling is available on supported Radeon hardware and games, with the FSR 4 name still used in some existing menus. It is an in-game SDK or driver-assisted workflow, not the same task as enhancing a JPEG in a browser. Compare it with DLSS using the same game, resolution, quality preset, motion and capture method.
 
-AMD has moved to machine learning–based upscaling and frame generation. The quality gap between FSR 4 and DLSS 4 is now smaller than it has ever been.
+## Side-by-side comparison
 
-## Side-by-Side Comparison
+| Question | DLSS 4 and later | DLSS 5 | AMD FSR 4 / FSR Upscaling |
+|---|---|---|---|
+| Primary job | Super Resolution, ray reconstruction, anti-aliasing and frame generation features | Renderer-grounded neural lighting and material detail | Game-integrated upscaling and related FSR Redstone features |
+| Input data | Game render plus temporal and motion information, depending on the feature | Game render plus engine data and developer controls | Game render and data exposed by the supported integration |
+| Extra frames | Frame Generation and Multi Frame Generation are separate features | Runs alongside the existing DLSS stack; it is not itself a frame generator | FSR Frame Generation is a separate feature |
+| Hardware stated by the vendors | MFG is for RTX 50 Series; other DLSS features vary by feature and GPU | RTX 50 Series GPUs and laptops, plus GeForce NOW | AMD-supported Radeon hardware and supported games; check the current FSR page |
+| What to verify | Game version, driver, feature toggle and latency | “DLSS Neural Rendering” toggle, RTX 50 support and game availability | FSR naming in the menu, game integration and Radeon support |
 
-| Feature | DLSS 4.5 (RTX 40/50) | DLSS 5 (RTX 50 only) | FSR 4 (RDNA 4 only) | FSR 3.1 (any GPU) |
-|---------|---------------------|---------------------|---------------------|-------------------|
-| Upscaling quality | Excellent | N/A (different purpose) | Very Good | Good |
-| Frame generation | Up to 6× (RTX 50), 1× (RTX 40) | Runs alongside DLSS 4.5 | 1× | 1× |
-| Neural rendering | No | **Yes — available now** | No | No |
-| GPU lock | NVIDIA RTX only | NVIDIA RTX 50 only | AMD RDNA 4 only | Any GPU |
-| Game support | 950+ titles | 15+ confirmed | ~250+ titles | 500+ titles |
-| Available now? | Yes | Yes — since September 2026 (NBA 2K27) | Yes | Yes |
+## Should you upgrade for DLSS 5?
 
-## Should You Upgrade for DLSS 5?
+**If you own an RTX 40 Series card:** DLSS 5 is currently documented for RTX 50 Series and GeForce NOW, so do not buy on a promise that your existing card will run it. You can still use the DLSS features supported by your game and driver.
 
-**If you have an RTX 40 series:** You already have the best performance upscaling available. DLSS 5 needs RTX 50 series hardware, so there is nothing to do yet — watch how it looks now that it is shipping in NBA 2K27.
+**If you are considering an RTX 50 Series card:** DLSS 5 is one part of the stack, alongside DLSS Super Resolution and Frame Generation. Check the games you actually play and the measured performance of the specific GPU before deciding.
 
-**If you have an RTX 30 series or older:** DLSS 4's Multi Frame Generation is a more immediate improvement.
+**If you use AMD:** FSR Upscaling and the wider FSR Redstone family may be the relevant path. Check AMD's current supported-hardware and game-integration notes instead of assuming the old “FSR 4” label describes every current feature.
 
-**If you're buying new:** RTX 50 series gives you the full stack — DLSS 4.5 Multi Frame Gen now, DLSS 5 in the fall.
+**For any buyer:** compare a same-game capture at the same resolution and preset. Record the GPU, driver, game build, feature toggles and whether the image is a real-time frame or a marketing still. This page's browser examples are separate DLSS 5-style visual references; they are not official NVIDIA output and are not a substitute for an in-game benchmark.
 
-**If you're on AMD:** FSR 4 is genuinely excellent. Unless you specifically want DLSS 5 Neural Rendering, there's no need to switch ecosystems.
+*Sources checked October 8, 2026: [NVIDIA DLSS 5 launch](https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/), [NVIDIA DLSS 5 FAQ](https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/), [NVIDIA developer notes](https://developer.nvidia.com/blog/whats-new-for-game-developers-dlss-5-with-3d-guided-neural-rendering-nvidia-ace-updates-and-new-rtx-kit-capabilities/), [NVIDIA DLSS 4 overview](https://www.nvidia.com/en-us/geforce/news/dlss-4-multi-frame-generation-out-now/), and [AMD FSR Technologies](https://www.amd.com/en/products/graphics/technologies/fidelityfx/super-resolution.html).*
 
-*Sources: NVIDIA GTC 2026 · AMD RDNA 4 launch · Digital Foundry benchmarks*
+*This site is independent and is not affiliated with or endorsed by NVIDIA or AMD.*`,
+    content_cn: `DLSS 5、DLSS 4 和 AMD FSR 解决的是不同问题。DLSS 5 是面向受支持游戏的、以渲染器为基础的神经渲染阶段；DLSS 4 及后续更新包含超分、光线重建、抗锯齿和帧生成等功能。AMD 当前文档把 FSR Redstone 家族里的机器学习超分称为 FSR Upscaling；较早的发布材料和部分游戏菜单仍会写 FSR 4。
 
-*This site is not affiliated with or endorsed by NVIDIA Corporation.*`,
-    content_cn: `在 2026 年，买什么显卡已经不只是 TFLOPS 的问题，而是你要押注哪个 AI 重建生态。
+**快速结论：** 先看你实际拥有的显卡和要玩的游戏。DLSS 5 当前面向 GeForce RTX 50 系列显卡/笔记本和 GeForce NOW，并于 2026 年 9 月 1 日在《NBA 2K27》中上线。DLSS 4 的不同功能有不同硬件条件；FSR Upscaling 依赖游戏集成，并不是浏览器图片转换器。没有在同一游戏、同一输入和同一设置下测试，就不能宣布一个通用的画质赢家。
 
-**快速结论：** DLSS 5 重点是受支持游戏里的神经渲染与光照细节；DLSS 4/4.5 重点是超分和帧生成；FSR 4 是 AMD 的机器学习替代方案。选择哪一个，取决于你的显卡、游戏支持情况，以及你更需要保真度还是更高帧率。
+## 一句话看懂三条路线
 
-## 一句话总结
+**DLSS 5** —— NVIDIA 将 3D-Guided Neural Rendering 描述为最终神经渲染阶段：利用游戏帧和引擎数据，在保持游戏画面为基础的前提下增加更真实的光照与材质细节。NVIDIA 表示它支持 RTX 50 系列显卡和笔记本，也可通过 GeForce NOW 使用；首发文章明确写的是 2026 年 9 月 1 日的《NBA 2K27》。
 
-**DLSS 5** — 让 AI 重建被性能预算削掉的光照与材质细节，而不只是重建分辨率。支持 RTX 50 系列显卡与笔记本，以及 GeForce NOW。2026 年 9 月 1 日随 NBA 2K27 上线。
+**DLSS 4 及后续更新** —— DLSS 套件包含 Super Resolution、Ray Reconstruction、DLAA 和 Frame Generation。DLSS 4 为 RTX 50 系列加入 Multi Frame Generation；NVIDIA 也说明 RTX 40/50 系列可使用升级后的 Frame Generation 模型。不要把“DLSS 4.5”当成一个不分显卡、游戏和驱动的单一模式。
 
-**DLSS 4 / 4.5** — 帧生成技术，将帧率最高乘以 6 倍。当下最佳超分技术。
+**FSR 4 / FSR Upscaling** —— AMD 当前 FSR 页面将 FSR Redstone 描述为包含 FSR Upscaling、FSR Frame Generation 与 FSR Ray Regeneration 的家族，并说明部分游戏菜单仍会显示 FSR 4。是否可用取决于游戏集成和 AMD 列出的硬件支持。
 
-**FSR 4** — AMD 全面转向 AI 驱动，图像质量现在与 DLSS 4 真正接近。
+## 三项技术实际做什么
 
-## 各技术实际做了什么
+### DLSS 5：以渲染器为基础的神经渲染
 
-### DLSS 4 / 4.5（现已可用）
+DLSS 5 不是可下载的图片滤镜。它在受支持的游戏管线中运行，利用渲染帧、运动和场景数据。NVIDIA 强调开发者可以控制模型、结构强度、色调强度和遮罩。因此，DLSS 5 截图应被理解为游戏渲染结果，不能据此宣称独立浏览器模型会复现同样的像素。
 
-DLSS 4 使用 Transformer 架构神经网络放大低分辨率帧。杀手功能是多帧生成：DLSS 4 每渲染 1 帧最多生成 4 帧（4× FPS 乘数）；DLSS 4.5 动态 MFG 最高 6× 乘数。
+### DLSS 4：重建与生成帧
 
-### DLSS 5（现已上线）
+DLSS 4 包含多个功能：Super Resolution 从较低分辨率渲染重建更高分辨率画面；Ray Reconstruction 改善光追效果；DLAA 在原生分辨率下处理抗锯齿；Frame Generation 和 Multi Frame Generation 在各自的硬件与延迟取舍下生成额外帧。比较时要把游戏里的具体开关和显卡支持一起记录，不能简单叫作“放大器”。
 
-DLSS 5 不生成额外帧。它是渲染管线的最后一级，重建引擎算不起的光照与材质细节——帧的几何与身份保持不变，只获得更真实的光照响应。它是扩展管线而不是替换管线，并与 DLSS 超分、多帧生成叠加使用。
+### FSR 4 / FSR Upscaling：AMD 的游戏集成路线
 
-**支持 RTX 50 系列显卡与笔记本**，GeForce NOW Ultimate 会员可在 NVIDIA 自营的云端 RTX 5080 机型上使用；RTX 40 系列及更早仍不支持。
+AMD 当前文档说明，机器学习版 FSR Upscaling 适用于列出的 Radeon 硬件和支持的游戏，部分菜单仍使用 FSR 4 名称。它是游戏 SDK 或驱动辅助流程，和浏览器里处理 JPEG 是不同任务。比较时应固定同一游戏、分辨率、质量预设、运动场景和截帧方法。
 
-### FSR 4（现已可用，仅限 RDNA 4）
+## 并排对比
 
-AMD 转向机器学习超分和帧生成。FSR 4 与 DLSS 4 之间的质量差距现在是历代最小的。
+| 问题 | DLSS 4 及后续 | DLSS 5 | AMD FSR 4 / FSR Upscaling |
+|---|---|---|---|
+| 主要用途 | 超分、光线重建、抗锯齿和帧生成等 | 以渲染器为基础的神经光照与材质细节 | 游戏集成的超分及 FSR Redstone 相关功能 |
+| 输入数据 | 游戏渲染帧，以及按功能使用的时间/运动信息 | 游戏渲染帧、引擎数据和开发者控制 | 支持集成所提供的游戏渲染数据 |
+| 是否生成额外帧 | Frame Generation 与 Multi Frame Generation 是独立功能 | 与现有 DLSS 栈并行，本身不是帧生成器 | FSR Frame Generation 是独立功能 |
+| 厂商说明的硬件 | MFG 面向 RTX 50 系列；其他 DLSS 功能按显卡和功能区分 | RTX 50 系列显卡/笔记本及 GeForce NOW | AMD 支持的 Radeon 硬件和支持的游戏，以当前 FSR 页面为准 |
+| 使用前要核对 | 游戏版本、驱动、功能开关和延迟 | “DLSS Neural Rendering”开关、RTX 50 支持和游戏可用性 | 菜单里的 FSR 名称、游戏集成和 Radeon 支持 |
 
-## 并排对比表
+## 是否应该为了 DLSS 5 升级显卡？
 
-| 功能 | DLSS 4.5 | DLSS 5 | FSR 4 | FSR 3.1 |
-|------|----------|--------|--------|---------|
-| 超分质量 | 优秀 | 不适用 | 非常好 | 良好 |
-| 帧生成 | 最高6× | 与DLSS4.5并行 | 1× | 1× |
-| 神经渲染 | 否 | **是，现已上线** | 否 | 否 |
-| GPU限制 | 仅NVIDIA RTX | 仅NVIDIA RTX 50 | 仅AMD RDNA 4 | 任意GPU |
-| 游戏支持 | 950+ | 15+ | ~250+ | 500+ |
-| 现在可用？ | 是 | 是（2026 年 9 月起，随 NBA 2K27） | 是 | 是 |
+**RTX 40 系列用户：** 当前 NVIDIA 资料把 DLSS 5 支持写在 RTX 50 系列和 GeForce NOW 上，因此不要基于“现有显卡一定能运行”来购买或等待。你仍可使用游戏和驱动支持的其他 DLSS 功能。
 
-## 应该为了 DLSS 5 升级显卡吗？
+**准备购买 RTX 50 系列：** DLSS 5 只是完整技术栈的一部分，还要看 DLSS Super Resolution、Frame Generation，以及你实际玩的游戏和具体显卡的实测性能。
 
-**RTX 40 系列用户：** 你已经有了当下最好的性能超分。DLSS 5 需要 RTX 50 系列硬件，暂时无需行动——它已随 NBA 2K27 上线，可以观察实际表现。
+**AMD 用户：** FSR Upscaling 和 FSR Redstone 家族可能更相关。先看 AMD 当前的硬件与游戏集成说明，不要假设旧的“FSR 4”标签能代表所有新功能。
 
-**RTX 30 系列或更老：** DLSS 4 的多帧生成是对日常游戏体验更直接的改善。
+**所有用户：** 请固定同一游戏、分辨率和预设做对比，并记录显卡、驱动、游戏版本、开关状态，以及画面是实时帧还是宣传静帧。本页的浏览器示例是独立的 DLSS 5-style 视觉参考，不是 NVIDIA 官方输出，也不能替代游戏内基准测试。
 
-**准备新购：** RTX 50 系列给你完整技术栈。
+*资料核对日期：2026 年 10 月 8 日。来源：[NVIDIA DLSS 5 发布](https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/)、[NVIDIA DLSS 5 FAQ](https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/)、[NVIDIA 开发者说明](https://developer.nvidia.com/blog/whats-new-for-game-developers-dlss-5-with-3d-guided-neural-rendering-nvidia-ace-updates-and-new-rtx-kit-capabilities/)、[NVIDIA DLSS 4 概览](https://www.nvidia.com/en-us/geforce/news/dlss-4-multi-frame-generation-out-now/) 和 [AMD FSR Technologies](https://www.amd.com/en/products/graphics/technologies/fidelityfx/super-resolution.html)。*
 
-**AMD 用户：** FSR 4 真的很优秀。除非你特别想要 DLSS 5 神经渲染，否则没必要换生态。
-
-*来源: NVIDIA GTC 2026 · AMD RDNA 4 发布 · Digital Foundry 基准测试*
-
-*此站点不隶属于或受 NVIDIA Corporation 支持或认可。*`
+*本站独立运营，不隶属于或受 NVIDIA、AMD 支持或认可。*`
   },
   {
     slug: 'crimson-desert-pc-optimization-dlss-fsr-guide-2026',

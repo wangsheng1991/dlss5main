@@ -113,6 +113,15 @@ export default function Download() {
         />
         <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">{t('hero.sub')}</p>
 
+        <section className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={t('hero.answer.title')}>
+          {(['what', 'output', 'limit'] as const).map((key) => (
+            <div key={key} className="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4">
+              <p className="text-[11px] uppercase tracking-widest text-zinc-500">{t(`hero.answer.${key}.label`)}</p>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-200">{t(`hero.answer.${key}.body`)}</p>
+            </div>
+          ))}
+        </section>
+
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a
             href="#request"

@@ -1,0 +1,314 @@
+{
+  "generatedAt": "2026-10-08T09:58:12.579Z",
+  "base": "https://www.dlss5nvidia.com",
+  "evidence": [
+    {
+      "case": "en-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "locale": "en-US",
+      "home": {
+        "title": "DLSS 5 Style Converter Online — Free AI Image Converter",
+        "h1": "DLSS 5\nStyle Converter Online",
+        "primary": [
+          {
+            "text": "Free tools",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "Try a free example",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "Open the free DLSS 5 visual enhancer →",
+            "href": "/image-quality-enhancer",
+            "tag": "A"
+          },
+          {
+            "text": "Open the converter · try an example →",
+            "href": "/dashboard?tool=game-character-style",
+            "tag": "A"
+          },
+          {
+            "text": "Try the free effect converter",
+            "href": null,
+            "tag": "BUTTON"
+          }
+        ]
+      },
+      "studio": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "title": "DLSS 5 convert · Character style — DLSS5NVIDIA",
+        "h1": "DLSS 5 convert · Character style",
+        "body": "DLSS 5\nModels\nFree tools\nUse cases\nSmall tools\nAbout\nBlog\nPodcast\nAPI Docs\nDLSS5 Studio\nEnterprise\nPricing\nLOGIN\n🇺🇸 English\nLogin\nRegister\nDLSS 5 convert · Character style\nBrowse tool pages\n\nUpload one game-character frame, choose a visual direction, and keep the silhouette, costume, pose and identity stable while changing light, materials and world direction.\n\nSTYLE CONVERSION SETTINGS\nDLSS 5 convert · Character style\nChange style direction\nCyberpunk neon\nMORE TOOLS\n10\n\nSign in to write your own prompt. Examples run with their own fixed prompt.\n\nSign in to upload your own image →\n\nOutput: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\nExamples are free and need no account. Uploading your own image needs one.\n\nView plans\nCyberpunk character style\nRun this example · free\nSign in to edit the prompt\nDLSS 5\n\nAdvancing the frontier of neural super-resolution and high-resolution AI upscaling for a clearer digital future.\n\n© 2026 INDEPENDENT DLSS 5-STYLE REFERENCE WORKFLOW.\n\nColorReco Tech · www.dlss5nvidia.com\n\nThis is an independent tool. Not affiliated with or endorsed by NVIDIA Corporation. DLSS is a registered trademark of NVIDIA Corporation.\n\nPLATFORM\nModels\nPricing\nEnterprise\nAPI Docs\nFREE TOOLS\nAI Image Upscaler\nDLSS 5 Visual Enhancer Online\nUnblur Image Online\nOld Photo Restoration\nAI Headshot Enhancer\nMejorar la calidad de imagen\nRemove Background\nErase Object\nImage to SVG\nVirtual Try-On\nAI Interior Design Render\nAI Portrait Retouch\nVirtual Makeup Try-On\nVideo Downloader\nUSE CASES\nProduct Photo Enhancer\nArchitecture Render Upscaler\nPortrait Photo Enhancer\nSMALL TOOLS\nFree Passport Photo Maker\nRESOURCES\nBlog\nPodcast\nDocumentation\nDLSS5 Studio\nAbout\nGame character cases\nVideo upscaler workflow\nLEGAL\nPrivacy Policy\nTerms of Service\nRefund & Cancellation\nPricing\nsupport@dlss5nvidia.com\nALL SYSTEMS OPERATIONAL",
+        "buttons": [
+          "Free tools",
+          "🇺🇸 English",
+          "DLSS 5 convert · Character style",
+          "Run this example · free"
+        ]
+      },
+      "runningText": "Preparing Cyberpunk character style…",
+      "timingsMs": {
+        "landing": 1828,
+        "runToResult": 989,
+        "total": 16584
+      },
+      "ready": {
+        "readyText": "Example ready · served from cache",
+        "download": "/api/image-edit/samples?sample=characterStyle",
+        "sliderCount": 1,
+        "visibleButtons": [
+          "About",
+          "Game character cases",
+          "Video upscaler workflow",
+          "Privacy Policy",
+          "Terms of Service",
+          "Refund & Cancellation",
+          "Pricing",
+          "support@dlss5nvidia.com"
+        ]
+      },
+      "refreshed": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "ready": false,
+        "body": "DLSS 5\nModels\nFree tools\nUse cases\nSmall tools\nAbout\nBlog\nPodcast\nAPI Docs\nDLSS5 Studio\nEnterprise\nPricing\nLOGIN\n🇺🇸 English\nLogin\nRegister\nDLSS 5 convert · Character style\nBrowse tool pages\n\nUpload one game-character frame, choose a visual direction, and keep the silhouette, costume, pose and identity stable while changing light, materials and world direction.\n\nSTYLE CONVERSION SETTINGS\nDLSS 5 convert · Character style\nChange style direction\nCyberpunk neon\nMORE TOOLS\n10\n\nSign in to write your own prompt. Examples run with their own fixed prompt.\n\nSign in to upload your own image →\n\nOutput: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\nExamples are free and need no account. Uploading your own image needs one.\n\nView plans\nCyberpunk character style\nRun this example · free\nSign in to edit the prompt\nDLSS 5\n\nAdvancing the frontier of neural super-resolution and high-resolution AI upscaling for a clearer digital future.\n\n© 2026 INDEPENDENT DLSS 5-STYLE REFERENCE "
+      },
+      "errors": []
+    },
+    {
+      "case": "zh-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "locale": "zh-CN",
+      "home": {
+        "title": "DLSS 5 Style Converter Online — Free AI Image Converter",
+        "h1": "DLSS 5\n风格转换器在线版",
+        "primary": [
+          {
+            "text": "免费试跑示例",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "打开转换器 · 免费试跑示例 →",
+            "href": "/dashboard?tool=game-character-style",
+            "tag": "A"
+          },
+          {
+            "text": "免费试用效果转换",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "免费试跑一个角色风格示例 →",
+            "href": "/dashboard?tool=game-character-style&sample=characterStyle",
+            "tag": "A"
+          },
+          {
+            "text": "ARCHITECTURE AND REAL-ESTATE WORKFLOW\n\nArchitecture Render Upscaler\n\nUse the image upscaler for architecture visuals that need more pixels. Keep the original perspective, inspect repeated geometry and reject results with halos or invented windows.\n\n查看指南 →",
+            "href": "/use-cases/architecture-render-upscaler",
+            "tag": "A"
+          }
+        ]
+      },
+      "studio": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "title": "DLSS 5 convert · 人物风格转换 — DLSS5NVIDIA",
+        "h1": "DLSS 5 convert · 人物风格转换",
+        "body": "DLSS 5\n模型\n免费工具\n应用场景\n小工具\n关于\n博客\n播客\nAPI 文档\nDLSS5 Studio\n企业版\nPricing\n登录\n🇨🇳 中文\n登录\n注册\nDLSS 5 convert · 人物风格转换\n浏览工具页面\n\n上传一张游戏人物图，选择视觉方向，保持人物轮廓、服装、动作和身份，再改变光照、材质与世界观。\n\n风格转换设置\nDLSS 5 convert · 人物风格转换\n更换风格方向\n赛博朋克霓虹\n更多工具\n10\n\n登录后可以填写自己的提示词。示例使用固定提示词运行。\n\n登录后上传自己的图片 →\n\n输出: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\n示例免费且无需账户；上传自己的图片需要登录。\n\n查看方案\n赛博朋克人物风格\n运行示例 · 免费\n登录后编辑提示词\nDLSS 5\n\n推进 NVIDIA DLSS 5 神经超分辨率与高分辨率 AI 图像增强的边界，为更清晰的数字未来而奋斗。\n\n© 2026 独立的 DLSS 5 风格参考工作流\n\nColorReco Tech · www.dlss5nvidia.com\n\n这是一个独立工具。不隶属于或受 NVIDIA Corporation 支持或认可。DLSS 是 NVIDIA Corporation 的注册商标。\n\n平台\n模型\n价格\n企业版\nAPI 文档\n免费工具\nAI Image Upscaler\nDLSS 5 Visual Enhancer Online\nUnblur Image Online\nOld Photo Restoration\nAI Headshot Enhancer\nMejorar la calidad de imagen\nRemove Background\nErase Object\nImage to SVG\nVirtual Try-On\nAI Interior Design Render\nAI Portrait Retouch\nVirtual Makeup Try-On\nVideo Downloader\n应用场景\nProduct Photo Enhancer\nArchitecture Render Upscaler\nPortrait Photo Enhancer\n小工具\nFree Passport Photo Maker\n资源\n博客\n播客\n文档\nDLSS5 Studio\n关于\nGame character cases\nVideo upscaler workflow\n法律\n隐私政策\n服务条款\n退款与取消政策\n价格\nsupport@dlss5nvidia.com\n所有系统运行正常",
+        "buttons": [
+          "免费工具",
+          "🇨🇳 中文",
+          "DLSS 5 convert · 人物风格转换",
+          "运行示例 · 免费"
+        ]
+      },
+      "runningText": "正在准备 赛博朋克人物风格…",
+      "timingsMs": {
+        "landing": 1763,
+        "runToResult": 1056,
+        "total": 14504
+      },
+      "ready": {
+        "readyText": "示例结果",
+        "download": "/api/image-edit/samples?sample=characterStyle",
+        "sliderCount": 1,
+        "visibleButtons": [
+          "关于",
+          "Game character cases",
+          "Video upscaler workflow",
+          "隐私政策",
+          "服务条款",
+          "退款与取消政策",
+          "价格",
+          "support@dlss5nvidia.com"
+        ]
+      },
+      "refreshed": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "ready": false,
+        "body": "DLSS 5\n模型\n免费工具\n应用场景\n小工具\n关于\n博客\n播客\nAPI 文档\nDLSS5 Studio\n企业版\nPricing\n登录\n🇨🇳 中文\n登录\n注册\nDLSS 5 convert · 人物风格转换\n浏览工具页面\n\n上传一张游戏人物图，选择视觉方向，保持人物轮廓、服装、动作和身份，再改变光照、材质与世界观。\n\n风格转换设置\nDLSS 5 convert · 人物风格转换\n更换风格方向\n赛博朋克霓虹\n更多工具\n10\n\n登录后可以填写自己的提示词。示例使用固定提示词运行。\n\n登录后上传自己的图片 →\n\n输出: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\n示例免费且无需账户；上传自己的图片需要登录。\n\n查看方案\n赛博朋克人物风格\n运行示例 · 免费\n登录后编辑提示词\nDLSS 5\n\n推进 NVIDIA DLSS 5 神经超分辨率与高分辨率 AI 图像增强的边界，为更清晰的数字未来而奋斗。\n\n© 2026 独立的 DLSS 5 风格参考工作流\n\nColorReco Tech · www.dlss5nvidia.com\n\n这是一个独立工具。不隶属于或受 NVIDIA Corporation 支持或认可。DLSS 是 NVIDIA Corporation 的注册商标。\n\n平台\n模型\n价格\n企业版\nAPI 文档\n免费工具\nAI Image Upscaler\nDLSS 5 Visual Enhancer Online\nUnblur Image Online\nOld Photo Restoration\nAI Headshot Enhancer\nMejorar la calidad de imagen\nRemove Background\nErase Object\nImage to SVG\nVirtual Try-On\nAI Interior Design Render\nAI Portrait Retouch\nVirtual Makeup Try-On\nVideo Downloader\n应用场景\nProduct Photo Enhancer\nArchitecture Render Upscaler\nPortrait Photo Enhancer\n小工具\nFree Passpo"
+      },
+      "errors": []
+    },
+    {
+      "case": "en-mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "locale": "en-US",
+      "home": {
+        "title": "DLSS 5 Style Converter Online — Free AI Image Converter",
+        "h1": "DLSS 5\nStyle Converter Online",
+        "primary": [
+          {
+            "text": "Try a free example",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "Open the free DLSS 5 visual enhancer →",
+            "href": "/image-quality-enhancer",
+            "tag": "A"
+          },
+          {
+            "text": "Open the converter · try an example →",
+            "href": "/dashboard?tool=game-character-style",
+            "tag": "A"
+          },
+          {
+            "text": "Try the free effect converter",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "Try your own image",
+            "href": null,
+            "tag": "BUTTON"
+          }
+        ]
+      },
+      "studio": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "title": "DLSS 5 convert · Character style — DLSS5NVIDIA",
+        "h1": "DLSS 5 convert · Character style",
+        "body": "DLSS 5\nDLSS 5 convert · Character style\nBrowse tool pages\n\nUpload one game-character frame, choose a visual direction, and keep the silhouette, costume, pose and identity stable while changing light, materials and world direction.\n\nSTYLE CONVERSION SETTINGS\nDLSS 5 convert · Character style\nChange style direction\nCyberpunk neon\nMORE TOOLS\n10\n\nSign in to write your own prompt. Examples run with their own fixed prompt.\n\nSign in to upload your own image →\n\nOutput: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\nExamples are free and need no account. Uploading your own image needs one.\n\nView plans\nCyberpunk character style\nRun this example · free\nSign in to edit the prompt\nDLSS 5\n\nAdvancing the frontier of neural super-resolution and high-resolution AI upscaling for a clearer digital future.\n\n© 2026 INDEPENDENT DLSS 5-STYLE REFERENCE WORKFLOW.\n\nColorReco Tech · www.dlss5nvidia.com\n\nThis is an independent tool. Not affiliated with or endorsed by NVIDIA Corporation. DLSS is a registered trademark of NVIDIA Corporation.\n\nPLATFORM\nModels\nPricing\nEnterprise\nAPI Docs\nFREE TOOLS\nAI Image Upscaler\nDLSS 5 Visual Enhancer Online\nUnblur Image Online\nOld Photo Restoration\nAI Headshot Enhancer\nMejorar la calidad de imagen\nRemove Background\nErase Object\nImage to SVG\nVirtual Try-On\nAI Interior Design Render\nAI Portrait Retouch\nVirtual Makeup Try-On\nVideo Downloader\nUSE CASES\nProduct Photo Enhancer\nArchitecture Render Upscaler\nPortrait Photo Enhancer\nSMALL TOOLS\nFree Passport Photo Maker\nRESOURCES\nBlog\nPodcast\nDocumentation\nDLSS5 Studio\nAbout\nGame character cases\nVideo upscaler workflow\nLEGAL\nPrivacy Policy\nTerms of Service\nRefund & Cancellation\nPricing\nsupport@dlss5nvidia.com\nALL SYSTEMS OPERATIONAL",
+        "buttons": [
+          "DLSS 5 convert · Character style",
+          "Run this example · free"
+        ]
+      },
+      "runningText": "Preparing Cyberpunk character style…",
+      "timingsMs": {
+        "landing": 1626,
+        "runToResult": 1392,
+        "total": 15629
+      },
+      "ready": {
+        "readyText": "Example ready · served from cache",
+        "download": "/api/image-edit/samples?sample=characterStyle",
+        "sliderCount": 1,
+        "visibleButtons": [
+          "About",
+          "Game character cases",
+          "Video upscaler workflow",
+          "Privacy Policy",
+          "Terms of Service",
+          "Refund & Cancellation",
+          "Pricing",
+          "support@dlss5nvidia.com"
+        ]
+      },
+      "refreshed": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "ready": false,
+        "body": "DLSS 5\nDLSS 5 convert · Character style\nBrowse tool pages\n\nUpload one game-character frame, choose a visual direction, and keep the silhouette, costume, pose and identity stable while changing light, materials and world direction.\n\nSTYLE CONVERSION SETTINGS\nDLSS 5 convert · Character style\nChange style direction\nCyberpunk neon\nMORE TOOLS\n10\n\nSign in to write your own prompt. Examples run with their own fixed prompt.\n\nSign in to upload your own image →\n\nOutput: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\nExamples are free and need no account. Uploading your own image needs one.\n\nView plans\nCyberpunk character style\nRun this example · free\nSign in to edit the prompt\nDLSS 5\n\nAdvancing the frontier of neural super-resolution and high-resolution AI upscaling for a clearer digital future.\n\n© 2026 INDEPENDENT DLSS 5-STYLE REFERENCE WORKFLOW.\n\nColorReco Tech · www.dlss5nvidia.com\n\nThis is an independent tool. Not affiliated with or endorsed by NVIDIA Corporation. D"
+      },
+      "errors": []
+    },
+    {
+      "case": "zh-mobile",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "locale": "zh-CN",
+      "home": {
+        "title": "DLSS 5 Style Converter Online — Free AI Image Converter",
+        "h1": "DLSS 5\n风格转换器在线版",
+        "primary": [
+          {
+            "text": "免费试跑示例",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "打开转换器 · 免费试跑示例 →",
+            "href": "/dashboard?tool=game-character-style",
+            "tag": "A"
+          },
+          {
+            "text": "免费试用效果转换",
+            "href": null,
+            "tag": "BUTTON"
+          },
+          {
+            "text": "免费试跑一个角色风格示例 →",
+            "href": "/dashboard?tool=game-character-style&sample=characterStyle",
+            "tag": "A"
+          },
+          {
+            "text": "ARCHITECTURE AND REAL-ESTATE WORKFLOW\n\nArchitecture Render Upscaler\n\nUse the image upscaler for architecture visuals that need more pixels. Keep the original perspective, inspect repeated geometry and reject results with halos or invented windows.\n\n查看指南 →",
+            "href": "/use-cases/architecture-render-upscaler",
+            "tag": "A"
+          }
+        ]
+      },
+      "studio": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "title": "DLSS 5 convert · 人物风格转换 — DLSS5NVIDIA",
+        "h1": "DLSS 5 convert · 人物风格转换",
+        "body": "DLSS 5\nDLSS 5 convert · 人物风格转换\n浏览工具页面\n\n上传一张游戏人物图，选择视觉方向，保持人物轮廓、服装、动作和身份，再改变光照、材质与世界观。\n\n风格转换设置\nDLSS 5 convert · 人物风格转换\n更换风格方向\n赛博朋克霓虹\n更多工具\n10\n\n登录后可以填写自己的提示词。示例使用固定提示词运行。\n\n登录后上传自己的图片 →\n\n输出: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\n示例免费且无需账户；上传自己的图片需要登录。\n\n查看方案\n赛博朋克人物风格\n运行示例 · 免费\n登录后编辑提示词\nDLSS 5\n\n推进 NVIDIA DLSS 5 神经超分辨率与高分辨率 AI 图像增强的边界，为更清晰的数字未来而奋斗。\n\n© 2026 独立的 DLSS 5 风格参考工作流\n\nColorReco Tech · www.dlss5nvidia.com\n\n这是一个独立工具。不隶属于或受 NVIDIA Corporation 支持或认可。DLSS 是 NVIDIA Corporation 的注册商标。\n\n平台\n模型\n价格\n企业版\nAPI 文档\n免费工具\nAI Image Upscaler\nDLSS 5 Visual Enhancer Online\nUnblur Image Online\nOld Photo Restoration\nAI Headshot Enhancer\nMejorar la calidad de imagen\nRemove Background\nErase Object\nImage to SVG\nVirtual Try-On\nAI Interior Design Render\nAI Portrait Retouch\nVirtual Makeup Try-On\nVideo Downloader\n应用场景\nProduct Photo Enhancer\nArchitecture Render Upscaler\nPortrait Photo Enhancer\n小工具\nFree Passport Photo Maker\n资源\n博客\n播客\n文档\nDLSS5 Studio\n关于\nGame character cases\nVideo upscaler workflow\n法律\n隐私政策\n服务条款\n退款与取消政策\n价格\nsupport@dlss5nvidia.com\n所有系统运行正常",
+        "buttons": [
+          "DLSS 5 convert · 人物风格转换",
+          "运行示例 · 免费"
+        ]
+      },
+      "runningText": "正在准备 赛博朋克人物风格…",
+      "timingsMs": {
+        "landing": 1675,
+        "runToResult": 1008,
+        "total": 14941
+      },
+      "ready": {
+        "readyText": "示例结果",
+        "download": "/api/image-edit/samples?sample=characterStyle",
+        "sliderCount": 1,
+        "visibleButtons": [
+          "关于",
+          "Game character cases",
+          "Video upscaler workflow",
+          "隐私政策",
+          "服务条款",
+          "退款与取消政策",
+          "价格",
+          "support@dlss5nvidia.com"
+        ]
+      },
+      "refreshed": {
+        "url": "https://www.dlss5nvidia.com/dashboard?tool=game-character-style&sample=characterStyle",
+        "ready": false,
+        "body": "DLSS 5\nDLSS 5 convert · 人物风格转换\n浏览工具页面\n\n上传一张游戏人物图，选择视觉方向，保持人物轮廓、服装、动作和身份，再改变光照、材质与世界观。\n\n风格转换设置\nDLSS 5 convert · 人物风格转换\n更换风格方向\n赛博朋克霓虹\n更多工具\n10\n\n登录后可以填写自己的提示词。示例使用固定提示词运行。\n\n登录后上传自己的图片 →\n\n输出: preserves your image aspect ratio · WebP · input up to 16 MP and 10 MiB\n\n示例免费且无需账户；上传自己的图片需要登录。\n\n查看方案\n赛博朋克人物风格\n运行示例 · 免费\n登录后编辑提示词\nDLSS 5\n\n推进 NVIDIA DLSS 5 神经超分辨率与高分辨率 AI 图像增强的边界，为更清晰的数字未来而奋斗。\n\n© 2026 独立的 DLSS 5 风格参考工作流\n\nColorReco Tech · www.dlss5nvidia.com\n\n这是一个独立工具。不隶属于或受 NVIDIA Corporation 支持或认可。DLSS 是 NVIDIA Corporation 的注册商标。\n\n平台\n模型\n价格\n企业版\nAPI 文档\n免费工具\nAI Image Upscaler\nDLSS 5 Visual Enhancer Online\nUnblur Image Online\nOld Photo Restoration\nAI Headshot Enhancer\nMejorar la calidad de imagen\nRemove Background\nErase Object\nImage to SVG\nVirtual Try-On\nAI Interior Design Render\nAI Portrait Retouch\nVirtual Makeup Try-On\nVideo Downloader\n应用场景\nProduct Photo Enhancer\nArchitecture Render Upscaler\nPortrait Photo Enhancer\n小工具\nFree Passport Photo Maker\n资源\n博客\n播客\n文档\nDLSS5 Studio\n关于\nGame character cases\nVideo upsca"
+      },
+      "errors": []
+    }
+  ]
+}

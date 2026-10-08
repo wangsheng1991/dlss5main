@@ -45,7 +45,7 @@ export default function UseCaseLanding() {
           <p className="mt-6">
             <Link
               to={`/dashboard?tool=${item.dashboardTool}`}
-              onClick={() => trackEvent('use_case_cta_click', { use_case: item.slug, tool: item.dashboardTool })}
+              onClick={() => { trackEvent('experience_click', { use_case: item.slug, tool: item.dashboardTool, intent: 'upload' }); trackEvent('use_case_cta_click', { use_case: item.slug, tool: item.dashboardTool }); }}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
             >
               {cta} <ArrowRight aria-hidden="true" className="w-4 h-4" />

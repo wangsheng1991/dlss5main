@@ -1,0 +1,102 @@
+[
+  {
+    "id": "en-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "locale": "en-US",
+    "metrics": {
+      "inputCount": 1,
+      "disabledInputs": true,
+      "uploadLabels": [
+        "Sign in to upload your own image →"
+      ],
+      "overflow": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "primaryButtons": [
+        "Free tools",
+        "🇺🇸 English",
+        "DLSS 5 convert · Character style",
+        "Run this example · free"
+      ]
+    }
+  },
+  {
+    "id": "zh-desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "locale": "zh-CN",
+    "metrics": {
+      "inputCount": 1,
+      "disabledInputs": true,
+      "uploadLabels": [
+        "登录后上传自己的图片 →"
+      ],
+      "overflow": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "primaryButtons": [
+        "免费工具",
+        "🇨🇳 中文",
+        "DLSS 5 convert · 人物风格转换",
+        "运行示例 · 免费"
+      ]
+    }
+  },
+  {
+    "id": "en-mobile",
+    "viewport": {
+      "width": 375,
+      "height": 812
+    },
+    "locale": "en-US",
+    "metrics": {
+      "inputCount": 1,
+      "disabledInputs": true,
+      "uploadLabels": [
+        "Sign in to upload your own image →"
+      ],
+      "overflow": false,
+      "viewport": {
+        "w": 375,
+        "h": 812
+      },
+      "primaryButtons": [
+        "DLSS 5 convert · Character style",
+        "Run this example · free"
+      ]
+    }
+  },
+  {
+    "id": "zh-mobile",
+    "viewport": {
+      "width": 375,
+      "height": 812
+    },
+    "locale": "zh-CN",
+    "metrics": {
+      "inputCount": 1,
+      "disabledInputs": true,
+      "uploadLabels": [
+        "登录后上传自己的图片 →"
+      ],
+      "overflow": false,
+      "viewport": {
+        "w": 375,
+        "h": 812
+      },
+      "primaryButtons": [
+        "DLSS 5 convert · 人物风格转换",
+        "运行示例 · 免费"
+      ]
+    }
+  }
+]
