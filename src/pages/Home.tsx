@@ -132,6 +132,9 @@ export default function Home() {
         <Link to="/download" className="mb-10 inline-flex text-sm font-semibold text-primary hover:text-white transition-colors">
           {t('home.requestStudio')}
         </Link>
+        <Link to="/comparisons" className="mb-10 -mt-5 inline-flex text-xs text-zinc-400 hover:text-primary transition-colors">
+          {isZh ? '先看 AI 图像工具对比与实测方法 →' : 'Compare AI image workflows and evidence →'}
+        </Link>
         <p className="max-w-3xl mx-auto -mt-5 mb-10 text-sm leading-relaxed text-zinc-400">{isZh ? AI_OVERVIEW_DEFINITION_ZH : AI_OVERVIEW_DEFINITION}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
