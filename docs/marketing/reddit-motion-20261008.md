@@ -2,6 +2,8 @@
 
 这批文件用于把真实案例讲清楚，不用于规避社区审核。每条视频都来自已经记录在 `docs/marketing/dlss5-studio-brief.md` 的 Studio 对比截图：先展示原图，再展示实际输出，最后展示带有原始上下布局的前后对比板。视频只做裁切、标签和时间编排，没有重新生成、修图或替换结果。
 
+![五组视频的原图、结果和前后对比预览](../../public/marketing/reddit-motion/20261008/contact-sheet.jpg)
+
 ## 已生成文件
 
 目录：`public/marketing/reddit-motion/20261008/`
