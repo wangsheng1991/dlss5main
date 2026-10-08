@@ -380,3 +380,17 @@ URL Inspection 的当前结果：
 - 等 Google 抓取并完成两个 canonical mismatch 验证；在验证结果返回前不重复提交同一批 URL。
 - 等下一完整 Search Console 窗口确认首页与 `/image-quality-enhancer` 对 `dlss 5 visual enhancer` 的落地页分流，以及 `/download` 对 `dlss 5 download` 的 CTR；报告存在延迟，不能用本轮旧快照判断新 metadata 失败。
 - 若 Google 再次报告 canonical 不一致，再基于新的实际抓取 HTML 处理；在此之前不改现有 `/en` hreflang/URL 结构。
+
+
+## 2026-10-08：比较页产品化与重新抓取
+
+- `/comparisons` 已从单一对照表升级为可运行的证据页：首屏提供人物风格转换和视觉增强的免登录缓存示例入口；页面包含 20 组来源图板、独立浏览器案例、四项可重复检查标准、一个明确标注为单次观察的 Studio 实测快照和 FAQ。
+- React 页面与 `scripts/prerender-seo.ts` 的静态预渲染同步更新，避免爬虫只看到旧的泛介绍；新增 Article + FAQPage JSON-LD，title、description、keywords、canonical 保持唯一。
+- 本地 `npx tsc --noEmit`、`npm test`（92/92）、`npm run build` 和 `git diff --check` 均通过。
+- 已部署 Production：Vercel `dpl_AZBj2L2WaTyAHHhihhJvscLEJskP`。正式域名复核 `/comparisons` HTTP 200，title、description、keywords、canonical、H1、FAQ schema 和 sitemap 条目均生效。
+- Search Console URL 检查显示该页已收录；本轮更新后再次点击“请求编入索引”，Google 返回“已将网址添加到优先抓取队列中”。
+
+### 当前 TODO
+
+- 等下一完整 Search Console 窗口观察 `comparisons` 的展示、点击、外链引荐和 sample run；不在短时间内重复提交同一 URL。
+- 外链发布按 [`external-link-campaign-20261008.md`](./marketing/external-link-campaign-20261008.md) 执行，先人工确认平台版规和账号权限，再发布首个真实案例。
