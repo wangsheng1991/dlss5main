@@ -361,3 +361,22 @@ URL Inspection 的当前结果：
 
 - 等 Google 验证队列重新抓取这 1 个 URL；验证完成前不重复请求同一 URL，也不把报告里的旧快照误判为当前缺陷。
 - 若验证重新失败，下一步只检查该 URL 的实际抓取 HTML 与 Google 选择 canonical 的差异，再决定是否将英文博客默认路径收敛为单一 canonical；在有新证据前不改现有 hreflang 结构。
+
+
+## 2026-10-08：索引队列收尾与线上 metadata 复核
+
+- Search Console 网页索引编制报告（数据更新时间 2026-10-04）显示 **69 个已编入索引、9 个未编入索引**。剩余原因是 3 个自动重定向、2 个 noindex、2 个“Google 选择的规范网页”、1 个“已发现尚未编入索引”和 1 个“重复网页，用户未选定规范网页”。自动重定向与 noindex 对应预期行为，已写入待办，不把它们当作需要强行索引的页面。
+- 对“已发现尚未编入索引”的 `https://www.dlss5nvidia.com/comparisons` 做了 URL 检查：正式页面 HTTP 200，title 为 `AI Image Tools Compared: GPT Image 2, ChatGPT Images, Midjourney & DLSS 5`，description、H1 和自指 canonical 均生效；已在 Search Console 点击“请求编入索引”，Google 返回“已将网址添加到优先抓取队列中”。
+- 对“Google 选择的规范网页”中的两个英文文章 URL 启动了修正验证，并分别请求重新抓取：
+  - `/en/blog/dlss-5-online-image-upscaler-guide`
+  - `/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`
+  两页线上均输出自指 canonical 和 `en`、`zh-CN`、`x-default` hreflang；GSC 的旧报告仍显示 Google 曾选择无 `/en` 的默认路径，这是旧抓取快照，验证已开始，两个 URL 均已进入优先抓取队列。
+- 先前“用户未选定规范网页”的 GPT-6 Astra 文章仍处于验证队列；线上 HTML 已有自指 canonical，未重复提交。
+- 正式域名静态 HTML 复核：`/`、`/comparisons`、`/download`、`/image-quality-enhancer`、上述两个英文文章页和 GPT-6 Astra 文章全部 HTTP 200；每页均有唯一 title、description、canonical、H1。首页当前 title 是 `DLSS 5 Style Converter Online — Free AI Image Converter`，增强器页当前 title 是 `DLSS 5 Visual Enhancer Online — AI Image Quality Enhancer`，下载页当前 title 是 `DLSS 5 Download (2026) — Free Online Converter, Mobile & Windows Studio`。
+- 本地质量门槛此前已通过：`npx tsc --noEmit`、`npm test`、`npm run build`、`git diff --check`。本轮没有改页面代码、路由或 sitemap，只记录 Search Console 操作与线上证据。
+
+### 当前 TODO
+
+- 等 Google 抓取并完成两个 canonical mismatch 验证；在验证结果返回前不重复提交同一批 URL。
+- 等下一完整 Search Console 窗口确认首页与 `/image-quality-enhancer` 对 `dlss 5 visual enhancer` 的落地页分流，以及 `/download` 对 `dlss 5 download` 的 CTR；报告存在延迟，不能用本轮旧快照判断新 metadata 失败。
+- 若 Google 再次报告 canonical 不一致，再基于新的实际抓取 HTML 处理；在此之前不改现有 `/en` hreflang/URL 结构。
