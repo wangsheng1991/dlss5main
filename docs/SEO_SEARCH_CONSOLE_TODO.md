@@ -342,7 +342,8 @@ URL Inspection 的当前结果：
 - `dlss 5 visual enhancer online` 的 8/13 说明精确在线意图已经匹配；宽泛 `dlss 5 visual enhancer` 的 5/215 仍偏低，且无空格变体当前仍有展示落在首页。首页与增强器页的最新 metadata 已上线，但 Google 报告尚未覆盖完整重抓周期，本轮不重复改标题或提交 URL。
 - 为增加真实的主题相关发现入口，新增一个短的“Related visual workflows”区块，并同步到 React 首页、`index.html` 静态壳和 `public/llms.txt`。只链接三个有独立产品和不同任务的公开项目：RenVi 室内设计（`houseplusplus.com`）、PixelHouse 空间设计（`aipixelhouse.com`）和 Image2LEGO 3D 建模（`image2lego.com`）。这不是批量互链目录；每个链接都解释相邻工作流，保持用户预期和爬虫语义一致。
 - RenVi 和 PixelHouse 的公开页脚各增加一个指向 DLSS 5 architecture render enhancer 的相关工作流链接；使用普通可抓取的 HTTPS 链接和 `noopener noreferrer`，没有使用 `nofollow`，也没有添加无关项目。主站 `robots.txt` 继续 `User-agent: * / Allow: /` 并声明 sitemap；测试现在会检查这些外链同时出现在静态首页和 `llms.txt`。
-- 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test` **92/92**、`npm run build` 均通过。部署完成后补写正式域名静态 HTML 和 Vercel deployment ID。
+- 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test` **92/92**、`npm run build` 均通过。主站提交 `80999a7` 已推送，Vercel Production `dpl_5gyer9DigvRmRV5JHTgkJAGLoZaK` 已 `READY`。
+- 正式域名静态复核：`https://www.dlss5nvidia.com/` 返回 HTTP 200，title、H1、canonical 和三条相关项目链接均存在；`/robots.txt` 返回 `User-agent: *`、`Allow: /` 和正式 sitemap；`/llms.txt` 含三条项目链接。两个反向入口也已推送：RenVi `05cd9fb`（Production 已 Ready）和 PixelHouse `15be5b4`（Vercel `ark-space` Production 已 Ready）。线上 HTML 复核确认 RenVi 与 PixelHouse 都能抓到指向 DLSS5NVIDIA architecture enhancer 的上下文链接；三站 robots 均允许公开营销页抓取并声明 sitemap。
 
 ### 当前 TODO
 
