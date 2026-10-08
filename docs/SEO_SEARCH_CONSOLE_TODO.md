@@ -394,3 +394,16 @@ URL Inspection 的当前结果：
 
 - 等下一完整 Search Console 窗口观察 `comparisons` 的展示、点击、外链引荐和 sample run；不在短时间内重复提交同一 URL。
 - 外链发布按 [`external-link-campaign-20261008.md`](./marketing/external-link-campaign-20261008.md) 执行，先人工确认平台版规和账号权限，再发布首个真实案例。
+
+## 2026-10-08：索引报告复核与旧快照验证收口
+
+- Search Console 网页索引编制报告当前仍显示 **69 个已编入索引、9 个未编入索引**，报告数据更新时间为 2026-10-04。未编入索引的 9 条由 3 个自动重定向、2 个 noindex、1 个 `/comparisons`“已发现 - 尚未编入索引”、1 个“重复网页，用户未选定规范网页”和 2 个“Google 选择的规范网页与用户指定的不同”组成；其中自动重定向与 noindex 是预期行为。
+- 对 `/comparisons` 的“已发现 - 尚未编入索引”问题启动了“验证修正情况”，Search Console 已显示 **验证已开始（2026-10-08）**。网址检查同时显示该 URL 已收录并已进入优先抓取队列，当前不重复点击请求编入索引。
+- “重复网页，用户未选定规范网页”目前仍只有 `https://www.dlss5nvidia.com/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`，验证已开始；“Google 选择的规范网页与用户指定的不同”仍是 `/en/blog/dlss-5-online-image-upscaler-guide` 与 `/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`，验证也已开始。三页线上 HTML 均已输出自指 canonical 与对应 hreflang，等待 Google 新抓取结果，不改 URL 结构。
+- Search Console 站点地图页显示 `https://www.dlss5nvidia.com/sitemap.xml` **成功**，最近读取 2026-10-03，已发现 **68 个网页、0 个视频**。本轮不重复提交未变化的 sitemap。
+- 正式域名线上复核：sitemap 中 68 条 URL 首轮并发检查 **67/68 通过**；唯一失败是 `/pricing` 的一次网络 `IncompleteRead`。随后独立重试 `/pricing` 返回 HTTP 200，title、description、keywords、canonical 和 H1 均存在且 canonical 自指，因此确认是读取瞬断，不是页面或 SEO 元数据问题。
+
+### 当前 TODO
+
+- 等 Google 完成 `/comparisons` 和 3 个 canonical 验证队列；验证期间没有可替代的代码或 Search Console 提交动作。
+- 下一次报告刷新后再判断旧快照是否消失；不重复请求已收录或已在验证队列中的 URL。
