@@ -135,8 +135,7 @@
     {
       "source": "/en/blog/dlss-5-online-image-upscaler-guide",
       "destination": "/blog/dlss-5-online-image-upscaler-guide",
-      "statusCode": 301,
-      "preserveQueryParams": true
+      "statusCode": 301
     }
   ]
 }
