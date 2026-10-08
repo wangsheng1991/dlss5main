@@ -42,6 +42,6 @@ Before publishing an enhanced image, keep the original beside it. Compare one fa
 
 The full comparison page contains the table, runnable samples, source-linked gallery and the four checks:
 
-https://www.dlss5nvidia.com/comparisons
+https://www.dlss5nvidia.com/comparisons?utm_source=devto&utm_medium=article&utm_campaign=external_links_20261008&utm_content=comparisons
 
 This is an independent project and is not affiliated with or endorsed by NVIDIA. The goal is a more honest image-tool comparison: show the input, show the changed pixels, state the limits and let readers decide which workflow fits their task.

@@ -1,12 +1,27 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import ToolLanding from './pages/ToolLanding';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { profileHas, type SiteSection } from './config/profile';
+import { trackRouteView, trackShareLinkAccess } from './lib/analytics';
+
+function AnalyticsRouteTracker() {
+  const { pathname, search } = useLocation();
+  const { loading } = useAuth();
+  useEffect(() => {
+    if (loading) return;
+    // Query values are intentionally excluded from page_path; UTM values are retained by the
+    // analytics bridge and tool/sample names are supplied by the CTA events themselves.
+    trackRouteView(pathname);
+    const params = new URLSearchParams(search);
+    if (params.has('share') || params.has('shared') || pathname.startsWith('/share/')) trackShareLinkAccess(pathname);
+  }, [loading, pathname, search]);
+  return null;
+}
 
 /**
  * Only the landing page ships in the entry bundle. Every other route is fetched when it is
@@ -45,6 +60,7 @@ export default function App() {
     <HelmetProvider>
       <AuthProvider>
         <Router>
+          <AnalyticsRouteTracker />
           <div className="min-h-screen bg-background text-on-surface font-body selection:bg-primary selection:text-black flex flex-col">
             <Navbar />
             <div className="flex-1">
