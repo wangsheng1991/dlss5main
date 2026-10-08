@@ -423,3 +423,9 @@ URL Inspection 的当前结果：
 - `ce2ac3d` 尚未推送/部署；正式上线前需确认发布窗口。上线后再在线复核 301、3 个随机 404、3 个入口页的静态 metadata 与 GA4 事件。
 - 部署后仅对新变更或仍未收录的 URL 做一次 URL 检查；不重复提交已在验证队列中的 canonical 问题，也不把 Google 抓取延迟当作代码失败。
 - 外部平台发布、创作者联系、付费推广和公开下载仍需人工版规检查与产品负责人确认，本轮只准备素材。
+
+## 2026-10-08：部署前后线上差异复核
+
+- 当前正式域名仍是上一版 Production：线上 sitemap 返回 **68** 条 URL，仍包含待收敛的 `/en/blog/dlss-5-online-image-upscaler-guide`；本地新构建的 sitemap 为 **67** 条，已移除该重复地址。未知路径线上仍会落到首页 200，这也与本地新 404 行为不同。
+- 对线上 sitemap 当前可抓取的 67 个 URL 做了带浏览器 User-Agent 的并发复核：67/67 返回 HTTP 200，且每页均有非空 title、description、canonical 和 H1。线上 `/`、`/image-quality-enhancer`、`/download`、`/comparisons` 与对比文章的现有 metadata 可读；本地新版本的 title、路由和 404 修复尚未进入正式域名。
+- 因此本轮没有对 Google 重复提交 sitemap 或 URL；在新构建正式部署前提交只会让 Google 继续抓旧壳。部署需要产品负责人确认，已保留在 TODO。
