@@ -334,3 +334,17 @@ URL Inspection 的当前结果：
 
 - 等 Production 部署并让 Google 重抓首页与 `/image-quality-enhancer`；24 小时报告的“12 小时前更新”意味着不能在本次部署后立即判断 CTR。下一窗口重点看该词是否从首页转移到 `/image-quality-enhancer`，以及首页 `dlss 5 online` 是否保持点击。
 - 不重复提交已在索引中的 URL；若 Search Console 仍把 visual enhancer 全部归到首页，再考虑仅在增强器页增加独立 use-case 入口，不再把首页 title 加回 visual enhancer。
+
+## 2026-10-08：最新查询复核与相关项目外链
+
+- Search Console 最新可用的 7 天窗口（2026-09-28—2026-10-04，报告约 22 小时滞后）为 **588 次点击 / 6,069 次展示 / 9.7% CTR / 平均排名 7.1**，较上一窗口 542/5,662/9.6%/7.2 继续上升。主要查询为 `dlss 5 online` 24/74、`dlss 5 image converter` 12/36、`dlss 5 image generator` 10/42、`dlss5 image converter` 9/46、`dlss5 online` 9/20、`dlss 5 visual enhancer online` 8/13、`dlss 5 download` 6/120、`dlss 5 visual enhancer` 5/215。
+- 最新 24 小时窗口为 **44 次点击 / 449 次展示 / 9.8% CTR / 平均排名 6.5**。桌面 29/317、移动 14/126、平板 1/6；移动 CTR 仍高于桌面，但平板样本太小，不做独立产品分流。国家分布继续覆盖美国、印度、印度尼西亚、巴西、英国、俄罗斯、法国、德国和香港等市场。
+- `dlss 5 visual enhancer online` 的 8/13 说明精确在线意图已经匹配；宽泛 `dlss 5 visual enhancer` 的 5/215 仍偏低，且无空格变体当前仍有展示落在首页。首页与增强器页的最新 metadata 已上线，但 Google 报告尚未覆盖完整重抓周期，本轮不重复改标题或提交 URL。
+- 为增加真实的主题相关发现入口，新增一个短的“Related visual workflows”区块，并同步到 React 首页、`index.html` 静态壳和 `public/llms.txt`。只链接三个有独立产品和不同任务的公开项目：RenVi 室内设计（`houseplusplus.com`）、PixelHouse 空间设计（`aipixelhouse.com`）和 Image2LEGO 3D 建模（`image2lego.com`）。这不是批量互链目录；每个链接都解释相邻工作流，保持用户预期和爬虫语义一致。
+- RenVi 和 PixelHouse 的公开页脚各增加一个指向 DLSS 5 architecture render enhancer 的相关工作流链接；使用普通可抓取的 HTTPS 链接和 `noopener noreferrer`，没有使用 `nofollow`，也没有添加无关项目。主站 `robots.txt` 继续 `User-agent: * / Allow: /` 并声明 sitemap；测试现在会检查这些外链同时出现在静态首页和 `llms.txt`。
+- 本地验证：`git diff --check`、`npx tsc --noEmit`、`npm test` **92/92**、`npm run build` 均通过。部署完成后补写正式域名静态 HTML 和 Vercel deployment ID。
+
+### 当前 TODO
+
+- 等 Google 重抓首页、增强器页和新增相关项目入口，下一窗口重点观察 `dlss 5 visual enhancer` 是否从首页转移到 `/image-quality-enhancer`，以及相关页面是否获得自然展示；不重复请求已经在索引中的 URL。
+- 外部项目的反向入口需要各自 Vercel 自动部署完成后再做线上 HTML 复核；若某项目未发布该链接，只保留主站的相关项目入口，不继续扩展互链数量。

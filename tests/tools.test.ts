@@ -21,6 +21,7 @@ import { TOOL_LANDINGS } from '../src/content/toolLandings';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { GAME_STYLE_LANDING } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING } from '../src/content/videoLanding';
+import { RELATED_PROJECTS } from '../src/content/relatedProjects';
 
 import { test } from './harness';
 
@@ -204,6 +205,18 @@ test('the static homepage exposes the same search intent and crawlable structure
   assert.match(html, /type="application\/ld\+json"/);
   assert.match(html, /"@type": "WebApplication"/);
   assert.match(html, /"@type": "VideoObject"/);
+});
+
+test('related visual projects are crawlable from the static homepage and llms profile', () => {
+  const html = homepage();
+  const llms = publicFile('llms.txt');
+  const robots = publicFile('robots.txt');
+  assert.match(robots, /User-agent:\s*\*/);
+  assert.match(robots, /Allow:\s*\//);
+  for (const project of RELATED_PROJECTS) {
+    assert.ok(html.includes(project.href), `${project.href} is missing from the static homepage`);
+    assert.ok(llms.includes(project.href), `${project.href} is missing from llms.txt`);
+  }
 });
 
 /**

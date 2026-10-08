@@ -49,6 +49,12 @@ AI tools for upscaling, restoration, portraits, virtual try-on, interior renders
 - Mejorar la calidad de imagen (Spanish): https://www.dlss5nvidia.com/es/mejorar-calidad-imagen
 <!-- end:tools -->
 
+## Related independent visual projects
+
+- RenVi AI interior design (room photos, sketches and interior concepts): https://www.houseplusplus.com
+- PixelHouse AI spatial design tools (architecture, interiors and real-estate workflows): https://aipixelhouse.com
+- Image2LEGO 3D builder (reference image to editable LEGO-style model): https://image2lego.com
+
 <!-- begin:useCases -->
 ## Workflow guides
 
