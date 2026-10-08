@@ -9,3 +9,5 @@ coverage/
 
 .vercel
 .claude/
+# External publishing results can contain account-specific public URLs.
+docs/marketing/external-posts/publish-log.jsonl
