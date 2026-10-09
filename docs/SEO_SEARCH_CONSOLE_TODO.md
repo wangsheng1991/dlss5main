@@ -466,3 +466,4 @@ URL Inspection 的当前结果：
 - 首页相关视觉工作流、静态首页外壳和 `public/llms.txt` 新增 `https://www.dlss5.app/zh-CN` 入口，定位为 Neural Architect 的 GPU 检查与 DLSS 5 功能矩阵；该页面与本站的图像转换工具承担不同任务，避免生成重复关键词页。
 - `dlss5.app` 现有页面已经反向提供“Try Our Tool”入口指向 `https://dlss5nvidia.com`，因此本轮形成双向发现路径；没有修改其部署或页面源代码。
 - 本轮不新增本站 URL、不改变 sitemap 条目，也不需要在 Search Console 单独提交索引请求。上线后只需观察首页外链抓取和相关查询表现。
+- 提交 `e3557cd` 已推送并部署为 Production（Vercel deployment `dpl_2NzUkTsGMSbTuTEWhjSi8pViragu`，状态 Ready）。正式首页与 `/llms.txt` 均返回 HTTP 200 并包含联动入口；正式 sitemap 仍为 67 个站内 URL。
