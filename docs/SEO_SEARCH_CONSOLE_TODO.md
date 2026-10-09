@@ -531,3 +531,18 @@ URL Inspection 的当前结果：
 ## 2026-10-09：对比文章目标 URL 索引确认
 
 - 对收敛后的 `https://www.dlss5nvidia.com/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 做 URL 检查，Search Console 返回 **“网址已收录到 Google”**、**“网页已编入索引”**。因此没有再次点击“请求编入索引”，避免消耗配额。
+
+## 2026-10-10：新页面线上 metadata 与索引队列复核
+
+- Search Console 已登录资源 `dlss5nvidia.com` 的网页索引报告仍显示：**69 个已编入索引、9 个未编入索引**，报告更新时间为 **2026-10-04**。未编入索引的 5 类原因仍为 3 个自动重定向、2 个 noindex、1 个“重复网页，用户未选定规范网页”、2 个 Google 选择其他规范网页、1 个“已发现 - 尚未编入索引”；后 3 类均显示“已开始”验证。
+- “已发现 - 尚未编入索引”的唯一样本仍是 `https://www.dlss5nvidia.com/comparisons`。该 URL 已于 2026-10-08 进入验证队列，之前 URL Inspection 已显示“网址已收录到 Google”，本轮不重复请求编入索引。
+- Search Console 站点地图页仍显示 `https://www.dlss5nvidia.com/sitemap.xml` 状态“成功”、最近读取 **2026-10-03**、发现 **68 个网页、0 个视频**。线上 sitemap 当前实际返回 **65 个 `<loc>`**；这是报告读取滞后，不重复提交同一 sitemap，也不提交相对路径。
+- 线上逐页复核（2026-10-10，带浏览器 User-Agent、跟随重定向）覆盖播客索引页与 5 个节目页、`/game-character-style`、`/video-upscaler`、`/video-downloader`、`/comparisons`、`/tools/passport-photo`、`/tools/passport-photo/3-na-4`，共 **12/12**：全部 HTTP 200；每页均有非空且与页面用途对应的唯一 `<title>`、`meta description`、自指 canonical 和 H1。示例：播客索引 title 为 `DLSS 5 AI Workflow Podcast — GPT-6, Claude and Visual Conversion`；人物风格页 title 为 `20 Game Character Style Conversion Examples — Before and After`；比较页 title 为 `AI Image Tools Compared: GPT Image 2, ChatGPT Images, Midjourney & DLSS 5`。
+- Search Console 效果报告最近 7 天（报告更新 **26.5 小时前**，日期 2026-09-30 至 2026-10-06）仍为 **659 点击、6,510 展示、CTR 10.1%、平均排名 7**。热门查询为：`dlss 5 online` 25/62、`dlss 5 image converter` 13/40、`dlss 5 image generator` 12/46、`dlss5 online` 12/26、`dlss5 image converter` 11/42、`dlss 5 generator` 8/48、`dlss5 apk` 8/26、`dlss 5 visual enhancer online` 8/16、`dlss 5 download android` 7/57、`dlss 5 visual enhancer` 6/234（点击/展示）。这说明 converter、online、generator 仍是当前主要入口，visual enhancer 有展示但 CTR 明显较低。
+- 仓库 HEAD 的 `f96c933` 是 dev-only 的 DLSS 5 compatibility checker scaffold，未进入线上 sitemap/部署，本轮不把它作为可提交索引的新页面。
+
+### 当前 TODO
+
+- 等 Google 重新读取线上 65 条 sitemap，并完成 3 个 canonical/发现类验证；这些是第三方抓取和报告延迟，当前没有安全的替代提交动作。
+- 下一个报告窗口重点观察 `dlss 5 image converter`、`dlss 5 image generator`、`dlss 5 visual enhancer` 与新播客页的页面分流；已有 URL 不重复消耗索引请求配额。
+- 如报告出现新的、非重定向/noindex 且不在验证队列中的 URL，再逐页做 URL Inspection、确认 title/description/canonical 后请求编入索引。
