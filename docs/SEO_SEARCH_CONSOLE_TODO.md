@@ -503,3 +503,16 @@ URL Inspection 的当前结果：
   - 最近 7 天：**659 点击 / 6,510 展示 / CTR 10.1% / 平均排名 7**。前 5 查询：`dlss 5 online` 25/62；`dlss 5 image converter` 13/40；`dlss 5 image generator` 12/46；`dlss5 online` 12/26；`dlss5 image converter` 11/42。前 5 页面：首页 499/2,832；`/download` 104/1,434；`/blog/dlss-5-online-image-upscaler-guide` 28/457；`/dashboard` 26/211；`/image-upscaler` 4/28。
   - 最近 28 天：**1,690 点击 / 1.77 万展示 / CTR 9.5% / 平均排名 7.3**（展示数按 Search Console 界面原样记录）。前 5 查询：`dlss 5 image converter` 60/233；`dlss 5 online` 56/209；`dlss 5 download` 28/502；`dlss 5 image generator` 26/97；`dlss 5 visual enhancer` 20/968。前 5 页面：首页 1,313/9,255；`/download` 255/4,272；`/blog/dlss-5-online-image-upscaler-guide` 56/783；`/dashboard` 32/275；`/en/blog/dlss-5-online-image-upscaler-guide` 11/158。
 - 结论：`dlss5.app` 当前流量主要来自多语言首页（尤其根路径，其次德语/西语）和桌面搜索，意图集中在品牌、GPU 架构与硬件兼容性；`dlss5nvidia.com` 规模约高两个数量级，主要由首页承接 `image converter / online / download / visual enhancer` 等高意图词。两站本轮只读，不改页面、不改 DNS、不提交 sitemap 或索引请求。
+
+## 2026-10-09：GPT-6 英文重复 URL 修复与生产复核
+
+- Search Console 当前概览仍显示 **69 个已编入索引、9 个未编入索引**；网页索引报告更新时间为 **2026-10-04**。未编入索引原因仍为 3 个自动重定向、2 个 noindex、1 个“重复网页，用户未选定规范网页”（验证已开始，2026-10-08）、2 个 Google 选择其他规范网页（验证已开始）和 1 个“已发现 - 尚未编入索引”（验证已开始）。
+- 复核“重复网页，用户未选定规范网页”明细，受影响 URL 为 `https://www.dlss5nvidia.com/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`，上次抓取 2026-10-02。线上旧版本曾对该地址返回 200、自指 canonical，确实与已收录的无前缀文章重复。
+- 提交 `ceab656` 已将该英文重复地址改为单跳 301 到 `/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`，同步调整 React/预渲染内链与 hreflang，并从 `public/sitemap.xml` 移除 `/en` 重复条目；保留中文 `/zh` 版本。`npm run lint`、`npm test`（94/94）和 `npm run build` 均通过。
+- GitHub 已推送 `ceab656`；Vercel Production `https://dlss5-main-bspuzigj8-wangsheng1991s-projects.vercel.app` 已 Ready。正式域名复核：旧 URL 返回 **301**，目标返回 **200**；目标 title、description、keywords、canonical 均生效；线上 sitemap 不再包含该 `/en` URL。
+- 本轮没有重复点击 sitemap 提交或 URL 编入索引按钮：重复 URL 已在验证队列，目标页面需等 Google 重新抓取后再读报告；对已收录 URL 不重复消耗请求配额。
+
+### 当前 TODO
+
+- 等 Google 重新抓取 `ceab656` 后完成“重复网页，用户未选定规范网页”验证；下一次报告刷新时确认该 URL 从未编入索引样本中消失。
+- 继续等待其余两个 canonical 验证和一个 discovered-not-indexed 验证；若报告出现新的、非重定向/noindex 且不在验证中的 URL，再逐页检查并请求编入索引。
