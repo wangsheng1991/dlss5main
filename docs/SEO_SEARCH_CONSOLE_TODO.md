@@ -546,3 +546,19 @@ URL Inspection 的当前结果：
 - 等 Google 重新读取线上 65 条 sitemap，并完成 3 个 canonical/发现类验证；这些是第三方抓取和报告延迟，当前没有安全的替代提交动作。
 - 下一个报告窗口重点观察 `dlss 5 image converter`、`dlss 5 image generator`、`dlss 5 visual enhancer` 与新播客页的页面分流；已有 URL 不重复消耗索引请求配额。
 - 如报告出现新的、非重定向/noindex 且不在验证队列中的 URL，再逐页做 URL Inspection、确认 title/description/canonical 后请求编入索引。
+
+## 2026-10-10：英文博客重复路由全量收敛与生产复核
+
+- 根因实测：对线上 sitemap 原有 65 个 URL 做静态审计，发现 7 对英文重复地址（`/blog` 与 `/en/blog` 首页，以及 6 篇英文文章的 `/blog/<slug>` 与 `/en/blog/<slug>`）。每对的正文文本长度与 SHA-256 均一致，而两个地址此前都返回 200 并使用各自的自指 canonical；这是真实的重复内容/规范选择风险，不是 Google 报告误报。
+- 提交 `fd885f1` 已统一收敛：`/en/blog` 与 9 个已确认的 `/en/blog/<slug>` 旧入口（其中 3 个此前已处理，本轮补齐 6 个）全部配置为单跳 301 到无前缀英文地址；英文预渲染、React 内链、站点 profile、`llms.txt` 和 sitemap 只保留无前缀英文 canonical，中文 `/zh/blog` 继续保留。旧路径不再生成静态副本，也不再出现在 sitemap。
+- 质量门禁：`npm run lint` 通过；`npm test` **103/103**；`npm run build` 通过（Vite、API catalog、SEO 预渲染均完成）；`git diff --check` 通过。未触碰工作区中与本轮无关的 Reddit/launch 草稿文件。
+- 已推送 `origin/main`。Vercel Production 部署 `dpl_DHELYf5XbcZTSC5cy4QhheMxrx6n` 状态 **READY**，正式别名 `https://www.dlss5nvidia.com` 已切换。
+- 线上复核：10 个废弃英文入口均返回 HTTP **301**，并各自直接指向对应无前缀文章/博客首页；跟随后目标均为 200。正式 `sitemap.xml` 返回 **58** 条 `<loc>`，不含任何 `/en/blog`；58/58 URL 均通过静态检查（HTTP 200、非空 title、description≥40 字符、H1、自指 canonical）。
+- Search Console：在账号 `wustwangsheng@gmail.com` 的 `dlss5nvidia.com` 资源中重新提交完整地址 `https://www.dlss5nvidia.com/sitemap.xml`，界面返回“已成功提交站点地图”。Google 界面仍显示最近读取 2026-10-03、已发现 68，说明新提交已接收但尚未完成下一次读取；不把这个旧快照误报为 58 条已发现。
+- 近期效果基线（报告更新仍滞后至 2026-10-06）：最近 7 天 **659 点击 / 6,514 展示 / CTR 10.1% / 平均排名 7**；主要查询仍是 `dlss 5 online`、`dlss 5 image converter`、`dlss 5 image generator`、`dlss5 online`、`dlss5 image converter`。这些查询对应的首页/工具页已在本轮线上 metadata 审计中通过。
+
+### 当前 TODO
+
+- 等 Google 重新读取 58 条 sitemap，并完成已开始的 canonical/发现类验证；301 旧地址不再请求单页编入索引，避免把不可索引的重定向重新送入队列。
+- Search Console 下一次报告刷新后，确认 7 对重复地址从问题样本中消失，并观察 converter、online、generator 与 visual enhancer 的点击/展示变化。
+- `dlss5.app` 与 `dlss5.net/.org` 的流量超越方案另行规划：优先补 SSR/独立 metadata、硬件兼容性/FAQ 数据、可运行检测器结果和多语言内链；本节不直接改姊妹站代码。
