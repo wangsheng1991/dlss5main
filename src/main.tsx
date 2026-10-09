@@ -3,6 +3,20 @@ import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { i18nReady } from './i18n';
+import { initClarity } from './lib/clarity';
+
+// Keep analytics third-party work off the critical render path. With no project ID this is a no-op.
+if (typeof window !== 'undefined') {
+  const startClarity = () => initClarity();
+  const requestIdle = (window as Window & {
+    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+  }).requestIdleCallback;
+  if (requestIdle) {
+    requestIdle(startClarity, { timeout: 2000 });
+  } else {
+    setTimeout(startClarity, 0);
+  }
+}
 
 const root = createRoot(document.getElementById('root')!);
 const draw = () => root.render(

@@ -18,7 +18,6 @@ test('the duplicate English upscaler URL has one 301 hop to the selected article
     source: deprecated,
     destination: selected,
     statusCode: 301,
-    preserveQueryParams: true,
   });
   assert.equal(vercel.redirects?.filter((rule) => rule.source === deprecated).length, 1);
 });

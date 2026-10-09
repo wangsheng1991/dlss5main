@@ -45,12 +45,13 @@ export default function Privacy() {
             <><strong className="text-zinc-200">Vercel</strong> — hosting and content delivery for the site and its API.</>,
             <><strong className="text-zinc-200">Model and storage providers</strong> — the AI services that upscale, generate or edit your images, and the object storage that holds them while a job runs.</>,
             <><strong className="text-zinc-200">Google Analytics</strong> — aggregated visitor statistics, only for visits where the page load completes.</>,
+            <><strong className="text-zinc-200">Microsoft Clarity (when enabled)</strong> — session recordings, heatmaps and interaction diagnostics. Clarity masks form values by default; this site also masks uploaded previews, generated results, before/after workspaces and file names. We do not send custom identifiers to Clarity.</>,
           ]} />
           <p>These providers act on our instructions and may process data outside your country.</p>
         </Section>
 
         <Section title="4. Cookies and local storage">
-          <p>We use technically necessary storage to keep you signed in and to remember your language choice. Analytics storage helps us count visits and see which pages are used. You can block or clear these in your browser; signing in will then not persist between visits.</p>
+          <p>We use technically necessary storage to keep you signed in and to remember your language choice. When enabled, analytics storage and Microsoft Clarity cookies help us count visits, understand page interaction and diagnose usability problems. You can block or clear these in your browser; signing in will then not persist between visits.</p>
         </Section>
 
         <Section title="5. How long we keep it">

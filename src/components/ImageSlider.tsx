@@ -9,7 +9,7 @@ import { ChevronsLeftRight } from 'lucide-react';
  * the split is drawn with clip-path so the input never scales independently of the output.
  * The handle only follows a real drag or a tap, not a passing pointer.
  */
-export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comparison', inputLabel = 'Input', outputLabel = 'Output', compareLabel, initialAspectRatio, outputBackdrop }: { highRes: string; lowRes: string; alt?: string; inputLabel?: string; outputLabel?: string; compareLabel?: string; initialAspectRatio?: number; priority?: boolean; outputBackdrop?: string }) {
+export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comparison', inputLabel = 'Input', outputLabel = 'Output', compareLabel, initialAspectRatio, outputBackdrop, privacyMask = false }: { highRes: string; lowRes: string; alt?: string; inputLabel?: string; outputLabel?: string; compareLabel?: string; initialAspectRatio?: number; priority?: boolean; outputBackdrop?: string; privacyMask?: boolean }) {
   const [sliderPos, setSliderPos] = useState(50);
   const [ratio, setRatio] = useState(initialAspectRatio || 1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +59,7 @@ export default function ImageSlider({ highRes, lowRes, alt = 'AI image edit comp
       aria-valuemax={100}
       aria-valuenow={Math.round(sliderPos)}
       className="relative w-full overflow-hidden rounded-lg bg-black cursor-ew-resize select-none touch-none focus-visible:outline-2 focus-visible:outline-primary"
+      data-clarity-mask={privacyMask ? 'true' : undefined}
       style={{ aspectRatio: ratio, maxHeight: '100%' }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
