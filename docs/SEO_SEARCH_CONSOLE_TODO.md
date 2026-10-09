@@ -442,3 +442,16 @@ URL Inspection 的当前结果：
 
 - 等 Google 重新读取 67 条 sitemap 并完成 3 个 canonical/发现类验证；在状态变化前不重复请求同一 URL。
 - 继续观察 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 和 `dlss 5 download` 的新窗口数据；当前线上 metadata 已验证，无代码侧 SEO 阻塞。
+
+## 2026-10-09：全量 sitemap metadata 审计与 Search Console 状态复核
+
+- 正式域名 `https://www.dlss5nvidia.com/sitemap.xml` 当前返回 **67** 个 `<loc>`，不包含已弃用的 `/en/blog/dlss-5-online-image-upscaler-guide`。对 67 个 URL 做了带浏览器 User-Agent、绕过失效本地代理并带重试的逐页静态审计：**67/67 通过**。每页均返回 HTTP 200，并同时具备非空 `title`、`meta description`、`meta keywords`、`<h1>` 和自指 `rel=canonical`；未发现 sitemap 页面级 metadata 或 canonical 漂移。
+- 关键入口线上复核：`/` 的 title 为 `DLSS 5 Style Converter Online — Free AI Image Converter`，`/image-quality-enhancer` 的 title 为 `DLSS 5 Visual Enhancer Online — AI Image Quality Enhancer`，`/download` 的 title 为 `DLSS 5 Download (2026) — Free Online Converter, Mobile & Windows Studio`，`/comparisons` 和对比文章均返回 200 且 canonical 指向自身。
+- 旧英文文章路径通过 `curl -L` 实测为单跳 **301**：`/en/blog/dlss-5-online-image-upscaler-guide` → `/blog/dlss-5-online-image-upscaler-guide`；最终目标返回 200。`/image2lego`、`/does-not-exist-404`、`/blog/not-a-real-article` 均为真实 **404**。
+- Search Console（账号 `wustwangsheng@gmail.com`，报告更新时间仍为 2026-10-04）当前读数没有变化：**69 个已编入索引、9 个未编入索引**。未编入索引的 9 条由 3 个预期重定向、2 个预期 noindex、2 个正在验证的 canonical mismatch、1 个正在验证的“重复网页，用户未选定规范网页”和 1 个正在验证的“已发现 - 尚未编入索引”组成；此前 `/comparisons` 的实时 URL 检查已显示“网址已收录到 Google”，因此本轮没有重复消耗 URL 检查或索引请求配额。
+- Search Console 站点地图界面仍显示最近读取 2026-10-03、发现 68 个网页，属于 Google 尚未重新读取线上 67 条 sitemap 的延迟；当前 sitemap 本身可正常访问，未再提交相对路径或重复提交同一 sitemap。
+
+### 当前 TODO
+
+- 等 Google 重新读取 67 条 sitemap，并完成 3 个 canonical/发现类验证队列；这些是 Google 抓取和报告延迟，代码与线上 metadata 已无可修复项。
+- 下一次 Search Console 报告刷新后再观察 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 与 `dlss 5 download` 的展示和点击变化；在状态变化前不重复请求已收录或已进入验证队列的 URL。
