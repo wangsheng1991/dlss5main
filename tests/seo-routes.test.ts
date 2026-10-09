@@ -18,6 +18,10 @@ const duplicateRoutes = [
     deprecated: '/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
     selected: '/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
   },
+  {
+    deprecated: '/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026',
+    selected: '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026',
+  },
 ];
 
 test('duplicate English article URLs have one 301 hop to the selected article', () => {

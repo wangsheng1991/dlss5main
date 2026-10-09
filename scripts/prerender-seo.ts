@@ -173,6 +173,7 @@ function absoluteUrl(path: string): string {
 const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
   'dlss-5-online-image-upscaler-guide',
   'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
+  'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
 ]);
 
 function articlePath(slug: string, locale?: 'en' | 'zh'): string {

@@ -146,6 +146,7 @@ export default function Blog() {
   const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
     'dlss-5-online-image-upscaler-guide',
     'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
+    'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
   ]);
   const localizedBlogPath = (language: 'en' | 'zh') => {
     if (language === 'en' && slug && DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug)) return `/blog/${slug}`;
