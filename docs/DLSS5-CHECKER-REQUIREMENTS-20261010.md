@@ -106,6 +106,28 @@ L3 机器层   /api/*.json + llms.txt + schema —— 让 AI 直接引用我们�
 - 所有兼容性结论必须有官方来源；引用来源要链接回原文。
 - 不做「DLSS 5 下载器」这类越界承诺（他们没有下载源，我们也不做）。
 
+### E13 本地软件必须出现在页面上（我们的东西不能缺席）
+- **每一张卡的结论页要同时回答两个问题**：游戏里的 DLSS 5 支不支持，以及**我们的本地软件（DLSS5 Studio）在这台机器上能不能跑**。
+- 本地软件的要求与实测数字来自我们**自己已发布**的 `/download` 要求页（`src/content/studioPage.ts` 的 `req.*`）与真实运行记录：
+  - 系统：Windows 10 (1909+) 64-bit 或 Windows 11
+  - 显卡：NVIDIA RTX 20 系及以上
+  - 驱动：610+ 才有硬件 NVENC，旧驱动自动降级并如实记录
+  - 内存：最低 8 GB，1080p/4K 视频建议 16 GB
+  - 磁盘：约 3 GB 可用（解包约 1.1 GB）
+  - 实测：Windows 11 Pro + RTX 4090 24 GB + 驱动 591.86，720p → 2560×1440 H.264 用时 **87.4 s（2.43 s/帧）**
+- **不许让页面说一句 `/download` 页不认的话**：这些字符串有测试逐字盯着（`tests/dlss-checker.test.ts`），改一边不改另一边会红。
+- 结论页永远给**两条可走的路**：本地 Studio / 在线转换器。竞品只有「支不支持」一个问题，我们有「那我该怎么办」。
+- 验收：无 JS 抓取结果页能看到本地软件的要求与实测数字。
+
+### E14 数据与理论：必须比 dlss5.net 强，而且要看得见
+- **数据**：两条独立结论轴（游戏内 / 我们的本地软件）＋ 每条结论带来源、核对日期、版本；官方来源互相矛盾时写进 `conflicts` 并展示，不挑好看的当唯一真相。
+- **理论**：不手打每张卡的结论，写**规则**（`src/features/dlssChecker/rules.ts`），由架构推导结论。加一个新架构只加一条规则，所有卡自动跟上；每条结论能回答「凭什么」。
+  - 规则自己**没有来源就不许发布结论**（只能标记 provisional），与手工条目同一把尺子。
+  - 手工条目与规则推导不一致时，识别为 `conflict`：页面发有来源的那条，维护端必须消解。
+- **可外推**：竞品是 64 张手工页面，每加一张卡重写一遍；我们的规则表能覆盖整张卡表（含 AMD/Intel，他们只有 5 张 N 卡页面）。
+- **可被引用**：同一份数据同时产出页面、`/api/*.json` 与 `llms.txt`，AI 引用我们时拿到的是结构化字段，不是一堆 HTML 文案。
+- 验收：删掉一条规则/改一条规则，测试能立刻指出受影响的结论；`npm test` 里 103 条用例全绿（其中 9 条专盯检测器）。
+
 ---
 
 ## 4. 数据模型
@@ -133,6 +155,20 @@ type GpuEntry = {
 ```
 
 游戏页：`GameEntry { slug, title, status, evidence[], releaseDate?, sources[], lastVerified }`。
+
+规则表（「理论」层）：
+
+```ts
+type SupportRule = {
+  id: string;                    // blackwell-native
+  architectures: string[];       // 覆盖哪些架构（与 GpuEntry.generation 同写法）
+  verdict: GpuStatus;
+  rationale: string;             // 为什么这样推，会原样显示给用户和 AI
+  sources: SourceRef[];          // 空数组 = 这条规则还不许发布结论
+};
+```
+
+判定顺序：手工条目（有来源才发）→ 规则推导（有来源的规则才发）→ 都没有就写「还没有结论」。
 
 ---
 
@@ -162,6 +198,9 @@ type GpuEntry = {
 | 按卡、按游戏分页 | ✅（卡只有 5 张） | ✅（卡表做全，含 AMD/Intel） |
 | 多语言 | 只有 pt | en + zh 起，按真实市场加 |
 | **真实硬件检测** | ❌ 只认手输 | ✅ WebGPU/WebGL 读真卡 |
+| **两条结论轴**（游戏内 + 我们的本地软件） | ❌ 只有「支不支持」一个问题 | ✅ 两个答案 + 两条可走的路 |
+| **本地软件的要求与实测数字在页面上** | ❌ 他们没有自己的软件 | ✅ Studio 要求 + 4090 实测（87.4 s） |
+| **规则推导出的结论（理论层）** | ❌ 64 张手工页面，每张重写 | ✅ 一条规则覆盖一个架构 |
 | **可分享/可索引的检测结果页** | ❌ | ✅ |
 | **机器可读 API + llms.txt** | ❌ | ✅ |
 | **更新管道 + diff/changelog** | ❌（纯手工） | ✅ 脚本化 |
@@ -186,12 +225,13 @@ type GpuEntry = {
 
 | 文件 | 里面已有什么 | 你要补什么 |
 |---|---|---|
-| `src/content/dlssChecker.ts` | 类型定义、判定规则常量、**各字段含义与填写规矩**、示例条目（全部 `status: 'unknown'`，刻意不编数据）、`TODO(DATA)` 清单 | 用 NVIDIA 官方来源填 `status` / `sources` / `lastVerified` / `ourWorkflows` |
+| `src/content/dlssChecker.ts` | 类型定义、**本地软件要求（与 `/download` 逐字一致）与本机实测数字**、示例条目（游戏内结论全部 `status: 'unknown'`，刻意不编数据）、`TODO(DATA)` 清单 | 用 NVIDIA 官方来源填 `status` / `sources` / `lastVerified` / `ourWorkflows` |
+| `src/features/dlssChecker/rules.ts` | 「理论」层：`SupportRule` 类型、`deriveFromRules()`、证据分级 `EVIDENCE_TIERS`（规则表现在是空的，填写模板在注释里） | 拿到官方原文后加规则；来源不齐的规则只能继续 provisional |
 | `src/features/dlssChecker/detect.ts` | `detectLocalGpu()` 已实现：WebGPU → WebGL → UA 三级回退，含失败提示 | VRAM 估算、驱动版本、更多浏览器边界 |
-| `src/features/dlssChecker/verdict.ts` | `normalizeGpuName()`、`matchGpu()`、`verdictFor()`、`canConclude()`（无来源即 unknown 的守卫）已实现 | 版本维度、置信度打分、冲突来源处理 |
-| `src/pages/DlssChecker.tsx` | 页面骨架：检测区 / 结果区 / 卡表 / 「你能跑什么」区 / FAQ 区，均带 `TODO(王胜)` 标记 | 每个区块的真实文案与交互、结果页路由 `/:gpu-slug`、分享卡片 |
-| `src/App.tsx` | **仅本机开发可见**的路由 `/dlss-checker`（上线前删 DEV 判断 + 在 `scripts/prerender-seo.ts` 登记） | 预渲染登记、sitemap 生成、`noindex` 规则 |
-| `tests/dlss-checker.test.ts` | 已实现：归一化、匹配、守卫、数据完整性四个用例 | 结果页与 API 的用例 |
+| `src/features/dlssChecker/verdict.ts` | `normalizeGpuName()`、`matchGpu()`、`canConclude()`（无来源不下结论）、`reconcile()`（手工 vs 规则推导对账，冲突会被识别并展示）、`verdictFor()`、`localSoftwareVerdict()` | 版本维度、置信度打分、冲突来源的加权 |
+| `src/pages/DlssChecker.tsx` | 页面骨架：检测区 / **两条结论轴** / 本地软件要求与实测 / 「我们怎么定的」证据分级 / 卡表 / FAQ，均带 `TODO(王胜)` 标记 | 每个区块的真实文案与交互、结果页路由 `/:gpu-slug`、分享卡片 |
+| `src/App.tsx` | **仅本机开发可见**的路由 `/dlss-checker`（生产构建里连分块都不存在，已实测） | 预渲染登记、sitemap 生成、`noindex` 规则 |
+| `tests/dlss-checker.test.ts` | 9 条用例：归一化、匹配、无来源不下结论、规则 provisional 与冲突、两条轴独立、**本地软件要求防漂移**、数据完整性、slug 规范 | 结果页与 API 的用例 |
 | `docs/DLSS5-CHECKER-REQUIREMENTS-20261010.md` | 本文件 | — |
 
 **「页面数」的计数器**：`shared_env/dlss-line/count-dlss5net-pages.mjs`（只读；数 sitemap 声明数、实际可达数、未登记列表，并与上次比对 delta）。要盯他们的增长节奏就跑它，别靠感觉。
