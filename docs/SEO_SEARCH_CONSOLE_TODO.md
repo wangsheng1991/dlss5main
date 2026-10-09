@@ -484,3 +484,22 @@ URL Inspection 的当前结果：
 - 站点地图仍显示 `https://www.dlss5nvidia.com/sitemap.xml` 最近读取 **2026-10-03**、已发现 **68** 个网页、状态成功；线上 sitemap 可读取 **67** 条 `<loc>`。这是 Google 报告滞后，不重复提交 sitemap 或逐页请求已在验证队列中的 URL。
 - 线上正式 sitemap 在绕过代理并重试后仍为 67 条；此前全量审计已确认 67/67 页面具备 HTTP 200、非空 title/description/keywords、H1 和自指 canonical。本轮未发现新的页面或 metadata 回归。
 - 结论：当前没有可安全推进的索引提交动作；下一步仅等待 Google 完成 sitemap 重读和验证队列，数据刷新后再按新出现的 URL 处理。
+
+## 2026-10-09：dlss5.app 流量与收录复核
+
+- Search Console 效果报告口径：搜索类型“网络”，界面显示上次更新 **22 小时前**，图表最新日期为 **2026-10-06**。
+- `dlss5.app` 最近 7 天：**1 次点击 / 33 次展示 / CTR 3% / 平均排名 12.2**。
+  - 查询（点击 / 展示）：`dlss 5 neural screen` 0/3；`dlss 5 supported cards` 0/1。
+  - 页面（点击 / 展示）：`https://dlss5.app/de` 1/5；`https://dlss5.app/` 0/15；`https://www.dlss5.app/ko` 0/6；`https://dlss5.app/en/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026` 0/2；`https://www.dlss5.app/ja/blog/what-is-dlss-5-neural-rendering-guide` 0/2；`https://www.dlss5.app/es` 0/1；`https://www.dlss5.app/de` 0/1；`https://dlss5.app/es` 0/1。
+  - 国家（点击 / 展示，前 10）：瑞士 1/2；韩国 0/6；英国 0/4；德国 0/4；美国 0/3；比利时 0/2；芬兰 0/2；巴西 0/2；印度 0/1；多米尼加共和国 0/1。
+  - 设备：桌面 1/29；移动设备 0/4；平板电脑未显示（0/0）。
+- `dlss5.app` 最近 28 天：**6 次点击 / 252 次展示 / CTR 2.4% / 平均排名 10.5**。
+  - 查询（前 10，点击 / 展示）：`dlss5 app` 1/7；`dlss 5 architecture` 1/6；`dlss checker` 0/9；`neural rendering` 0/5；`dlss 5 app` 0/4；`fsr 4 vs dlss 5` 0/3；`dlss 5 neural screen` 0/3；`dlss 5 live flow` 0/2；`dlss 5 welche grafikkarte` 0/2；`dlss 5 archviz` 0/1。
+  - 页面（前 10，点击 / 展示）：`https://dlss5.app/` 4/134；`https://dlss5.app/de` 1/32；`https://dlss5.app/es` 1/2；`https://www.dlss5.app/ko` 0/19；`https://www.dlss5.app/es` 0/14；`https://www.dlss5.app/de` 0/10；`https://dlss5.app/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 0/9；`https://www.dlss5.app/ja/blog/what-is-dlss-5-neural-rendering-guide` 0/7；`https://dlss5.app/en/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026` 0/5；`https://dlss5.app/fr` 0/3。
+  - 国家（前 10，点击 / 展示）：巴西 1/9；中国香港 1/7；瑞士 1/6；墨西哥 1/5；意大利 1/4；希腊 1/2；德国 0/41；韩国 0/23；美国 0/23；英国 0/12。
+  - 设备：桌面 4/184；移动设备 2/68；平板电脑未显示（0/0）。
+- `dlss5.app` 索引明细中唯一的“已抓取 - 尚未编入索引” URL 为 `https://www.dlss5.app/en/blog/dlss5-ai-slop-controversy`，上次抓取 2026-08-24；本轮只读取，没有点击“验证修正情况”。
+- `dlss5nvidia.com` 同窗口对比（报告同样更新于 22 小时前）：
+  - 最近 7 天：**659 点击 / 6,510 展示 / CTR 10.1% / 平均排名 7**。前 5 查询：`dlss 5 online` 25/62；`dlss 5 image converter` 13/40；`dlss 5 image generator` 12/46；`dlss5 online` 12/26；`dlss5 image converter` 11/42。前 5 页面：首页 499/2,832；`/download` 104/1,434；`/blog/dlss-5-online-image-upscaler-guide` 28/457；`/dashboard` 26/211；`/image-upscaler` 4/28。
+  - 最近 28 天：**1,690 点击 / 1.77 万展示 / CTR 9.5% / 平均排名 7.3**（展示数按 Search Console 界面原样记录）。前 5 查询：`dlss 5 image converter` 60/233；`dlss 5 online` 56/209；`dlss 5 download` 28/502；`dlss 5 image generator` 26/97；`dlss 5 visual enhancer` 20/968。前 5 页面：首页 1,313/9,255；`/download` 255/4,272；`/blog/dlss-5-online-image-upscaler-guide` 56/783；`/dashboard` 32/275；`/en/blog/dlss-5-online-image-upscaler-guide` 11/158。
+- 结论：`dlss5.app` 当前流量主要来自多语言首页（尤其根路径，其次德语/西语）和桌面搜索，意图集中在品牌、GPU 架构与硬件兼容性；`dlss5nvidia.com` 规模约高两个数量级，主要由首页承接 `image converter / online / download / visual enhancer` 等高意图词。两站本轮只读，不改页面、不改 DNS、不提交 sitemap 或索引请求。
