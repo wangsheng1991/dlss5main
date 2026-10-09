@@ -527,3 +527,7 @@ URL Inspection 的当前结果：
 ### 当前 TODO
 
 - 等 Google 重新抓取该 301 并完成已有 canonical 验证；本轮不重复点击请求编入索引。已收录的目标文章不需要再次提交。
+
+## 2026-10-09：对比文章目标 URL 索引确认
+
+- 对收敛后的 `https://www.dlss5nvidia.com/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 做 URL 检查，Search Console 返回 **“网址已收录到 Google”**、**“网页已编入索引”**。因此没有再次点击“请求编入索引”，避免消耗配额。
