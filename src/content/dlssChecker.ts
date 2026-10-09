@@ -14,12 +14,13 @@
  * 两条轴分开写，因为答案常常不一样：一张 RTX 2060 游戏里可能还没有 DLSS 5，但我们的
  * 本地软件是支持的。
  *
- * TODO(DATA)：示例条目的 `status` 刻意全部留成 `'unknown'`，就是不让任何人凭印象填数据。
- * 开工时按这个顺序取证据（每填一条就填一条的 `sources` 和 `lastVerified`）：
+ * 数据核对日期：2026-10-10。当前只发布 NVIDIA 官方明确支持或计划支持的结论；
+ * 没有针对型号或架构的官方原文仍然保持 `'unknown'`。
+ * 取证顺序：
  *   - NVIDIA 新闻室 DLSS 5 发布稿（支持哪些卡、哪些游戏）
  *   - GeForce 驱动发布说明（哪个驱动版本引入支持）
  *   - NVIDIA DLSS 5 技术页 / 官方 FAQ
- * 详细需求见 `docs/DLSS5-CHECKER-REQUIREMENTS-20261010.md`。
+ * 详细证据表见 `docs/DLSS5-CHECKER-EVIDENCE-20261010.md`。
  */
 
 import { SITE_URL } from '../config/site';
@@ -140,9 +141,17 @@ export const GPU_ENTRIES: GpuEntry[] = [
     aliases: ['NVIDIA GeForce RTX 5090', 'RTX 5090', 'GB202'],
     generation: 'Blackwell',
     vramGb: 32,
-    status: 'unknown',
+    status: 'confirmed',
+    note: 'NVIDIA lists DLSS 5 for all GeForce RTX 50 Series GPUs and laptops.',
     localSoftware: OURS_SUPPORTED,
-    sources: [],
+    sources: [
+      {
+        label: 'NVIDIA DLSS 5 launch article',
+        url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
+        checkedAt: '2026-10-10',
+      },
+    ],
+    lastVerified: '2026-10-10',
   },
   {
     slug: 'rtx-5080',
@@ -151,9 +160,17 @@ export const GPU_ENTRIES: GpuEntry[] = [
     aliases: ['NVIDIA GeForce RTX 5080', 'RTX 5080', 'GB203'],
     generation: 'Blackwell',
     vramGb: 16,
-    status: 'unknown',
+    status: 'confirmed',
+    note: 'NVIDIA lists DLSS 5 for all GeForce RTX 50 Series GPUs and laptops.',
     localSoftware: OURS_SUPPORTED,
-    sources: [],
+    sources: [
+      {
+        label: 'NVIDIA DLSS 5 launch article',
+        url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
+        checkedAt: '2026-10-10',
+      },
+    ],
+    lastVerified: '2026-10-10',
   },
   {
     slug: 'rtx-4090',
@@ -163,8 +180,19 @@ export const GPU_ENTRIES: GpuEntry[] = [
     generation: 'Ada Lovelace',
     vramGb: 24,
     status: 'unknown',
+    note: 'NVIDIA says RTX 40 Series expansion is planned, while its current support table still marks DLSS 5 as unavailable on RTX 40; we do not publish a present-tense verdict.',
     localSoftware: OURS_MEASURED,
-    sources: [],
+    sources: [
+      {
+        label: 'NVIDIA DLSS 5 FAQ (NVIDIA staff)',
+        url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/',
+        checkedAt: '2026-10-10',
+      },
+    ],
+    lastVerified: '2026-10-10',
+    conflicts: [
+      'NVIDIA\'s current DLSS technology support table marks DLSS 3D-Guided Neural Rendering with a dash for RTX 40 Series; the FAQ describes future expansion as planned. This entry therefore remains planned, not confirmed.',
+    ],
   },
   {
     slug: 'rtx-4070',
@@ -174,8 +202,19 @@ export const GPU_ENTRIES: GpuEntry[] = [
     generation: 'Ada Lovelace',
     vramGb: 12,
     status: 'unknown',
+    note: 'NVIDIA says RTX 40 Series expansion is planned, while its current support table still marks DLSS 5 as unavailable on RTX 40; we do not publish a present-tense verdict.',
     localSoftware: OURS_SUPPORTED,
-    sources: [],
+    sources: [
+      {
+        label: 'NVIDIA DLSS 5 FAQ (NVIDIA staff)',
+        url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/',
+        checkedAt: '2026-10-10',
+      },
+    ],
+    lastVerified: '2026-10-10',
+    conflicts: [
+      'NVIDIA\'s current DLSS technology support table marks DLSS 3D-Guided Neural Rendering with a dash for RTX 40 Series; the FAQ describes future expansion as planned. This entry therefore remains planned, not confirmed.',
+    ],
   },
   {
     slug: 'rtx-3060',
@@ -184,9 +223,17 @@ export const GPU_ENTRIES: GpuEntry[] = [
     aliases: ['NVIDIA GeForce RTX 3060', 'RTX 3060', 'GA106'],
     generation: 'Ampere',
     vramGb: 12,
-    status: 'unknown',
+    status: 'unsupported',
+    note: 'NVIDIA\'s current DLSS technology table marks DLSS 5 3D-Guided Neural Rendering as unavailable on GeForce RTX 30 Series.',
     localSoftware: OURS_SUPPORTED,
-    sources: [],
+    sources: [
+      {
+        label: 'NVIDIA DLSS technology supported hardware table',
+        url: 'https://www.nvidia.com/en-us/geforce/technologies/dlss/',
+        checkedAt: '2026-10-10',
+      },
+    ],
+    lastVerified: '2026-10-10',
   },
   {
     slug: 'gtx-1060',
@@ -207,7 +254,28 @@ export const GPU_ENTRIES_PLANNED_SLUGS = [
 ] as const;
 
 /** 游戏页：只在官方明确给出支持时生成，别为凑页面数填。 */
-export const GAME_ENTRIES: GameEntry[] = [];
+export const GAME_ENTRIES: GameEntry[] = [
+  {
+    slug: 'nba-2k27',
+    title: 'NBA 2K27',
+    status: 'confirmed',
+    evidence: 'NVIDIA says the PC version enables DLSS 5 on GeForce RTX 50 Series GPUs and laptops; GeForce NOW Ultimate streams it from NVIDIA RTX 5080-powered rigs. The in-game setting is called “DLSS Neural Rendering”.',
+    releaseDate: '2026-09-03',
+    sources: [
+      {
+        label: 'NVIDIA DLSS 5 launch article',
+        url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
+        checkedAt: '2026-10-10',
+      },
+      {
+        label: 'NVIDIA GeForce Game Ready Driver 616.64 article',
+        url: 'https://www.nvidia.com/en-us/geforce/news/nba-2k27-dlss-5-3d-guided-neural-rendering-geforce-game-ready-driver/',
+        checkedAt: '2026-10-10',
+      },
+    ],
+    lastVerified: '2026-10-10',
+  },
+];
 
 /** 页面文案。检测区、结果区、「你能跑什么」区、方法论区都从这里取词。 */
 export const CHECKER_COPY = {
