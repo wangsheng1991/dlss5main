@@ -516,3 +516,14 @@ URL Inspection 的当前结果：
 
 - 等 Google 重新抓取 `ceab656` 后完成“重复网页，用户未选定规范网页”验证；下一次报告刷新时确认该 URL 从未编入索引样本中消失。
 - 继续等待其余两个 canonical 验证和一个 discovered-not-indexed 验证；若报告出现新的、非重定向/noindex 且不在验证中的 URL，再逐页检查并请求编入索引。
+
+## 2026-10-09：第二个英文重复文章入口收敛
+
+- 对 Search Console 中“Google 选择的规范网页与用户指定的不同”样本 `https://www.dlss5nvidia.com/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 做了线上核验：旧版本返回 HTTP 200 且 canonical 指向自身，而无前缀文章同样返回 200，属于同内容双 URL。
+- 提交 `15c196c` 将该 `/en` 路径加入英文默认文章集合，改为单跳 301 到 `/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`，同步移除预渲染副本、站内英文卡片链接和 sitemap 重复条目；中文 `/zh` 版本保留。
+- 本地 `npx tsc --noEmit`、`npm test`（94/94）、`npm run build` 和 `git diff --check` 通过。GitHub 已推送，Vercel Production `https://dlss5-main-dvh78bbeh-wangsheng1991s-projects.vercel.app` 已 Ready。
+- 正式域名复核：旧 URL 返回 **301**，目标返回 **200**；目标 title、description、keywords、canonical 均为该文章自身，线上 sitemap 不再包含 `/en` 重复 URL。
+
+### 当前 TODO
+
+- 等 Google 重新抓取该 301 并完成已有 canonical 验证；本轮不重复点击请求编入索引。已收录的目标文章不需要再次提交。
