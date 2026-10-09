@@ -1,5 +1,5 @@
 /**
- * Independent projects in the same visual-production family. Keep this list short and contextual:
+ * Companion projects in the same visual-production family. Keep this list short and contextual:
  * every link is a real public product with a different job, not a reciprocal-link directory.
  */
 export const RELATED_PROJECTS = [
@@ -23,5 +23,12 @@ export const RELATED_PROJECTS = [
     nameEn: 'Image2LEGO 3D builder',
     description: '把图片变成可编辑的 LEGO 风格 3D 模型和搭建步骤。',
     descriptionEn: 'Turn a reference image into an editable LEGO-style 3D model and build plan.',
+  },
+  {
+    href: 'https://www.dlss5.app/zh-CN',
+    name: 'Neural Architect',
+    nameEn: 'DLSS5.app GPU checker',
+    description: '检查显卡架构、DLSS 5 功能矩阵和相关硬件信息。',
+    descriptionEn: 'Check GPU architecture, DLSS 5 feature coverage and the hardware matrix.',
   },
 ] as const;

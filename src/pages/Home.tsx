@@ -444,13 +444,13 @@ export default function Home() {
         <div className="mb-10 max-w-2xl">
           <span className="text-nvidia-green font-label text-xs uppercase tracking-[0.2em] mb-4 block">{isZh ? '相关视觉工作流' : 'Related visual workflows'}</span>
           <h2 id="related-projects-heading" className="text-3xl font-headline font-bold text-white mb-4">{isZh ? '同一套素材，不同的创作方向' : 'Different workflows for the same visual source'}</h2>
-          <p className="text-zinc-400 leading-relaxed">{isZh ? 'DLSS5NVIDIA 专注于游戏帧和人物风格转换。下面是同一创作者生态中的独立工具：室内设计、空间方案和可编辑 3D 模型。' : 'DLSS5NVIDIA focuses on game-frame and character-style conversion. These independent tools cover adjacent jobs: interior design, spatial concepts and editable 3D models.'}</p>
+          <p className="text-zinc-400 leading-relaxed">{isZh ? 'DLSS5NVIDIA 专注于游戏帧和人物风格转换。下面是同一创作生态中可以衔接的工具：硬件检查、室内设计、空间方案和可编辑 3D 模型。' : 'DLSS5NVIDIA focuses on game-frame and character-style conversion. These companion tools cover adjacent jobs: GPU checks, interior design, spatial concepts and editable 3D models.'}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {RELATED_PROJECTS.map((project) => <a key={project.href} href={project.href} target="_blank" rel="noopener noreferrer" className="group rounded-xl border border-outline-variant/20 bg-surface-low p-6 hover:border-primary/50 transition-colors">
             <h3 className="text-lg font-headline font-bold text-white group-hover:text-primary transition-colors">{isZh ? project.name : project.nameEn}</h3>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400">{isZh ? project.description : project.descriptionEn}</p>
-            <span className="mt-4 inline-block text-sm text-primary font-semibold">{isZh ? '打开独立项目 ↗' : 'Open independent project ↗'}</span>
+            <span className="mt-4 inline-block text-sm text-primary font-semibold">{isZh ? '打开相关工具 ↗' : 'Open related tool ↗'}</span>
           </a>)}
         </div>
       </section>

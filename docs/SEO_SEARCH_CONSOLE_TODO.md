@@ -460,3 +460,9 @@ URL Inspection 的当前结果：
 
 - 本轮审计记录提交 `9f69f9c` 已推送到 `origin/main`；Vercel Production deployment `dpl_HrqTaZv6gbFu54QeVUpi39hM5qa2` 已 **READY**，正式域名别名仍指向该生产项目。
 - 发布后再次复核：旧英文文章路径单跳 301 后到默认文章，首页、视觉增强、下载、比较页均返回 200 且 title、description、canonical 存在；正式 sitemap 返回 200、67 条 URL、无弃用英文重复地址。
+
+## 2026-10-09：dlss5.app 联动入口
+
+- 首页相关视觉工作流、静态首页外壳和 `public/llms.txt` 新增 `https://www.dlss5.app/zh-CN` 入口，定位为 Neural Architect 的 GPU 检查与 DLSS 5 功能矩阵；该页面与本站的图像转换工具承担不同任务，避免生成重复关键词页。
+- `dlss5.app` 现有页面已经反向提供“Try Our Tool”入口指向 `https://dlss5nvidia.com`，因此本轮形成双向发现路径；没有修改其部署或页面源代码。
+- 本轮不新增本站 URL、不改变 sitemap 条目，也不需要在 Search Console 单独提交索引请求。上线后只需观察首页外链抓取和相关查询表现。
