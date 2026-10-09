@@ -11,6 +11,10 @@ const vercel = JSON.parse(readFileSync('vercel.json', 'utf8')) as {
 const sitemap = readFileSync('public/sitemap.xml', 'utf8');
 const duplicateRoutes = [
   {
+    deprecated: '/en/blog',
+    selected: '/blog',
+  },
+  {
     deprecated: '/en/blog/dlss-5-online-image-upscaler-guide',
     selected: '/blog/dlss-5-online-image-upscaler-guide',
   },
@@ -21,6 +25,30 @@ const duplicateRoutes = [
   {
     deprecated: '/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026',
     selected: '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026',
+  },
+  {
+    deprecated: '/en/blog/seedance-2-5-video-super-resolution-cost-guide-2026',
+    selected: '/blog/seedance-2-5-video-super-resolution-cost-guide-2026',
+  },
+  {
+    deprecated: '/en/blog/dlss-5-latest-news-september-2026',
+    selected: '/blog/dlss-5-latest-news-september-2026',
+  },
+  {
+    deprecated: '/en/blog/what-is-dlss-5-neural-rendering-guide',
+    selected: '/blog/what-is-dlss-5-neural-rendering-guide',
+  },
+  {
+    deprecated: '/en/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026',
+    selected: '/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026',
+  },
+  {
+    deprecated: '/en/blog/best-ai-image-upscaler-2026-comparison',
+    selected: '/blog/best-ai-image-upscaler-2026-comparison',
+  },
+  {
+    deprecated: '/en/blog/dlss5-artistic-vision-debate-honest-assessment',
+    selected: '/blog/dlss5-artistic-vision-debate-honest-assessment',
   },
 ];
 

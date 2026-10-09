@@ -100,7 +100,7 @@ Free exact-format utilities run locally in the browser. The passport photo maker
 - DLSS 5 vs DLSS 4 vs FSR 4 comparison: https://www.dlss5nvidia.com/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026
 - Seedance 2.5 + video super-resolution cost guide: https://www.dlss5nvidia.com/blog/seedance-2-5-video-super-resolution-cost-guide-2026
 
-English and Simplified Chinese crawlable blog indexes are available at https://www.dlss5nvidia.com/en/blog and https://www.dlss5nvidia.com/zh/blog. Each localized article URL exposes reciprocal `hreflang` links and its own canonical URL.
+The English crawlable blog index is available at https://www.dlss5nvidia.com/blog and the Simplified Chinese index at https://www.dlss5nvidia.com/zh/blog. English articles use the unprefixed `/blog/<slug>` URL; `/en/blog` legacy duplicates redirect there. Each remaining localized article URL exposes reciprocal `hreflang` links and its own canonical URL.
 <!-- end:blog -->
 
 <!-- begin:podcast -->

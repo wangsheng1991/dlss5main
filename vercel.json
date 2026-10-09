@@ -133,6 +133,11 @@
   },
   "redirects": [
     {
+      "source": "/en/blog",
+      "destination": "/blog",
+      "statusCode": 301
+    },
+    {
       "source": "/en/blog/dlss-5-online-image-upscaler-guide",
       "destination": "/blog/dlss-5-online-image-upscaler-guide",
       "statusCode": 301
@@ -145,6 +150,36 @@
     {
       "source": "/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026",
       "destination": "/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/blog/seedance-2-5-video-super-resolution-cost-guide-2026",
+      "destination": "/blog/seedance-2-5-video-super-resolution-cost-guide-2026",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/blog/dlss-5-latest-news-september-2026",
+      "destination": "/blog/dlss-5-latest-news-september-2026",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/blog/what-is-dlss-5-neural-rendering-guide",
+      "destination": "/blog/what-is-dlss-5-neural-rendering-guide",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026",
+      "destination": "/blog/crimson-desert-pc-optimization-dlss-fsr-guide-2026",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/blog/best-ai-image-upscaler-2026-comparison",
+      "destination": "/blog/best-ai-image-upscaler-2026-comparison",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/blog/dlss5-artistic-vision-debate-honest-assessment",
+      "destination": "/blog/dlss5-artistic-vision-debate-honest-assessment",
       "statusCode": 301
     }
   ]

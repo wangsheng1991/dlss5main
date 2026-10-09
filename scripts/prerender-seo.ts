@@ -174,6 +174,12 @@ const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
   'dlss-5-online-image-upscaler-guide',
   'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
   'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
+  'seedance-2-5-video-super-resolution-cost-guide-2026',
+  'dlss-5-latest-news-september-2026',
+  'what-is-dlss-5-neural-rendering-guide',
+  'crimson-desert-pc-optimization-dlss-fsr-guide-2026',
+  'best-ai-image-upscaler-2026-comparison',
+  'dlss5-artistic-vision-debate-honest-assessment',
 ]);
 
 function articlePath(slug: string, locale?: 'en' | 'zh'): string {
@@ -204,8 +210,8 @@ function pageHead(options: {
     : options.canonicalPath.startsWith('/zh/')
       ? options.canonicalPath.replace(/^\/zh/, '/en')
       : `/en${options.canonicalPath}`;
-  const normalizedEnglishBlogPath = [...DEFAULT_ENGLISH_ARTICLE_SLUGS].some(slug => englishBlogPath === `/en/blog/${slug}`)
-    ? englishBlogPath.replace(/^\/en(?=\/blog\/)/, '')
+  const normalizedEnglishBlogPath = (englishBlogPath === '/en/blog' || [...DEFAULT_ENGLISH_ARTICLE_SLUGS].some(slug => englishBlogPath === `/en/blog/${slug}`))
+    ? englishBlogPath.replace(/^\/en(?=\/blog(?:\/|$))/, '')
     : englishBlogPath;
   const chineseBlogPath = options.canonicalPath.startsWith('/zh/')
     ? options.canonicalPath
@@ -912,7 +918,9 @@ function renderApiCatalog(): string {
  */
 if (profileHas('blog')) {
   for (const locale of [undefined, 'en', 'zh'] as const) {
-    writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
+    // The English index is the unprefixed x-default route. `/en/blog` is a legacy duplicate
+    // redirected at the edge and must not get a second static document.
+    if (locale !== 'en') writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
     for (const article of ARTICLES) {
       const route = articlePath(article.slug, locale);
       // These English articles are served once at /blog/<slug>; /en/blog/<slug> is a 301.

@@ -127,7 +127,8 @@ export default function Blog() {
   const copy = BLOG_COPY[locale] || BLOG_COPY['en-US'];
   // The unprefixed path is the x-default canonical. Keep its head metadata in the same English
   // language as the prerendered shell even when the visible article copy follows the visitor's UI
-  // language; /en/blog and /zh/blog remain the explicit language alternates.
+  // language; /zh/blog remains the explicit translated alternate while the English x-default
+  // address is unprefixed.
   const seoLocale = routeLocale ? locale : 'en-US';
   const seoCopy = routeLocale ? copy : BLOG_COPY['en-US'];
   const isArticleLocaleSupported = locale === 'en-US' || locale === 'zh-CN';
@@ -147,8 +148,15 @@ export default function Blog() {
     'dlss-5-online-image-upscaler-guide',
     'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
     'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
+    'seedance-2-5-video-super-resolution-cost-guide-2026',
+    'dlss-5-latest-news-september-2026',
+    'what-is-dlss-5-neural-rendering-guide',
+    'crimson-desert-pc-optimization-dlss-fsr-guide-2026',
+    'best-ai-image-upscaler-2026-comparison',
+    'dlss5-artistic-vision-debate-honest-assessment',
   ]);
   const localizedBlogPath = (language: 'en' | 'zh') => {
+    if (language === 'en' && !slug) return '/blog';
     if (language === 'en' && slug && DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug)) return `/blog/${slug}`;
     return `/${language}/blog${slug ? `/${slug}` : ''}`;
   };
