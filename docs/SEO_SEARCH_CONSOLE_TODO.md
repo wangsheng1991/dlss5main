@@ -455,3 +455,8 @@ URL Inspection 的当前结果：
 
 - 等 Google 重新读取 67 条 sitemap，并完成 3 个 canonical/发现类验证队列；这些是 Google 抓取和报告延迟，代码与线上 metadata 已无可修复项。
 - 下一次 Search Console 报告刷新后再观察 `dlss 5 convert`、`dlss 5 image converter`、`dlss 5 visual enhancer` 与 `dlss 5 download` 的展示和点击变化；在状态变化前不重复请求已收录或已进入验证队列的 URL。
+
+## 2026-10-09：审计记录生产发布
+
+- 本轮审计记录提交 `9f69f9c` 已推送到 `origin/main`；Vercel Production deployment `dpl_HrqTaZv6gbFu54QeVUpi39hM5qa2` 已 **READY**，正式域名别名仍指向该生产项目。
+- 发布后再次复核：旧英文文章路径单跳 301 后到默认文章，首页、视觉增强、下载、比较页均返回 200 且 title、description、canonical 存在；正式 sitemap 返回 200、67 条 URL、无弃用英文重复地址。
