@@ -467,3 +467,13 @@ URL Inspection 的当前结果：
 - `dlss5.app` 现有页面已经反向提供“Try Our Tool”入口指向 `https://dlss5nvidia.com`，因此本轮形成双向发现路径；没有修改其部署或页面源代码。
 - 本轮不新增本站 URL、不改变 sitemap 条目，也不需要在 Search Console 单独提交索引请求。上线后只需观察首页外链抓取和相关查询表现。
 - 提交 `e3557cd` 已推送并部署为 Production（Vercel deployment `dpl_2NzUkTsGMSbTuTEWhjSi8pViragu`，状态 Ready）。正式首页与 `/llms.txt` 均返回 HTTP 200 并包含联动入口；正式 sitemap 仍为 67 个站内 URL。
+
+## 2026-10-09：dlss5.app Search Console 资源核实
+
+- 账号 `wustwangsheng@gmail.com` 下的资源 `dlss5.app` 存在并可访问，Search Console 概述页正常显示资源名；本轮没有遇到重新验证或权限提示。
+- 站点地图页显示两条历史提交记录，均为 **成功**，没有重复提交：
+  - `https://www.dlss5.app/sitemap.xml`：提交日期 2026-04-13，最近读取 2026-04-13，已发现 14 个网页、0 个视频。
+  - `https://dlss5.app/sitemap.xml`：提交日期 2026-04-11，最近读取 2026-04-14，已发现 14 个网页、0 个视频。
+  公开 sitemap 当前有 16 个 `loc`，所以 Search Console 的已发现数量仍少于文件中的 URL 总数；本轮不重复提交，先等待 Google 重新读取。
+- 网页索引编制摘要的报告更新时间为 **2026-10-04**：**33 个已编入索引、85 个未编入索引**。未编入索引明细只有 3 类：`备用网页（有适当的规范标记）` 49 个、`网页会自动重定向` 35 个、`已抓取 - 尚未编入索引` 1 个；当前摘要没有显示“重复网页，用户未选定规范网页”或“Google 选择的规范网页与用户指定的不同”。
+- 结论：资源和 sitemap 均已建立，主要缺口是 Google 尚未将大部分已知 URL 纳入索引，以及 sitemap 发现数尚未覆盖公开文件的全部 16 条。下一步只观察抓取/索引报告变化；不重建资源、不改 DNS、不修改 dlss5nvidia.com 页面。
