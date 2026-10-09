@@ -22,8 +22,9 @@
 
 - **`.net` 明确声明自己是独立站。**【实测】页脚和 [About](https://www.dlss5.net/about) 写明 independent/not affiliated with NVIDIA；作者/创建者为 “DLSS 5 Checker Editor”，并说明工具匹配用户输入的显卡型号，不扫描本机或测量性能。不能把它当作 NVIDIA 官方站。
 - **`.net` 有可见的时间与编辑信号。**【实测】[About](https://www.dlss5.net/about) 显示 “Last reviewed: September 5, 2026”，[Editorial Policy](https://www.dlss5.net/editorial-policy) 显示 “Last checked September 5, 2026”；About 叙述站点从 2026-03-16 NVIDIA GTC 公告后的信息混乱中产生。站点地图只写 `changefreq`/`priority`，没有 `lastmod`，所以不能从 sitemap 推算逐页更新时间。
-- **Wayback 只能确认至少有一个 2026-09-25 快照，不能证明它是第一次抓取。**【实测】2026-10-09/10 调用 Internet Archive availability API `https://archive.org/wayback/available?url=dlss5.net%2F` 返回最近可用快照 `20260925093017`（重放地址为 `https://www.dlss5.net/`）。CDX 服务当时返回 “Temporarily Offline”，所以没有拿到完整历史序列；“新站红利”仍属待核实。
-- **同名域名排查没有证明同一站长。**【实测】2026-10-09/10：`dlss5.com` 返回 Cloudflare 403；`dlss5.org` 返回 HTTP 200、标题 “DLSS 5: Everything You Need to Know”，但未发现与 `.net` 相同的 AdSense/Plausible 标识；`dlss5.io`、`dlss5.ai` 在本次出口下没有可用响应。仅凭域名相似不能合并为同一模板或同一运营者。
+- **最早可证实的 Wayback 快照是 2026-04-06。**【实测】2026-10-09 深夜重新调用 [Wayback CDX](https://web.archive.org/cdx/search/cdx?url=dlss5.net&output=json&fl=timestamp,original,statuscode&limit=5)，原始序列显示 `20260406031434` 的 `https://dlss5.net/` 返回 307，随后 `20260406072639` 与 `20260406072656` 的 `https://www.dlss5.net/` 返回 200；之后还有 2026-06-16 的重定向记录。结合 [availability API](https://archive.org/wayback/available?url=dlss5.net%2F) 返回的 2026-09-25 快照，可以确认该站最晚在 2026-04-06 已有正常可抓页面。**推断**：它在域名注册后约三周便进入可抓取状态，可能较早占据 DLSS 5 信息真空期；这支持“起跑早”，但不直接等于流量暴涨。
+- **域名时间线显示它是 2026 年 3 月的新站。**【实测】2026-10-09/10 的 WHOIS 结果：Creation Date `2026-03-17 12:57:34 UTC`，Updated `2026-03-17`，Registrar Spaceship，NS 为 `melany.ns.cloudflare.com`。这与 2026-04-06 的最早 CDX 快照相差约三周。
+- **同名域名排查没有证明同一站长。**【实测】2026-10-09/10：`dlss5.com` 返回 Cloudflare 403；`dlss5.org` 返回 HTTP 200、标题 “DLSS 5: Everything You Need to Know”，未发现与 `.net` 相同的 AdSense/Plausible 标识；`dlss5.io`、`dlss5.ai` 在本次出口下没有可用响应。结论只能是同一关键词空间存在多个独立站，不能据此合并为同一模板或同一运营者。
 - **`.net` 有可见的外部引用/目录收录，但不是流量归因。**【实测】2026-10-10 的公开搜索结果出现 [LinkedIn 建站帖](https://www.linkedin.com/posts/gyaansetu-webdev_activity-7439855864691281920-yE1p)、[Smartees](https://smartees.tech/t/dlss5-checker)、[AISO Tools](https://aisotools.com/tool/dlss-5-checker)、[The Hack Stack](https://www.thehackstack.com/product/14e07a9b-1ed8-47dd-8274-5ae30ee1651d) 和 [Forocoches](https://forocoches.com/foro/index.php?showthread.php?page=2&t=10796479) 等页面/帖子。它们说明有人发现或转载了该工具，但没有给出点击量、链接属性、发布时间链或因果归因；不能据此声称“外链带来了暴涨”。
 
 ### A4. `.app` 的 Search Console 现实数据
@@ -94,8 +95,8 @@
 
 - `.net` 的真实点击、展示、CTR、排名、国家/设备拆分、付费/自然流量比例和增长曲线；本账号无该资源权限。
 - `.net` 外部链接的数量、follow/nofollow 属性、首次引用时间以及每个引用带来的会话；本轮搜索只证明公开页面/目录/帖子存在。
-- Wayback 的**第一次**抓取时间和完整内容演进；availability API 只返回 2026-09-25 的可用快照，CDX 当时暂时离线。
-- `.net`、`.org`、`.com`、`.io`、`.ai` 是否由同一人运营；同名域名和一次性脚本观察不足以归属。
+- Wayback 在 2026-04-06 之前是否还有未返回的抓取，以及 2026-04-06 到 2026-09-25 之间完整的内容演进；目前只能把 2026-04-06 标为最早**可证实**快照，不能称为绝对首次抓取。
+- `.net`、`.org`、`.com`、`.io`、`.ai` 是否由同一人运营；WHOIS、标题和脚本观察不足以归属。
 - Google 在其他国家、设备、登录状态或不同时间的精确排名；B 表是一次美国英文快照，且混合模块会改变视觉位置。
 - `.app` 的 7/28 天数据与 `.net` 的真实流量不是同一统计口径；不能从 `.app` 的 29/1,779 三个月数据反推竞品转化。
 
