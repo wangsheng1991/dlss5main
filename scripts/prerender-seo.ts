@@ -167,13 +167,19 @@ function absoluteUrl(path: string): string {
   return path.startsWith('http') ? path : `${BASE_URL}${path}`;
 }
 
-const DEFAULT_ENGLISH_ARTICLE_SLUG = 'dlss-5-online-image-upscaler-guide';
+// English articles that already have an indexed, unprefixed address. Keep one
+// canonical URL and redirect the redundant /en/blog copy instead of asking
+// Google to choose between identical pages.
+const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
+  'dlss-5-online-image-upscaler-guide',
+  'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
+]);
 
 function articlePath(slug: string, locale?: 'en' | 'zh'): string {
   // Keep the already indexed unprefixed English article as the canonical address. The old
   // /en/blog URL is redirected at the edge; all generated cards and related links use this helper
   // so we do not create fresh internal links to the deprecated duplicate.
-  if (locale === 'en' && slug === DEFAULT_ENGLISH_ARTICLE_SLUG) return `/blog/${slug}`;
+  if (locale === 'en' && DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug)) return `/blog/${slug}`;
   return `${locale ? `/${locale}` : ''}/blog/${slug}`;
 }
 
@@ -197,8 +203,8 @@ function pageHead(options: {
     : options.canonicalPath.startsWith('/zh/')
       ? options.canonicalPath.replace(/^\/zh/, '/en')
       : `/en${options.canonicalPath}`;
-  const normalizedEnglishBlogPath = englishBlogPath === `/en/blog/${DEFAULT_ENGLISH_ARTICLE_SLUG}`
-    ? `/blog/${DEFAULT_ENGLISH_ARTICLE_SLUG}`
+  const normalizedEnglishBlogPath = [...DEFAULT_ENGLISH_ARTICLE_SLUGS].some(slug => englishBlogPath === `/en/blog/${slug}`)
+    ? englishBlogPath.replace(/^\/en(?=\/blog\/)/, '')
     : englishBlogPath;
   const chineseBlogPath = options.canonicalPath.startsWith('/zh/')
     ? options.canonicalPath
@@ -908,7 +914,7 @@ if (profileHas('blog')) {
     writeRoute(`${locale ? `/${locale}` : ''}/blog`, renderBlogIndex(locale));
     for (const article of ARTICLES) {
       const route = articlePath(article.slug, locale);
-      // The English upscaler article is served once at /blog/<slug>; /en/blog/<slug> is a 301.
+      // These English articles are served once at /blog/<slug>; /en/blog/<slug> is a 301.
       if (locale === 'en' && route === articlePath(article.slug)) continue;
       writeRoute(route, renderArticle(article, locale).html);
     }
