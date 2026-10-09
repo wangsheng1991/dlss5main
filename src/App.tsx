@@ -46,6 +46,14 @@ const UseCaseLanding = lazy(() => import('./pages/UseCaseLanding'));
 const PassportPhoto = lazy(() => import('./pages/PassportPhoto'));
 const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
+/**
+ * DLSS 5 checker — the scaffold for the compatibility tool (see
+ * `docs/DLSS5-CHECKER-REQUIREMENTS-20261010.md`). It exists only in local development: `DEV` is
+ * folded to `false` in a production build, so the import, the chunk and the route all disappear
+ * from what is deployed. To ship it, register the route in `scripts/prerender-seo.ts` too (and in
+ * the sitemap that step generates).
+ */
+const DlssChecker = import.meta.env.DEV ? lazy(() => import('./pages/DlssChecker')) : null;
 
 /**
  * Renders a page, or sends the visitor home when this deployment does not publish that section. A
@@ -112,6 +120,8 @@ export default function App() {
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />
+                  {/* Scaffold only: a production build has no checker route and no checker chunk. */}
+                  {DlssChecker && <Route path="/dlss-checker" element={<DlssChecker />} />}
                 </Routes>
               </Suspense>
             </div>
