@@ -662,3 +662,10 @@ URL Inspection 的当前结果：
 - 最近一次已记录的界面读数：`dlss5nvidia.com` 2026-09-09—2026-10-06 为 **1,690 点击 / 约 17,700 展示 / CTR 9.5% / 平均排名 7.3**；`dlss5.app` 最近一次 28 天快照为 **6 点击 / 252 展示 / CTR 2.4% / 平均排名 10.5**。独立查询数和完整 top20 行在已保存记录中未显示。
 - 本轮尝试通过已登录 Chrome 刷新 Search Console 时，浏览器页面返回网络挂起（`ERR_NETWORK_IO_SUSPENDED`），因此没有把旧读数冒充新读数，也没有提交 sitemap 或请求编入索引。下一次浏览器恢复后，只需补读同一窗口的独立查询数、top20 及逐查询均位。
 - T1–T4 的已交付项继续保留；T4 ja/ko 只作为样本实验，是否铺开由 2–4 周展示和成功使用数据决定，不因语言数量直接扩页。
+
+## 2026-10-11：Search Console 28 天效果报告刷新
+
+- 本次通过已登录 Chrome 的 Search Console 只读打开效果报告；窗口均为 **2026年9月9日—2026年10月6日**，界面显示“上次更新日期：41.5小时前”。没有提交 sitemap，也没有点击请求编入索引。
+- `dlss5.app`：**总点击次数 6、总曝光次数 252、平均点击率 2.4%、平均排名 10.5、共 18 行查询**。完整查询行（点击/展示）为：`dlss5 app` 1/7；`dlss 5 architecture` 1/6；`dlss checker` 0/9；`neural rendering` 0/5；`dlss 5 app` 0/4；`fsr 4 vs dlss 5` 0/3；`dlss 5 neural screen` 0/3；`dlss 5 live flow` 0/2；`dlss 5 welche grafikkarte` 0/2；`dlss 5 archviz` 0/1；`dlss 5 vs fsr 4` 0/1；`dlss5 vs fsr 4` 0/1；`neural dlss` 0/1；`dlss 5` 0/1；`dlss 5 3080` 0/1；`dlss 5 neural rendering` 0/1；`dlss 5 supported cards` 0/1；`dlss5 vs dlss4` 0/1。
+- `dlss5nvidia.com`：**总点击次数 1,690、总曝光次数 1.77万、平均点击率 9.5%、平均排名 7.3、共 595 行查询**。前 20 行（点击/展示）为：`dlss 5 image converter` 60/233；`dlss 5 online` 56/209；`dlss 5 download` 28/502；`dlss 5 image generator` 26/97；`dlss 5 visual enhancer` 20/968；`dlss 5 image enhancer` 18/98；`dlss5 image converter` 17/93；`dlss image upscaler` 17/43；`dlss 5 upscaling` 14/235；`dlss 5 upscaler` 13/126；`dlss5 image enhancer` 13/42；`dlss5 online` 13/37；`dlss5 upscaler` 11/55；`dlss 5 filter online` 10/47；`dlss 5 mobile download` 9/92；`dlss 5 download android` 9/86；`dlss 5 generator` 9/51；`image to dlss5` 9/44；`image to dlss 5` 9/32；`dlss5 apk` 8/27。
+- 该次界面未显示逐查询平均排名，也未显示前 20 查询的单独 CTR；这些字段保持“未显示”，不从总量反推。
