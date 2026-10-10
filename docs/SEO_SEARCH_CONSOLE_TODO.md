@@ -654,3 +654,4 @@ URL Inspection 的当前结果：
 - `robots.txt` 允许抓取，并指向 `https://www.dlss5nvidia.com/sitemap.xml`。
 - 可直接修复的代码侧 SEO 项已收口；Search Console 当前剩余是 Google 重新读取 sitemap、刷新索引报告和既有验证队列。提交已成功但界面仍显示旧读取快照时，不重复提交同一 sitemap、不重复请求已收录 URL。
 - 待 Google 报告刷新后再核对：58 条正式 URL 的发现数、历史重复/规范验证是否结束，以及 converter / online / generator / visual enhancer 的页面分流。
+- 本轮尝试读取已登录浏览器中的 Search Console 时，浏览器运行时返回“Unable to load browser request-header policy”；未重复重试、未执行任何 GSC 写操作。
