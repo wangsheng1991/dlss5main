@@ -646,3 +646,11 @@ URL Inspection 的当前结果：
 
 - 等 Google 刷新 sitemap 与索引报告，确认历史重复路由验证结果；报告更新前不重复提交同一 URL。
 - 下一次数据刷新后比较 `image converter`、`online`、`image generator`、`visual enhancer` 与新工具页的点击分流。
+
+## 2026-10-10：SEO 生产面最终核验（本轮）
+
+- 线上 `https://www.dlss5nvidia.com/sitemap.xml` 返回 **58** 个 `<loc>`；并发逐页抓取 58/58 均 HTTP 200，均有非空 title、description（≥40 字符）、keywords、H1 与自指 canonical；canonical 与 sitemap URL 一致。
+- 58 个标题全部唯一（`duplicateTitleCount=0`），未发现新的软 404、canonical 漂移或 sitemap 外的重复正式 URL。
+- `robots.txt` 允许抓取，并指向 `https://www.dlss5nvidia.com/sitemap.xml`。
+- 可直接修复的代码侧 SEO 项已收口；Search Console 当前剩余是 Google 重新读取 sitemap、刷新索引报告和既有验证队列。提交已成功但界面仍显示旧读取快照时，不重复提交同一 sitemap、不重复请求已收录 URL。
+- 待 Google 报告刷新后再核对：58 条正式 URL 的发现数、历史重复/规范验证是否结束，以及 converter / online / generator / visual enhancer 的页面分流。
