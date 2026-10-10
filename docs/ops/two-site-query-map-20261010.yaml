@@ -1,0 +1,117 @@
+version: 1
+checked_at: 2026-10-10
+notes:
+  - "A query has one owning page. The sibling site may link to it, but must not publish a near-duplicate self-canonical page."
+  - "Search Console values are baselines, not promises; refresh before changing priority."
+queries:
+  - id: main-dlss5-online
+    site: dlss5nvidia.com
+    intent: workflow
+    primary_query: "dlss 5 online"
+    owner_path: /
+    cta_path: /dashboard?tool=game-character-style&sample=characterStyle
+    baseline:
+      window: 7d
+      clicks: 25
+      impressions: 62
+    sibling_link: https://www.dlss5.app/en/supported-cards
+  - id: main-image-converter
+    site: dlss5nvidia.com
+    intent: workflow
+    primary_query: "dlss 5 image converter"
+    owner_path: /
+    cta_path: /dashboard?tool=game-character-style&sample=characterStyle
+    baseline:
+      window: 7d
+      clicks: 13
+      impressions: 40
+    sibling_link: https://www.dlss5.app/en/supported-cards
+  - id: main-image-generator
+    site: dlss5nvidia.com
+    intent: workflow
+    primary_query: "dlss 5 image generator"
+    owner_path: /
+    cta_path: /dashboard?tool=enhance&sample=sample1
+    baseline:
+      window: 7d
+      clicks: 12
+      impressions: 46
+    sibling_link: https://www.dlss5.app/en/supported-cards
+  - id: main-visual-enhancer
+    site: dlss5nvidia.com
+    intent: workflow
+    primary_query: "dlss 5 visual enhancer"
+    owner_path: /image-quality-enhancer
+    cta_path: /dashboard?tool=enhance&sample=sample1
+    baseline:
+      window: 7d
+      clicks: 6
+      impressions: 234
+    sibling_link: https://www.dlss5.app/en/supported-cards
+  - id: main-download
+    site: dlss5nvidia.com
+    intent: download
+    primary_query: "dlss 5 download"
+    owner_path: /download
+    cta_path: /download#request
+    baseline:
+      window: 28d
+      clicks: 28
+      impressions: 502
+    sibling_link: https://www.dlss5.app/en/studio
+  - id: app-supported-cards
+    site: dlss5.app
+    intent: evidence
+    primary_query: "dlss 5 supported cards"
+    owner_path: /en/supported-cards
+    cta_path: https://www.dlss5nvidia.com/models
+    baseline:
+      window: unavailable
+      clicks: unavailable
+      impressions: unavailable
+    source_requirement: official NVIDIA statement per status
+  - id: app-gpu-checker
+    site: dlss5.app
+    intent: evidence
+    primary_query: "dlss 5 gpu compatibility checker"
+    owner_path: /en/supported-cards
+    cta_path: https://www.dlss5nvidia.com/download
+    baseline:
+      window: unavailable
+      clicks: unavailable
+      impressions: unavailable
+    source_requirement: model record, VRAM, status and checked source
+  - id: app-gpu-model
+    site: dlss5.app
+    intent: evidence
+    primary_query: "RTX 5090 DLSS 5 support"
+    owner_path: /en/gpu/rtx5090
+    cta_path: https://www.dlss5nvidia.com/models
+    baseline:
+      window: unavailable
+      clicks: unavailable
+      impressions: unavailable
+    source_requirement: official NVIDIA hardware/compatibility source
+  - id: app-dlss5-games
+    site: dlss5.app
+    intent: evidence
+    primary_query: "DLSS 5 supported games"
+    owner_path: pending-official-games-page
+    cta_path: https://www.dlss5nvidia.com/blog
+    baseline:
+      window: unavailable
+      clicks: unavailable
+      impressions: unavailable
+    source_requirement: official NVIDIA title list with checked date
+    blocker: "Do not publish a games table until every row has an official source and availability wording."
+  - id: app-dlss5-download
+    site: dlss5.app
+    intent: evidence
+    primary_query: "DLSS 5 download"
+    owner_path: /en/studio
+    cta_path: https://www.dlss5nvidia.com/download
+    baseline:
+      window: unavailable
+      clicks: unavailable
+      impressions: unavailable
+    source_requirement: distinguish NVIDIA official software from the independent Studio request flow

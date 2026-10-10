@@ -1,0 +1,42 @@
+version: 1
+checked_at: 2026-10-10
+rules:
+  default_ship_mode: draft-or-pr
+  human_approval_required_for: [production_deploy, external_post, creator_contact, paid_spend]
+  never_count_as_success: [button_click, sitemap_submission, index_request]
+queue:
+  - id: p0-cross-site-funnel
+    status: ready
+    owner: seo-operator
+    deliverable: "One query map and two-way internal-link audit for main workflow pages and app evidence pages."
+    acceptance: "Every primary query has one owner path, a sibling link and a measurable CTA."
+  - id: p0-gsc-baseline
+    status: ready
+    owner: data-operator
+    deliverable: "Refresh 7d/28d GSC query/page baselines for both sites."
+    acceptance: "Report clicks, impressions, CTR, position and data date; unavailable stays unavailable."
+  - id: p1-app-games-evidence
+    status: blocked-on-evidence
+    owner: evidence-editor
+    deliverable: "A source-linked DLSS 5 games/evidence hub derived only from NVIDIA pages."
+    acceptance: "Every game row has an official source URL, checked date and availability wording."
+  - id: p1-main-ctr-pages
+    status: queued
+    owner: content-editor
+    deliverable: "Improve /image-quality-enhancer and /download only after refreshed GSC data."
+    acceptance: "Title, H1, first-screen answer and CTA use one intent; no duplicate page is added."
+  - id: p1-distribution-kit
+    status: queued
+    owner: growth-editor
+    deliverable: "One tutorial, one measured case and one community draft per approved query cluster."
+    acceptance: "Shared claim IDs, UTM campaign, destination page and platform rule check."
+  - id: p2-model-data-refresh
+    status: queued
+    owner: data-editor
+    deliverable: "Review Models.dev metadata and compare it with product facts."
+    acceptance: "Models.dev never supplies NVIDIA compatibility status; differences are recorded as unknown."
+  - id: p2-report-loop
+    status: queued
+    owner: analyst
+    deliverable: "Seven-day and fourteen-day review of impressions → qualified visit → generation success → download."
+    acceptance: "Small samples are labelled evidence-insufficient; no success claim from traffic alone."
