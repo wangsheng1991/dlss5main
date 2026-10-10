@@ -630,3 +630,19 @@ URL Inspection 的当前结果：
 - `https://www.dlss5.app/en/gpu/rtx5070`
 - `https://www.dlss5.app/zh-CN/supported-cards`
 - 这五条只是进入抓取队列，不等于已经编入索引；之前已提交的 `/en/supported-cards`、`/en/studio`、`/en/gpu/rtx5090`、`/zh-CN/gpu/rtx5090` 不重复提交。Google 站点地图和索引报告仍可能显示旧快照，后续只在报告或 URL Inspection 出现新状态后再复核。
+
+## 2026-10-10：主站新工具页 URL Inspection 复核
+
+- 使用已登录的 Google Search Console `dlss5nvidia.com` 资源逐页检查：
+  - `https://www.dlss5nvidia.com/game-character-style`
+  - `https://www.dlss5nvidia.com/video-upscaler`
+  - `https://www.dlss5nvidia.com/podcast`
+  - `https://www.dlss5nvidia.com/tools/passport-photo`
+- 四个 URL 的界面原文均为 **“网址已收录到 Google”**，并显示 **“网页已编入索引”**；未出现新的 canonical 冲突、未发现“Google 无法识别此网址”或抓取异常。
+- `video-upscaler` 另外显示视频索引区域存在有效视频结构化内容；本轮只读取，没有重复点击“请求编入索引”。
+- 结论：主站新增工具、播客与案例入口已经进入 Google 索引，当前剩余问题仍是历史重复/重定向验证队列和 sitemap 报告滞后，不再对已收录 URL 重复提交。
+
+### 当前 TODO
+
+- 等 Google 刷新 sitemap 与索引报告，确认历史重复路由验证结果；报告更新前不重复提交同一 URL。
+- 下一次数据刷新后比较 `image converter`、`online`、`image generator`、`visual enhancer` 与新工具页的点击分流。
