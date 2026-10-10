@@ -37,6 +37,15 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
         ? ['Check the displayed output dimensions before spending a credit.', 'Keep the original aspect ratio and compare straight edges.', 'For print, calculate the required pixel dimensions first.']
         : ['Inspect blocky compression areas and fine product textures.', 'Check that labels and logos have not been rewritten.', 'Compare colors and lighting against your original.']);
   const longForm = toolLongForm(tool);
+  const evidenceLabel = es
+    ? 'Consultar evidencia de GPU y VRAM →'
+    : tool.path.includes('video')
+      ? 'Check GPU evidence before a video workflow →'
+      : tool.dashboardTool === 'enhance'
+        ? 'Check model-level evidence for visual enhancement →'
+        : tool.dashboardTool === 'upscale'
+          ? 'Check VRAM and DLSS 5 evidence by GPU →'
+          : 'Check the source-linked GPU evidence →';
   return <>
     <main lang={tool.locale} className="pt-28 sm:pt-32 pb-20 px-5 max-w-[1200px] mx-auto w-full">
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start" id="tool">
@@ -124,6 +133,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <div className="mt-4 flex flex-wrap gap-3">{MICRO_TOOLS.map(item => <a key={item.path} href={item.path} className="rounded-lg border border-primary/30 px-4 py-3 text-sm text-primary hover:bg-primary/10">{item.heading} <ArrowRight aria-hidden="true" className="ml-1 inline w-4 h-4" /></a>)}</div>
         </>}
         {profileHas('blog') && <a className="inline-block mt-6 text-sm text-primary" href="/blog/dlss-5-online-image-upscaler-guide">{es ? 'Guía sobre mejora de imágenes (en inglés) →' : 'Read the online image enhancement guide →'}</a>}
+        <p className="mt-6"><a className="text-sm text-primary" href="https://www.dlss5.app/en/supported-cards">{evidenceLabel}</a></p>
       </section>
     </main>
   </>;

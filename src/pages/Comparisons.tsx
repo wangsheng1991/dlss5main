@@ -95,6 +95,13 @@ export default function Comparisons() {
         </div>
       </section>
 
+      <section className="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-6 sm:p-8" aria-labelledby="hardware-evidence-heading">
+        <p className="text-xs uppercase tracking-[0.2em] text-primary font-label">Hardware context</p>
+        <h2 id="hardware-evidence-heading" className="mt-2 text-2xl font-headline font-bold text-white">Ground the comparison in GPU evidence</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400">The tool table explains what each workflow does. For model-level DLSS 5 status, VRAM and source links, continue to the independent GPU evidence checker.</p>
+        <a className="mt-5 inline-block text-primary font-semibold" href="https://www.dlss5.app/en/supported-cards">Check GPU evidence by model →</a>
+      </section>
+
       <section className="mt-16" aria-labelledby="evidence-heading">
         <div className="mb-8 max-w-3xl">
           <p className="text-xs uppercase tracking-[0.2em] text-primary font-label">Evidence, not a leaderboard</p>

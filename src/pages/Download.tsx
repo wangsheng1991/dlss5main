@@ -440,6 +440,9 @@ export default function Download() {
         <Link to="/dashboard" className="inline-block mt-5 text-sm text-primary hover:underline">
           {isZh ? '不想等邮件？先在浏览器里试用在线工具' : 'Do not want to wait for an email? Try the browser tools instead'}
         </Link>
+        <a href="https://www.dlss5.app/en/studio" className="block mt-3 text-sm text-primary hover:underline">
+          {isZh ? '查看逐型号显卡证据与本地运行条件 →' : 'Check per-GPU evidence and local readiness →'}
+        </a>
       </section>
     </main>
   );

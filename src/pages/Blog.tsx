@@ -532,6 +532,12 @@ export default function Blog() {
           >
             {copy.ctaButton}
           </Link>
+          <a
+            href="https://www.dlss5.app/en/supported-cards"
+            className="mt-3 inline-flex items-center gap-2 px-6 py-3 border border-primary/40 text-primary font-semibold rounded-lg hover:bg-primary/10 transition-colors"
+          >
+            Check the source-linked GPU evidence →
+          </a>
         </div>
 
         {/* Footer */}

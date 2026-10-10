@@ -30,6 +30,12 @@ export default function Models() {
           </article>
         ))}
       </div>
+      <section className="mt-14 rounded-xl border border-outline-variant/20 bg-surface-low p-6 sm:p-8">
+        <p className="text-xs uppercase tracking-[0.2em] text-primary font-label">Evidence companion</p>
+        <h2 className="mt-3 text-2xl font-headline font-bold text-white">Check the hardware evidence behind a workflow</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400">Model capability is only one part of a useful result. Browse the sister evidence desk for per-GPU VRAM, architecture and source-linked DLSS 5 status before choosing a conversion or enhancement path.</p>
+        <a className="mt-5 inline-flex text-primary font-semibold" href="https://www.dlss5.app/en/supported-cards">Open the DLSS 5 GPU evidence checker →</a>
+      </section>
     </main>
   );
 }
