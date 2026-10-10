@@ -52,7 +52,7 @@
 
 | # | 页型 | 数量 | 来源 | 备注 |
 |---|---|---|---|---|
-| 6 | **逐游戏页** `/games/<slug>` + `/games` 追踪页 | 15 款 × 3 语 + 3 = **48** | **NVIDIA 官方公告已给出 15 款名单**（2026-03-16《DLSS 5 Delivers AI-Powered Breakthrough…》，原文列出 AION 2、Assassin's Creed Shadows、Black State、CINDER CITY、Delta Force、Hogwarts Legacy、Justice、NARAKA: BLADEPOINT、NTE: Neverness to Everness、Phantom Blade Zero、Resident Evil Requiem、Sea of Remnants、Starfield、The Elder Scrolls IV: Oblivion Remastered、Where Winds Meet，"and more"） | **发布前必须先找一份更新的官方名单**：这份是 2026-03 的预告，2026-09 之后应有上线名单（NBA 2K27 等），不能只拿旧名单当现状 |
+| 6 | **逐游戏页** `/games/<slug>` + `/games` 追踪页 | 先做追踪页 + **NBA 2K27 一页**，其余按官方更新增量加 | **DLSS 5 已经上线**：NVIDIA 官方文章《DLSS 5 Available Now: 3D-Guided Neural Rendering Debuts In NBA 2K27 For All GeForce RTX 50 Series GPUs, And On GeForce NOW》（Henry Lin，**2026-09-01**）确认首发游戏 **NBA 2K27**、驱动 **616.64 WHQL**、面向全部 RTX 50 系与 GeForce NOW。2026-03-16 公告里那 15 款（AION 2、AC Shadows、Black State、CINDER CITY、Delta Force、Hogwarts Legacy、Justice、NARAKA、NTE、Phantom Blade Zero、Resident Evil Requiem、Sea of Remnants、Starfield、Oblivion Remastered、Where Winds Meet）是**已宣布/计划支持**，不是已上线名单 | **两套名单必须分开写**：已上线（NBA 2K27）与已宣布（15 款）。把 3 月的预告写成现状就是编数据。发布每条游戏前核一次官方 FAQ/公告与驱动 release notes |
 | 7 | 型号系列页 `/series/rtx-50`、`40`、`30`、`20` | 12 | 我们 31 条型号 spec 汇总 | 聚合页，与 `.app` 型号页互链而非复制 |
 | 8 | `/release-date` 时效页 | 3 | NVIDIA 官方公告时间线（每条带日期与链接） | 需按月维护 |
 | 9 | `/download-setup` 下载/安装页 | 3 | NVIDIA 官方驱动页与 App 说明 | **与主站 `/download`（Studio 索取）区分开** |
@@ -95,6 +95,19 @@
 - **Codex（`.app` 与主站仓库的执行者）**：按批次实现页面；先修两个零难度缺陷（主站 7 条未登记进 sitemap、`.app` 70 条死内链）；实现 IndexNow 脚本与 key 文件；每批上线后回报「页数 / sitemap 数 / 线上复核末行」。
 - **我（default_agent）**：复核每一批的线上结果（SSR、sitemap、同质化、死链、schema），核对每条事实句的来源是否真的存在，并把结论写回 `shared_env/dlss-line/TODO.md`。
 - **要王胜本人**：Bing Webmaster / Yandex / Naver 的账号验证（可选项）；第 2 批的游戏名单如果需要以 2026-09 之后的上线名单为准，拍板用哪份官方来源。
+
+---
+
+## 八、Codex 的排期（2026-10-11 回，已接受）
+
+1. **第 0 天 · 前置修复**：`.app` 修日/韩 4 页的 70 条死链；主站 sitemap 只补 `/store` `/terms` `/privacy` `/refund`（认证页保持 noindex 不入 sitemap）；跑 SSR / 404 / canonical / 死链检查。
+2. **第 1 批（18 页）内部顺序**：`system-requirements` → `status` → `guides` → `what-is-dlss-5` → 两个对比页。先立规格与证据口径，再做聚合页与易重复的常青页/对比页；每页**先写英文再补 zh-CN / zh-TW**，避免三语漂移。
+3. **第 1 批上线后**：更新 sitemap、线上复核，观察 7–14 天索引变化。`.app` 旧读数 33 编入 / 85 未编入，**旧页收录明显改善前不铺第 2 批的 69 页**。
+4. **第 2 批改序**：先做 `/games` 追踪页 + **一个已确认的 NBA 2K27 页**，再做 RTX 系列、发布日期、下载安装、Unreal。逐游戏页不一次铺 15×3。
+5. **第 3 批**：DLSS 4.5 → AMD 官方状态 → 社区视频 → AI-PC；ja/ko 先补死链与真实翻译再扩页。
+6. **IndexNow 由 Codex 实现**：两站各生成公开 key 文件 + `scripts/indexnow.mjs`（读 sitemap 批量提交，145/58 条都远低于单次 10,000 上限）；Google 不参与 IndexNow，仍走 Search Console sitemap。账号验证（Bing / Naver / Yandex）留给王胜，可选。
+
+**Codex 指出的三处冲突，我核过后同意**：① 我原先写的「15 款游戏名单」已过时（DLSS 5 2026-09-01 已上线，首发 NBA 2K27）；② 「主站 7 个可达页不在 sitemap」不能把认证页一并加入（我已更正为 4 页）；③ 「先铺页面」仍受来源、独有内容、未上线软件措辞三条限制。
 
 ---
 
