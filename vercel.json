@@ -77,6 +77,54 @@
     {
       "source": "/docs",
       "destination": "/docs/index.html"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides/index.html"
+    },
+    {
+      "source": "/what-is-dlss-5",
+      "destination": "/what-is-dlss-5/index.html"
+    },
+    {
+      "source": "/vs/dlss-5-vs-dlss-4-5",
+      "destination": "/vs/dlss-5-vs-dlss-4-5/index.html"
+    },
+    {
+      "source": "/vs/dlss-5-vs-fsr-4",
+      "destination": "/vs/dlss-5-vs-fsr-4/index.html"
+    },
+    {
+      "source": "/system-requirements",
+      "destination": "/system-requirements/index.html"
+    },
+    {
+      "source": "/status",
+      "destination": "/status/index.html"
+    },
+    {
+      "source": "/zh/guides",
+      "destination": "/zh/guides/index.html"
+    },
+    {
+      "source": "/zh/what-is-dlss-5",
+      "destination": "/zh/what-is-dlss-5/index.html"
+    },
+    {
+      "source": "/zh/vs/dlss-5-vs-dlss-4-5",
+      "destination": "/zh/vs/dlss-5-vs-dlss-4-5/index.html"
+    },
+    {
+      "source": "/zh/vs/dlss-5-vs-fsr-4",
+      "destination": "/zh/vs/dlss-5-vs-fsr-4/index.html"
+    },
+    {
+      "source": "/zh/system-requirements",
+      "destination": "/zh/system-requirements/index.html"
+    },
+    {
+      "source": "/zh/status",
+      "destination": "/zh/status/index.html"
     }
   ],
   "headers": [

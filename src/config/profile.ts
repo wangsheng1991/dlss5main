@@ -22,6 +22,8 @@ export type SiteSection =
   | 'docs'
   | 'enterprise'
   | 'comparisons'
+  /** Evidence-led SEO guide pages built from reviewed sources. */
+  | 'seoExpansion'
   /** The SEO landing pages for individual tools (`TOOL_LANDINGS`). */
   | 'tools'
   /** Search-led workflow pages built around a real before/after example. */
@@ -75,6 +77,7 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
   docs: ['/docs'],
   enterprise: ['/enterprise'],
   comparisons: ['/comparisons'],
+  seoExpansion: ['/guides', '/what-is-dlss-5', '/vs/dlss-5-vs-dlss-4-5', '/vs/dlss-5-vs-fsr-4', '/system-requirements', '/status'],
   tools: [
     '/image-upscaler',
     '/image-quality-enhancer',

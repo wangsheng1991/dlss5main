@@ -29,6 +29,18 @@ The home page includes original before-and-after image pairs and short video ref
 - Official NVIDIA 3D-Guided Neural Rendering reference: https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/
 - AI video upscaler and super-resolution workflow: https://www.dlss5nvidia.com/video-upscaler
 
+## Evidence-led guides
+
+These pages separate official NVIDIA statements from our independent browser workflows and retain a
+review date, source links and an FAQ for each search intent.
+
+- DLSS 5 guides: https://www.dlss5nvidia.com/guides
+- What is DLSS 5?: https://www.dlss5nvidia.com/what-is-dlss-5
+- DLSS 5 vs DLSS 4.5: https://www.dlss5nvidia.com/vs/dlss-5-vs-dlss-4-5
+- DLSS 5 vs FSR 4: https://www.dlss5nvidia.com/vs/dlss-5-vs-fsr-4
+- DLSS 5 system requirements: https://www.dlss5nvidia.com/system-requirements
+- DLSS 5 support status tracker: https://www.dlss5nvidia.com/status
+
 <!-- begin:tools -->
 ## Free tools
 

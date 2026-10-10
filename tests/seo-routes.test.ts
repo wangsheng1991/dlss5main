@@ -67,3 +67,21 @@ test('the sitemap and SPA fallback do not advertise or serve the deprecated dupl
   }
   assert.equal(vercel.rewrites?.some((rule) => rule.source === '/(.*)'), false);
 });
+
+test('evidence-led expansion pages are published in both current site locales', () => {
+  const paths = [
+    '/guides',
+    '/what-is-dlss-5',
+    '/vs/dlss-5-vs-dlss-4-5',
+    '/vs/dlss-5-vs-fsr-4',
+    '/system-requirements',
+    '/status',
+    '/zh/guides',
+    '/zh/what-is-dlss-5',
+    '/zh/vs/dlss-5-vs-dlss-4-5',
+    '/zh/vs/dlss-5-vs-fsr-4',
+    '/zh/system-requirements',
+    '/zh/status',
+  ];
+  for (const path of paths) assert.ok(sitemap.includes(`<loc>https://www.dlss5nvidia.com${path}</loc>`), path);
+});

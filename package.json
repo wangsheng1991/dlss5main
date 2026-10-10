@@ -10,7 +10,8 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test": "tsx tests/run.ts",
-    "test:online": "SPEC_ONLINE=1 tsx tests/run.ts"
+    "test:online": "SPEC_ONLINE=1 tsx tests/run.ts",
+    "indexnow:submit": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@fal-ai/client": "^1.10.1",
