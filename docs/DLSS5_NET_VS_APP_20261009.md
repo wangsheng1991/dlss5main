@@ -104,3 +104,37 @@
 
 - 新增本文件；未改动网站代码、DNS、sitemap、索引提交或现有文档。
 - 证据入口：[`dlss5.net`](https://www.dlss5.net/)、[`dlss5.net sitemap`](https://www.dlss5.net/sitemap.xml)、[`dlss5.net About`](https://www.dlss5.net/about)、[`dlss5.net Editorial Policy`](https://www.dlss5.net/editorial-policy)、[`.app Search Console`](https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Adlss5.app)、[Wayback availability API](https://archive.org/wayback/available?url=dlss5.net%2F)。
+
+## G. 2026-10-10：SimilarWeb 访问量与 DLSS 5 首发月份核验
+
+### G1. SimilarWeb 读数（2026 年 9 月）
+
+以下均为 Similarweb 页面公开的 **estimated data**，通过已登录 Chrome 直接打开页面读取；不是 Google Search Console 数据，也不是站点自报。百分比显示为页面或其内嵌数据中的值，标注“未公开”表示 Similarweb 免费视图只给出排名顺序、未给出该渠道的数值。
+
+| 站点 | 9 月总访问量 | 环比 | 流量来源构成 | 国家构成 |
+|---|---:|---:|---|---|
+| `dlss5.net` | **288,243** | **+1,837.5%**（页面四舍五入为 1,838%） | Organic Search **90.32%**（第 1）；Direct 第 2、Referrals 第 3，但两者百分比在免费视图未公开 | US **16.69%**、Brazil **9.04%**、UK **7.97%**、Germany **5.29%**、India **4.49%**，Others **56.52%** |
+| `dlss5nvidia.com` | **5,077** | **+211.3%** | Direct **36.90%**（第 1）；Organic 第 2、Referrals 第 3，百分比未公开 | US **52.93%**、India **15.75%**、Thailand **12.86%**、Brazil **12.26%**、Turkey **6.21%** |
+| `dlss5.app` | **无数据**（页面所有流量指标为 “- -”） | 无数据 | “No Data to Display” | “No Data to Display” |
+
+**读数限制。** 三个页面标题都标注 September 2026；`.app` 页面同时显示 “You’ve hit your search limit”，因此不能把空值解释成零访问。页面没有给出 `.net` 与主站完整渠道百分比，不能把未公开项按剩余比例自行补齐。用户提供的 288,243 与浏览器读数一致；主站第三方估算约 5,077，明显低于本站 GSC 的自然点击量，说明 Similarweb 的估算口径与 GSC 点击不是同一个指标，不能直接相除或据此推算转化率。
+
+### G2. NVIDIA 官方时间线
+
+| 事实 | 官方原文与日期 | 强度 |
+|---|---|---|
+| 首次公开发布 DLSS 5 | NVIDIA《DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games》写明 “By Henry Lin on **March 16, 2026**” 和 “NVIDIA today unveiled NVIDIA DLSS 5”。[官方原文](https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/) | **官方原文** |
+| 首个已上市游戏/首发窗口 | NVIDIA《DLSS 5 3D-Guided Neural Rendering Debuts in NBA 2K27》写明 “on **September 01, 2026**”，并称 DLSS 5 “is available starting now in NBA 2K27” for GeForce RTX 50 Series GPUs and laptops。[官方原文](https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/) | **官方原文** |
+| 首个公开的 DLSS 5 Game Ready 驱动 | NVIDIA《NBA 2K27 With DLSS 5 … GeForce Game Ready Driver Released》写明 “on **September 03, 2026**”，标题为 driver 616.64；正文要求安装 **GeForce Game Ready Driver 616.64 WHQL** 才能在 NBA 2K27 开启 DLSS Neural Rendering。[官方原文](https://www.nvidia.com/en-eu/geforce/news/nba-2k27-dlss-5-3d-guided-neural-rendering-geforce-game-ready-driver/) | **官方原文** |
+| 9 月是否为“第一个游戏与驱动上线月” | 官方原文把 3 月定义为 unveil/announcement，把 9 月 1 日定义为 NBA 2K27 可用，把 9 月 3 日定义为 616.64 驱动发布；在本次检索到的 NVIDIA 官方资料中未见更早的 DLSS 5 已上市游戏或 DLSS 5 解锁驱动。故可写为“**首发商业可用月为 2026 年 9 月（游戏 9/1，驱动 9/3）**”，不要把 3 月预告写成产品上线。 | **官方原文 + 有限范围推断** |
+
+### G3. 对“288,243 是否只是上线尖峰”的修正
+
+- **实测**：Similarweb 将 `.net` 的 9 月环比标为 +1,837.5%，且 90.32% 来自 Organic Search；这与“上线月份出现巨大搜索需求”相容。
+- **官方原文**：DLSS 5 在 9 月 1–3 日完成首个游戏与驱动的公开可用节点；因此 9 月确实是首发月，而不是稳定运行了数月后的普通基线。
+- **仍是推断**：不能仅凭一个月的 Similarweb 估算断言 288,243 全部是一次性尖峰，也不能确定 10 月会保留多少。下一步应把 2026 年 10 月及以后同一 Similarweb 口径的月度读数，与 GSC 查询/页面和站点自己的“开始体验、成功生成”漏斗分开观察。对于 `.app`，Similarweb 本次无数据，不能用“0”参与比较。
+
+### G4. 本次读取的边界
+
+- 三个 Similarweb URL 均通过内置 Chrome 尝试；`.net` 与主站首次打开可读，重复访问后页面触发免费查询上限；`.app` 直接显示无数据和查询次数限制。没有使用镜像站或猜测值。
+- 本节只追加取证记录；没有修改任何站点代码、DNS、sitemap 或 Search Console 设置。
