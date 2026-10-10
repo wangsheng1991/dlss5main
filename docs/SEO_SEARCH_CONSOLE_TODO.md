@@ -669,3 +669,18 @@ URL Inspection 的当前结果：
 - `dlss5.app`：**总点击次数 6、总曝光次数 252、平均点击率 2.4%、平均排名 10.5、共 18 行查询**。完整查询行（点击/展示）为：`dlss5 app` 1/7；`dlss 5 architecture` 1/6；`dlss checker` 0/9；`neural rendering` 0/5；`dlss 5 app` 0/4；`fsr 4 vs dlss 5` 0/3；`dlss 5 neural screen` 0/3；`dlss 5 live flow` 0/2；`dlss 5 welche grafikkarte` 0/2；`dlss 5 archviz` 0/1；`dlss 5 vs fsr 4` 0/1；`dlss5 vs fsr 4` 0/1；`neural dlss` 0/1；`dlss 5` 0/1；`dlss 5 3080` 0/1；`dlss 5 neural rendering` 0/1；`dlss 5 supported cards` 0/1；`dlss5 vs dlss4` 0/1。
 - `dlss5nvidia.com`：**总点击次数 1,690、总曝光次数 1.77万、平均点击率 9.5%、平均排名 7.3、共 595 行查询**。前 20 行（点击/展示）为：`dlss 5 image converter` 60/233；`dlss 5 online` 56/209；`dlss 5 download` 28/502；`dlss 5 image generator` 26/97；`dlss 5 visual enhancer` 20/968；`dlss 5 image enhancer` 18/98；`dlss5 image converter` 17/93；`dlss image upscaler` 17/43；`dlss 5 upscaling` 14/235；`dlss 5 upscaler` 13/126；`dlss5 image enhancer` 13/42；`dlss5 online` 13/37；`dlss5 upscaler` 11/55；`dlss 5 filter online` 10/47；`dlss 5 mobile download` 9/92；`dlss 5 download android` 9/86；`dlss 5 generator` 9/51；`image to dlss5` 9/44；`image to dlss 5` 9/32；`dlss5 apk` 8/27。
 - 该次界面未显示逐查询平均排名，也未显示前 20 查询的单独 CTR；这些字段保持“未显示”，不从总量反推。
+
+## 2026-10-11：主站剩余新页面 URL Inspection 复核
+
+- 在已登录 Search Console 逐个检查了此前没有单独记录的 4 个正式 sitemap URL：
+  - `/podcast/gpt-6-astra-vs-claude-opus-5-5-dlss-5-style-prompts`：界面原文“网址已收录到 Google”，并显示“网页已编入索引”。
+  - `/video-downloader`：界面原文“网址已收录到 Google”，并显示“网页已编入索引”。
+  - `/tools/passport-photo/3-na-4`：界面原文“网址已收录到 Google”，并显示“网页已编入索引”。
+  - `/use-cases/architecture-render-upscaler`：界面原文“网址已收录到 Google”，并显示“网页已编入索引”。
+- 这 4 个 URL 没有点击“请求编入索引”，避免对已收录页面重复消耗配额。
+- 同次线上静态复核（带 Mozilla User-Agent）确认 4/4 均 HTTP 200，且 title、description、H1、canonical 均存在并自指：
+  - 播客页 title `GPT-6 Astra vs Claude Opus 5.5 for DLSS 5 Style Prompts — DLSS 5 AI Workflow Podcast`。
+  - 视频下载页 title `Video Downloader Online — Save a Video or Its Audio from a Link`。
+  - 3×4 工具页 title `Free 3×4 cm Passport Photo Online — Printable Maker`。
+  - 建筑案例页 title `Architecture Render Upscaler — Preserve Straight Lines and Materials`。
+- 主站当前索引报告仍为 2026/10/4 快照（69 已编入、9 未编入）；站点地图仍显示 2026/10/3 最近读取、68 个已发现网页。正式 sitemap 已提交成功但 Google 尚未重读，因此本轮不再重复提交 sitemap。
