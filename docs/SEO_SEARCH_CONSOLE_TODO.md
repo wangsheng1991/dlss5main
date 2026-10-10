@@ -627,5 +627,6 @@ URL Inspection 的当前结果：
   - `https://www.dlss5.app/en/gpu/rtx3070ti`
   - `https://www.dlss5.app/en/gpu/rtx5080`
   - `https://www.dlss5.app/en/gpu/rtx5070ti`
-  - `https://www.dlss5.app/en/gpu/rtx5070`
-- 这四条只是进入抓取队列，不等于已经编入索引；之前已提交的 `/en/supported-cards`、`/en/studio`、`/en/gpu/rtx5090`、`/zh-CN/gpu/rtx5090` 不重复提交。Google 站点地图和索引报告仍可能显示旧快照，后续只在报告或 URL Inspection 出现新状态后再复核。
+- `https://www.dlss5.app/en/gpu/rtx5070`
+- `https://www.dlss5.app/zh-CN/supported-cards`
+- 这五条只是进入抓取队列，不等于已经编入索引；之前已提交的 `/en/supported-cards`、`/en/studio`、`/en/gpu/rtx5090`、`/zh-CN/gpu/rtx5090` 不重复提交。Google 站点地图和索引报告仍可能显示旧快照，后续只在报告或 URL Inspection 出现新状态后再复核。
