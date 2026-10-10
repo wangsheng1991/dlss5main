@@ -28,7 +28,7 @@
 
 | | 现状 | 缺口 |
 |---|---|---|
-| 主站 dlss5nvidia.com | 活页 65 / sitemap 58 | **7 个可达页不在 sitemap**（`/dashboard` `/store` `/refund` `/login` `/register` `/terms` `/privacy`）—— 零难度可修 |
+| 主站 dlss5nvidia.com | 活页 65 / sitemap 58 | **4 个可索引页不在 sitemap**：`/store` `/terms` `/privacy` `/refund`（实测都是 `index,follow`）。另 3 页（`/login` `/dashboard` `/register`）是 `noindex,nofollow`，**不进 sitemap 是对的**，别顺手加进去 —— 零难度可修 |
 | 姊妹站 dlss5.app | 145 页全 SSR，型号页 93（31×3）深度第一 | **70 条死内链**：`/ja`、`/ja/supported-cards`、`/ko`、`/ko/supported-cards` 四页各自链出 35 条 404（31 款型号 + 4 个信任页）—— 零难度可修（要么补页，要么改链接） |
 | 两站合计 | 页型 7–14 类 | **15 个页型我们完全没有**：逐游戏页、游戏支持追踪、系统需求、指南 hub、发布日、证据/状态追踪、vs 对比、技术解释常青页、型号系列、引擎页、下载安装页、DLSS 4.5 簇、AMD 官方状态页、社区视频聚合、AI-PC 话题簇 |
 
