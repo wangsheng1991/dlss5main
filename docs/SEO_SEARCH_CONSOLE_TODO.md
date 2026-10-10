@@ -562,3 +562,15 @@ URL Inspection 的当前结果：
 - 等 Google 重新读取 58 条 sitemap，并完成已开始的 canonical/发现类验证；301 旧地址不再请求单页编入索引，避免把不可索引的重定向重新送入队列。
 - Search Console 下一次报告刷新后，确认 7 对重复地址从问题样本中消失，并观察 converter、online、generator 与 visual enhancer 的点击/展示变化。
 - `dlss5.app` 与 `dlss5.net/.org` 的流量超越方案另行规划：优先补 SSR/独立 metadata、硬件兼容性/FAQ 数据、可运行检测器结果和多语言内链；本节不直接改姊妹站代码。
+
+## 2026-10-10：dlss5.app 预渲染与姊妹站联动更新
+
+- 对照 `dlss5.net` / `dlss5.org` 的公开结构后，确认姊妹站原主要缺口是 SPA 空壳：初始 HTML 只有 `#root`，所有路径共用 title，GPU 表格、FAQ 与文章正文要等 JavaScript 执行。该问题已在 `wangsheng1991/dlss5app` 提交 `e353caa`（静态 SEO 预渲染、多语言正文、独立 JSON-LD、24 条 sitemap、`llms.txt`、真实 404）和 `4aae107`（生产 `www` 主机的 canonical/hreflang 对齐）中修复；随后 `14c30de` 移除一次会造成 www/裸域循环的实验性 host redirect。
+- 线上 Production `dpl_BDmPVYZfTtKep7xoWz4HfDr2AiVi` 已 READY，正式 `https://www.dlss5.app` 复核通过：`/en`、`/zh-CN`、`/en/blog`、英文文章和中文文章均 HTTP 200，静态源码直接含唯一 title、description、H1、self-canonical 和正文；随机不存在路径返回真实 404；`/sitemap.xml` 返回 **24** 条 `<loc>`，`/llms.txt` 返回 200。生产裸域由 Vercel 统一 307 到 www，因此 canonical 与 sitemap 已统一使用 `https://www.dlss5.app`。
+- 账号 `wustwangsheng@gmail.com` 的 `dlss5.app` Search Console 站点地图页已重新提交 `https://dlss5.app/sitemap.xml`，界面返回“已成功提交站点地图”；Google 的已发现数量仍是旧快照 14，等待下一次读取后再核对 24 条。
+- 本次目标是让 `.app` 具备与 `.net/.org` 同级的可抓取硬件/FAQ/文章基础，再用独立的免费检测结果、官方证据和多语言正文形成差异；流量超越属于后续 7–28 天实验结果，当前不能提前宣称。
+
+### 当前 TODO
+
+- 等 Google 重新读取 `www.dlss5.app/sitemap.xml` 并刷新 7/28 天效果报告；下一次复核 24 条页面是否进入索引，以及 `dlss 5 supported cards`、`dlss checker`、`dlss 5 gpu` 等长尾的展示变化。
+- 继续补充有官方来源的 GPU/游戏条目和真实更新日期；没有官方原文的条目维持未确认，不用猜测填充。
