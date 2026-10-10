@@ -574,3 +574,18 @@ URL Inspection 的当前结果：
 
 - 等 Google 重新读取 `www.dlss5.app/sitemap.xml` 并刷新 7/28 天效果报告；下一次复核 24 条页面是否进入索引，以及 `dlss 5 supported cards`、`dlss checker`、`dlss 5 gpu` 等长尾的展示变化。
 - 继续补充有官方来源的 GPU/游戏条目和真实更新日期；没有官方原文的条目维持未确认，不用猜测填充。
+
+## 2026-10-10：生产 sitemap 与 URL Inspection 实时复核
+
+- 本地质量门禁重新通过：`npm run lint`、`npm test` 与 `npm run build` 均成功；工作区中与本轮无关的 Reddit/launch 草稿保持未暂存。
+- 生产 `https://www.dlss5nvidia.com/sitemap.xml` 当前返回 **58** 条 `<loc>`。逐页跟随重定向复核 58/58：全部 HTTP 200，且均有非空 `<title>`、`meta description`、`meta keywords`、H1 与自指 canonical；canonical 与 sitemap URL 一致，没有新的 metadata 或规范化回归。
+- Search Console 站点地图页（账号 `wustwangsheng@gmail.com`）显示：`https://www.dlss5nvidia.com/sitemap.xml` 于 **2026-10-10** 提交成功；最近读取仍为 **2026-10-03**，已发现 **68** 个网页、0 个视频。这是 Google 尚未重读新提交的旧快照，不能当作线上 58 条的当前发现数。
+- 网页索引报告更新时间仍为 **2026-10-04**：**69 个已编入索引、9 个未编入索引**。未编入索引原因为：自动重定向 3、noindex 2、重复网页（用户未选定规范网页）1、重复网页（Google 选择的规范网页不同）2、已发现尚未编入索引 1、已抓取尚未编入索引 0；后三类验证均显示“已开始”。
+- “已发现尚未编入索引”旧样本是 `https://www.dlss5nvidia.com/comparisons`（报告快照）；通过 Search Console 网址检查实时复核，该 URL 当前显示 **“网址已收录到 Google”**、**“网页已编入索引”**，因此没有再次点击请求编入索引。
+- “重复网页，用户未选定规范网页”旧样本是 `https://www.dlss5nvidia.com/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`（最后抓取 2026-10-02）；当前生产代码已将该入口改为单跳 301，属于等待 Google 重抓的历史样本，不应再次提交。
+- 效果报告实时读数（图表日期 2026-09-30 至 2026-10-06）：最近 7 天 **659 点击 / 6,514 展示 / CTR 10.1% / 平均排名 7**；最近 28 天 **1,690 点击 / 约 1.77 万展示 / CTR 9.5% / 平均排名 7.3**。7 天主要查询仍为 `dlss 5 online`、`dlss 5 image converter`、`dlss 5 image generator`；28 天主要查询仍为 `dlss 5 image converter`、`dlss 5 online`、`dlss 5 download`、`dlss 5 image generator`、`dlss 5 visual enhancer`。
+
+### 当前 TODO
+
+- 等 Google 重读 2026-10-10 的 sitemap 提交并刷新索引报告；刷新后确认 58 条正式 URL 的发现数与重复路由验证结果。
+- 继续观察 converter、online、generator、visual enhancer 及新播客/案例页的点击分流。当前没有新的、非重定向或 noindex 且未进入验证队列的 URL，因此本轮不再逐页重复请求编入索引。
