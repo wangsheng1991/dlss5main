@@ -589,3 +589,32 @@ URL Inspection 的当前结果：
 
 - 等 Google 重读 2026-10-10 的 sitemap 提交并刷新索引报告；刷新后确认 58 条正式 URL 的发现数与重复路由验证结果。
 - 继续观察 converter、online、generator、visual enhancer 及新播客/案例页的点击分流。当前没有新的、非重定向或 noindex 且未进入验证队列的 URL，因此本轮不再逐页重复请求编入索引。
+
+## 2026-10-10：两站 Search Console sitemap 与 URL Inspection 复核（15:00 CST）
+
+- 账号：`wustwangsheng@gmail.com`；本次使用已登录 Chrome 的 Search Console 界面，只做 sitemap 提交、索引读取和 URL Inspection。
+- `dlss5.app` 站点地图页原文：`https://dlss5.app/sitemap.xml`，提交日期 **2026年10月10日**，上次读取 **2026年4月14日**，状态 **成功**，已发现网页 **14**、视频 **0**；`https://www.dlss5.app/sitemap.xml`，重新提交后界面显示提交日期 **2026年10月10日**，上次读取 **2026年4月13日**，状态 **成功**，已发现网页 **14**、视频 **0**。两条都指向同一份 sitemap；线上实际 sitemap 已扩展，但本次提交后 Google 尚未重读，不能把 14 当成当前线上发现数。
+- `dlss5.app` 网页索引报告原文：上次更新 **2026/10/4**；已编入索引 **33**；未编入索引 **85**。原因分布：备用网页（有适当的规范标记）**49**、网页会自动重定向 **35**、已抓取 - 尚未编入索引 **1**。报告显示验证均为“未启动”。
+- `dlss5nvidia.com` 站点地图页原文：`https://www.dlss5nvidia.com/sitemap.xml`，重新提交后界面显示提交日期 **2026年10月10日**，上次读取 **2026年10月3日**，状态 **成功**，已发现网页 **68**、视频 **0**。
+- `dlss5nvidia.com` 网页索引报告原文：上次更新 **2026/10/4**；已编入索引 **69**；未编入索引 **9**。原因分布：网页会自动重定向 **3**、被“noindex”标记排除 **2**、重复网页（用户未选定规范网页）**1**、重复网页（Google 选择的规范网页与用户指定的不同）**2、已发现 - 尚未编入索引 **1**、已抓取 - 尚未编入索引 **0**。前两类验证“未启动”，后三类验证“已开始”（已抓取类为“已通过”）。
+- 指定 URL Inspection（`www.dlss5.app` 资源）结果：
+  - `/en`：`网址尚未收录到 Google`；原因“备用网页（有适当的规范标记）”；用户规范 `https://dlss5.app/en`；Google 选择 `https://dlss5.app/`。
+  - `/en/supported-cards`：`网址尚未收录到 Google`；原因“Google 无法识别此网址”；站点地图、引荐来源均“未检测到”；抓取与规范均“不适用”。
+  - `/en/studio`：同上，“Google 无法识别此网址”，站点地图/引荐来源均“未检测到”。
+  - `/en/gpu/rtx5090`：同上，“Google 无法识别此网址”，站点地图/引荐来源均“未检测到”。
+  - `/zh-CN/gpu/rtx5090`：同上，“Google 无法识别此网址”，站点地图/引荐来源均“未检测到”。
+  - `/en/blog/what-is-dlss-5-neural-rendering-guide`：`网址尚未收录到 Google`；原因“备用网页（有适当的规范标记）”；用户规范为该 `/en` URL，Google 选择旧的 `https://dlss5.app/es/blog/...`；最后抓取 **2026年8月26日 16:27:33**，网页抓取成功。
+- 实际网址测试：`https://www.dlss5.app/this-page-does-not-exist` 返回原文“网页无法编入索引：未找到 (404)”，网页抓取“失败：未找到 (404)”，测试时间 **2026年10月10日 15:02:21**；不是软 404。
+- 旧 URL 检查：`https://www.dlss5.app/de` 显示“网址已收录到 Google”；`https://www.dlss5.app/es` 显示“网址尚未收录到 Google”，原因“备用网页（有适当的规范标记）”，Google 选择与用户声明规范相同；`https://www.dlss5.app/games` 显示“网址尚未收录到 Google”，原因“Google 无法识别此网址”。
+- 本次重新提交成功：`https://www.dlss5.app/sitemap.xml`、`https://www.dlss5nvidia.com/sitemap.xml`；未重复提交 apex sitemap（它此前已在 2026年10月10日成功提交，但仍显示 2026年4月14日旧读取快照）。
+- 本次点击“请求编入索引”并看到“已请求编入索引 / 已将网址添加到优先抓取队列中”的 URL：
+  - `https://www.dlss5.app/en/supported-cards`
+  - `https://www.dlss5.app/en/studio`
+  - `https://www.dlss5.app/en/gpu/rtx5090`
+  - `https://www.dlss5.app/zh-CN/gpu/rtx5090`
+  未对 `/en` 或重复文章页请求，以免在规范路由尚未收敛前消耗配额。
+
+### 当前 TODO
+
+- 等 Google 重新读取两条正式 sitemap，并刷新索引报告；提交成功不等于已读取或已编入索引。
+- app 的 `/en` 与旧语言/文章 URL 仍有历史规范选择样本，后续 F3 收敛 canonical 后再观察，不在本次 GSC 操作中重复请求。
