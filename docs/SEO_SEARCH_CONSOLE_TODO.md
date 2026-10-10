@@ -655,3 +655,10 @@ URL Inspection 的当前结果：
 - 可直接修复的代码侧 SEO 项已收口；Search Console 当前剩余是 Google 重新读取 sitemap、刷新索引报告和既有验证队列。提交已成功但界面仍显示旧读取快照时，不重复提交同一 sitemap、不重复请求已收录 URL。
 - 待 Google 报告刷新后再核对：58 条正式 URL 的发现数、历史重复/规范验证是否结束，以及 converter / online / generator / visual enhancer 的页面分流。
 - 本轮尝试读取已登录浏览器中的 Search Console 时，浏览器运行时返回“Unable to load browser request-header policy”；未重复重试、未执行任何 GSC 写操作。
+
+## 2026-10-11：10 倍流量讨论响应
+
+- 新增 `docs/TRAFFIC_10X_RESPONSE_20261010.md`，把当前可核的 Search Console 28 天读数、五条判断、10 倍算术、动作优先级、2–4 周证伪实验和 DLSS5SWAPPER_ABSORB 的冲突集中记录。
+- 最近一次已记录的界面读数：`dlss5nvidia.com` 2026-09-09—2026-10-06 为 **1,690 点击 / 约 17,700 展示 / CTR 9.5% / 平均排名 7.3**；`dlss5.app` 最近一次 28 天快照为 **6 点击 / 252 展示 / CTR 2.4% / 平均排名 10.5**。独立查询数和完整 top20 行在已保存记录中未显示。
+- 本轮尝试通过已登录 Chrome 刷新 Search Console 时，浏览器页面返回网络挂起（`ERR_NETWORK_IO_SUSPENDED`），因此没有把旧读数冒充新读数，也没有提交 sitemap 或请求编入索引。下一次浏览器恢复后，只需补读同一窗口的独立查询数、top20 及逐查询均位。
+- T1–T4 的已交付项继续保留；T4 ja/ko 只作为样本实验，是否铺开由 2–4 周展示和成功使用数据决定，不因语言数量直接扩页。
