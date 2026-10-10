@@ -618,3 +618,14 @@ URL Inspection 的当前结果：
 
 - 等 Google 重新读取两条正式 sitemap，并刷新索引报告；提交成功不等于已读取或已编入索引。
 - app 的 `/en` 与旧语言/文章 URL 仍有历史规范选择样本，后续 F3 收敛 canonical 后再观察，不在本次 GSC 操作中重复请求。
+
+## 2026-10-10：新增 GPU 证据页的线上复核与优先抓取请求
+
+- 本地与线上产物已完成同一轮验证：`dlss5app` 的 `npm run lint`、`npm run check:consistency`、`npm run build` 均通过；一致性脚本输出 `app=31 main=6 compared=5 mismatches=0 verdict=OK`。主站 `npm run lint`、`npm test`（103/103）和 `npm run build` 也通过。主站仍只维护 6 条有证据的检测器记录，app 的 25 条额外型号未被猜测复制为主站结论。
+- 线上 `https://www.dlss5.app/sitemap.xml` 当前返回 **135 个 `<loc>`**；`/en/gpu/rtx3070ti`、`/en/gpu/rtx5080`、`/en/gpu/rtx5070ti`、`/en/gpu/rtx5070` 均返回 HTTP **200**，并分别有自指 canonical、唯一型号 title、description 与 H1。示例 title：`RTX 3070 Ti DLSS 5 support and VRAM evidence | Neural Architect`。
+- 在已登录的 Search Console（`wustwangsheng@gmail.com`，`dlss5.app` 资源）中逐页检查并点击“请求编入索引”，Google 对以下四个此前显示“网址尚未收录到 Google / Google 无法识别此网址”的 URL 均返回原文 **“已请求编入索引”**，并提示“已将网址添加到优先抓取队列中”：
+  - `https://www.dlss5.app/en/gpu/rtx3070ti`
+  - `https://www.dlss5.app/en/gpu/rtx5080`
+  - `https://www.dlss5.app/en/gpu/rtx5070ti`
+  - `https://www.dlss5.app/en/gpu/rtx5070`
+- 这四条只是进入抓取队列，不等于已经编入索引；之前已提交的 `/en/supported-cards`、`/en/studio`、`/en/gpu/rtx5090`、`/zh-CN/gpu/rtx5090` 不重复提交。Google 站点地图和索引报告仍可能显示旧快照，后续只在报告或 URL Inspection 出现新状态后再复核。
