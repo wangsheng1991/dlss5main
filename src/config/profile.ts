@@ -76,7 +76,7 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
   models: ['/models'],
   docs: ['/docs'],
   enterprise: ['/enterprise'],
-  comparisons: ['/comparisons'],
+  comparisons: ['/comparisons', '/before-after', '/zh/before-after'],
   seoExpansion: ['/guides', '/what-is-dlss-5', '/vs/dlss-5-vs-dlss-4-5', '/vs/dlss-5-vs-fsr-4', '/system-requirements', '/status'],
   tools: [
     '/image-upscaler',

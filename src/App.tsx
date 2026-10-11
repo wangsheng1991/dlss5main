@@ -39,6 +39,7 @@ const About = lazy(() => import('./pages/About'));
 const Download = lazy(() => import('./pages/Download'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const Comparisons = lazy(() => import('./pages/Comparisons'));
+const BeforeAfter = lazy(() => import('./pages/BeforeAfter'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Refund = lazy(() => import('./pages/Refund'));
@@ -97,6 +98,8 @@ export default function App() {
                   <Route path="/enterprise" element={orHome('enterprise', <Enterprise />)} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/comparisons" element={orHome('comparisons', <Comparisons />)} />
+                  <Route path="/before-after" element={orHome('comparisons', <BeforeAfter />)} />
+                  <Route path="/zh/before-after" element={orHome('comparisons', <BeforeAfter locale="zh" />)} />
                   <Route path="/guides" element={orHome('seoExpansion', <SeoExpansion kind="guides" />)} />
                   <Route path="/what-is-dlss-5" element={orHome('seoExpansion', <SeoExpansion kind="what-is" />)} />
                   <Route path="/vs/dlss-5-vs-dlss-4-5" element={orHome('seoExpansion', <SeoExpansion kind="vs-dlss-45" />)} />

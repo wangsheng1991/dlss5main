@@ -443,6 +443,9 @@ export default function Download() {
         <a href="https://www.dlss5.app/en/studio" className="block mt-3 text-sm text-primary hover:underline">
           {isZh ? '查看逐型号显卡证据与本地运行条件 →' : 'Check per-GPU evidence and local readiness →'}
         </a>
+        <Link to="/before-after" className="block mt-3 text-sm text-primary hover:underline">
+          {isZh ? '查看前后对比与视频参考 →' : 'See before-and-after cases and video references →'}
+        </Link>
       </section>
     </main>
   );

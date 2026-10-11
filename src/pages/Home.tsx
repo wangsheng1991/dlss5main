@@ -369,6 +369,14 @@ export default function Home() {
             </article>
           ))}
         </div>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Link to="/before-after" className="inline-flex items-center rounded-lg border border-primary/40 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors">
+            {isZh ? '查看全部前后对比与实测记录 →' : 'Open the full before-and-after evidence page →'}
+          </Link>
+          <Link to="/download#showcase" className="text-sm font-semibold text-primary hover:text-white transition-colors">
+            {isZh ? '查看 Studio 实机截图 →' : 'See Studio screenshots →'}
+          </Link>
+        </div>
       </section>
 
       <section className="mt-12" aria-labelledby="game-style-cases-heading">

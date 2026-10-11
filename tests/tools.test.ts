@@ -21,6 +21,7 @@ import { TOOL_LANDINGS } from '../src/content/toolLandings';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { GAME_STYLE_LANDING } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING } from '../src/content/videoLanding';
+import { BEFORE_AFTER_CASES, BEFORE_AFTER_FAQ } from '../src/content/beforeAfter';
 import { RELATED_PROJECTS } from '../src/content/relatedProjects';
 
 import { test } from './harness';
@@ -194,6 +195,21 @@ test('the video workflow has crawlable demos, FAQ copy and a sitemap entry', () 
   assert.ok(sitemap.includes('<loc>https://www.dlss5nvidia.com/video-upscaler</loc>'));
   assert.ok(homepage().includes('href="/video-upscaler"'));
   assert.ok(publicFile('llms.txt').includes('https://www.dlss5nvidia.com/video-upscaler'));
+});
+
+test('the before-and-after page keeps measured cases, videos and both locale routes discoverable', () => {
+  assert.equal(BEFORE_AFTER_CASES.length, 7);
+  assert.equal(BEFORE_AFTER_FAQ.length, 6);
+  for (const item of BEFORE_AFTER_CASES) {
+    assert.ok(item.beforeSize.length > 0 && item.afterSize.length > 0, `${item.id} needs dimensions`);
+    assert.ok(item.record.length > 0 && item.limit.length > 0, `${item.id} needs provenance and a limit`);
+    assert.doesNotThrow(() => readFileSync(new URL(`../public${item.before}`, import.meta.url)), `${item.id} input is missing`);
+    assert.doesNotThrow(() => readFileSync(new URL(`../public${item.after}`, import.meta.url)), `${item.id} output is missing`);
+  }
+  const sitemap = publicFile('sitemap.xml');
+  assert.ok(sitemap.includes('<loc>https://www.dlss5nvidia.com/before-after</loc>'));
+  assert.ok(sitemap.includes('<loc>https://www.dlss5nvidia.com/zh/before-after</loc>'));
+  assert.ok(homepage().includes('href="/before-after"'));
 });
 
 test('the static homepage exposes the same search intent and crawlable structured data before JavaScript runs', () => {
