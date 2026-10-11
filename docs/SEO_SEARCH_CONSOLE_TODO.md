@@ -702,3 +702,17 @@ URL Inspection 的当前结果：
 - 进一步查看：重复网页且用户未选定规范网页的示例是 `/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`（1 条）；Google 选择其他 canonical 的两条是 `/en/blog/dlss-5-online-image-upscaler-guide` 与 `/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`，两页线上 canonical 均明确指向不带 `/en` 的正式文章 URL；这属于现行正本策略，未擅自改动。
 - “已发现尚未编入索引”的唯一示例为 `/comparisons`；URL 检查界面当前原文为“网址已收录到 Google / 网页已编入索引”，因此未重复请求编入索引。该索引报告是旧快照，待报告刷新后再核对。
 - 待王胜本人决定的事项（本轮跳过）：是否继续保留 `/en` 文章到无语言正本的 canonical 合并策略；是否要把 1 条用户未选定 canonical 的 GPT-6 播客页改写或并入其他正本。重定向与 noindex 条目目前符合登录/受限页面策略，不改。
+
+## 2026-10-11：新增证据页的 GSC 优先抓取与最新效果复核
+
+- 线上静态复核：正式 `https://www.dlss5nvidia.com/sitemap.xml` 当前有 **74 条 URL**；74/74 返回 HTTP 200，均有唯一 `<title>`、长度足够的 `meta description`、H1 与自指 canonical；本轮没有发现新的 metadata、状态码或 canonical 回归。
+- Search Console「效果」报告（账号 `wustwangsheng@gmail.com`，上次更新 **59 小时前**）：最近 7 天（2026-10-02—2026-10-08）为 **666 点击 / 7,197 展示 / CTR 9.3% / 平均排名 7.0**；最近 28 天（2026-09-11—2026-10-08）为 **1,773 点击 / 19,073 展示 / CTR 9.3% / 平均排名 7.2**。7 天前五查询为 `dlss 5 online` 24/53、`dlss 5 image converter` 12/39、`dlss5 image converter` 12/37、`dlss 5 image generator` 10/38、`dlss5 online` 10/26（点击/展示）。
+- Search Console「站点地图」原文：`https://www.dlss5nvidia.com/sitemap.xml` 提交 **2026年10月11日**、上次读取 **2026年10月10日**、状态“成功”、已发现 **58** 个网页、0 个视频。58 是 Google 尚未重读 74 条线上 sitemap 前的旧快照，不能当作当前 URL 数。
+- Search Console「网页索引编制」原文仍为上次更新 **2026/10/4**：已编入 **69**、未编入 **9**。未编入原因：自动重定向 3、noindex 2、重复网页（用户未选定规范网页）1、重复网页（Google 选择的规范网页与用户指定的不同）2、已发现尚未编入索引 1、已抓取尚未编入索引 0；前三个验证状态分别为“未启动、未启动、已开始”，已抓取项为“已通过”。
+- 新增证据页 URL 检查：`/guides` 与 `/what-is-dlss-5` 均显示“网址尚未收录到 Google / Google 无法识别此网址”，且站点地图与引荐来源暂未检测到；两页已点击“请求编入索引”，界面均显示“已请求编入索引 / 已将网址添加到优先抓取队列中”。第三个新页 `/vs/dlss-5-vs-dlss-4-5` 同样尚未收录，但提交时 Google 返回“超出了配额：今天已经超出了每日配额，请明天再尝试提交此网址”，因此本轮停止继续消耗配额。
+
+### 当前 TODO
+
+- Google 尚未重读 2026-10-11 提交的 74 条 sitemap；待下一次报告刷新后核对已发现数量是否从 58 收敛到线上 74。
+- 明日配额恢复后，再处理未提交的新增证据页（优先 `/vs/dlss-5-vs-dlss-4-5`，随后其余 `/vs/dlss-5-vs-fsr-4`、`/system-requirements`、`/status` 及中文对应页），每页先 URL Inspection，已收录的页面不重复请求。
+- 当前未发现新的站内技术缺口；所有可由代码修复的 title、description、H1、canonical、sitemap 与 robots 检查均已通过。
