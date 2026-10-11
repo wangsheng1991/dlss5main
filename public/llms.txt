@@ -18,6 +18,7 @@ DLSS 5 NVIDIA is an independent browser-based DLSS 5-style effect converter. Use
 - Before-and-after evidence (independent image pairs, dimensions, run records, limits and two six-second reference videos): https://www.dlss5nvidia.com/before-after
 - Reddit comparison gallery (20 official reference pairs plus independent tests): https://www.dlss5nvidia.com/marketing/reddit/dlss5-reddit-comparisons.html
 - DLSS5 Studio measured Reddit kit (nine cases, sources and licensing): https://www.dlss5nvidia.com/marketing/reddit/dlss5-studio-kit.html
+- DLSS5 Studio 下载指南（中文）：https://www.dlss5nvidia.com/zh/download
 
 ## Game character style references
 

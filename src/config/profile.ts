@@ -72,7 +72,7 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
   blog: ['/blog', '/zh/blog'],
   podcast: ['/podcast'],
   about: ['/about'],
-  download: ['/download'],
+  download: ['/download', '/zh/download'],
   models: ['/models'],
   docs: ['/docs'],
   enterprise: ['/enterprise'],

@@ -95,6 +95,7 @@ export default function App() {
                   <Route path="/zh/blog/:slug" element={orHome('blog', <Blog />)} />
                   <Route path="/about" element={orHome('about', <About />)} />
                   <Route path="/download" element={orHome('download', <Download />)} />
+                  <Route path="/zh/download" element={orHome('download', <Download forceLocale="zh-CN" />)} />
                   <Route path="/enterprise" element={orHome('enterprise', <Enterprise />)} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/comparisons" element={orHome('comparisons', <Comparisons />)} />

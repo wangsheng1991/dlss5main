@@ -468,19 +468,24 @@ type PublicGuideOptions = {
   links?: Array<{ label: string; path: string }>;
   extraHtml?: string;
   noindex?: boolean;
+  language?: 'en-US' | 'zh-CN';
+  eyebrow?: string;
+  coversHeading?: string;
+  relatedHeading?: string;
 };
 
 /** Keep the non-blog public routes crawlable before React loads the lazy page bundle. */
 function renderPublicGuide(options: PublicGuideOptions): string {
+  const language = options.language || 'en-US';
   const links = options.links?.length
-    ? `<nav class="mt-10 border-t border-outline-variant/20 pt-7" aria-label="Related pages"><h2 class="text-xl font-bold text-white">Continue exploring</h2><ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">${options.links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(link.label)} →</a></li>`).join('')}</ul></nav>`
+    ? `<nav class="mt-10 border-t border-outline-variant/20 pt-7" aria-label="${escapeHtml(options.relatedHeading || 'Related pages')}"><h2 class="text-xl font-bold text-white">${escapeHtml(options.relatedHeading || 'Continue exploring')}</h2><ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">${options.links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(link.label)} →</a></li>`).join('')}</ul></nav>`
     : '';
-  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">DLSS5NVIDIA · independent guide</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">What this page covers</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${options.extraHtml || ''}${links}</main>`;
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(options.eyebrow || 'DLSS5NVIDIA · independent guide')}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">${escapeHtml(options.coversHeading || 'What this page covers')}</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${options.extraHtml || ''}${links}</main>`;
   return withRoot(withHead(TEMPLATE, {
     title: options.title,
     description: options.description,
     canonicalPath: options.path,
-    language: 'en-US',
+    language,
     keywords: options.keywords,
     noindex: options.noindex,
   }), root);
@@ -1031,6 +1036,30 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   keywords: ['DLSS 5 download', 'DLSS 5 download mobile', 'DLSS 5 download android', 'DLSS 5 online', 'free DLSS 5 converter', 'DLSS 5 Studio download', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
   links: [{ label: 'Free DLSS 5 visual enhancer', path: '/image-quality-enhancer' }, { label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Before-and-after evidence', path: '/before-after' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }, { label: 'GPU compatibility evidence', path: 'https://www.dlss5.app/en/supported-cards' }, { label: 'Studio readiness by GPU', path: 'https://www.dlss5.app/en/studio' }],
   extraHtml: `${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}${studioStaticVideo}`,
+}));
+const studioStaticZh = STUDIO_COPY['zh-CN'];
+const studioStaticZhCases = [
+  { id: 'night', image: 'studio-overview.jpg', extra: 'studio-night-lens.jpg', extraAlt: studioStaticZh['shots.nightLens.alt'] },
+  { id: 'photo', image: 'studio-photo-restore.jpg' },
+  { id: 'video', image: 'studio-video-compare.jpg', extra: 'studio-queue.jpg', extraAlt: studioStaticZh['showcase.video.queueAlt'] },
+] as const;
+const studioStaticZhShowcase = `<section id="showcase" class="mt-12"><h2 class="text-2xl font-bold text-white">${escapeHtml(studioStaticZh['showcase.title'])}</h2><p class="mt-4 text-zinc-300 leading-relaxed">${studioStaticZh['showcase.intro']}</p>${studioStaticZhCases.map((item) => `<article class="mt-8 rounded-xl border border-outline-variant/20 bg-surface-low overflow-hidden"><img src="/studio/${item.image}" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStaticZh[`showcase.${item.id}.alt`])}" class="w-full" />${'extra' in item ? `<img src="/studio/${item.extra}" width="1440" height="778" loading="lazy" alt="${escapeHtml(item.extraAlt)}" class="w-full" />` : ''}<div class="p-5"><h3 class="text-xl font-bold text-white">${escapeHtml(studioStaticZh[`showcase.${item.id}.title`])}</h3><p class="mt-2 text-zinc-300 leading-relaxed">${studioStaticZh[`showcase.${item.id}.body`]}</p></div></article>`).join('')}<figure class="mt-8"><img src="/studio/studio-diff.jpg" width="1440" height="778" loading="lazy" alt="${escapeHtml(studioStaticZh['shots.diff.alt'])}" class="w-full rounded-xl" /><figcaption class="mt-2 text-sm text-zinc-400">${escapeHtml(studioStaticZh['shots.diff.cap'])}</figcaption></figure></section>`;
+const studioStaticZhAtAGlance = '<section class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="一眼看懂"><article class="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4"><p class="text-[11px] uppercase tracking-widest text-zinc-500">它能做什么</p><p class="mt-2 text-sm leading-relaxed text-zinc-200">在 Windows 本地调用 Visual Enhancer 发布包，批量处理图片和视频。</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4"><p class="text-[11px] uppercase tracking-widest text-zinc-500">你会得到什么</p><p class="mt-2 text-sm leading-relaxed text-zinc-200">擦除对比、可核对的队列结果和留在本机的可下载文件。</p></article><article class="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4"><p class="text-[11px] uppercase tracking-widest text-zinc-500">限制</p><p class="mt-2 text-sm leading-relaxed text-zinc-200">需要 RTX 显卡和 NVIDIA 发布包；Live 是增强预览，不是实时视频。</p></article></section>';
+const studioStaticZhAndroid = '<section class="mt-12 max-w-4xl"><h2 class="text-2xl font-bold text-white">在找 DLSS 5 Android 下载？</h2><p class="mt-4 text-zinc-300 leading-relaxed">目前没有独立 Android APK。手机或桌面端可以直接使用浏览器在线转换器；DLSS5 Studio 是另一个按申请提供的 Windows RTX 工具。</p></section>';
+const studioStaticZhVideo = '<section class="mt-12" aria-labelledby="studio-reference-video-heading-zh"><h2 id="studio-reference-video-heading-zh" class="text-2xl font-bold text-white">前后对比视频参考</h2><p class="mt-4 text-zinc-300 leading-relaxed">这些六秒静音循环片段来自同一站点管线的独立视觉参考，并非 NVIDIA 截图，也不是实时性能承诺。</p><div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5"><figure><video class="w-full rounded-xl bg-black" controls muted loop playsinline preload="metadata" poster="/examples/generated/architecture-1-after.jpg"><source src="/examples/dlss5-upscale-before-after-demo.mp4" type="video/mp4" /></video><figcaption class="mt-2 text-sm text-zinc-400">文字结论：片段展示从输入到输出的转换，不是速度或画质基准测试。</figcaption></figure><figure><video class="w-full rounded-xl bg-black" controls muted loop playsinline preload="metadata" poster="/examples/generated/game-cyber-1-after.jpg"><source src="/examples/dlss5-game-style-transition.mp4" type="video/mp4" /></video><figcaption class="mt-2 text-sm text-zinc-400">文字结论：独立风格参考保留身份、姿势和轮廓作为复核锚点。</figcaption></figure></div><p class="mt-5"><a href="/zh/before-after">查看完整前后对比证据页 →</a></p></section>';
+if (profileHas('download')) writeRoute('/zh/download', renderPublicGuide({
+  path: '/zh/download',
+  title: studioStaticZh['meta.title'],
+  description: studioStaticZh['meta.desc'],
+  heading: 'DLSS 5 下载指南 —— DLSS5 Studio 申请',
+  lead: '先选对 DLSS 5 路径：手机或桌面端可使用免费在线转换器，也可以了解独立 Windows RTX Studio 的申请方式。目前没有 Android APK 或独立 NVIDIA 安装包。',
+  keywords: ['DLSS 5 下载', 'DLSS 5 手机下载', 'DLSS 5 Android 下载', 'DLSS 5 在线转换器', 'DLSS5 Studio 下载', '免费图片转换器'],
+  language: 'zh-CN',
+  eyebrow: 'DLSS5NVIDIA · 独立指南',
+  coversHeading: '本页包含什么',
+  relatedHeading: '继续探索',
+  links: [{ label: '免费 DLSS 5 视觉增强器', path: '/image-quality-enhancer' }, { label: '免费 AI 图片放大器', path: '/image-upscaler' }, { label: '前后对比证据页', path: '/zh/before-after' }, { label: '最新 DLSS 5 新闻', path: '/zh/blog/dlss-5-latest-news-september-2026' }, { label: '模型与工作流', path: '/models' }, { label: 'GPU 兼容性证据', path: 'https://www.dlss5.app/zh-CN/supported-cards' }, { label: '按 GPU 查看 Studio 准备度', path: 'https://www.dlss5.app/zh-CN/studio' }],
+  extraHtml: `${studioStaticZhAtAGlance}${studioStaticZhAndroid}${studioStaticZhShowcase}${studioStaticZhVideo}`,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({

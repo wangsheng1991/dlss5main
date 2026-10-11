@@ -51,9 +51,9 @@ const FEATURES = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
 const stripTags = (value: string) => value.replace(/<[^>]+>/g, '');
 
-export default function Download() {
+export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-CN' } = {}) {
   const { i18n } = useTranslation();
-  const locale: 'en-US' | 'zh-CN' = i18n.language?.startsWith('zh') ? 'zh-CN' : 'en-US';
+  const locale: 'en-US' | 'zh-CN' = forceLocale ?? (i18n.language?.startsWith('zh') ? 'zh-CN' : 'en-US');
   const isZh = locale === 'zh-CN';
 
   // English first, the reader's language on top of it: a key that only exists in one of the two
