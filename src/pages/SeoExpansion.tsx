@@ -64,6 +64,13 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         ))}
       </section>
 
+      {page.sections?.map((section, index) => (
+        <section key={section.heading} className="mt-12 max-w-4xl" aria-labelledby={`section-${page.kind}-${index}`}>
+          <h2 id={`section-${page.kind}-${index}`} className="text-2xl font-headline font-bold text-white">{section.heading}</h2>
+          <p className="mt-4 text-zinc-300 leading-relaxed">{section.body}</p>
+        </section>
+      ))}
+
       {page.table && (
         <section className="mt-12" aria-labelledby="comparison-table-heading">
           <h2 id="comparison-table-heading" className="text-2xl font-headline font-bold text-white">{isZh ? '对照表' : 'At-a-glance comparison'}</h2>

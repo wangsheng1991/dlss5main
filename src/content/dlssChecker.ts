@@ -180,16 +180,16 @@ export const GPU_ENTRIES: GpuEntry[] = [
     generation: 'Ada Lovelace',
     vramGb: 24,
     status: 'unknown',
-    note: 'NVIDIA says RTX 40 Series expansion is planned, while its current support table still marks DLSS 5 as unavailable on RTX 40; we do not publish a present-tense verdict.',
+    note: 'NVIDIA’s September 2026 FAQ says it plans to work on expanding official support to GeForce RTX 40 Series after RTX 50 performance is more fully tuned. The current support table still marks DLSS 5 as unavailable on RTX 40, so this entry remains unconfirmed.',
     localSoftware: OURS_MEASURED,
     sources: [
       {
         label: 'NVIDIA DLSS 5 FAQ (NVIDIA staff)',
         url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/',
-        checkedAt: '2026-10-10',
+        checkedAt: '2026-10-11',
       },
     ],
-    lastVerified: '2026-10-10',
+    lastVerified: '2026-10-11',
     conflicts: [
       'NVIDIA\'s current DLSS technology support table marks DLSS 3D-Guided Neural Rendering with a dash for RTX 40 Series; the FAQ describes future expansion as planned. This entry therefore remains planned, not confirmed.',
     ],
@@ -202,16 +202,16 @@ export const GPU_ENTRIES: GpuEntry[] = [
     generation: 'Ada Lovelace',
     vramGb: 12,
     status: 'unknown',
-    note: 'NVIDIA says RTX 40 Series expansion is planned, while its current support table still marks DLSS 5 as unavailable on RTX 40; we do not publish a present-tense verdict.',
+    note: 'NVIDIA’s September 2026 FAQ says it plans to work on expanding official support to GeForce RTX 40 Series after RTX 50 performance is more fully tuned. The current support table still marks DLSS 5 as unavailable on RTX 40, so this entry remains unconfirmed.',
     localSoftware: OURS_SUPPORTED,
     sources: [
       {
         label: 'NVIDIA DLSS 5 FAQ (NVIDIA staff)',
         url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/',
-        checkedAt: '2026-10-10',
+        checkedAt: '2026-10-11',
       },
     ],
-    lastVerified: '2026-10-10',
+    lastVerified: '2026-10-11',
     conflicts: [
       'NVIDIA\'s current DLSS technology support table marks DLSS 3D-Guided Neural Rendering with a dash for RTX 40 Series; the FAQ describes future expansion as planned. This entry therefore remains planned, not confirmed.',
     ],
