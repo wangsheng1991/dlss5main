@@ -691,3 +691,14 @@ URL Inspection 的当前结果：
 - 线上 `https://www.dlss5nvidia.com/sitemap.xml` 已更新为 74 个 `<loc>`；IndexNow 接口已接受 74 条 URL（HTTP 202）。IndexNow 不提交 Google，Google 仍需自然抓取或在 Search Console 中由账号持有人操作。
 - `.app` 提交 `86c32e8` 已推送并修复日/韩样本页的死内链：未发布的 `/ja`、`/ko` 型号/信任页链接改指已有英文证据页；本地构建后死本地化链接为 0，线上 `/ja` 返回 200。日/韩样本页仍只保留现有两页，不扩展语言路由。
 - 本轮尝试再次读取已登录 Chrome 的 Search Console 时，浏览器桥接仍无法建立（CDP 等待超时；此前页面也出现 `ERR_NETWORK_IO_SUSPENDED`）。没有重复提交 sitemap、没有请求编入索引；待浏览器运行时恢复后，再读取新 74 页的发现/索引数字。
+
+## 2026-10-11：主站线上 SEO 与 Search Console 复核
+
+- 线上 `https://www.dlss5nvidia.com/sitemap.xml` 当前包含 **74 条 URL**。逐条抓取结果为 **74/74 HTTP 200**，且每页均有 `<title>`、`meta description`、`meta keywords` 与自报 canonical；本次未发现缺失项、重定向或重复 title。
+- `robots.txt` 允许抓取并指向 `https://www.dlss5nvidia.com/sitemap.xml`。
+- Search Console「效果」报告（界面显示“上次更新日期：57.5小时前”）：最近 **7 天**为 **666 点击 / 7,200 展示 / CTR 9.3% / 平均排名 7.0**；最近 **28 天（2026-09-11—2026-10-08）**为 **1,773 点击 / 1.91 万展示 / CTR 9.3% / 平均排名 7.2**。7 天热门查询前五为：`dlss 5 online` 24/53、`dlss 5 image converter` 12/39、`dlss5 image converter` 12/37、`dlss 5 image generator` 10/38、`dlss5 online` 10/26（点击/展示）。
+- Search Console「站点地图」：`https://www.dlss5nvidia.com/sitemap.xml` 已于 **2026年10月11日**重新提交，界面原文“已成功提交站点地图”；上次读取仍为 **2026年10月10日**，状态“成功”，已发现网页仍显示 **58**，等待 Google 下一次处理后再刷新到 74。本轮不重复提交。
+- Search Console「网页索引编制」快照（上次更新 **2026/10/4**）：**69 个网页已编入索引、9 个未编入索引**。未编入原因与数量：网页会自动重定向 3、被 noindex 标记排除 2、重复网页且用户未选定规范网页 1、重复网页且 Google 选择的规范网页与用户指定的不同 2、已发现尚未编入索引 1、已抓取尚未编入索引 0。
+- 进一步查看：重复网页且用户未选定规范网页的示例是 `/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`（1 条）；Google 选择其他 canonical 的两条是 `/en/blog/dlss-5-online-image-upscaler-guide` 与 `/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`，两页线上 canonical 均明确指向不带 `/en` 的正式文章 URL；这属于现行正本策略，未擅自改动。
+- “已发现尚未编入索引”的唯一示例为 `/comparisons`；URL 检查界面当前原文为“网址已收录到 Google / 网页已编入索引”，因此未重复请求编入索引。该索引报告是旧快照，待报告刷新后再核对。
+- 待王胜本人决定的事项（本轮跳过）：是否继续保留 `/en` 文章到无语言正本的 canonical 合并策略；是否要把 1 条用户未选定 canonical 的 GPT-6 播客页改写或并入其他正本。重定向与 noindex 条目目前符合登录/受限页面策略，不改。
