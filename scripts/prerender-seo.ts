@@ -472,6 +472,7 @@ type PublicGuideOptions = {
   eyebrow?: string;
   coversHeading?: string;
   relatedHeading?: string;
+  alternates?: Array<{ hrefLang: string; href: string }>;
 };
 
 /** Keep the non-blog public routes crawlable before React loads the lazy page bundle. */
@@ -488,6 +489,7 @@ function renderPublicGuide(options: PublicGuideOptions): string {
     language,
     keywords: options.keywords,
     noindex: options.noindex,
+    alternates: options.alternates,
   }), root);
 }
 
@@ -1034,6 +1036,11 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   heading: 'DLSS 5 Download Guide — DLSS5 Studio by Request',
   lead: 'Choose the right DLSS 5 path: use the free online converter on mobile or desktop, or understand why DLSS5 Studio is a separate Windows RTX build requested by email. There is no official Android APK or standalone NVIDIA DLSS installer.',
   keywords: ['DLSS 5 download', 'DLSS 5 download mobile', 'DLSS 5 download android', 'DLSS 5 online', 'free DLSS 5 converter', 'DLSS 5 Studio download', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
+  alternates: [
+    { hrefLang: 'en', href: `${BASE_URL}/download` },
+    { hrefLang: 'zh-CN', href: `${BASE_URL}/zh/download` },
+    { hrefLang: 'x-default', href: `${BASE_URL}/download` },
+  ],
   links: [{ label: 'Free DLSS 5 visual enhancer', path: '/image-quality-enhancer' }, { label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Before-and-after evidence', path: '/before-after' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }, { label: 'GPU compatibility evidence', path: 'https://www.dlss5.app/en/supported-cards' }, { label: 'Studio readiness by GPU', path: 'https://www.dlss5.app/en/studio' }],
   extraHtml: `${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}${studioStaticVideo}`,
 }));
@@ -1055,6 +1062,11 @@ if (profileHas('download')) writeRoute('/zh/download', renderPublicGuide({
   lead: '先选对 DLSS 5 路径：手机或桌面端可使用免费在线转换器，也可以了解独立 Windows RTX Studio 的申请方式。目前没有 Android APK 或独立 NVIDIA 安装包。',
   keywords: ['DLSS 5 下载', 'DLSS 5 手机下载', 'DLSS 5 Android 下载', 'DLSS 5 在线转换器', 'DLSS5 Studio 下载', '免费图片转换器'],
   language: 'zh-CN',
+  alternates: [
+    { hrefLang: 'en', href: `${BASE_URL}/download` },
+    { hrefLang: 'zh-CN', href: `${BASE_URL}/zh/download` },
+    { hrefLang: 'x-default', href: `${BASE_URL}/download` },
+  ],
   eyebrow: 'DLSS5NVIDIA · 独立指南',
   coversHeading: '本页包含什么',
   relatedHeading: '继续探索',
