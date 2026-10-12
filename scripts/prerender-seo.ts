@@ -482,6 +482,31 @@ function renderPublicGuide(options: PublicGuideOptions): string {
     ? `<nav class="mt-10 border-t border-outline-variant/20 pt-7" aria-label="${escapeHtml(options.relatedHeading || 'Related pages')}"><h2 class="text-xl font-bold text-white">${escapeHtml(options.relatedHeading || 'Continue exploring')}</h2><ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">${options.links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(link.label)} →</a></li>`).join('')}</ul></nav>`
     : '';
   const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(options.eyebrow || 'DLSS5NVIDIA · independent guide')}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">${escapeHtml(options.coversHeading || 'What this page covers')}</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${options.extraHtml || ''}${links}</main>`;
+  // Additive schema only: these guide routes shipped without a page-level node, so crawlers saw the
+  // shell's Organization graph alone. WebPage + BreadcrumbList describe the page that already
+  // exists; nothing in the visible page changes.
+  const pageUrl = `${BASE_URL}${options.path}`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: options.heading,
+        description: options.description,
+        inLanguage: language,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${BASE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: options.heading, item: pageUrl },
+        ],
+      },
+    ],
+  };
   return withRoot(withHead(TEMPLATE, {
     title: options.title,
     description: options.description,
@@ -490,6 +515,7 @@ function renderPublicGuide(options: PublicGuideOptions): string {
     keywords: options.keywords,
     noindex: options.noindex,
     alternates: options.alternates,
+    structuredData,
   }), root);
 }
 
