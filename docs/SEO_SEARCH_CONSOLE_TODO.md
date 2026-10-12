@@ -720,3 +720,9 @@ URL Inspection 的当前结果：
 ## 2026-10-12：GSC 28 天 Top20 基线（只读）
 
 详表见 [`docs/GSC_TOP20_20261012.md`](./GSC_TOP20_20261012.md)。Search Console 界面窗口为 2026-09-13—2026-10-10：主站 1,850 点击、展示卡片原文“2万”、CTR 9.2%、平均排名 7.2；`.app` 6 点击、208 展示、CTR 2.9%、平均排名 9.2。主站页面点击前二为 `/`（1,368/9,149）和 `/download`（310/5,293），合计占总点击约 90.7%。`/dashboard` 在 GSC 页面表有 48 点击/425 展示。两个 `/en/blog/...` URL 线上均为 301；upscaler URL 检查为“尚未收录/网页会自动重定向”，comparison URL 检查仍显示旧的“网址已收录”，与当前 301 冲突，暂不改动，等待 Google 重抓。
+
+## 2026-10-13：新增页面抓取通知与线上元数据复核
+
+- 线上正式 sitemap 当前为 **77 条 URL**；并发只读检查结果：**77/77 HTTP 200、77/77 有 title、77/77 有 meta description、77/77 有 canonical**。本次抽查的 `/vs/dlss-5-vs-dlss-4-5`、`/vs/dlss-5-vs-fsr-4`、`/system-requirements`、`/status` 及中文对应页均 200，title/H1/description 均存在。
+- 使用现有 `scripts/indexnow.mjs` 提交线上构建 sitemap，IndexNow 返回 **HTTP 200，accepted 77 URLs**。这覆盖 Bing/Yandex/Naver/Seznam/Yep 等 IndexNow 接收方，不代表 Google 已编入索引。
+- Google Search Console 手动请求仍需已登录浏览器完成；本次浏览器在 URL Inspection 测试期间断开（`Unable to load browser request-header policy`），没有把未确认结果写成成功，也没有重复点击或提交 sitemap。待浏览器恢复且每日配额可用时，优先检查并请求 `/vs/dlss-5-vs-dlss-4-5` 与 `/vs/dlss-5-vs-fsr-4`，每次最多 2 个新页。
