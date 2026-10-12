@@ -726,3 +726,10 @@ URL Inspection 的当前结果：
 - 线上正式 sitemap 当前为 **77 条 URL**；并发只读检查结果：**77/77 HTTP 200、77/77 有 title、77/77 有 meta description、77/77 有 canonical**。本次抽查的 `/vs/dlss-5-vs-dlss-4-5`、`/vs/dlss-5-vs-fsr-4`、`/system-requirements`、`/status` 及中文对应页均 200，title/H1/description 均存在。
 - 使用现有 `scripts/indexnow.mjs` 提交线上构建 sitemap，IndexNow 返回 **HTTP 200，accepted 77 URLs**。这覆盖 Bing/Yandex/Naver/Seznam/Yep 等 IndexNow 接收方，不代表 Google 已编入索引。
 - Google Search Console 手动请求仍需已登录浏览器完成；本次浏览器在 URL Inspection 测试期间断开（`Unable to load browser request-header policy`），没有把未确认结果写成成功，也没有重复点击或提交 sitemap。待浏览器恢复且每日配额可用时，优先检查并请求 `/vs/dlss-5-vs-dlss-4-5` 与 `/vs/dlss-5-vs-fsr-4`，每次最多 2 个新页。
+
+## 2026-10-13：GSC 新页面优先抓取请求
+
+- URL Inspection 当前结果：`/vs/dlss-5-vs-dlss-4-5` 已显示“网址已收录到 Google / 网页已编入索引”；`/system-requirements` 同样已收录，不重复请求。
+- `/vs/dlss-5-vs-fsr-4` 检查结果为“网址尚未收录到 Google”，原因“已发现 - 尚未编入索引”，且已从 sitemap 发现；本日已点击请求编入索引，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。
+- `/status` 检查结果为“网址尚未收录到 Google”，原因“已发现 - 尚未编入索引”；本日已点击请求编入索引，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。这两条使用本日 2 个手动请求配额，未继续提交中文重复页。
+- IndexNow 与 sitemap 继续作为其他搜索引擎和 Google 自然抓取入口；提交请求不等于立即编入索引。
