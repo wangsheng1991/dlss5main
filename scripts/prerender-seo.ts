@@ -533,6 +533,11 @@ function renderExpansionPage(page: ExpansionPage): string {
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
+      // Additive only: these expansion routes shipped with Article + FAQPage but no page-level node and
+      // no breadcrumb, so crawlers never saw the trail that the visible <nav> already shows. Nothing in
+      // the visible page changes (see additive-20261012/WEEK-PLAN.md §3.4).
+      { '@type': 'WebPage', '@id': `${BASE_URL}${page.path}#webpage`, url: `${BASE_URL}${page.path}`, name: page.heading, description: page.description, inLanguage: isZh ? 'zh-CN' : 'en-US' },
+      { '@type': 'BreadcrumbList', '@id': `${BASE_URL}${page.path}#breadcrumb`, itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: page.heading, item: `${BASE_URL}${page.path}` }] },
       { '@type': 'Article', '@id': `${BASE_URL}${page.path}#article`, headline: page.heading, description: page.description, dateModified: '2026-10-11', inLanguage: isZh ? 'zh-CN' : 'en-US', mainEntityOfPage: `${BASE_URL}${page.path}`, author: { '@type': 'Organization', name: 'DLSS5NVIDIA' } },
       { '@type': 'FAQPage', '@id': `${BASE_URL}${page.path}#faq`, mainEntity: page.faq.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
     ],
