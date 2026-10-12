@@ -716,3 +716,7 @@ URL Inspection 的当前结果：
 - Google 尚未重读 2026-10-11 提交的 74 条 sitemap；待下一次报告刷新后核对已发现数量是否从 58 收敛到线上 74。
 - 明日配额恢复后，再处理未提交的新增证据页（优先 `/vs/dlss-5-vs-dlss-4-5`，随后其余 `/vs/dlss-5-vs-fsr-4`、`/system-requirements`、`/status` 及中文对应页），每页先 URL Inspection，已收录的页面不重复请求。
 - 当前未发现新的站内技术缺口；所有可由代码修复的 title、description、H1、canonical、sitemap 与 robots 检查均已通过。
+
+## 2026-10-12：GSC 28 天 Top20 基线（只读）
+
+详表见 [`docs/GSC_TOP20_20261012.md`](./GSC_TOP20_20261012.md)。Search Console 界面窗口为 2026-09-13—2026-10-10：主站 1,850 点击、展示卡片原文“2万”、CTR 9.2%、平均排名 7.2；`.app` 6 点击、208 展示、CTR 2.9%、平均排名 9.2。主站页面点击前二为 `/`（1,368/9,149）和 `/download`（310/5,293），合计占总点击约 90.7%。`/dashboard` 在 GSC 页面表有 48 点击/425 展示。两个 `/en/blog/...` URL 线上均为 301；upscaler URL 检查为“尚未收录/网页会自动重定向”，comparison URL 检查仍显示旧的“网址已收录”，与当前 301 冲突，暂不改动，等待 Google 重抓。
