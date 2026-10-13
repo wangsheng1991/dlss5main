@@ -9,6 +9,7 @@ DLSS 5 NVIDIA is an independent browser-based DLSS 5-style effect converter. Use
 ## Key pages
 
 - Home: https://www.dlss5nvidia.com/
+- 中文首页（简体中文版首页）：https://www.dlss5nvidia.com/zh
 - Blog and technical guides: https://www.dlss5nvidia.com/blog
 - Models: https://www.dlss5nvidia.com/models
 - API documentation: https://www.dlss5nvidia.com/docs
