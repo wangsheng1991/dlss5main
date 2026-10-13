@@ -5,7 +5,11 @@
 export type AnalyticsValue = string | number | boolean;
 
 declare global {
-  interface Window { dataLayer?: unknown[]; }
+  interface Window {
+    dataLayer?: unknown[];
+    // Defined by the inline bootstrap in index.html before this bundle runs.
+    gtag?: (command: 'event', eventName: string, parameters: Record<string, AnalyticsValue>) => void;
+  }
 }
 
 type VisitorState = 'anonymous' | 'authenticated';
@@ -89,64 +93,29 @@ function gtag(...args: unknown[]) {
 }
 
 /**
- * gtag.js only forwards `event` commands that arrive after the loader has initialised; commands
- * queued before it loads are processed for `js`/`config` only, so an event pushed during hydration
- * is silently dropped. Measured on the live page on 2026-10-13: an `arguments`-shaped event pushed
- * after load produced a google-analytics.com/g/collect hit, the same push queued before the loader
- * did not. `index.html` deliberately loads the loader on `window.load` (googletagmanager.com is
- * unreachable from mainland China), so events are held here and flushed once it appears.
+ * Send one product event to GA4.
+ *
+ * Two traps, both measured from the outside on the live page on 2026-10-13 while watching
+ * google-analytics.com/g/collect:
+ *
+ * 1. **Shape.** A plain Array pushed into `dataLayer` is not a gtag command and gtag.js ignores it —
+ *    that is why every custom event was missing from GA4 while its own `page_view` still showed up.
+ *    The `arguments` shape that `index.html`'s own `gtag()` pushes does arrive.
+ * 2. **Order.** gtag.js only forwards `event` commands it finds *after* a `config` command, so the
+ *    queue has to exist before this bundle runs: `index.html` now bootstraps `js`/`config`
+ *    synchronously in the head. The loader script itself still waits for `window.load`, because
+ *    googletagmanager.com is unreachable from mainland China and a hanging request there used to
+ *    delay every visitor's load event. While the loader is still in flight the command simply queues
+ *    inside `dataLayer` — that is the normal gtag contract and needs no help from here.
  */
-const pendingEvents: unknown[][] = [];
-let flushTimer: number | undefined;
-let pendingSince = 0;
-let loaderReadyAt = 0;
-const MAX_PENDING_MS = 60_000;
-const MAX_PENDING_EVENTS = 50;
-
-/**
- * The loader is only ready once it has taken over `dataLayer.push`. `window.google_tag_manager`
- * appears slightly earlier, and anything pushed into the raw array during that gap is never
- * re-scanned — measured on the live page on 2026-10-13: pushing the same arguments-shaped event
- * before the takeover left it sitting in dataLayer with no collect hit, while the identical push
- * afterwards was sent. gtag.js replaces push with its own function, so compare against the native.
- */
-// index.html emits this only after the external gtag script's load event. The dataLayer push
-// function itself remains Array.prototype.push in some gtag versions, so comparing the function
-// identity is not a reliable readiness signal. Keep a short settling window after load so the
-// loader can process its config command before we flush product events.
-const isGtagReady = () => loaderReadyAt > 0 && Date.now() - loaderReadyAt >= 250;
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('dlss:analytics-ready', () => {
-    loaderReadyAt = Date.now();
-    window.setTimeout(flushPending, 300);
-  }, { once: true });
-}
-
-function flushPending() {
-  if (pendingEvents.length && !isGtagReady() && Date.now() - pendingSince > MAX_PENDING_MS) {
-    // The loader never arrived (blocked network, extension): drop rather than hold memory forever.
-    pendingEvents.length = 0;
-  }
-  while (pendingEvents.length && isGtagReady()) {
-    const args = pendingEvents.shift()!;
-    gtag(...args);
-  }
-  if (!pendingEvents.length && flushTimer !== undefined) {
-    window.clearInterval(flushTimer);
-    flushTimer = undefined;
-  }
-}
-
 function sendEvent(name: string, params: Record<string, AnalyticsValue>) {
-  if (isGtagReady()) {
-    gtag('event', name, params);
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', name, params);
     return;
   }
-  if (!pendingEvents.length) pendingSince = Date.now();
-  if (pendingEvents.length >= MAX_PENDING_EVENTS) pendingEvents.shift();
-  pendingEvents.push(['event', name, params]);
-  flushTimer ??= window.setInterval(flushPending, 500);
+  // The inline bootstrap defines window.gtag before this bundle loads; if it is somehow missing,
+  // fall back to pushing the same command in the shape gtag.js understands.
+  gtag('event', name, params);
 }
 
 /** Push a gtag-compatible event without a hard dependency on the GA script. */

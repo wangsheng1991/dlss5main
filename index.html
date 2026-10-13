@@ -96,26 +96,24 @@
       @media (max-width: 700px) { #static-fallback .static-research { grid-template-columns: 1fr; } }
     </style>
     <script>
-      // Google Analytics is injected after the page has loaded: googletagmanager.com is unreachable
+      // The GA4 queue is created here, synchronously and without any network request: gtag.js only
+      // forwards `event` commands it finds after a `config` command, so deferring this bootstrap (as
+      // it used to be, inside the load callback below) made every product event fired during
+      // hydration land ahead of the config and get dropped.
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      // send_page_view: false — the app's own route tracker emits page_view with the attribution
+      // envelope from src/lib/analytics.ts; leaving the automatic hit on would double-count it.
+      gtag('config', 'G-2H65VD73K0', { send_page_view: false });
+      // Only the library itself waits for the page load event: googletagmanager.com is unreachable
       // from mainland China, and a hanging request there used to delay every visitor's load event.
       window.addEventListener('load', function () {
         setTimeout(function () {
           var script = document.createElement('script');
           script.async = true;
           script.src = 'https://www.googletagmanager.com/gtag/js?id=G-2H65VD73K0';
-          // The analytics bridge queues product events until the external loader has actually
-          // finished. `google_tag_manager` appears before the loader is ready on slow links, so
-          // use the script's load event as the hand-off signal instead of guessing from globals.
-          script.addEventListener('load', function () {
-            window.setTimeout(function () {
-              window.dispatchEvent(new Event('dlss:analytics-ready'));
-            }, 500);
-          });
           document.head.appendChild(script);
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', 'G-2H65VD73K0');
         }, 0);
       });
     </script>
