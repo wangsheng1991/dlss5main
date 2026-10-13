@@ -813,3 +813,12 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - 线上 `https://www.dlss5nvidia.com/sitemap.xml` 当前 **88** 个 `<loc>`；本次构建通过后用 IndexNow 提交 88 条，接口返回 `HTTP 200` / `accepted 88 URLs`。
 - 静态 HTML 复核：`/before-after`、`/zh/before-after`、`/benchmark`、`/games`、`/dlss-5-apk`、`/studio-beta`、`/zh/studio-beta` 均 HTTP 200，均有独立 `<title>` 与 `meta description`。
 - GSC 手动请求配额：本日已用 `/before-after` 与 `/zh/before-after` 两条；`/benchmark` 仍为「已发现 - 尚未编入索引」，等待下一配额窗口，不重复提交。
+
+## 2026-10-13：新页索引状态再次复核
+
+- `https://www.dlss5nvidia.com/benchmark`：URL Inspection 原文「网址已收录到 Google」；网页索引编制显示「网页已编入索引」。
+- `https://www.dlss5nvidia.com/games`：原文「网址已收录到 Google」；「网页已编入索引」。
+- `https://www.dlss5nvidia.com/dlss-5-apk`：原文「网址已收录到 Google」；「网页已编入索引」。
+- `https://www.dlss5nvidia.com/before-after`：原文「网址已收录到 Google」；「网页已编入索引」；增强功能显示路径 1 项有效内容、视频检测到 2 项有效内容并提示非严重问题。
+- `https://www.dlss5nvidia.com/zh/before-after`：原文「网址已收录到 Google」；「网页已编入索引」；增强功能显示路径 1 项有效内容、视频检测到 2 项有效内容并提示非严重问题。
+- 本轮仅做 URL Inspection 读取，没有重复点击「请求编入索引」；之前两条 before-after 请求已进入队列并现已显示收录。
