@@ -14,6 +14,7 @@ import { STUDIO_COPY } from '../src/content/studioPage';
 import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
 import { PODCAST_EPISODES, PODCAST_INDEX_DESCRIPTION, type PodcastEpisode } from '../src/content/podcast';
 import { EXPANSION_PAGES, type ExpansionPage } from '../src/content/seoExpansion';
+import { RELATED_ADDITIONS } from '../src/content/relatedAdditions';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
 import { LEGAL } from '../src/config/legal';
@@ -306,7 +307,11 @@ function withoutHiddenUrls(text: string): string {
 function writeRoute(route: string, html: string): void {
   const output = resolve(DIST, route.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(output), { recursive: true });
-  writeFileSync(output, forThisDeployment(html));
+  const links = RELATED_ADDITIONS[route];
+  const related = links && isPublishedPath(route)
+    ? `<aside class="mx-auto max-w-[1000px] px-6 pb-20" aria-label="${route.startsWith('/zh/') ? '相关页面' : 'Related pages'}"><div class="border-t border-outline-variant/20 pt-7"><h2 class="text-xl font-bold text-white">${route.startsWith('/zh/') ? '相关' : 'Related'}</h2><p class="mt-2 text-sm text-zinc-400">${route.startsWith('/zh/') ? '继续核对案例、支持状态与使用条件。' : 'Continue with examples, support status and practical requirements.'}</p><ul class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">${links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(route.startsWith('/zh/') ? link.zh : link.en)} →</a></li>`).join('')}</ul></div></aside>`
+    : '';
+  writeFileSync(output, forThisDeployment(related ? html.replace('</main>', `</main>${related}`) : html));
 }
 
 function coverFor(article: Article) {

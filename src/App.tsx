@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import RelatedAdditions from './components/RelatedAdditions';
 import Home from './pages/Home';
 import ToolLanding from './pages/ToolLanding';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -144,6 +145,7 @@ export default function App() {
                   {/* Scaffold only: a production build has no checker route and no checker chunk. */}
                   {DlssChecker && <Route path="/dlss-checker" element={<DlssChecker />} />}
                 </Routes>
+                <RelatedAdditions />
               </Suspense>
             </div>
             <Footer />
