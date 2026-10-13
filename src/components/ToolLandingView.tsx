@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Check, UploadCloud } from 'lucide-react';
 import ImageSlider from './ImageSlider';
 import { toolAlternates, toolLongForm, toolSteps, type ToolLanding } from '../content/toolLandings';
@@ -12,18 +11,11 @@ import { AI_OVERVIEW_DEFINITION } from '../content/seoDefinitions';
 
 export function ToolUploadIntro({ tool }: { tool: ToolLanding }) {
   const es = tool.locale === 'es';
-  /**
-   * These two CTAs must be router links, not plain anchors: a raw <a href> reloads the document, and
-   * the click event pushed into the GA queue in the same tick dies with it. Measured from the outside
-   * on 2026-10-13: the /image-upscaler anchor lost experience_click + tool_sample_click, while the
-   * router <Link> on /use-cases/product-photo-enhancer delivered experience_click. A Link still renders
-   * the same <a href> (and the pre-rendered HTML is unchanged), so SEO and deep links are untouched.
-   */
   return <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-6 text-center">
     <UploadCloud aria-hidden="true" className="w-8 h-8 mx-auto mb-3 text-primary" />
     <div className="flex flex-wrap items-center justify-center gap-3">
-      {tool.freeSample && <Link to={`/dashboard?tool=${tool.dashboardTool}&sample=${tool.freeSample}`} onClick={() => { trackEvent('experience_click', { tool: tool.dashboardTool, sample: tool.freeSample, intent: 'sample', locale: tool.locale }); trackEvent('tool_sample_click', { tool: tool.dashboardTool, sample: tool.freeSample, locale: tool.locale }); }} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{es ? 'Probar ejemplo gratis' : 'Try free example'}</Link>}
-      <Link to={`/dashboard?tool=${tool.dashboardTool}`} onClick={() => { trackEvent('experience_click', { tool: tool.dashboardTool, intent: 'upload', locale: tool.locale }); trackEvent('tool_cta_click', { tool: tool.dashboardTool, locale: tool.locale }); }} className="inline-flex items-center rounded-lg border border-primary/50 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.freeSample ? (es ? 'Subir mi imagen' : 'Upload my image') : tool.cta}</Link>
+      {tool.freeSample && <a href={`/dashboard?tool=${tool.dashboardTool}&sample=${tool.freeSample}`} onClick={() => { trackEvent('experience_click', { tool: tool.dashboardTool, sample: tool.freeSample, intent: 'sample', locale: tool.locale }); trackEvent('tool_sample_click', { tool: tool.dashboardTool, sample: tool.freeSample, locale: tool.locale }); }} className="inline-flex items-center rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{es ? 'Probar ejemplo gratis' : 'Try free example'}</a>}
+      <a href={`/dashboard?tool=${tool.dashboardTool}`} onClick={() => { trackEvent('experience_click', { tool: tool.dashboardTool, intent: 'upload', locale: tool.locale }); trackEvent('tool_cta_click', { tool: tool.dashboardTool, locale: tool.locale }); }} className="inline-flex items-center rounded-lg border border-primary/50 px-5 py-3 text-sm font-semibold text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">{tool.freeSample ? (es ? 'Subir mi imagen' : 'Upload my image') : tool.cta}</a>
     </div>
     <p className="mt-3 text-xs leading-relaxed text-zinc-400">{es ? 'Prueba el caso gratuito primero; para subir tu propia imagen se abrirá el estudio y se te pedirá iniciar sesión.' : 'Try the free case first; uploading your own image opens the studio and asks you to sign in.'}</p>
     <p className="mt-2 text-xs text-zinc-400">{tool.ctaNote}</p>
