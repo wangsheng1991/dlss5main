@@ -198,8 +198,9 @@ test('the video workflow has crawlable demos, FAQ copy and a sitemap entry', () 
 });
 
 test('the before-and-after page keeps measured cases, videos and both locale routes discoverable', () => {
-  assert.equal(BEFORE_AFTER_CASES.length, 7);
-  assert.equal(BEFORE_AFTER_FAQ.length, 6);
+  assert.ok(BEFORE_AFTER_CASES.length >= 22);
+  assert.ok(new Set(BEFORE_AFTER_CASES.map((item) => item.category)).size >= 6);
+  assert.ok(BEFORE_AFTER_FAQ.length >= 9);
   for (const item of BEFORE_AFTER_CASES) {
     assert.ok(item.beforeSize.length > 0 && item.afterSize.length > 0, `${item.id} needs dimensions`);
     assert.ok(item.record.length > 0 && item.limit.length > 0, `${item.id} needs provenance and a limit`);

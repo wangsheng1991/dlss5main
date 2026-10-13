@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import ImageSlider from '../components/ImageSlider';
 import { BEFORE_AFTER_CASES, BEFORE_AFTER_COPY, BEFORE_AFTER_FAQ, beforeAfterSchema } from '../content/beforeAfter';
+import type { BeforeAfterCase } from '../content/beforeAfter';
 import { SITE_URL } from '../config/site';
 
 type Locale = 'en' | 'zh';
@@ -64,6 +65,31 @@ export default function BeforeAfter({ locale = 'en' }: { locale?: Locale }) {
         </div>
       </section>
 
+      <section className="mt-20" aria-labelledby="case-table-heading">
+        <h2 id="case-table-heading" className="text-3xl font-headline font-bold text-white">{isZh ? '案例总表' : 'Case index'}</h2>
+        <p className="mt-3 text-zinc-400 leading-relaxed">{isZh ? '先按类别、尺寸和记录状态筛选，再打开上面的滑块查看细节。' : 'Scan the category, dimensions and record status before opening a card for the visual detail.'}</p>
+        <div className="mt-6 overflow-x-auto rounded-2xl border border-outline-variant/20">
+          <table data-case-table className="w-full min-w-[860px] text-left text-sm">
+            <thead className="bg-surface-low text-zinc-300"><tr><th className="p-3">{isZh ? '类别' : 'Category'}</th><th className="p-3">{isZh ? '案例' : 'Case'}</th><th className="p-3">{isZh ? '输入' : 'Input'}</th><th className="p-3">{isZh ? '输出' : 'Output'}</th><th className="p-3">{isZh ? '工作类型' : 'Workflow'}</th><th className="p-3">{isZh ? '记录' : 'Record'}</th></tr></thead>
+            <tbody>{BEFORE_AFTER_CASES.map((item) => <tr key={item.id} className="border-t border-outline-variant/15"><td className="p-3 text-primary">{isZh ? item.categoryZh : item.category}</td><td className="p-3 text-white"><a href={`#${item.id}`} className="hover:text-primary">{isZh ? item.titleZh : item.title}</a></td><td className="p-3 text-zinc-300">{item.beforeSize}</td><td className="p-3 text-zinc-300">{item.afterSize}</td><td className="p-3 text-zinc-300">{workflowLabel(item.outputType, isZh)}</td><td className="p-3 text-zinc-400">{isZh ? item.recordZh : item.record}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-20 grid gap-6 lg:grid-cols-2" aria-labelledby="method-heading">
+        <div className="rounded-2xl border border-outline-variant/20 bg-surface-low p-6">
+          <h2 id="method-heading" className="text-2xl font-headline font-bold text-white">{isZh ? '方法与复现' : 'Method and reproduction'}</h2>
+          <p className="mt-4 text-sm leading-relaxed text-zinc-300">{isZh ? '输入来自我们自己的图像管线上传；每张卡写明控制项。复现时记录原始输入、输出尺寸、模型或预设、硬件、驱动、日期和耗时。' : 'Inputs come from uploads to our own image pipeline; each card names the control used. For a reproduction, record the original input, output size, model or preset, hardware, driver, date and elapsed time.'}</p>
+          <p className="mt-3 text-sm leading-relaxed text-zinc-400">{isZh ? '这些案例不是 NVIDIA 运行时截图，不是游戏帧，也不是跨卡对比。只有带逐次台账的案例才可用于耗时复核。' : 'These cases are not NVIDIA runtime screenshots, game frames or cross-GPU comparisons. Only cases with a run ledger can be used for elapsed-time review.'}</p>
+          <p className="mt-4 text-sm"><Link className="text-primary hover:text-white" to={isZh ? '/zh/benchmark' : '/benchmark'}>{isZh ? '查看基准证据中心 →' : 'Open the benchmark evidence center →'}</Link></p>
+        </div>
+        <div className="rounded-2xl border border-outline-variant/20 bg-surface-low p-6">
+          <h2 className="text-2xl font-headline font-bold text-white">{isZh ? '继续探索' : 'Continue exploring'}</h2>
+          <p className="mt-4 text-sm leading-relaxed text-zinc-300">{isZh ? '想看更深的人物风格案例，可进入 20 组专页；想自己处理图片，可从对应工具或 Studio 说明开始。' : 'For deeper character-style cases, open the 20-case page; for your own image, start with the matching tool or Studio details.'}</p>
+          <p className="mt-4 flex flex-wrap gap-4 text-sm"><Link className="text-primary hover:text-white" to="/game-character-style">{isZh ? '20 组人物风格案例 →' : '20 character-style cases →'}</Link><Link className="text-primary hover:text-white" to={isZh ? '/zh/download' : '/download'}>{isZh ? 'Studio 说明 →' : 'Studio details →'}</Link></p>
+        </div>
+      </section>
+
       <section className="mt-20" aria-labelledby="video-heading">
         <div className="max-w-3xl">
           <h2 id="video-heading" className="text-3xl font-headline font-bold text-white">{isZh ? '六秒视频：看转换过程，再看静帧' : 'Six-second videos: watch the transition, then inspect frames'}</h2>
@@ -112,10 +138,33 @@ export default function BeforeAfter({ locale = 'en' }: { locale?: Locale }) {
 }
 
 function CaseCard({ item, isZh }: { item: typeof BEFORE_AFTER_CASES[number]; isZh: boolean; key?: React.Key }) {
-  return <article className="rounded-2xl border border-outline-variant/20 bg-surface-low overflow-hidden">
+  return <article id={item.id} data-case={item.id} data-category={item.category} className="rounded-2xl border border-outline-variant/20 bg-surface-low overflow-hidden">
     <ImageSlider highRes={item.after} lowRes={item.before} alt={isZh ? `${item.titleZh}前后对比` : `${item.title} before and after`} inputLabel={isZh ? '输入' : 'Input'} outputLabel={isZh ? '输出参考' : 'Output reference'} compareLabel={isZh ? `拖动查看${item.titleZh}前后对比` : `Drag to compare ${item.title}`} initialAspectRatio={item.aspectRatio} />
-    <div className="p-5"><p className="text-[10px] text-primary uppercase tracking-widest font-label">{isZh ? item.categoryZh : item.category}</p><h3 className="mt-2 text-xl font-headline font-bold text-white">{isZh ? item.titleZh : item.title}</h3><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? item.descriptionZh : item.description}</p><dl className="mt-4 grid grid-cols-2 gap-3 text-xs"><div><dt className="text-zinc-500">{isZh ? '输入' : 'Input'}</dt><dd className="mt-1 text-zinc-200">{item.beforeSize}</dd></div><div><dt className="text-zinc-500">{isZh ? '输出' : 'Output'}</dt><dd className="mt-1 text-zinc-200">{item.afterSize}</dd></div></dl>{item.extraInput && <p className="mt-3 text-xs text-zinc-400">{isZh ? '第二张参考：' : 'Second reference: '}<code>{item.extraInput}</code></p>}<details className="mt-4 text-xs text-zinc-400"><summary className="cursor-pointer text-primary">{isZh ? '查看提示词与记录' : 'View prompt and run record'}</summary><p className="mt-2 leading-relaxed"><strong className="text-zinc-200">{isZh ? '提示词：' : 'Prompt: '}</strong>{item.prompt}</p><p className="mt-2 leading-relaxed"><strong className="text-zinc-200">{isZh ? '记录：' : 'Record: '}</strong>{isZh ? item.recordZh : item.record}</p></details><p className="mt-4 text-xs leading-relaxed text-zinc-500"><strong className="text-zinc-300">{isZh ? '边界：' : 'Limit: '}</strong>{isZh ? item.limitZh : item.limit}</p></div>
+    <div className="p-5"><p className="text-[10px] text-primary uppercase tracking-widest font-label">{isZh ? item.categoryZh : item.category}</p><h3 className="mt-2 text-xl font-headline font-bold text-white">{isZh ? item.titleZh : item.title}</h3><p className="mt-3 text-sm leading-relaxed text-zinc-300">{isZh ? item.descriptionZh : item.description}</p><dl className="mt-4 grid grid-cols-2 gap-3 text-xs"><div><dt className="text-zinc-500">{isZh ? '输入' : 'Input'}</dt><dd className="mt-1 text-zinc-200">{item.beforeSize}</dd></div><div><dt className="text-zinc-500">{isZh ? '输出' : 'Output'}</dt><dd className="mt-1 text-zinc-200">{item.afterSize}</dd></div></dl>{item.extraInput && <p className="mt-3 text-xs text-zinc-400">{isZh ? '第二张参考：' : 'Second reference: '}<code>{item.extraInput}</code></p>}<details className="mt-4 text-xs text-zinc-400"><summary className="cursor-pointer text-primary">{isZh ? '查看提示词与记录' : 'View prompt and run record'}</summary><p className="mt-2 leading-relaxed"><strong className="text-zinc-200">{isZh ? '提示词：' : 'Prompt: '}</strong>{item.prompt}</p><p className="mt-2 leading-relaxed"><strong className="text-zinc-200">{isZh ? '记录：' : 'Record: '}</strong>{isZh ? item.recordZh : item.record}</p></details><p className="mt-4 text-xs leading-relaxed text-zinc-500"><strong className="text-zinc-300">{isZh ? '边界：' : 'Limit: '}</strong>{isZh ? item.limitZh : item.limit}</p><Link className="mt-4 inline-flex text-xs font-semibold text-primary hover:text-white" to={toolPath(item, isZh)}>{isZh ? `打开${toolLabel(item, true)} →` : `Open ${toolLabel(item, false)} →`}</Link></div>
   </article>;
+}
+
+function workflowLabel(outputType: BeforeAfterCase['outputType'], isZh: boolean) {
+  if (outputType === 'upscale') return isZh ? '放大' : 'Upscale';
+  if (outputType === 'same-size') return isZh ? '同尺寸修复' : 'Same-size retouch';
+  return isZh ? '编辑 / 转换' : 'Edit / conversion';
+}
+
+function toolPath(item: BeforeAfterCase, isZh: boolean) {
+  if (item.category === 'game-frames') return '/game-character-style';
+  if (item.category === 'object-cutout') return item.id.startsWith('creative') ? '/image-quality-enhancer' : '/erase-object';
+  if (item.category === 'two-reference') return '/image-quality-enhancer';
+  if (item.outputType === 'upscale') return '/image-upscaler';
+  if (item.outputType === 'same-size') return '/portrait-retouch';
+  return '/image-quality-enhancer';
+}
+
+function toolLabel(item: BeforeAfterCase, isZh: boolean) {
+  if (item.category === 'game-frames') return isZh ? '人物风格工具' : 'character-style tool';
+  if (item.category === 'object-cutout' && !item.id.startsWith('creative')) return isZh ? '擦除工具' : 'object eraser';
+  if (item.outputType === 'upscale') return isZh ? '图片放大器' : 'image upscaler';
+  if (item.outputType === 'same-size') return isZh ? '人像修复工具' : 'portrait retouch tool';
+  return isZh ? '视觉增强器' : 'visual enhancer';
 }
 
 function VideoCard({ src, poster, title, conclusion, label }: { src: string; poster: string; title: string; conclusion: string; label: string }) {
@@ -136,6 +185,12 @@ function translateFaq(value: string) {
     'Its input and output are both 600 × 900. It is a same-size portrait retouch case, included to show the difference between restoring an existing image and enlarging it.': '它的输入和输出都是 600 × 900。这是同尺寸人像修复，用来说明修复已有图像与放大图像的区别。',
     'What inputs usually fail?': '哪些输入通常容易失败？',
     'Extremely small or heavily compressed images, tiny text, multiple faces and scenes with motion blur are hard cases. Start with the largest original file, then inspect the result before sharing or publishing it.': '极小或重度压缩图片、小字、多人脸和运动模糊都是难例。请从最大尺寸的原始文件开始，检查结果后再分享或发布。',
+    'How is this page different from the benchmark center?': '这个页面与基准证据中心有什么区别？',
+    'This page is a visual gallery: it pairs existing inputs and outputs so you can inspect edges, faces and composition. The benchmark center defines measurement fields and separates recorded runs from visual references.': '这里是视觉案例库：把现有输入和输出放在一起，方便检查边缘、脸部和构图。基准证据中心定义测量字段，并把有记录的运行与视觉参考分开。',
+    'Can I reproduce one of these cases?': '我能复现其中一个案例吗？',
+    'Yes. Open the linked tool on a comparable input, use the control shown on the card, and record the original file, output size, model or preset, hardware, driver, date and elapsed time. Results may vary between runs.': '可以。用相近的输入打开卡片链接的工具，按卡片中的控制项运行，并记录原始文件、输出尺寸、模型或预设、硬件、驱动、日期和耗时。不同运行结果可能不同。',
+    'Why does this page not use NVIDIA screenshots?': '为什么页面不使用 NVIDIA 截图？',
+    'The gallery documents our own image pipeline. Keeping independent assets separate from NVIDIA material makes the provenance clear and avoids presenting a visual reference as an official runtime capture.': '这个案例库记录我们自己的图像管线。把独立素材与 NVIDIA 材料分开，可以明确来源，避免把视觉参考误认为官方运行时画面。',
   };
   return map[value] || value;
 }
