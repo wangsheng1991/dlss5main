@@ -767,3 +767,10 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - 已部署并线上复核：`/dlss-5-apk`、`/zh/dlss-5-apk`、`/games`、`/zh/games` 均 HTTP 200；英文两页验收脚本均 `fails=0 verdict=PASS`，中文页均有独立 title、WebPage、BreadcrumbList、FAQPage；`/zh/games` 另含 ItemList。
 - IndexNow 已提交线上 sitemap，界面/接口返回 `HTTP 200`，接受 **81 URLs**。
 - 本日 GSC 手动请求配额已被上一节记录的 `/vs/dlss-5-vs-fsr-4` 与 `/status` 用完；未重复点击。配额恢复后，仅请求本批两个新页型的英文第一页 `/dlss-5-apk`、`/games`，中文页依靠 sitemap 与自然抓取。
+
+## 2026-10-13：W1 英文页已提交 GSC 优先抓取
+
+- URL Inspection：`https://www.dlss5nvidia.com/dlss-5-apk` 原文为“网址尚未收录到 Google”，原因“Google 无法识别此网址”，未检测到引荐站点地图；已点击“请求编入索引”，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。
+- URL Inspection：`https://www.dlss5nvidia.com/games` 原文为“网址尚未收录到 Google”，原因“Google 无法识别此网址”，未检测到引荐站点地图；已点击“请求编入索引”，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。
+- 两个中文页未重复消耗配额，继续依靠 sitemap 与自然抓取。线上 sitemap 当前 81 条 URL；IndexNow 已接受 81 条（HTTP 200）。
+- 线上验收：四个 W1 URL 均 HTTP 200；`/dlss-5-apk`、`/games` 及中文页检查脚本均 `fails=0 verdict=PASS`；保护名单巡检 `changed=0 down=0 verdict=FROZEN-OK`。
