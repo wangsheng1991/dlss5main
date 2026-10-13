@@ -201,7 +201,7 @@ export function beforeAfterSchema(baseUrl = SITE_URL) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebPage', '@id': `${baseUrl}/before-after#webpage`, name: BEFORE_AFTER_COPY.en.heading, url: `${baseUrl}/before-after`, dateModified: '2026-10-11', inLanguage: 'en-US' },
+      { '@type': 'WebPage', '@id': `${baseUrl}/before-after#webpage`, name: BEFORE_AFTER_COPY.en.heading, url: `${baseUrl}/before-after`, dateModified: '2026-10-13', inLanguage: 'en-US' },
       ...BEFORE_AFTER_CASES.flatMap((item) => [
         { '@type': 'ImageObject', '@id': `${baseUrl}/before-after#${item.id}-before`, contentUrl: absolute(item.before), name: `${item.title} input`, caption: `${item.beforeLabel}; ${item.beforeSize}` },
         { '@type': 'ImageObject', '@id': `${baseUrl}/before-after#${item.id}-after`, contentUrl: absolute(item.after), name: `${item.title} output`, caption: `${item.afterLabel}; ${item.afterSize}` },

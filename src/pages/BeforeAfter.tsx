@@ -35,7 +35,7 @@ export default function BeforeAfter({ locale = 'en' }: { locale?: Locale }) {
         <nav className="mb-8 text-sm text-zinc-500" aria-label={isZh ? '面包屑' : 'Breadcrumb'}>
           <Link to="/">DLSS5NVIDIA</Link><span className="mx-2" aria-hidden="true">/</span><span>{isZh ? '前后对比' : 'Before and after'}</span>
         </nav>
-        <p className="text-primary uppercase tracking-[0.2em] text-xs font-label">{isZh ? '独立视觉参考 · 复审 2026-10-11' : 'Independent visual references · reviewed 2026-10-11'}</p>
+        <p className="text-primary uppercase tracking-[0.2em] text-xs font-label">{isZh ? '独立视觉参考 · 复审 2026-10-13' : 'Independent visual references · reviewed 2026-10-13'}</p>
         <h1 className="text-4xl md:text-6xl font-headline font-bold text-white mt-4">{copy.heading}</h1>
         <p className="text-lg leading-relaxed text-zinc-300 mt-6">{copy.answer}</p>
         <div className="mt-7 flex flex-wrap gap-3">
