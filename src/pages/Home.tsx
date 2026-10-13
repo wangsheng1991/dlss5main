@@ -135,6 +135,16 @@ export default function Home() {
         <Link to="/comparisons" className="mb-10 -mt-5 inline-flex text-xs text-zinc-400 hover:text-primary transition-colors">
           {isZh ? '先看 AI 图像工具对比与实测方法 →' : 'Compare AI image workflows and evidence →'}
         </Link>
+        <p className="mb-10 -mt-5 text-xs text-zinc-400">
+          {isZh ? '想先看效果对比与实测证据？' : 'Want the effect comparison and measured evidence first?'}{' '}
+          <Link to="/before-after" className="font-semibold text-primary hover:text-white transition-colors">
+            {isZh ? '前后对比中心 →' : 'Before/after center →'}
+          </Link>
+          <span className="mx-2 text-zinc-700">·</span>
+          <Link to="/benchmark" className="font-semibold text-primary hover:text-white transition-colors">
+            {isZh ? '基准证据中心 →' : 'Benchmark evidence center →'}
+          </Link>
+        </p>
         <p className="max-w-3xl mx-auto -mt-5 mb-10 text-sm leading-relaxed text-zinc-400">{isZh ? AI_OVERVIEW_DEFINITION_ZH : AI_OVERVIEW_DEFINITION}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
