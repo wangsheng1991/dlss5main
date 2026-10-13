@@ -20,6 +20,43 @@ interface SEOProps {
 
 const BASE_URL = SITE_URL;
 
+/**
+ * React stamps every DOM node it creates with a private `__reactFiber$…` / `__reactProps$…` key.
+ * Deleting one of those behind React's back leaves its fiber holding a node that is no longer in the
+ * tree, and the very next client-side route change dies in
+ * `Cannot read properties of null (reading 'removeChild')` — the page keeps the stale content and the
+ * link appears to do nothing.
+ *
+ * Measured on 2026-10-13: the collapse effect below removed 15 React-owned tags on /image-upscaler
+ * (13 meta, 1 link, 1 JSON-LD script) and every route doing that lost its client-side navigation,
+ * while `/` and `/login` — where nothing needed collapsing — kept working.
+ */
+const isReactOwned = (element: Element) =>
+  Object.keys(element).some(key => key.startsWith('__reactFiber$') || key.startsWith('__reactProps$') || key.startsWith('__reactMarker$'));
+
+/**
+ * Collapse duplicate head tags, keeping the newest copy of each semantic key, but **never** remove a
+ * tag React owns: when React has its own copy the stale static-shell or Helmet-injected ones go
+ * instead, and a group of several React-owned copies is left alone rather than risking the crash.
+ */
+const collapseDuplicates = (elements: Element[], keyOf: (element: Element) => string) => {
+  const groups = new Map<string, Element[]>();
+  for (const element of elements) {
+    const key = keyOf(element);
+    const list = groups.get(key);
+    if (list) list.push(element);
+    else groups.set(key, [element]);
+  }
+  for (const list of groups.values()) {
+    if (list.length < 2) continue;
+    const owned = list.filter(isReactOwned);
+    const keep = new Set(owned.length ? owned : [list[list.length - 1]]);
+    for (const element of list) {
+      if (!keep.has(element) && !isReactOwned(element)) element.remove();
+    }
+  }
+};
+
 export default function SEO({
   title,
   description,
@@ -50,37 +87,24 @@ export default function SEO({
   // only when the complete HTML happens to be identical.
   useEffect(() => {
     const collapseManagedMeta = () => {
-      const seen = new Set<string>();
       const elements = [...document.querySelectorAll(
         'meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]',
       )];
-      // Helmet appends the active route's tags after the static shell. Walking backwards keeps the
-      // newest locale-specific value and removes the stale shell value.
-      for (let index = elements.length - 1; index >= 0; index -= 1) {
-        const element = elements[index];
-        const key = element.getAttribute('name')
-          ? `name:${element.getAttribute('name')}`
-          : `property:${element.getAttribute('property')}`;
-        if (seen.has(key)) element.remove();
-        else seen.add(key);
-      }
+      // Helmet appends the active route's tags after the static shell. Working back to front keeps the
+      // newest locale-specific value and drops the stale shell value.
+      collapseDuplicates(elements, element => (element.getAttribute('name')
+        ? `name:${element.getAttribute('name')}`
+        : `property:${element.getAttribute('property')}`));
     };
     const dedupe = (selector: string, signature: (element: Element) => string) => {
-      const seen = new Set<string>();
-      document.querySelectorAll(selector).forEach(element => {
-        const key = signature(element);
-        if (seen.has(key)) element.remove();
-        else seen.add(key);
-      });
+      collapseDuplicates([...document.querySelectorAll(selector)], signature);
     };
     const collapseJsonLd = () => {
-      const seen = new Set<string>();
       const elements = [...document.querySelectorAll('script[type="application/ld+json"]')];
       // A translated route has the same CollectionPage/WebPage identity as the static English
       // shell, but a different JSON string. Keep the newest graph for each semantic page identity;
       // this preserves the site Organization graph while replacing the stale route graph.
-      for (let index = elements.length - 1; index >= 0; index -= 1) {
-        const element = elements[index];
+      collapseDuplicates(elements, element => {
         let key = element.textContent || '';
         try {
           const parsed = JSON.parse(key) as { '@type'?: string; '@id'?: string; url?: string; '@graph'?: Array<{ '@type'?: string; '@id'?: string; url?: string }> };
@@ -92,9 +116,8 @@ export default function SEO({
         } catch {
           // Keep the original text as a safe fallback for malformed third-party additions.
         }
-        if (seen.has(key)) element.remove();
-        else seen.add(key);
-      }
+        return key;
+      });
     };
     collapseManagedMeta();
     dedupe('link[rel="canonical"], link[rel="alternate"]', element => element.outerHTML);

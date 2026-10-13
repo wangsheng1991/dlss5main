@@ -135,18 +135,47 @@
     </script>
     <script>
       // Keep a prerendered head and React Helmet's head from exposing exact duplicate SEO tags.
+      //
+      // This script must never delete a tag React created. React 19 hoists <meta>/<link>/<script>
+      // from the tree into <head> and keeps a fiber pointing at each of those nodes; removing one
+      // here leaves the fiber holding a node with no parent, and the next client-side route change
+      // dies in `Cannot read properties of null (reading 'removeChild')` — the URL changes, the
+      // content does not. Measured 2026-10-13 on /image-upscaler: this loop detached 15 React-owned
+      // tags (13 meta, 1 canonical link, 1 JSON-LD script) and every pre-rendered route lost its
+      // client-side navigation, while `/` — where nothing was duplicated — kept working.
+      //
+      // Duplicates are therefore collapsed the other way round: when React has its own copy of a
+      // tag, the stale static-shell copy goes and React's stays.
       (function () {
-        function dedupe(selector, signature) {
-          var seen = new Set();
-          document.querySelectorAll(selector).forEach(function (element) {
-            var key = signature(element);
-            if (seen.has(key)) element.remove(); else seen.add(key);
+        function ownedByReact(element) {
+          var keys = Object.keys(element);
+          for (var index = 0; index < keys.length; index += 1) {
+            var key = keys[index];
+            if (key.indexOf('__reactFiber$') === 0 || key.indexOf('__reactProps$') === 0 || key.indexOf('__reactMarker$') === 0) return true;
+          }
+          return false;
+        }
+        function collapse(elements, keyOf) {
+          var groups = new Map();
+          for (var index = 0; index < elements.length; index += 1) {
+            var element = elements[index];
+            var key = keyOf(element);
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(element);
+          }
+          groups.forEach(function (list) {
+            if (list.length < 2) return;
+            var keep = list.filter(ownedByReact);
+            if (!keep.length) keep = [list[list.length - 1]];
+            list.forEach(function (element) {
+              if (keep.indexOf(element) === -1 && !ownedByReact(element)) element.remove();
+            });
           });
         }
         function clean() {
-          dedupe('link[rel="canonical"], link[rel="alternate"]', function (element) { return element.outerHTML; });
-          dedupe('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]', function (element) { return element.outerHTML; });
-          dedupe('script[type="application/ld+json"]', function (element) { return element.textContent || ''; });
+          collapse(Array.prototype.slice.call(document.querySelectorAll('link[rel="canonical"], link[rel="alternate"]')), function (element) { return element.outerHTML; });
+          collapse(Array.prototype.slice.call(document.querySelectorAll('meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]')), function (element) { return element.outerHTML; });
+          collapse(Array.prototype.slice.call(document.querySelectorAll('script[type="application/ld+json"]')), function (element) { return element.textContent || ''; });
         }
         clean();
         var observer = new MutationObserver(clean);
