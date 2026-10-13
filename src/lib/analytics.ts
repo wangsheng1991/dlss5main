@@ -99,6 +99,7 @@ function gtag(...args: unknown[]) {
 const pendingEvents: unknown[][] = [];
 let flushTimer: number | undefined;
 let pendingSince = 0;
+let loaderReadyAt = 0;
 const MAX_PENDING_MS = 60_000;
 const MAX_PENDING_EVENTS = 50;
 
@@ -109,7 +110,18 @@ const MAX_PENDING_EVENTS = 50;
  * before the takeover left it sitting in dataLayer with no collect hit, while the identical push
  * afterwards was sent. gtag.js replaces push with its own function, so compare against the native.
  */
-const isGtagReady = () => typeof window.dataLayer?.push === 'function' && window.dataLayer.push !== Array.prototype.push;
+// index.html emits this only after the external gtag script's load event. The dataLayer push
+// function itself remains Array.prototype.push in some gtag versions, so comparing the function
+// identity is not a reliable readiness signal. Keep a short settling window after load so the
+// loader can process its config command before we flush product events.
+const isGtagReady = () => loaderReadyAt > 0 && Date.now() - loaderReadyAt >= 250;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('dlss:analytics-ready', () => {
+    loaderReadyAt = Date.now();
+    window.setTimeout(flushPending, 300);
+  }, { once: true });
+}
 
 function flushPending() {
   if (pendingEvents.length && !isGtagReady() && Date.now() - pendingSince > MAX_PENDING_MS) {

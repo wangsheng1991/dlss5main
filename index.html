@@ -103,6 +103,14 @@
           var script = document.createElement('script');
           script.async = true;
           script.src = 'https://www.googletagmanager.com/gtag/js?id=G-2H65VD73K0';
+          // The analytics bridge queues product events until the external loader has actually
+          // finished. `google_tag_manager` appears before the loader is ready on slow links, so
+          // use the script's load event as the hand-off signal instead of guessing from globals.
+          script.addEventListener('load', function () {
+            window.setTimeout(function () {
+              window.dispatchEvent(new Event('dlss:analytics-ready'));
+            }, 500);
+          });
           document.head.appendChild(script);
           window.dataLayer = window.dataLayer || [];
           function gtag() { dataLayer.push(arguments); }
