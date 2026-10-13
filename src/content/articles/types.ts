@@ -306,9 +306,17 @@ AMD 当前文档说明，机器学习版 FSR Upscaling 适用于列出的 Radeon
 
 **Important:** Use DLSS 4 for stability until Pearl Abyss patches the DLSS 4.5 flickering issue.
 
-## Performance notes by GPU
+## Benchmark Targets by GPU (4K)
 
-This guide does not publish a frame-rate table: we do not have a matching local GPU run or a citable first-party result for those numbers. Use the settings guidance below as a starting point, then record your own GPU, driver, resolution, preset and capture date.
+No numeric frame-rate table is published here: these values have no matching local GPU run or citable first-party result. The table keeps the comparison fields visible so a future measured run can fill them without changing the page structure.
+
+| GPU | Native 4K Ultra | DLSS 4 Quality | DLSS 4 Performance |
+|-----|------------------|----------------|-------------------|
+| RTX 5090 | Not measured here | Not measured here | Not measured here |
+| RTX 5080 | Not measured here | Not measured here | Not measured here |
+| RTX 5070 Ti | Not measured here | Not measured here | Not measured here |
+| RTX 4090 | Not measured here | Not measured here | Not measured here |
+| RX 9070 XT (FSR 4) | Not measured here | Not measured here | Not measured here |
 
 ## Recommended Settings
 
@@ -351,9 +359,18 @@ DLSS 5 began shipping on 1 September 2026 with NBA 2K27. Crimson Desert is not c
 - **AMD FSR 3**（任意显卡）
 - **AMD FSR 4**（仅限 RDNA 4）
 
-## 各 GPU 的性能说明
+## 各 GPU 帧率参考（4K）
 
-本指南不发布帧率表：我们没有与这些数字匹配的本地显卡实测或可引用的一手结果。请把下面的设置建议作为起点，并记录自己的显卡、驱动、分辨率、画质档和截图日期。
+本表保留比较字段，但不填没有本地显卡实测或可引用一手来源的数字；未来有合格测量时可在原位置补录。
+
+| 显卡 | 原生4K超高 | DLSS 4质量 | DLSS 4性能 |
+|------|-----------|-----------|-----------|
+| RTX 5090 | 本站未测量 | 本站未测量 | 本站未测量 |
+| RTX 5080 | 本站未测量 | 本站未测量 | 本站未测量 |
+| RTX 5070 Ti | 本站未测量 | 本站未测量 | 本站未测量 |
+| RTX 4090 | 本站未测量 | 本站未测量 | 本站未测量 |
+| RX 9070 XT（FSR 4） | 本站未测量 | 本站未测量 | 本站未测量 |
+
 ## 各配置档位推荐
 
 **高端配置（RTX 5080/5090，RX 9070 XT）——4K超高 60fps+**
