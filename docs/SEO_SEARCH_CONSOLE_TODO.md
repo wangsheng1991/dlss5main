@@ -822,3 +822,9 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - `https://www.dlss5nvidia.com/before-after`：原文「网址已收录到 Google」；「网页已编入索引」；增强功能显示路径 1 项有效内容、视频检测到 2 项有效内容并提示非严重问题。
 - `https://www.dlss5nvidia.com/zh/before-after`：原文「网址已收录到 Google」；「网页已编入索引」；增强功能显示路径 1 项有效内容、视频检测到 2 项有效内容并提示非严重问题。
 - 本轮仅做 URL Inspection 读取，没有重复点击「请求编入索引」；之前两条 before-after 请求已进入队列并现已显示收录。
+
+## 2026-10-13：Studio beta 新页请求编入索引
+
+- `https://www.dlss5nvidia.com/studio-beta`：URL Inspection 原文「网址尚未收录到 Google」，原因「已发现 - 尚未编入索引」，发现来源为线上 sitemap；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- `https://www.dlss5nvidia.com/zh/studio-beta`：URL Inspection 原文「网址尚未收录到 Google」，原因「Google 无法识别此网址」；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- 本次两条请求均为当天配额内的首次提交；未重复提交已收录页面。
