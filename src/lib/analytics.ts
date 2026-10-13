@@ -88,6 +88,48 @@ function gtag(...args: unknown[]) {
   push.apply(null, args);
 }
 
+/**
+ * gtag.js only forwards `event` commands that arrive after the loader has initialised; commands
+ * queued before it loads are processed for `js`/`config` only, so an event pushed during hydration
+ * is silently dropped. Measured on the live page on 2026-10-13: an `arguments`-shaped event pushed
+ * after load produced a google-analytics.com/g/collect hit, the same push queued before the loader
+ * did not. `index.html` deliberately loads the loader on `window.load` (googletagmanager.com is
+ * unreachable from mainland China), so events are held here and flushed once it appears.
+ */
+const pendingEvents: unknown[][] = [];
+let flushTimer: number | undefined;
+let pendingSince = 0;
+const MAX_PENDING_MS = 60_000;
+const MAX_PENDING_EVENTS = 50;
+
+const isGtagReady = () => typeof (window as { google_tag_manager?: unknown }).google_tag_manager !== 'undefined';
+
+function flushPending() {
+  if (pendingEvents.length && !isGtagReady() && Date.now() - pendingSince > MAX_PENDING_MS) {
+    // The loader never arrived (blocked network, extension): drop rather than hold memory forever.
+    pendingEvents.length = 0;
+  }
+  while (pendingEvents.length && isGtagReady()) {
+    const args = pendingEvents.shift()!;
+    gtag(...args);
+  }
+  if (!pendingEvents.length && flushTimer !== undefined) {
+    window.clearInterval(flushTimer);
+    flushTimer = undefined;
+  }
+}
+
+function sendEvent(name: string, params: Record<string, AnalyticsValue>) {
+  if (isGtagReady()) {
+    gtag('event', name, params);
+    return;
+  }
+  if (!pendingEvents.length) pendingSince = Date.now();
+  if (pendingEvents.length >= MAX_PENDING_EVENTS) pendingEvents.shift();
+  pendingEvents.push(['event', name, params]);
+  flushTimer ??= window.setInterval(flushPending, 500);
+}
+
 /** Push a gtag-compatible event without a hard dependency on the GA script. */
 export function trackEvent(name: string, params: Record<string, AnalyticsValue | undefined> = {}) {
   if (typeof window === 'undefined') return;
@@ -107,7 +149,7 @@ export function trackEvent(name: string, params: Record<string, AnalyticsValue |
     if (previous && now - previous < 1500) return;
     recentOnce.set(key, now);
   }
-  gtag('event', name, { ...context, ...clean });
+  sendEvent(name, { ...context, ...clean });
 }
 
 /** StrictMode can mount a route effect twice; suppress only same-tick duplicates. */
