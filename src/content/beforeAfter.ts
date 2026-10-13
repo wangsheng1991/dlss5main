@@ -234,7 +234,8 @@ export function workflowLabel(item: { id: string; outputType: BeforeAfterCase['o
 }
 
 // 总表里的「记录」列只放摘要，完整句子留在卡片里 —— 否则 20 行重复同一句会把表读成噪声。
-const LEDGER_MISSING = /Asset dimensions checked (20\d\d-\d\d-\d\d);[\s\S]*$/;
+// 中英两种写法都要认（record 是英文串，recordZh 是中文串）。
+const LEDGER_MISSING = /^(?:Asset dimensions checked |尺寸于 |素材与尺寸于 )(20\d\d-\d\d-\d\d)(?: 复核)?[；;][\s\S]*$/;
 export function recordSummary(record: string, isZh: boolean): string {
   const missing = LEDGER_MISSING.exec(record);
   if (missing) return isZh ? `尺寸 ${missing[1]} 复核 · 无逐次台账` : `checked ${missing[1]} · no run ledger`;
