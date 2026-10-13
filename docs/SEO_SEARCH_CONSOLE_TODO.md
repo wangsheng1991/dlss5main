@@ -768,6 +768,15 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - IndexNow 已提交线上 sitemap，界面/接口返回 `HTTP 200`，接受 **81 URLs**。
 - 本日 GSC 手动请求配额已被上一节记录的 `/vs/dlss-5-vs-fsr-4` 与 `/status` 用完；未重复点击。配额恢复后，仅请求本批两个新页型的英文第一页 `/dlss-5-apk`、`/games`，中文页依靠 sitemap 与自然抓取。
 
+## 2026-10-13：主站未编入索引原因复核
+
+- Search Console 网页报告上次更新仍为 **2026/10/9**：已编入 **71**、未编入 **7**。
+- “网页会自动重定向”3 条：`https://dlss5nvidia.com/`、`http://www.dlss5nvidia.com/`、`http://dlss5nvidia.com/`；均为协议/主机规范化路径，属于预期状态。
+- “被 noindex 标记排除”2 条：`https://www.dlss5nvidia.com/register`、`https://www.dlss5nvidia.com/dashboard?tool=vectorize`；两者均在保护规则中，属于预期状态。
+- “重复网页，用户未选定规范网页”1 条：`https://www.dlss5nvidia.com/en/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026`，线上已 301 到无 `/en` 正式路径，等待 Google 重新抓取即可。
+- “重复网页，Google 选择的规范网页与用户指定的不同”1 条：`https://www.dlss5nvidia.com/en/blog/dlss-5-online-image-upscaler-guide`，线上已 301 到 `/blog/dlss-5-online-image-upscaler-guide`；GSC 示例抓取日期为 2026年9月24日，当前无需再改代码或请求该旧 URL。
+- “已发现—尚未编入索引”与“已抓取—尚未编入索引”均为 **0**。本轮未新增手动索引请求。
+
 ## 2026-10-13：W1 英文页已提交 GSC 优先抓取
 
 - URL Inspection：`https://www.dlss5nvidia.com/dlss-5-apk` 原文为“网址尚未收录到 Google”，原因“Google 无法识别此网址”，未检测到引荐站点地图；已点击“请求编入索引”，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。
