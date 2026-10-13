@@ -783,3 +783,15 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - URL Inspection：`https://www.dlss5nvidia.com/games` 原文为“网址尚未收录到 Google”，原因“Google 无法识别此网址”，未检测到引荐站点地图；已点击“请求编入索引”，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。
 - 两个中文页未重复消耗配额，继续依靠 sitemap 与自然抓取。线上 sitemap 当前 81 条 URL；IndexNow 已接受 81 条（HTTP 200）。
 - 线上验收：四个 W1 URL 均 HTTP 200；`/dlss-5-apk`、`/games` 及中文页检查脚本均 `fails=0 verdict=PASS`；保护名单巡检 `changed=0 down=0 verdict=FROZEN-OK`。
+
+## 2026-10-13：效果对比中心上线后的 Search Console 收口
+
+- 线上主站 sitemap 当前返回 **87 个 `<loc>`**；本次在已登录 Search Console 重新提交 `https://www.dlss5nvidia.com/sitemap.xml`，界面原文为「已成功提交站点地图」，提示 Google 会定期处理更改。
+- 提交前界面显示该 sitemap：状态「成功」、上次读取 **2026年10月13日**、已发现 **81** 个网页、0 个视频；提交后界面尚未刷新已发现数量，不能把 81 当作最新收录数。
+- 新版 `/before-after` 与 `/zh/before-after` 已通过线上结构验收（24 张卡、7 类、24 行总表、ItemList/FAQPage/WebPage/BreadcrumbList/ImageObject/VideoObject）。本轮没有对已收录旧 URL 重复请求编入索引。
+- IndexNow 已重新提交主站 sitemap 的 **87 条 URL**，接口返回 `HTTP 200`、`accepted 87 URLs`；这只通知 Bing/Yandex/Naver/Seznam/Yep，不代表 Google 已编入。
+
+### 当前 TODO
+
+- 等待 Google 重新处理 sitemap 并刷新 87 条发现数及索引报告；在报告刷新前不重复提交同一 sitemap。
+- 下一次手动 URL Inspection 配额恢复后，只检查新页是否已自然收录；已收录页面不重复请求，新增页优先按每日 2 条上限处理。
