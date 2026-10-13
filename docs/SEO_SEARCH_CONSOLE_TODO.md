@@ -795,3 +795,15 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 
 - 等待 Google 重新处理 sitemap 并刷新 87 条发现数及索引报告；在报告刷新前不重复提交同一 sitemap。
 - 下一次手动 URL Inspection 配额恢复后，只检查新页是否已自然收录；已收录页面不重复请求，新增页优先按每日 2 条上限处理。
+
+## 2026-10-13：效果对比页逐页 URL Inspection 复核
+
+- `https://www.dlss5nvidia.com/before-after`：URL Inspection 原文「网址尚未收录到 Google」，原因「Google 无法识别此网址」；未检测到引荐站点地图；本次已点击「请求编入索引」，随后界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- `https://www.dlss5nvidia.com/zh/before-after`：URL Inspection 原文「网址尚未收录到 Google」，原因「Google 无法识别此网址」；未检测到引荐站点地图；本次已点击「请求编入索引」，随后界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- `https://www.dlss5nvidia.com/benchmark`：URL Inspection 原文「网址尚未收录到 Google」，原因「已发现 - 尚未编入索引」；发现来源为 `https://www.dlss5nvidia.com/sitemap.xml`，未抓取。当天两个手动请求配额已由上述两个 before-after URL 用完，因此未点击请求按钮。
+- 线上静态 HTML 复核（2026-10-13）：`/before-after` 与 `/zh/before-after` 均 HTTP 200，分别有独立 title 与 meta description；`/benchmark`、`/games`、`/dlss-5-apk`、`/studio-beta` 及其已上线语言页均 HTTP 200 且 title/description 可抓取。未对已收录 URL 重复请求。
+
+### 当前 TODO（更新）
+
+- 等待 Google 处理两条 before-after 优先抓取请求及 sitemap；当天手动配额已用完，不能再提交 benchmark/games/apk 等 URL。
+- 配额恢复后按「只提交尚未收录的新页、每日最多两条」继续；IndexNow 与 sitemap 已完成，不替代 Google 编入。
