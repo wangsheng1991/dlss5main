@@ -132,7 +132,7 @@ const copy = {
     },
     'system-requirements': {
       title: 'DLSS 5 System Requirements and GPU Support | DLSS5NVIDIA',
-      description: 'Separate official DLSS 5 game requirements from DLSS5 Studio local requirements and the free browser converter path.',
+      description: 'Separate NVIDIA’s official DLSS 5 game requirements from DLSS5 Studio local requirements and the free browser converter path.',
       heading: 'DLSS 5 system requirements: three different paths',
       lead: '“DLSS 5 requirements” can mean an official game feature, the local DLSS5 Studio workflow, or the browser converter. Read the path you actually plan to use.',
       keywords: ['dlss 5 system requirements', 'dlss 5 minimum requirements', 'dlss 5 driver version', 'rtx 50 dlss 5 support'],
@@ -158,7 +158,7 @@ const copy = {
     },
     status: {
       title: 'DLSS 5 Support Status and Evidence Tracker | DLSS5NVIDIA',
-      description: 'A dated DLSS 5 status tracker that separates confirmed official statements, planned expansion and unknown model-level details.',
+      description: 'A dated DLSS 5 status tracker that separates NVIDIA’s confirmed statements, planned expansion and unknown model-level details.',
       heading: 'DLSS 5 support status: what is confirmed?',
       lead: 'This tracker records what an official source actually says, when we checked it and where the wording remains provisional. Unknown is a valid result.',
       keywords: ['dlss 5 confirmed', 'dlss 5 support status', 'is dlss 5 out yet', 'dlss 5 gpu support tracker'],
@@ -233,17 +233,17 @@ const zhOverrides: Record<ExpansionKind, Record<string, unknown>> = {
   },
   'system-requirements': {
     title: 'DLSS 5 系统要求与显卡支持 | DLSS5NVIDIA',
-    description: '区分官方 DLSS 5 游戏要求、本地 DLSS5 Studio 要求和免费浏览器转换路径。',
+    description: '区分 NVIDIA 官方 DLSS 5 游戏要求、本地 DLSS5 Studio 要求和免费浏览器转换路径。',
     heading: 'DLSS 5 系统要求：三条不同路径',
     lead: '“DLSS 5 要求”可能指官方游戏功能、本地 DLSS5 Studio，或浏览器转换器。请阅读与你计划使用的路径相符的部分。',
     keywords: ['dlss 5 系统要求', 'dlss 5 最低要求', 'dlss 5 驱动版本', 'rtx 50 dlss 5 支持'],
     facts: [['官方游戏路径', 'NVIDIA 9 月 FAQ 点名 RTX 50 系列显卡与笔记本，以及从 RTX 5080 云端设备串流的 GeForce NOW Ultimate。'], ['RTX 40 计划（2026-10-11 核对）', 'FAQ 表示 NVIDIA 计划在 RTX 50 性能调校更充分后扩展 RTX 40 系列官方支持；这不是当前兼容性。'], ['本地 Studio 路径', `${LOCAL_SOFTWARE.os}；${LOCAL_SOFTWARE.gpu}；${LOCAL_SOFTWARE.memory}；${LOCAL_SOFTWARE.disk}。`], ['浏览器路径', '本地 RTX 工作流不适合设备时，可使用在线转换器；它不要求本地 NVIDIA 运行时。']],
     table: { headers: ['路径', '最低证据', '可以得出的结论'], rows: [['官方游戏 DLSS 5', 'NVIDIA 的游戏、硬件与驱动资料', '只有来源点名时才发布已确认状态'], ['DLSS5 Studio 本地版', `${LOCAL_SOFTWARE.os}；${LOCAL_SOFTWARE.gpu}；${LOCAL_SOFTWARE.memory}`, '本站发布的软件要求'], ['浏览器转换器', '支持的浏览器和上传图片', '独立的图像转换工作流']] },
-    faq: [['NBA 2K27 首发需要哪个驱动？', 'NVIDIA 首发文章点名 GeForce Game Ready Driver 616.64 WHQL，用来显示 DLSS Neural Rendering 选项。'], ['能否说 RTX 40 已支持？', '不能。根据当前 FAQ，官方游戏路径的 RTX 40 扩展仍是计划事项。'], ['不装本地版能试视觉工作流吗？', '可以。浏览器转换器与 Windows Studio 索取流程是两条独立路径。']],
+    faq: [['NBA 2K27 首发需要哪个驱动？', 'NVIDIA 首发文章点名 GeForce Game Ready Driver 616.64 WHQL，用来显示 DLSS Neural Rendering 选项。'], ['能否说 RTX 40 已支持？', '不能。根据 NVIDIA 当前 FAQ，官方游戏路径的 RTX 40 扩展仍是计划事项。'], ['不装本地版能试视觉工作流吗？', '可以。浏览器转换器与 Windows Studio 索取流程是两条独立路径。']],
   },
   status: {
     title: 'DLSS 5 支持状态与证据追踪 | DLSS5NVIDIA',
-    description: '带日期的 DLSS 5 状态追踪，区分官方已确认、计划扩展和仍未知的型号级信息。',
+    description: '带日期的 DLSS 5 状态追踪，区分 NVIDIA 官方已确认、计划扩展和仍未知的型号级信息。',
     heading: 'DLSS 5 支持状态：哪些已经确认？',
     lead: '本页记录官方来源实际说了什么、核对日期，以及仍然暂定的部分。未知也是有效结果。',
     keywords: ['dlss 5 已确认', 'dlss 5 支持状态', 'dlss 5 发布了吗', 'dlss 5 显卡支持追踪'],
