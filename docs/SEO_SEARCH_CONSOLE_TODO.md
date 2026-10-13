@@ -761,3 +761,9 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 
 - 不消耗更多手动请求配额；本日 2 个新页请求已用完（见上一节）。
 - W1 继续按既定规格制作 `/dlss-5-apk` 与 `/games`（及中文页），不改首页、下载页或其他保护页。
+
+## 2026-10-13：W1 两个新页型已上线
+
+- 已部署并线上复核：`/dlss-5-apk`、`/zh/dlss-5-apk`、`/games`、`/zh/games` 均 HTTP 200；英文两页验收脚本均 `fails=0 verdict=PASS`，中文页均有独立 title、WebPage、BreadcrumbList、FAQPage；`/zh/games` 另含 ItemList。
+- IndexNow 已提交线上 sitemap，界面/接口返回 `HTTP 200`，接受 **81 URLs**。
+- 本日 GSC 手动请求配额已被上一节记录的 `/vs/dlss-5-vs-fsr-4` 与 `/status` 用完；未重复点击。配额恢复后，仅请求本批两个新页型的英文第一页 `/dlss-5-apk`、`/games`，中文页依靠 sitemap 与自然抓取。
