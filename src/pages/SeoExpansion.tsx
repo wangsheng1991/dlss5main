@@ -12,6 +12,22 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
     '@context': 'https://schema.org',
     '@graph': [
       {
+        '@type': 'WebPage',
+        '@id': `https://www.dlss5nvidia.com${page.path}#webpage`,
+        url: `https://www.dlss5nvidia.com${page.path}`,
+        name: page.heading,
+        description: page.description,
+        inLanguage: isZh ? 'zh-CN' : 'en-US',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `https://www.dlss5nvidia.com${page.path}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: 'https://www.dlss5nvidia.com/' },
+          { '@type': 'ListItem', position: 2, name: page.heading, item: `https://www.dlss5nvidia.com${page.path}` },
+        ],
+      },
+      {
         '@type': 'Article',
         '@id': `https://www.dlss5nvidia.com${page.path}#article`,
         headline: page.heading,
@@ -30,6 +46,11 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
           acceptedAnswer: { '@type': 'Answer', text: answer },
         })),
       },
+      ...(page.itemList ? [{
+        '@type': 'ItemList',
+        '@id': `https://www.dlss5nvidia.com${page.path}#itemlist`,
+        itemListElement: page.itemList.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, url: item.url })),
+      }] : []),
     ],
   };
 
