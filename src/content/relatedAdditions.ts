@@ -1,5 +1,11 @@
 /** Additive related-reading links for the eight protected routes in the October 2026 experiment. */
 export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string; zh: string }>> = {
+  '/zh': [
+    { path: '/zh/before-after', en: 'Before-and-after reference cases', zh: '前后对比参考案例' },
+    { path: '/zh/benchmark', en: 'Benchmark evidence center', zh: '基准证据中心' },
+    { path: '/zh/guides', en: 'DLSS 5 guides', zh: 'DLSS 5 使用指南' },
+    { path: '/zh/download', en: 'Download and request access', zh: '下载与内测申请' },
+  ],
   '/download': [
     { path: '/dlss-5-apk', en: 'Android and APK availability', zh: '安卓与 APK 可用情况' },
     { path: '/system-requirements', en: 'System requirements', zh: '系统要求' },

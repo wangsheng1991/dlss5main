@@ -27,6 +27,10 @@
       "destination": "/api/billing/[route]"
     },
     {
+      "source": "/zh",
+      "destination": "/zh/index.html"
+    },
+    {
       "source": "/blog",
       "destination": "/blog/index.html"
     },

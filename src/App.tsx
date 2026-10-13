@@ -79,6 +79,9 @@ export default function App() {
               <Suspense fallback={<div className="pt-40 pb-24 text-center text-zinc-500">Loading…</div>}>
                 <Routes>
                   <Route path="/" element={<Home />} />
+                  {/* The Chinese edition of the home page at its own indexable URL. `/` stays the
+                      English x-default; the two declare each other through hreflang. */}
+                  <Route path="/zh" element={<Home locale="zh" />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/dashboard" element={<Dashboard />} />

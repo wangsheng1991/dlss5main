@@ -5,9 +5,11 @@ import { RELATED_ADDITIONS } from '../content/relatedAdditions';
 export default function RelatedAdditions() {
   const { pathname } = useLocation();
   const { i18n } = useTranslation();
-  const links = RELATED_ADDITIONS[pathname];
+  // The edge serves `/a/b/` as well as `/a/b`, and the router matches both; the trailing slash must
+  // not decide whether the page keeps its related links.
+  const links = RELATED_ADDITIONS[pathname] || RELATED_ADDITIONS[pathname.replace(/\/+$/, '') || '/'];
   if (!links) return null;
-  const isZh = pathname.startsWith('/zh/') || i18n.language.startsWith('zh');
+  const isZh = pathname === '/zh' || pathname.startsWith('/zh/') || i18n.language.startsWith('zh');
   return <aside className="mx-auto max-w-[1000px] px-6 pb-20" aria-label={isZh ? '相关页面' : 'Related pages'}>
     <div className="border-t border-outline-variant/20 pt-7">
       <h2 className="text-xl font-bold text-white">{isZh ? '相关' : 'Related'}</h2>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   UploadCloud, Cpu, Sparkles,
@@ -14,6 +14,7 @@ import { MICRO_TOOLS } from '../content/microTools';
 import { SHOWCASE_CASES } from '../content/showcaseCases';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
 import { brandCopy, profileHas } from '../config/profile';
+import { SITE_URL } from '../config/site';
 import { MAX_UPLOAD_MIB } from '../config/tools';
 import { trackEvent } from '../lib/analytics';
 import { AI_OVERVIEW_DEFINITION } from '../content/seoDefinitions';
@@ -79,18 +80,74 @@ const SEARCH_CASES = [
 
 const AI_OVERVIEW_DEFINITION_ZH = 'DLSS5NVIDIA 是一个独立的浏览器端 DLSS 5 风格效果转换器、在线视觉增强器和 AI 图像生成器：上传游戏帧或人物图片，在保持结构、姿态和身份可检查的前提下改变风格、光照和材质，也提供独立的超分辨率与修复流程。它不是 NVIDIA 官方 DLSS 运行时。';
 
-export default function Home() {
+/** The home page is published as two self-canonical URLs: `/` (English, x-default) and `/zh`. */
+type HomeLocale = 'en' | 'zh';
+
+const HOME_HEAD: Record<HomeLocale, { title: string; description: string; keywords: string[]; canonical: string; language: string }> = {
+  en: {
+    title: 'DLSS 5 Style Converter Online — Free AI Image Converter',
+    description: 'Free DLSS 5-style image converter for game frames and character references. Try a cached example, compare before and after, and create a new visual direction online without an RTX GPU or download. Need sharpening instead? Use the separate visual enhancer.',
+    keywords: ['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 image generator', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4'],
+    canonical: '/',
+    language: 'en-US',
+  },
+  zh: {
+    title: 'DLSS 5 风格转换器在线 — 免费 AI 图像转换工具',
+    description: '免费的 DLSS 5 风格图像转换器：上传游戏帧或人物图，先从缓存示例看效果，再比较前后差异并生成新的风格、光照与材质方向，无需 RTX 显卡、无需下载。只想让已有图片更清晰？请用独立的视觉增强器。',
+    keywords: ['dlss 5 转换', 'dlss 5 图像转换器', 'dlss 5 效果转换器', 'dlss 5 风格转换', 'dlss 5 在线', 'dlss 5 中文', '游戏角色风格转换', '3d 引导神经渲染', '游戏截图神经渲染', 'dlss 5 图像放大器', 'ai 图像放大器', '免费图片放大', '4k 图片放大', 'ai 超分辨率', '神经渲染', 'dlss 4.5', 'fsr 4'],
+    canonical: '/zh',
+    language: 'zh-CN',
+  },
+};
+
+/**
+ * `/zh` is the Chinese edition of this page, and the URL decides the language there: a visitor who
+ * arrives from a Chinese search result reads Chinese without opening the picker first. Every other
+ * route keeps following the visitor's own choice, so no other page changes language behind their
+ * back.
+ */
+export default function Home({ locale }: { locale?: HomeLocale } = {}) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const isZh = i18n.language.startsWith('zh');
+  const isZh = locale ? locale === 'zh' : i18n.language.startsWith('zh');
+  const head = HOME_HEAD[locale || 'en'];
+
+  useEffect(() => {
+    if (locale !== 'zh' || i18n.language.startsWith('zh')) return;
+    // The URL decides the language on this route, and that decision does not follow the visitor
+    // anywhere else: i18next caches whatever it is switched to, and a cached `zh-CN` would leave the
+    // English home rendering Chinese copy for the next visit — a crawler that reads /zh first would
+    // then index `/` as a Chinese page. An explicit choice made in the picker is put back as it was.
+    const cache = (() => {
+      try {
+        return window.localStorage.getItem('i18nextLng');
+      } catch {
+        return null;
+      }
+    })();
+    void i18n.changeLanguage('zh-CN').then(() => {
+      try {
+        if (cache === null) window.localStorage.removeItem('i18nextLng');
+        else window.localStorage.setItem('i18nextLng', cache);
+      } catch {
+        // A browser with storage disabled simply keeps the detected language; the page still reads.
+      }
+    });
+  }, [locale, i18n, i18n.language]);
 
   return (
     <main className="pt-32 pb-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
       <SEO
-        title="DLSS 5 Style Converter Online — Free AI Image Converter"
-        description="Free DLSS 5-style image converter for game frames and character references. Try a cached example, compare before and after, and create a new visual direction online without an RTX GPU or download. Need sharpening instead? Use the separate visual enhancer."
-        keywords={['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 image generator', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4']}
-        canonical="/"
+        title={head.title}
+        description={head.description}
+        keywords={head.keywords}
+        canonical={head.canonical}
+        language={head.language}
+        alternates={[
+          { hrefLang: 'en', href: `${SITE_URL}/` },
+          { hrefLang: 'zh-CN', href: `${SITE_URL}/zh` },
+          { hrefLang: 'x-default', href: `${SITE_URL}/` },
+        ]}
       />
       <section className="text-center mb-16 relative">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
@@ -129,7 +186,7 @@ export default function Home() {
           <span className="hidden sm:inline text-zinc-700">·</span>
           <span>{t('home.ownUploadNote')}</span>
         </div>
-        <Link to="/download" className="mb-10 inline-flex text-sm font-semibold text-primary hover:text-white transition-colors">
+        <Link to={isZh ? '/zh/download' : '/download'} className="mb-10 inline-flex text-sm font-semibold text-primary hover:text-white transition-colors">
           {t('home.requestStudio')}
         </Link>
         <Link to="/comparisons" className="mb-10 -mt-5 inline-flex text-xs text-zinc-400 hover:text-primary transition-colors">
@@ -137,11 +194,11 @@ export default function Home() {
         </Link>
         <p className="mb-10 -mt-5 text-xs text-zinc-400">
           {isZh ? '想先看效果对比与实测证据？' : 'Want the effect comparison and measured evidence first?'}{' '}
-          <Link to="/before-after" className="font-semibold text-primary hover:text-white transition-colors">
+          <Link to={isZh ? '/zh/before-after' : '/before-after'} className="font-semibold text-primary hover:text-white transition-colors">
             {isZh ? '前后对比中心 →' : 'Before/after center →'}
           </Link>
           <span className="mx-2 text-zinc-700">·</span>
-          <Link to="/benchmark" className="font-semibold text-primary hover:text-white transition-colors">
+          <Link to={isZh ? '/zh/benchmark' : '/benchmark'} className="font-semibold text-primary hover:text-white transition-colors">
             {isZh ? '基准证据中心 →' : 'Benchmark evidence center →'}
           </Link>
         </p>

@@ -28,12 +28,29 @@ export default function Navbar() {
   const { user, profile, logout } = useAuth();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   const blogPath = i18n.language.startsWith('zh') ? '/zh/blog' : '/blog';
+  // The home page has an English and a Chinese edition; a visitor reading the Chinese one stays
+  // there when they click the brand instead of being dropped into the English home.
+  const homePath = location.pathname === '/zh' || location.pathname.startsWith('/zh/') ? '/zh' : '/';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
   const handleLanguageChange = (code: string) => {
+    // The home page is the other pair of stable SEO URLs: `/` is the English x-default edition and
+    // `/zh` the Chinese one. Picking a language here moves between them instead of changing the
+    // copy behind an unchanged URL.
+    if (location.pathname === '/' || location.pathname === '/zh') {
+      if (code === 'zh-CN') {
+        void i18n.changeLanguage('zh-CN');
+        navigate('/zh');
+      } else {
+        void i18n.changeLanguage(code);
+        navigate('/');
+      }
+      setIsLangOpen(false);
+      return;
+    }
     // Blog editions have stable SEO URLs. Preserve the article slug while moving between the
     // English x-default route and the Chinese edition; the other UI locales use the English
     // source edition until translated article URLs exist.
@@ -66,7 +83,7 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-[#0e0e0e]/90 backdrop-blur-xl border-b border-outline-variant/10">
       <div className="flex justify-between items-center px-4 md:px-8 h-16 max-w-[1440px] mx-auto">
         <div className="flex items-center gap-8">
-          <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline" to="/">{SITE_PROFILE.brand}</Link>
+          <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline" to={homePath}>{SITE_PROFILE.brand}</Link>
           {!isAuthPage && (
             <div className="hidden md:flex gap-6 items-center">
               {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>}

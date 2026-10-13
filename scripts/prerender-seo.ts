@@ -266,6 +266,9 @@ function withHead(template: string, options: Parameters<typeof pageHead>[0]): st
   html = html
     .replace(/^\s*<meta name="robots"[^>]*>\s*$/gm, '')
     .replace(/^\s*<link rel="canonical"[^>]*>\s*$/gm, '')
+    // The shell's alternates are the home page's, and only the home page's: left in place every
+    // route would also claim `/` and `/zh` as its own translations.
+    .replace(/^\s*<link rel="alternate"[^>]*>\s*$/gm, '')
     .replace(/<meta property="og:[^"]+"[^>]*\/?>\s*/g, '')
     .replace(/<meta name="twitter:[^"]+"[^>]*\/?>\s*/g, '')
     .replace(/[ \t]*<script type="application\/ld\+json">[\s\S]*?<\/script>[ \t]*\n?/, '');
@@ -1170,6 +1173,155 @@ if (profileHas('useCases')) for (const item of USE_CASES) writeRoute(item.path, 
 if (profileHas('microTools')) {
   writeRoute('/tools/passport-photo', renderPassportPhoto());
   for (const spec of publishableSpecs()) writeRoute(`/tools/passport-photo/${PASSPORT_PHOTO_SPEC_SLUGS[spec.id]}`, renderPassportPhoto(spec));
+}
+/** The Chinese edition of the home page. `/` itself is the shell written back at the end of this file. */
+writeRoute('/zh', renderHomeZh());
+
+/**
+ * The Chinese edition of the home page, served at `/zh`.
+ *
+ * `/` is the shell Vite emits and carries the English no-JavaScript fallback. A second indexable URL
+ * needs a document of its own rather than a copy that canonicalises somewhere else, so this writes
+ * the Chinese head, the Chinese fallback copy a crawler reads without running JavaScript, and the
+ * hreflang pair that ties the two editions together. The `/zh` React route renders the same URL for
+ * a browser that runs the app.
+ */
+function renderHomeZh(): string {
+  const title = 'DLSS 5 风格转换器在线 — 免费 AI 图像转换工具';
+  const description = '免费的 DLSS 5 风格图像转换器：上传游戏帧或人物图，先从缓存示例看效果，再比较前后差异并生成新的风格、光照与材质方向，无需 RTX 显卡、无需下载。只想让已有图片更清晰？请用独立的视觉增强器。';
+  const questions: Array<[string, string]> = [
+    ['DLSS 5 风格转换器能做什么？', '上传游戏帧或人物图，选择风格、光照或材质方向，对照输入检查生成结果，需要时再单独放大。'],
+    ['这是 NVIDIA 官方的 DLSS 5 工具吗？', '不是。这是一个受神经渲染思路启发的独立、非官方浏览器工具；它不读取游戏引擎的帧，也不声称做了官方 DLSS 运行时处理。'],
+    ['有 DLSS 5 安卓下载吗？', '没有独立的 DLSS 5 安卓 APK。手机上直接用浏览器里的在线转换器；DLSS5 Studio 是需要申请的独立 Windows RTX 工具。'],
+  ];
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', '@id': `${BASE_URL}/zh#webpage`, url: `${BASE_URL}/zh`, name: 'DLSS 5 风格转换器在线版', description, inLanguage: 'zh-CN' },
+      { '@type': 'FAQPage', mainEntity: questions.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) },
+    ],
+  };
+  const root = `<div id="static-fallback">
+      <h1>DLSS 5 风格转换器在线版</h1>
+      <p>DLSS5NVIDIA 是一个独立的浏览器端 DLSS 5 风格效果转换器，面向游戏帧和人物图片：生成新的风格、光照与材质方向，先对照原始图检查，需要时再单独放大——不需要显卡，也不需要安装。</p>
+      <p><a href="/dashboard?tool=game-character-style&amp;sample=characterStyle">免账号试一个缓存示例</a> · <a href="/dashboard?tool=game-character-style">登录后上传自己的图片</a> · <a href="/zh/download">申请 DLSS5 Studio</a></p>
+      <p>只想让已有图片更清晰，而不是改变它的风格？<a href="/image-quality-enhancer">打开免费的在线视觉增强器</a>，上传前先看一个参考案例。</p>
+      <p>在几种图像工作流之间犹豫？<a href="/comparisons">对比 AI 图像工具</a>：可运行的示例、带来源的说明，以及一套可重复的检查清单。</p>
+      <p>想先看结果？<a href="/zh/before-after">浏览独立的 DLSS 5 前后对比证据页</a>：每张图都标注尺寸、参数与边界，并附 6 秒参考视频。</p>
+      <p>要的是测出来的证据，而不是一张截图？<a href="/zh/benchmark">打开 DLSS 5 基准证据中心</a>：我们测了什么、每条结果必须记录哪些字段，以及我们刻意留空的地方。</p>
+      <p>转换流程把原始姿态、轮廓和身份当作可复核的约束；放大与修复是独立模式，只处理边缘与纹理，不声称是 NVIDIA 官方 DLSS 运行时处理。</p>
+      <ul>
+        <li>放大、降噪与锐化，最高输出 4K</li>
+        <li>另有 AI 图像生成、图像编辑与视频超分辨率</li>
+        <li>在浏览器里运行；开发者可用 Web API</li>
+      </ul>
+      <h2>方案</h2>
+      <p>Free / Pro / Team 三档方案的当前价格、每月额度与每日上限见<a href="/pricing">价格页</a>；订阅按月续费、可随时取消，未用完的额度不结转。</p>
+      <h2>联系</h2>
+      <p>关于方案、发票或 API：<a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></p>
+      <!-- begin:blog -->
+      <h2>最新 DLSS 5 研究</h2>
+      <div class="static-research">
+        <a href="/zh/blog/seedance-2-5-video-super-resolution-cost-guide-2026"><img src="/blog/seedance25-video-superres.png" alt="Seedance 2.5 视频超分辨率流程" width="1600" height="700"><span>Seedance 2.5 + 视频超分辨率成本指南</span></a>
+        <a href="/zh/blog/dlss-5-gpt-6-astra-ai-rendering-workflow-2026"><img src="/blog/gpt6-dlss5-workflow.png" alt="GPT-6 与 DLSS 5 渲染流程" width="1600" height="700"><span>GPT-6 + DLSS 5 渲染流程</span></a>
+        <a href="/zh/blog/dlss-5-online-image-upscaler-guide"><img src="/examples/sample2.jpg" alt="在线 AI 图像放大指南" width="1600" height="700"><span>在线图像放大器实用指南</span></a>
+      </div>
+      <!-- end:blog -->
+      <h2>转换产出什么</h2>
+      <p>DLSS 5 转换把游戏帧或人物图变成可复核的视觉参考：在保持姿态、轮廓和身份稳定的前提下，生成新的风格、光照与材质方向。这些示例是我们自己的参考图，不是 NVIDIA 官方截图，也不是 DLSS 运行时的输出。</p>
+      <h3>DLSS 5 效果转换器：游戏角色风格生成</h3>
+      <p>从游戏方向入手：对照原始帧与转换后的参考图，下载前先检查人脸、手部、装备边缘和布料。<a href="https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/" rel="noreferrer">NVIDIA 的 3D-Guided Neural Rendering 文章</a>介绍了启发这套独立浏览器流程的引擎侧思路。</p>
+      <div class="static-research">
+        <a href="/dashboard?tool=game-character-style"><img src="/examples/generated/game-cyber-1-after.jpg" alt="赛博朋克游戏角色风格转换参考" width="768" height="512"><span>赛博朋克快递员 · 转换后的风格参考</span></a>
+        <a href="/dashboard?tool=game-character-style"><img src="/examples/generated/game-fantasy-1-after.jpg" alt="月夜骑士游戏角色风格转换参考" width="768" height="512"><span>月夜骑士 · 转换后的风格参考</span></a>
+        <a href="/dashboard?tool=game-character-style"><img src="/examples/generated/game-anime-4-after.jpg" alt="水下探险者游戏角色风格转换参考" width="768" height="512"><span>水下探险者 · 转换后的风格参考</span></a>
+      </div>
+      <h3>放大与修复参考</h3>
+      <p>转换之后，独立的放大与修复流程可以恢复边缘与纹理。请在 100% 比例对照输入与输出，并在每次导出结果旁保留原图。</p>
+      <div class="static-research">
+        <a href="/dashboard"><img src="/examples/sample1-photo-low.webp" alt="厨房图片：AI 放大前" width="256" height="256"><span>放大前：低分辨率厨房图片</span></a>
+        <a href="/dashboard"><img src="/examples/sample1-photo.webp" alt="厨房图片：AI 放大后" width="1024" height="1024"><span>放大后：柜体边缘与台面纹理更清晰</span></a>
+        <!-- begin:blog -->
+        <a href="/zh/blog/dlss-5-online-image-upscaler-guide"><img src="/examples/case-portrait.jpg" alt="人像细节放大增强" width="1200" height="1500" loading="lazy"><span>人像与面部细节恢复</span></a>
+        <a href="/zh/blog/dlss-5-online-image-upscaler-guide"><img src="/examples/case-architecture.jpg" alt="建筑直线边缘放大增强" width="1200" height="800" loading="lazy"><span>建筑与直线边缘细节</span></a>
+        <!-- end:blog -->
+      </div>
+      <p><a href="/game-character-style">浏览游戏角色前后对比案例</a> · <a href="/dashboard?tool=game-character-style">开始风格转换流程</a> · <a href="/video-upscaler">了解 AI 视频放大流程</a></p>
+      <h2>相关视觉工作流</h2>
+      <p>相邻的视觉生产需求见 <a href="https://www.dlss5.app/zh-CN" rel="noopener noreferrer">DLSS5.app 显卡检查器</a>、<a href="https://www.houseplusplus.com" rel="noopener noreferrer">RenVi AI 室内设计</a>、<a href="https://aipixelhouse.com" rel="noopener noreferrer">PixelHouse AI 空间设计</a> 和 <a href="https://image2lego.com" rel="noopener noreferrer">Image2LEGO 3D 拼搭</a>。这些是各自独立的工具，工作流也不同。</p>
+      <!-- begin:podcast -->
+      <p><a href="/podcast">DLSS 5 AI 工作流播客：GPT-6、Claude 与视觉转换脚本</a></p>
+      <!-- end:podcast -->
+      <!-- begin:tools -->
+      <h2>免费的 AI 图像工具</h2>
+      <p>覆盖放大、修复、人像、虚拟试穿、室内效果图和图像编辑。每个页面都写明输入限制与输出尺寸，并给出一个带结果的完整示例。</p>
+      <ul>
+        <li><a href="/image-upscaler">AI 图片放大器</a> — 在不改变构图的前提下，把小图放大约 2× 或 4×</li>
+        <li><a href="/image-quality-enhancer">图像质量增强</a> — 让偏软或压缩严重的照片更锐利</li>
+        <li><a href="/unblur-image">模糊图片修复</a> — 处理拍糊的照片</li>
+        <li><a href="/old-photo-restoration">免费老照片修复</a> — 预览褪色或压缩家庭照片的增强结果，并保留原始扫描件对照</li>
+        <li><a href="/ai-headshot">AI 头像增强</a> — 只做职业人像清理，不要求换一张脸</li>
+        <li><a href="/image-to-svg">图片转 SVG</a> — 把标志或插画描成可缩放的矢量文件</li>
+        <li><a href="/remove-background">去背景</a> — 把主体抠到透明底上，导出 PNG</li>
+        <li><a href="/erase-object">擦除物体</a> — 移除物体并补回它挡住的部分</li>
+        <li><a href="/virtual-try-on">虚拟试穿</a> — 把服装商品图穿到人身上，保持脸、姿势和背景</li>
+        <li><a href="/interior-design">室内设计效果图</a> — 把空房间或有待完工的房间变成有家具的效果图，不动墙和窗</li>
+        <li><a href="/portrait-retouch">人像精修</a> — 三档强度均匀肤色、提亮眼神，保留身份与脸型</li>
+        <li><a href="/virtual-makeup">虚拟妆容</a> — 六种妆面、三档强度</li>
+        <li><a href="/video-downloader">视频下载</a> — 粘贴 YouTube、Bilibili、抖音或 TikTok 链接，保存该站提供的文件，最高 1080p 或仅音频</li>
+        <li><a href="/es/mejorar-calidad-imagen">Mejorar la calidad de imagen</a> — 面向西班牙语读者的质量增强页</li>
+      </ul>
+      <!-- end:tools -->
+      <!-- begin:useCases -->
+      <h2>图像增强流程指南</h2>
+      <p>商品图、建筑效果图和人像的前后对比指南。每篇都连到对应工具，并说明发布前该检查什么。</p>
+      <ul>
+        <li><a href="/use-cases/product-photo-enhancer">商品图增强</a> — 改善压缩过的商品图，同时检查标签与商品边缘</li>
+        <li><a href="/use-cases/architecture-render-upscaler">建筑效果图放大</a> — 放大效果图，同时检查透视、窗户与直线</li>
+        <li><a href="/use-cases/portrait-photo-enhancer">人像照片增强</a> — 改善偏软的人像，同时复核身份相关细节</li>
+      </ul>
+      <!-- end:useCases -->
+      <!-- begin:microTools -->
+      <h2>小图像工具</h2>
+      <p>确定性的浏览器小工具，用于精确的证件照规格。图片留在你自己的设备上。</p>
+      <ul>
+        <li><a href="/tools/passport-photo">免费证件照制作</a> — 在本机生成 3×4 或 35×45 mm 照片与可打印排版</li>
+        <li><a href="/tools/passport-photo/3-na-4">免费 3×4 证件照</a> — 已核对的尺寸与头部高度说明</li>
+        <li><a href="/tools/passport-photo/35x45-ru">免费 35×45 护照照片</a> — 已核对的尺寸与可打印输出</li>
+      </ul>
+      <!-- end:microTools -->
+      <h2>中文页面</h2>
+      <ul>
+        <li><a href="/zh/benchmark">DLSS 5 基准证据中心</a> — 我们实测的字段与留白</li>
+        <li><a href="/zh/before-after">DLSS 5 前后对比中心</a> — 逐组标注尺寸、参数与边界</li>
+        <li><a href="/zh/guides">DLSS 5 使用指南</a> · <a href="/zh/what-is-dlss-5">DLSS 5 是什么</a></li>
+        <li><a href="/zh/vs/dlss-5-vs-dlss-4-5">DLSS 5 与 DLSS 4.5 对比</a> · <a href="/zh/vs/dlss-5-vs-fsr-4">DLSS 5 与 FSR 4 对比</a></li>
+        <li><a href="/zh/system-requirements">系统要求</a> · <a href="/zh/status">发布与支持状态</a> · <a href="/zh/games">游戏支持情况</a></li>
+        <li><a href="/zh/dlss-5-apk">安卓与 APK 说明</a> · <a href="/zh/studio-beta">Studio 桌面版内测申请</a> · <a href="/zh/download">下载与申请说明</a></li>
+        <li><a href="/zh/blog">中文博客</a> — 带来源的技术与实测文章</li>
+      </ul>
+      <p><a href="/store">商店</a> · <a href="/pricing">价格</a><!-- begin:docs --> · <a href="/docs">API 文档</a><!-- end:docs --> · <a href="/zh/blog">博客</a><!-- begin:about --> · <a href="/about">关于我们</a><!-- end:about --></p>
+    </div>`;
+  return withRoot(withHead(TEMPLATE, {
+    title,
+    description,
+    canonicalPath: '/zh',
+    language: 'zh-CN',
+    keywords: ['dlss 5 转换', 'dlss 5 图像转换器', 'dlss 5 效果转换器', 'dlss 5 风格转换', 'dlss 5 在线', 'dlss 5 中文', '游戏角色风格转换', '3d 引导神经渲染', '游戏截图神经渲染', 'dlss 5 图像放大器', 'ai 图像放大器', '免费图片放大', '4k 图片放大', 'ai 超分辨率', '神经渲染', 'dlss 4.5', 'fsr 4'],
+    alternates: [
+      { hrefLang: 'en', href: `${BASE_URL}/` },
+      { hrefLang: 'zh-CN', href: `${BASE_URL}/zh` },
+      { hrefLang: 'x-default', href: `${BASE_URL}/` },
+    ],
+    structuredData: schema,
+  }), root)
+    // The shell's no-JavaScript note is English; this document is Chinese throughout.
+    .replace(/<noscript>[\s\S]*?<\/noscript>/, `<noscript>
+      <p style="max-width:46rem;margin:0 auto;padding:0 1.5rem 3rem;color:#ababab;font-family:ui-sans-serif,system-ui,&quot;PingFang SC&quot;,&quot;Microsoft YaHei&quot;,sans-serif">
+        这个浏览器关闭了 JavaScript，交互式上传和仪表盘用不了。上面的内容已经说明了服务范围与方案；有需要请写信到
+        <a href="mailto:${SUPPORT_EMAIL}" style="color:#b1fa50">${SUPPORT_EMAIL}</a>。
+      </p>
+    </noscript>`);
 }
 
 function renderStudioBetaStatic(locale: 'en' | 'zh'): string {

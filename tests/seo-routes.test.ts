@@ -85,3 +85,39 @@ test('evidence-led expansion pages are published in both current site locales', 
   ];
   for (const path of paths) assert.ok(sitemap.includes(`<loc>https://www.dlss5nvidia.com${path}</loc>`), path);
 });
+
+/**
+ * The home page is the one pair a visitor reaches without any link: `/` for English and `/zh` for
+ * Chinese. Both halves have to exist as documents of their own, and each has to name the other as a
+ * translation, or a crawler reads the Chinese page as an uncanonical duplicate instead of a locale.
+ */
+test('the home page is published in both locales and the pair declares itself from both sides', () => {
+  assert.ok(sitemap.includes('<loc>https://www.dlss5nvidia.com/zh</loc>'), '/zh is missing from the sitemap');
+  assert.deepEqual(
+    vercel.rewrites?.find((rule) => rule.source === '/zh'),
+    { source: '/zh', destination: '/zh/index.html' },
+  );
+
+  const pair = [
+    '<link rel="alternate" hreflang="en" href="https://www.dlss5nvidia.com/"',
+    '<link rel="alternate" hreflang="zh-CN" href="https://www.dlss5nvidia.com/zh"',
+    '<link rel="alternate" hreflang="x-default" href="https://www.dlss5nvidia.com/"',
+  ];
+  // The English edition is the shell Vite emits and states the origin absolutely; the Chinese one is
+  // written by the prerender step, which resolves the origin at build time.
+  const shell = readFileSync('index.html', 'utf8');
+  for (const link of pair) assert.ok(shell.includes(link), `the English home does not declare ${link}`);
+
+  const prerender = readFileSync('scripts/prerender-seo.ts', 'utf8');
+  const chineseHome = prerender.split('function renderHomeZh')[1] || '';
+  const chinesePair = [
+    "hrefLang: 'en', href: `${BASE_URL}/`",
+    "hrefLang: 'zh-CN', href: `${BASE_URL}/zh`",
+    "hrefLang: 'x-default', href: `${BASE_URL}/`",
+  ];
+  for (const alternate of chinesePair) assert.ok(chineseHome.includes(alternate), `the Chinese home does not declare ${alternate}`);
+
+  // Both editions are self-canonical: the Chinese document must not canonicalise to the English one.
+  assert.ok(chineseHome.includes("canonicalPath: '/zh'"), 'the Chinese home does not canonicalise to /zh');
+  assert.ok(readFileSync('src/App.tsx', 'utf8').includes('<Home locale="zh" />'), '/zh is not routed to the Chinese home');
+});
