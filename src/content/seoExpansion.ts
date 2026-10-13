@@ -1,6 +1,7 @@
 import { LOCAL_SOFTWARE } from './dlssChecker';
+import { w2Page } from './w2Expansion';
 
-export type ExpansionKind = 'guides' | 'what-is' | 'vs-dlss-45' | 'vs-fsr-4' | 'system-requirements' | 'status' | 'dlss-5-apk' | 'games';
+export type ExpansionKind = 'guides' | 'what-is' | 'vs-dlss-45' | 'vs-fsr-4' | 'system-requirements' | 'status' | 'dlss-5-apk' | 'games' | 'nba-2k27' | 'benchmark';
 export type ExpansionLocale = 'en' | 'zh';
 
 type LinkItem = { label: string; href: string };
@@ -268,7 +269,7 @@ const copy = {
   },
 } as const;
 
-const zhOverrides: Record<ExpansionKind, Record<string, unknown>> = {
+const zhOverrides: Partial<Record<ExpansionKind, Record<string, unknown>>> = {
   guides: {
     title: 'DLSS 5 指南：设置、转换与证据 | DLSS5NVIDIA',
     description: '以来源为基础的 DLSS 5 指南中心，覆盖设置问题、图像转换、视觉增强和 GPU 证据。',
@@ -374,6 +375,17 @@ const sharedLinks = (locale: ExpansionLocale): LinkItem[] => locale === 'zh'
       { label: 'DLSS 5 game support tracker', href: '/games' },
     ];
 
+const expansionLinks = (kind: ExpansionKind, locale: ExpansionLocale): LinkItem[] => {
+  const links = [...sharedLinks(locale)];
+  if (kind === 'games') links.push({ label: locale === 'zh' ? 'NBA 2K27 首发证据页' : 'NBA 2K27 launch evidence', href: locale === 'zh' ? '/zh/games/nba-2k27' : '/games/nba-2k27' });
+  if (kind === 'benchmark') links.push({ label: locale === 'zh' ? '游戏支持追踪' : 'Game support tracker', href: locale === 'zh' ? '/zh/games' : '/games' });
+  if (kind === 'nba-2k27') {
+    links.push({ label: locale === 'zh' ? '返回游戏支持追踪' : 'Back to the game tracker', href: locale === 'zh' ? '/zh/games' : '/games' });
+    links.push({ label: locale === 'zh' ? '查看证据中心' : 'Open the evidence center', href: locale === 'zh' ? '/zh/benchmark' : '/benchmark' });
+  }
+  return links;
+};
+
 const sourceLinks = (kind: ExpansionKind): LinkItem[] => {
   const common = [
     { label: 'NVIDIA DLSS 5 launch article', href: OFFICIAL_DLSS5 },
@@ -387,10 +399,13 @@ const sourceLinks = (kind: ExpansionKind): LinkItem[] => {
 };
 
 export function expansionPage(kind: ExpansionKind, locale: ExpansionLocale): ExpansionPage {
-  const c = locale === 'zh' ? { ...copy.en[kind], ...zhOverrides[kind] } : copy.en[kind];
+  const c = (kind === 'nba-2k27' || kind === 'benchmark')
+    ? w2Page(kind, locale)
+    : locale === 'zh' ? { ...copy.en[kind], ...zhOverrides[kind] } : copy.en[kind];
   const slug = kind === 'what-is' ? 'what-is-dlss-5'
     : kind === 'vs-dlss-45' ? 'vs/dlss-5-vs-dlss-4-5'
       : kind === 'vs-fsr-4' ? 'vs/dlss-5-vs-fsr-4'
+        : kind === 'nba-2k27' ? 'games/nba-2k27'
         : kind;
   const path = `${locale === 'zh' ? '/zh' : ''}/${slug}`;
   return {
@@ -398,10 +413,10 @@ export function expansionPage(kind: ExpansionKind, locale: ExpansionLocale): Exp
     locale,
     path,
     ...c,
-    links: sharedLinks(locale),
+    links: expansionLinks(kind, locale),
     sourceLinks: sourceLinks(kind),
   } as ExpansionPage;
 }
 
-export const EXPANSION_KINDS: ExpansionKind[] = ['guides', 'what-is', 'vs-dlss-45', 'vs-fsr-4', 'system-requirements', 'status', 'dlss-5-apk', 'games'];
+export const EXPANSION_KINDS: ExpansionKind[] = ['guides', 'what-is', 'vs-dlss-45', 'vs-fsr-4', 'system-requirements', 'status', 'dlss-5-apk', 'games', 'nba-2k27', 'benchmark'];
 export const EXPANSION_PAGES = EXPANSION_KINDS.flatMap(kind => (['en', 'zh'] as ExpansionLocale[]).map(locale => expansionPage(kind, locale)));

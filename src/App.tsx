@@ -110,6 +110,8 @@ export default function App() {
                   <Route path="/status" element={orHome('seoExpansion', <SeoExpansion kind="status" />)} />
                   <Route path="/dlss-5-apk" element={orHome('seoExpansion', <SeoExpansion kind="dlss-5-apk" />)} />
                   <Route path="/games" element={orHome('seoExpansion', <SeoExpansion kind="games" />)} />
+                  <Route path="/games/nba-2k27" element={orHome('seoExpansion', <SeoExpansion kind="nba-2k27" />)} />
+                  <Route path="/benchmark" element={orHome('seoExpansion', <SeoExpansion kind="benchmark" />)} />
                   <Route path="/zh/guides" element={orHome('seoExpansion', <SeoExpansion kind="guides" locale="zh" />)} />
                   <Route path="/zh/what-is-dlss-5" element={orHome('seoExpansion', <SeoExpansion kind="what-is" locale="zh" />)} />
                   <Route path="/zh/vs/dlss-5-vs-dlss-4-5" element={orHome('seoExpansion', <SeoExpansion kind="vs-dlss-45" locale="zh" />)} />
@@ -118,6 +120,8 @@ export default function App() {
                   <Route path="/zh/status" element={orHome('seoExpansion', <SeoExpansion kind="status" locale="zh" />)} />
                   <Route path="/zh/dlss-5-apk" element={orHome('seoExpansion', <SeoExpansion kind="dlss-5-apk" locale="zh" />)} />
                   <Route path="/zh/games" element={orHome('seoExpansion', <SeoExpansion kind="games" locale="zh" />)} />
+                  <Route path="/zh/games/nba-2k27" element={orHome('seoExpansion', <SeoExpansion kind="nba-2k27" locale="zh" />)} />
+                  <Route path="/zh/benchmark" element={orHome('seoExpansion', <SeoExpansion kind="benchmark" locale="zh" />)} />
                   <Route path="/image-upscaler" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/image-quality-enhancer" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/unblur-image" element={orHome('tools', <ToolLanding />)} />
