@@ -102,7 +102,14 @@ let pendingSince = 0;
 const MAX_PENDING_MS = 60_000;
 const MAX_PENDING_EVENTS = 50;
 
-const isGtagReady = () => typeof (window as { google_tag_manager?: unknown }).google_tag_manager !== 'undefined';
+/**
+ * The loader is only ready once it has taken over `dataLayer.push`. `window.google_tag_manager`
+ * appears slightly earlier, and anything pushed into the raw array during that gap is never
+ * re-scanned — measured on the live page on 2026-10-13: pushing the same arguments-shaped event
+ * before the takeover left it sitting in dataLayer with no collect hit, while the identical push
+ * afterwards was sent. gtag.js replaces push with its own function, so compare against the native.
+ */
+const isGtagReady = () => typeof window.dataLayer?.push === 'function' && window.dataLayer.push !== Array.prototype.push;
 
 function flushPending() {
   if (pendingEvents.length && !isGtagReady() && Date.now() - pendingSince > MAX_PENDING_MS) {
