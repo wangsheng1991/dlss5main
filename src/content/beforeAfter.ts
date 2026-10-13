@@ -196,6 +196,51 @@ export const BEFORE_AFTER_COPY = {
   },
 } as const;
 
+// 工作类型要逐案说清楚：卡片和总表都不许把什么都写成「编辑 / 转换」。
+// 这份标签按 id 显式给出，React 页与预渲染模板共用（2026-10-13）。
+export const WORKFLOW_LABELS: Record<string, { en: string; zh: string }> = {
+  'portrait-upscale': { en: 'Upscale 3.75×', zh: '放大 3.75×' },
+  'product-upscale': { en: 'Upscale 3.75×', zh: '放大 3.75×' },
+  'architecture-upscale': { en: 'Upscale 3.75×', zh: '放大 3.75×' },
+  'retouch-natural': { en: 'Same-size retouch', zh: '同尺寸修复' },
+  'cutout-teapot': { en: 'Background cutout', zh: '抠图' },
+  'erase-spoon': { en: 'Generative erase', zh: '生成式擦除' },
+  'tryon-top': { en: 'Try-on · two references', zh: '试穿 · 双参考' },
+  'vectorize-badge': { en: 'Bitmap to vector', zh: '位图转矢量' },
+  'interior-style': { en: 'Style conversion', zh: '风格转换' },
+  'makeup-ref': { en: 'Makeup · two references', zh: '妆容 · 双参考' },
+  'game-cyber-1': { en: 'Game-frame style conversion', zh: '游戏帧风格转换' },
+  'game-cyber-2': { en: 'Game-frame style conversion', zh: '游戏帧风格转换' },
+  'game-fantasy-1': { en: 'Game-frame style conversion', zh: '游戏帧风格转换' },
+  'game-sci-fi-1': { en: 'Game-frame style conversion', zh: '游戏帧风格转换' },
+  'game-modern-1': { en: 'Game-frame style conversion', zh: '游戏帧风格转换' },
+  'game-anime-1': { en: 'Game-frame style conversion', zh: '游戏帧风格转换' },
+  'product-1': { en: 'Upscale 2.86×', zh: '放大 2.86×' },
+  'product-2': { en: 'Upscale 2.86×', zh: '放大 2.86×' },
+  'architecture-lines-2': { en: 'Style conversion', zh: '风格转换' },
+  'architecture-lines-3': { en: 'Style conversion', zh: '风格转换' },
+  'creative-1': { en: 'Object redraw', zh: '对象重绘' },
+  'creative-2': { en: 'Object redraw', zh: '对象重绘' },
+  'nature-1': { en: 'Look conversion', zh: '光照与风格转换' },
+  'nature-2': { en: 'Look conversion', zh: '光照与风格转换' },
+};
+
+export function workflowLabel(item: { id: string; outputType: BeforeAfterCase['outputType'] }, isZh: boolean): string {
+  const known = WORKFLOW_LABELS[item.id];
+  if (known) return isZh ? known.zh : known.en;
+  if (item.outputType === 'upscale') return isZh ? '放大' : 'Upscale';
+  if (item.outputType === 'same-size') return isZh ? '同尺寸修复' : 'Same-size retouch';
+  return isZh ? '编辑 / 转换' : 'Edit / conversion';
+}
+
+// 总表里的「记录」列只放摘要，完整句子留在卡片里 —— 否则 20 行重复同一句会把表读成噪声。
+const LEDGER_MISSING = /Asset dimensions checked (20\d\d-\d\d-\d\d);[\s\S]*$/;
+export function recordSummary(record: string, isZh: boolean): string {
+  const missing = LEDGER_MISSING.exec(record);
+  if (missing) return isZh ? `尺寸 ${missing[1]} 复核 · 无逐次台账` : `checked ${missing[1]} · no run ledger`;
+  return record.replace(/^Measured case:\s*/, isZh ? '实测：' : 'Measured: ');
+}
+
 export function beforeAfterSchema(baseUrl = SITE_URL) {
   const absolute = (path: string) => path.startsWith('http') ? path : `${baseUrl}${path}`;
   return {
