@@ -733,3 +733,31 @@ URL Inspection 的当前结果：
 - `/vs/dlss-5-vs-fsr-4` 检查结果为“网址尚未收录到 Google”，原因“已发现 - 尚未编入索引”，且已从 sitemap 发现；本日已点击请求编入索引，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。
 - `/status` 检查结果为“网址尚未收录到 Google”，原因“已发现 - 尚未编入索引”；本日已点击请求编入索引，界面确认“已请求编入索引 / 已将网址添加到优先抓取队列中”。这两条使用本日 2 个手动请求配额，未继续提交中文重复页。
 - IndexNow 与 sitemap 继续作为其他搜索引擎和 Google 自然抓取入口；提交请求不等于立即编入索引。
+
+## 2026-10-13：查询词落地页核对（只读）
+
+Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28 天（2026-09-13—2026-10-10），界面上次更新“8小时前”。本节只记录点击查询后切换到“网页”标签看到的 URL，不改页面、不请求编入索引。
+
+### Enhancer 查询簇
+
+- `dlss 5 visual enhancer`：21 点击、935 展示、CTR 2.2%、平均排名 7。网页表：`/` 21/926；`/podcast/ai-image-generator-vs-visual-enhancer-vs-converter` 0/11；`/image-quality-enhancer` 0/4；`/blog/dlss-5-online-image-upscaler-guide` 0/2（表内格式均为点击/展示）。
+- `dlss visual enhancer`：0 点击、163 展示、CTR 0%、平均排名 8。网页表：`/` 0/150；`/podcast/ai-image-generator-vs-visual-enhancer-vs-converter` 0/13。
+- `dlss 5 enhancer`：3 点击、131 展示、CTR 2.3%、平均排名 6.5。网页表：`/` 3/130；`/image-quality-enhancer` 0/8；`/blog/dlss-5-online-image-upscaler-guide` 0/1。
+- `dlss 5 image enhancer`：18 点击、99 展示、CTR 18.2%、平均排名 4.3。网页表：`/` 15/97；`/image-quality-enhancer` 3/33；`/blog/dlss-5-online-image-upscaler-guide` 0/7；`/about` 0/6；`/blog` 0/6；`/docs` 0/6；`/models` 0/6；`/download` 0/2；`/enterprise` 0/2；`/pricing` 0/2。
+
+判定：四个查询均主要落在首页；仅 `dlss 5 image enhancer` 已有少量直接落到 `/image-quality-enhancer`。因此 W1 不改保护名单；若后续新增 enhancer 专页，应按“首页承接 + 新页验证”的加法方案设计。`/image-quality-enhancer` 的标题实验继续等待既定 14 天观察窗。
+
+### Comparison 查询簇
+
+- `dlss 5 vs fsr 4`：2 点击、184 展示、CTR 1.1%、平均排名 5.2。网页表：`/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 2/180；其 `/en/` 301 路径仍显示 0/15。
+- `fsr 4 vs dlss 5`：7 点击、153 展示、CTR 4.6%、平均排名 5.3。网页表：正式博客 URL 5/144；`/en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026` 2/16。
+- `dlss 4 vs dlss 5`：0 点击、137 展示、CTR 0%、平均排名 8.1。网页表：正式博客 URL 0/134；`/en/` 0/3；`/zh/` 0/1。
+- `dlss 5 vs dlss 4`：0 点击、92 展示、CTR 0%、平均排名 7.3。网页表：正式博客 URL 0/89；`/en/` 0/5。
+- `dlss 5 vs dlss 4.5`：界面显示无数据（0 点击、0 展示、平均排名 0）。
+
+判定：对比意图已集中到正式博客正本 `/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026`；`/en/` 与 `/zh/` 只是 301/低量历史展示，不另建重复页。页面表的分项展示在部分查询下与查询汇总不完全相加，按 Search Console 各自界面原值记录。
+
+### 后续
+
+- 不消耗更多手动请求配额；本日 2 个新页请求已用完（见上一节）。
+- W1 继续按既定规格制作 `/dlss-5-apk` 与 `/games`（及中文页），不改首页、下载页或其他保护页。
