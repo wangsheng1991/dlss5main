@@ -73,6 +73,21 @@ export const pixelBucket = (width: number, height: number) => {
   return '>16MP';
 };
 
+/**
+ * Send one command to the GA dataLayer in the shape gtag.js actually consumes.
+ *
+ * gtag.js only reads `arguments` objects — that is what `index.html`'s own `gtag()` pushes. A plain
+ * Array looks identical to us (same 0/1/2 slots, same length) and is silently dropped, which is why
+ * every custom event on this site was missing from GA4 while `page_view` still appeared: GA4's own
+ * automatic hit was the only thing arriving. Verified from the outside on 2026-10-13 by pushing both
+ * shapes into the live dataLayer and watching google-analytics.com/g/collect.
+ */
+function gtag(...args: unknown[]) {
+  const dataLayer = (window.dataLayer ??= []);
+  const push = function () { dataLayer.push(arguments); };
+  push.apply(null, args);
+}
+
 /** Push a gtag-compatible event without a hard dependency on the GA script. */
 export function trackEvent(name: string, params: Record<string, AnalyticsValue | undefined> = {}) {
   if (typeof window === 'undefined') return;
@@ -92,8 +107,7 @@ export function trackEvent(name: string, params: Record<string, AnalyticsValue |
     if (previous && now - previous < 1500) return;
     recentOnce.set(key, now);
   }
-  window.dataLayer ??= [];
-  window.dataLayer.push(['event', name, { ...context, ...clean }]);
+  gtag('event', name, { ...context, ...clean });
 }
 
 /** StrictMode can mount a route effect twice; suppress only same-tick duplicates. */
