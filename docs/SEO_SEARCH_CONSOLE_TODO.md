@@ -828,3 +828,12 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - `https://www.dlss5nvidia.com/studio-beta`：URL Inspection 原文「网址尚未收录到 Google」，原因「已发现 - 尚未编入索引」，发现来源为线上 sitemap；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
 - `https://www.dlss5nvidia.com/zh/studio-beta`：URL Inspection 原文「网址尚未收录到 Google」，原因「Google 无法识别此网址」；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
 - 本次两条请求均为当天配额内的首次提交；未重复提交已收录页面。
+
+## 2026-10-13：Studio beta 收录复核
+
+- URL Inspection（已登录 Search Console，资源 `sc-domain:dlss5nvidia.com`）：`https://www.dlss5nvidia.com/studio-beta` 显示「网址已收录到 Google」，并显示「网页已编入索引」。
+- `https://www.dlss5nvidia.com/zh/studio-beta` 同样显示「网址已收录到 Google」，并显示「网页已编入索引」。两页此前提交的优先抓取请求已完成处理，本轮未重复点击请求。
+- 站点地图页仍显示 `https://www.dlss5nvidia.com/sitemap.xml` 状态「成功」、上次读取「2026年10月13日」、已发现网页「87」、已发现视频「0」；该数字是 Search Console 界面当前读数，不能替代线上 sitemap 的实时 URL 数。
+- 线上静态复核：`/studio-beta` 与 `/zh/studio-beta` 均 HTTP 200，title 与 meta description 均存在且为各自语言版本。
+
+结论：本轮新增 Studio beta 两个 URL 均已被 Google 编入索引；当前没有需要再次消耗手动请求配额的页面。
