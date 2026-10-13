@@ -111,6 +111,14 @@ export default function BeforeAfter({ locale = 'en' }: { locale?: Locale }) {
             label={isZh ? '人物风格 · 6 秒' : 'Character style · 6 seconds'}
           />
         </div>
+        <div className="mt-6 max-w-3xl rounded-xl border border-outline-variant/20 bg-surface-low p-5">
+          <p className="text-sm leading-relaxed text-zinc-300">
+            {isZh
+              ? '我们公开的唯一视频类实测记录：3 秒 720p 片段（36 帧）在 RTX 4090 参考机、驱动 591.86 上批处理用时 87.4 秒（2.43 秒/帧）。这是本机批处理耗时，不是实时性能，也不是上面两段演示视频的渲染耗时——它们只是过渡参考。'
+              : 'Our only published video-pipeline measurement: a three-second 720p clip (36 frames) took 87.4 seconds of batch time on an RTX 4090 reference machine with driver 591.86 — 2.43 seconds per frame. That is local batch time, not real-time performance, and not the render time of the two clips above, which are transition references only.'}
+          </p>
+          <p className="mt-3 text-xs"><Link className="text-primary hover:text-white" to={isZh ? '/zh/benchmark' : '/benchmark'}>{isZh ? '实测方法与边界见基准证据中心 →' : 'Measurement method and limits: open the benchmark evidence center →'}</Link></p>
+        </div>
       </section>
 
       <section className="mt-20 rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-6 sm:p-8" aria-labelledby="limits-heading">
