@@ -4,6 +4,10 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
     { path: '/dlss-5-apk', en: 'Android and APK availability', zh: '安卓与 APK 可用情况' },
     { path: '/system-requirements', en: 'System requirements', zh: '系统要求' },
     { path: '/status', en: 'DLSS 5 release status', zh: 'DLSS 5 发布状态' },
+    { path: '/studio-beta', en: 'Request the limited Studio beta', zh: '申请 Studio 有限名额内测' },
+  ],
+  '/zh/download': [
+    { path: '/zh/studio-beta', en: 'Request the limited Studio beta', zh: '申请 Studio 有限名额内测' },
   ],
   '/image-quality-enhancer': [
     { path: '/before-after', en: 'Before-and-after reference cases', zh: '前后对比参考案例' },

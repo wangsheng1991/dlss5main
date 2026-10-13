@@ -38,6 +38,7 @@ const Blog = lazy(() => import('./pages/Blog'));
 const Podcast = lazy(() => import('./pages/Podcast'));
 const About = lazy(() => import('./pages/About'));
 const Download = lazy(() => import('./pages/Download'));
+const StudioBeta = lazy(() => import('./pages/StudioBeta'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const Comparisons = lazy(() => import('./pages/Comparisons'));
 const BeforeAfter = lazy(() => import('./pages/BeforeAfter'));
@@ -97,6 +98,8 @@ export default function App() {
                   <Route path="/about" element={orHome('about', <About />)} />
                   <Route path="/download" element={orHome('download', <Download />)} />
                   <Route path="/zh/download" element={orHome('download', <Download forceLocale="zh-CN" />)} />
+                  <Route path="/studio-beta" element={orHome('download', <StudioBeta forceLocale="en" />)} />
+                  <Route path="/zh/studio-beta" element={orHome('download', <StudioBeta forceLocale="zh" />)} />
                   <Route path="/enterprise" element={orHome('enterprise', <Enterprise />)} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/comparisons" element={orHome('comparisons', <Comparisons />)} />
