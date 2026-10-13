@@ -807,3 +807,9 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 
 - 等待 Google 处理两条 before-after 优先抓取请求及 sitemap；当天手动配额已用完，不能再提交 benchmark/games/apk 等 URL。
 - 配额恢复后按「只提交尚未收录的新页、每日最多两条」继续；IndexNow 与 sitemap 已完成，不替代 Google 编入。
+
+## 2026-10-13：最新 sitemap 与静态元数据复核
+
+- 线上 `https://www.dlss5nvidia.com/sitemap.xml` 当前 **88** 个 `<loc>`；本次构建通过后用 IndexNow 提交 88 条，接口返回 `HTTP 200` / `accepted 88 URLs`。
+- 静态 HTML 复核：`/before-after`、`/zh/before-after`、`/benchmark`、`/games`、`/dlss-5-apk`、`/studio-beta`、`/zh/studio-beta` 均 HTTP 200，均有独立 `<title>` 与 `meta description`。
+- GSC 手动请求配额：本日已用 `/before-after` 与 `/zh/before-after` 两条；`/benchmark` 仍为「已发现 - 尚未编入索引」，等待下一配额窗口，不重复提交。
