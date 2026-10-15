@@ -22,6 +22,8 @@ export const VISUAL_ENHANCER_COPY = {
     desktop: 'Need batch processing? See DLSS5 Studio',
     explainHeading: 'What this visual enhancer does',
     explain: 'This page targets practical image quality work: a soft, compressed or small image goes through an independent image-edit model that renders a larger result with plausible edge and texture detail. It is a visual estimate, not pixel-exact recovery and not the NVIDIA DLSS game runtime.',
+    onlineHeading: 'Online first, desktop when needed',
+    onlineText: 'The free browser example is the fastest way to inspect the visual change: click once, compare the result, and download it without signing in. If you need to process your own files or review the desktop workflow, continue to the DLSS5 Studio request page.',
     workflowHeading: 'A simple review workflow',
     steps: [
       ['1. Start with the original', 'Use the largest JPEG, PNG or WebP you have. A social preview or screenshot has already discarded information.'],
@@ -36,6 +38,7 @@ export const VISUAL_ENHANCER_COPY = {
       ['What does the model enhance?', 'It re-renders an image at a larger output size while asking the composition, colors, lighting and subject identity to remain stable.'],
       ['Can it recover details that were never captured?', 'No. The output is an estimate. Keep the original and review information-sensitive areas such as faces, text and logos.'],
       ['Can I try it without signing in?', 'Yes. The cached sample on this page is free and does not require an account. Your own upload uses the signed-in studio workflow.'],
+      ['Does this page enhance video?', 'The free browser example on this page is an image workflow. For the desktop workflow and current availability of broader processing, see the DLSS5 Studio request page.'],
       ['What is the difference from an in-game DLSS feature?', 'DLSS 5 is an NVIDIA game-rendering technology. This page runs a separate image workflow on a supplied picture; it is not an in-game integration.'],
     ],
     linksHeading: 'Continue with the right workflow',
@@ -65,6 +68,8 @@ export const VISUAL_ENHANCER_COPY = {
     desktop: '需要批量处理？查看 DLSS5 Studio',
     explainHeading: '这个视觉增强器做什么',
     explain: '本页面向实际图像质量任务：模糊、压缩或尺寸较小的图片会经过独立图像编辑模型，生成带有合理边缘与纹理细节的更大结果。这是视觉估计，不是逐像素恢复，也不是 NVIDIA DLSS 游戏运行时。',
+    onlineHeading: '先在线试，再按需要使用桌面版',
+    onlineText: '免费浏览器示例适合先看效果：点击一次、对比结果并下载，不需要登录。需要处理自己的文件或了解桌面工作流时，再进入 DLSS5 Studio 索取页面。',
     workflowHeading: '简单的复核流程',
     steps: [
       ['1. 从原图开始', '使用手上最大的 JPEG、PNG 或 WebP。社交平台预览图或截图已经丢失了一部分信息。'],
@@ -79,6 +84,7 @@ export const VISUAL_ENHANCER_COPY = {
       ['模型会增强什么？', '它会以更大的输出尺寸重新渲染图片，同时要求构图、色彩、光照和主体身份保持稳定。'],
       ['能恢复从未拍到的细节吗？', '不能。输出是估计结果。请保留原图，并检查脸部、文字和标志等信息敏感区域。'],
       ['可以免登录试用吗？', '可以。本页的缓存示例免费且无需账号；处理自己的图片时使用登录后的工作室流程。'],
+      ['这个页面能增强视频吗？', '本页的免费浏览器示例是图片工作流。更广泛的处理能力和桌面版当前可用情况，请查看 DLSS5 Studio 索取页面。'],
       ['它与游戏内 DLSS 功能有什么区别？', 'DLSS 5 是 NVIDIA 的游戏渲染技术。本页处理的是上传图片的独立图像工作流，不是游戏内集成。'],
     ],
     linksHeading: '继续使用合适的工作流',
