@@ -86,14 +86,14 @@ type HomeLocale = 'en' | 'zh';
 const HOME_HEAD: Record<HomeLocale, { title: string; description: string; keywords: string[]; canonical: string; language: string }> = {
   en: {
     title: 'DLSS 5 Style Converter Online — Free AI Image Converter',
-    description: 'Free DLSS 5-style image converter for game frames and character references. Try a cached example, compare before and after, and create a new visual direction online without an RTX GPU or download. Need sharpening instead? Use the separate visual enhancer.',
+    description: 'Free DLSS 5-style image converter for game frames and character references. Try a cached example, compare before and after, and create a new visual direction online without an RTX GPU or download. Need a clearer source before conversion? Compare an image-quality workflow first.',
     keywords: ['dlss 5 convert', 'dlss 5 image converter', 'dlss 5 image generator', 'dlss 5 effect converter', 'dlss 5 style converter', 'dlss 5 visual generation', 'dlss 5 visual enhancer', 'dlss 5 visual enhancer online', 'dlss 5 online', 'dlss 5 game character style', 'dlss 5 style transfer', 'game character style conversion', '3d guided neural rendering', 'neural rendering game screenshot', 'dlss 5 upscaler', 'dlss5 upscaler', 'dlss 5 upscaling', 'dlss image upscaler', 'dlss upscaler', 'ai image upscaler', 'free image upscaler', '4k image upscaler', 'ai super resolution', 'neural rendering', 'dlss 4.5', 'fsr 4'],
     canonical: '/',
     language: 'en-US',
   },
   zh: {
     title: 'DLSS 5 风格转换器在线 — 免费 AI 图像转换工具',
-    description: '免费的 DLSS 5 风格图像转换器：上传游戏帧或人物图，先从缓存示例看效果，再比较前后差异并生成新的风格、光照与材质方向，无需 RTX 显卡、无需下载。只想让已有图片更清晰？请用独立的视觉增强器。',
+    description: '免费的 DLSS 5 风格图像转换器：上传游戏帧或人物图，先从缓存示例看效果，再比较前后差异并生成新的风格、光照与材质方向，无需 RTX 显卡、无需下载。转换前想先检查原图质量？先查看图像质量工作流。',
     keywords: ['dlss 5 转换', 'dlss 5 图像转换器', 'dlss 5 效果转换器', 'dlss 5 风格转换', 'dlss 5 在线', 'dlss 5 中文', '游戏角色风格转换', '3d 引导神经渲染', '游戏截图神经渲染', 'dlss 5 图像放大器', 'ai 图像放大器', '免费图片放大', '4k 图片放大', 'ai 超分辨率', '神经渲染', 'dlss 4.5', 'fsr 4'],
     canonical: '/zh',
     language: 'zh-CN',

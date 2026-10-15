@@ -216,7 +216,7 @@ test('the before-and-after page keeps measured cases, videos and both locale rou
 test('the static homepage exposes the same search intent and crawlable structured data before JavaScript runs', () => {
   const html = homepage();
   assert.match(html, /<title>DLSS 5 Style Converter Online — Free AI Image Converter<\/title>/);
-  assert.match(html, /name="description"[^>]+separate visual enhancer/);
+  assert.match(html, /name="description"[^>]+image-quality workflow first/);
   assert.match(html, /property="og:image"[^>]+game-cyber-1-after\.jpg/);
   assert.match(html, /name="twitter:card"[^>]+summary_large_image/);
   assert.match(html, /type="application\/ld\+json"/);
