@@ -844,3 +844,9 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - 增长集中在 `dlss 5 online`、converter、download/APK；`dlss 5 visual enhancer` 仍是高展示低点击簇。10-13 新页中目前只有 `/dlss-5-apk` 在报表中有明确数据（28 天 19 点击/348 展示），其余新页当前页面表为「无数据」。
 - 索引报告仍为已编入 71、未编入 7；「已发现—尚未编入索引」与「已抓取—尚未编入索引」均为 0。sitemap 状态成功，上次读取 2026-10-13，已发现 87 页、0 视频。
 - 完整原始表、查询簇分析、索引原因代表 URL 与三类下一步见 [`docs/GSC_SNAPSHOT_20261015.md`](GSC_SNAPSHOT_20261015.md)。本轮只读，未提交 sitemap，未请求编入索引。
+
+## 2026-10-15：新页线上静态复核与 IndexNow 通知
+
+- 线上静态复核：`/visual-enhancer`、`/zh/visual-enhancer`、`/games/nba-2k27`、`/zh/games/nba-2k27`、`/benchmark`、`/zh/benchmark`、`/dlss-5-apk`、`/zh/dlss-5-apk`、`/studio-beta`、`/zh/studio-beta` 均返回 HTTP 200，且静态 HTML 含独立 `<title>` 与 meta description。
+- 使用构建产物 `scripts/indexnow.mjs` 向 `https://api.indexnow.org/indexnow` 提交主站 sitemap 中的 90 个 URL；接口返回 `HTTP 200`，原文为 `IndexNow accepted 90 URLs for www.dlss5nvidia.com (HTTP 200).` 该通知覆盖 Bing、Yandex、Naver、Seznam、Yep，不代表 Google 已编入索引。
+- Google Search Console 手动请求仍遵守每日配额与“只提交尚未收录新页”的规则；本次未对已确认收录 URL 重复请求。
