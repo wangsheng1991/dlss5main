@@ -81,6 +81,7 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
   tools: [
     '/image-upscaler',
     '/image-quality-enhancer',
+    '/visual-enhancer',
     '/unblur-image',
     '/old-photo-restoration',
     '/ai-headshot',

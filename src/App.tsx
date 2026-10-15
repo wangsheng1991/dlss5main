@@ -48,6 +48,7 @@ const Refund = lazy(() => import('./pages/Refund'));
 const UseCaseLanding = lazy(() => import('./pages/UseCaseLanding'));
 const PassportPhoto = lazy(() => import('./pages/PassportPhoto'));
 const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
+const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
 /**
@@ -130,6 +131,8 @@ export default function App() {
                   <Route path="/zh/benchmark" element={orHome('seoExpansion', <SeoExpansion kind="benchmark" locale="zh" />)} />
                   <Route path="/image-upscaler" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/image-quality-enhancer" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/visual-enhancer" element={orHome('tools', <VisualEnhancer />)} />
+                  <Route path="/zh/visual-enhancer" element={orHome('tools', <VisualEnhancer locale="zh" />)} />
                   <Route path="/unblur-image" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/old-photo-restoration" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/ai-headshot" element={orHome('tools', <ToolLanding />)} />

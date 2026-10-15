@@ -16,16 +16,34 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
     { path: '/zh/studio-beta', en: 'Request the limited Studio beta', zh: '申请 Studio 有限名额内测' },
   ],
   '/image-quality-enhancer': [
+    { path: '/visual-enhancer', en: 'Dedicated visual enhancer page', zh: '专门的视觉增强器页面' },
     { path: '/before-after', en: 'Before-and-after reference cases', zh: '前后对比参考案例' },
     { path: '/guides', en: 'DLSS 5 guides', zh: 'DLSS 5 使用指南' },
   ],
   '/image-upscaler': [
+    { path: '/visual-enhancer', en: 'Dedicated visual enhancer page', zh: '专门的视觉增强器页面' },
     { path: '/before-after', en: 'Before-and-after reference cases', zh: '前后对比参考案例' },
     { path: '/guides', en: 'DLSS 5 guides', zh: 'DLSS 5 使用指南' },
   ],
   '/video-upscaler': [
     { path: '/before-after', en: 'Video and image reference cases', zh: '视频与图片对比案例' },
     { path: '/games', en: 'Launched and announced games', zh: '已上线与已宣布游戏' },
+  ],
+  '/unblur-image': [
+    { path: '/visual-enhancer', en: 'Dedicated visual enhancer page', zh: '专门的视觉增强器页面' },
+    { path: '/image-upscaler', en: 'AI Image Upscaler', zh: 'AI 图片放大器' },
+  ],
+  '/visual-enhancer': [
+    { path: '/image-quality-enhancer', en: 'Image quality enhancer', zh: '图像质量增强器' },
+    { path: '/image-upscaler', en: 'AI image upscaler', zh: 'AI 图片放大器' },
+    { path: '/unblur-image', en: 'Unblur image workflow', zh: '图片去模糊工作流' },
+    { path: '/download', en: 'DLSS5 Studio desktop path', zh: 'DLSS5 Studio 桌面版路径' },
+  ],
+  '/zh/visual-enhancer': [
+    { path: '/image-quality-enhancer', en: 'Image quality enhancer', zh: '图像质量增强器' },
+    { path: '/image-upscaler', en: 'AI image upscaler', zh: 'AI 图片放大器' },
+    { path: '/unblur-image', en: 'Unblur image workflow', zh: '图片去模糊工作流' },
+    { path: '/zh/download', en: 'DLSS5 Studio desktop path', zh: 'DLSS5 Studio 桌面版路径' },
   ],
   '/models': [
     { path: '/system-requirements', en: 'Hardware requirements', zh: '硬件要求' },

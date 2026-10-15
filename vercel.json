@@ -67,6 +67,14 @@
       "destination": "/image-quality-enhancer/index.html"
     },
     {
+      "source": "/visual-enhancer",
+      "destination": "/visual-enhancer/index.html"
+    },
+    {
+      "source": "/zh/visual-enhancer",
+      "destination": "/zh/visual-enhancer/index.html"
+    },
+    {
       "source": "/unblur-image",
       "destination": "/unblur-image/index.html"
     },
