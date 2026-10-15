@@ -850,3 +850,10 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - 线上静态复核：`/visual-enhancer`、`/zh/visual-enhancer`、`/games/nba-2k27`、`/zh/games/nba-2k27`、`/benchmark`、`/zh/benchmark`、`/dlss-5-apk`、`/zh/dlss-5-apk`、`/studio-beta`、`/zh/studio-beta` 均返回 HTTP 200，且静态 HTML 含独立 `<title>` 与 meta description。
 - 使用构建产物 `scripts/indexnow.mjs` 向 `https://api.indexnow.org/indexnow` 提交主站 sitemap 中的 90 个 URL；接口返回 `HTTP 200`，原文为 `IndexNow accepted 90 URLs for www.dlss5nvidia.com (HTTP 200).` 该通知覆盖 Bing、Yandex、Naver、Seznam、Yep，不代表 Google 已编入索引。
 - Google Search Console 手动请求仍遵守每日配额与“只提交尚未收录新页”的规则；本次未对已确认收录 URL 重复请求。
+
+## 2026-10-15：新页 URL Inspection 复核
+
+- 主站 Search Console 最近 28 天界面读数：总点击 **1,919**、总曝光 **2.08 万**、平均点击率 **9.2%**、平均排名 **7.2**；报告上次更新显示「10.5 小时前」。
+- `https://www.dlss5nvidia.com/visual-enhancer`：网址检查原文「网址已收录到 Google」；网页索引编制原文「网页已编入索引」。本轮未重复请求。
+- `https://www.dlss5nvidia.com/games/nba-2k27`：网址检查原文「网址尚未收录到 Google」且原因为「Google 无法识别此网址」；本次点击「请求编入索引」，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- 页面表前十中首页为 **1,400 点击 / 8,991 展示**，`/download` 为 **330 / 5,671**；新页尚未进入该前十页面表。本轮没有重复提交其他 URL。
