@@ -17,11 +17,13 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
   ],
   '/image-quality-enhancer': [
     { path: '/visual-enhancer', en: 'Dedicated visual enhancer page', zh: '专门的视觉增强器页面' },
+    { path: '/video-upscaler', en: 'Video upscaler workflow', zh: '视频放大工作流' },
     { path: '/before-after', en: 'Before-and-after reference cases', zh: '前后对比参考案例' },
     { path: '/guides', en: 'DLSS 5 guides', zh: 'DLSS 5 使用指南' },
   ],
   '/image-upscaler': [
     { path: '/visual-enhancer', en: 'Dedicated visual enhancer page', zh: '专门的视觉增强器页面' },
+    { path: '/video-upscaler', en: 'Video upscaler workflow', zh: '视频放大工作流' },
     { path: '/before-after', en: 'Before-and-after reference cases', zh: '前后对比参考案例' },
     { path: '/guides', en: 'DLSS 5 guides', zh: 'DLSS 5 使用指南' },
   ],
@@ -31,6 +33,7 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
   ],
   '/unblur-image': [
     { path: '/visual-enhancer', en: 'Dedicated visual enhancer page', zh: '专门的视觉增强器页面' },
+    { path: '/video-upscaler', en: 'Video upscaler workflow', zh: '视频放大工作流' },
     { path: '/image-upscaler', en: 'AI Image Upscaler', zh: 'AI 图片放大器' },
   ],
   '/visual-enhancer': [

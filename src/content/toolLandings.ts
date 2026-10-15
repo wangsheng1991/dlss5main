@@ -79,8 +79,8 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     slug: 'image-quality-enhancer',
     dashboardTool: 'enhance',
     language: 'en-US',
-    title: 'DLSS 5 Visual Enhancer Online — AI Image Quality Enhancer',
-    description: 'Try a free DLSS 5-style visual enhancer online: compare a before-and-after example, then improve a blurry or compressed image in the browser. Independent and no install.',
+    title: 'DLSS 5 Visual Enhancer Online — Free Example, No Login Required',
+    description: 'Try a free, no-login DLSS 5-style visual enhancer example online, then improve your own blurry or compressed image in the browser after signing in. Independent and no install.',
     eyebrow: 'AI image tool',
     heading: 'DLSS 5 Visual Enhancer Online',
     intro: 'Improve practical image quality in the browser with an independent DLSS 5-style visual enhancer. The workflow preserves the scene while improving texture and edges; inspect the result before downloading.',
@@ -633,6 +633,7 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     related: [
       { path: '/image-upscaler', label: 'AI Image Upscaler' },
       { path: '/image-quality-enhancer', label: 'Image Quality Enhancer' },
+      { path: '/unblur-image', label: 'Unblur Image' },
     ],
     demo: {
       kind: 'poster',

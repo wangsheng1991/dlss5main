@@ -1192,8 +1192,8 @@ writeRoute('/zh', renderHomeZh());
  * a browser that runs the app.
  */
 function renderHomeZh(): string {
-  const title = 'DLSS 5 风格转换器在线 — 免费 AI 图像转换工具';
-  const description = '免费的 DLSS 5 风格图像转换器：上传游戏帧或人物图，先从缓存示例看效果，再比较前后差异并生成新的风格、光照与材质方向，无需 RTX 显卡、无需下载。转换前想先检查原图质量？先查看图像质量工作流。';
+  const title = 'DLSS 5 风格转换器在线 — 免费图像质量与视觉增强工具';
+  const description = '免费的 DLSS 5 风格图像转换器，另有独立的图像质量增强器：上传游戏帧或人物图，先用免登录缓存示例看效果，再比较前后差异并生成新的风格、光照与材质方向，无需 RTX 显卡、无需下载。';
   const questions: Array<[string, string]> = [
     ['DLSS 5 风格转换器能做什么？', '上传游戏帧或人物图，选择风格、光照或材质方向，对照输入检查生成结果，需要时再单独放大。'],
     ['这是 NVIDIA 官方的 DLSS 5 工具吗？', '不是。这是一个受神经渲染思路启发的独立、非官方浏览器工具；它不读取游戏引擎的帧，也不声称做了官方 DLSS 运行时处理。'],
@@ -1210,7 +1210,7 @@ function renderHomeZh(): string {
       <h1>DLSS 5 风格转换器在线版</h1>
       <p>DLSS5NVIDIA 是一个独立的浏览器端 DLSS 5 风格效果转换器，面向游戏帧和人物图片：生成新的风格、光照与材质方向，先对照原始图检查，需要时再单独放大——不需要显卡，也不需要安装。</p>
       <p><a href="/dashboard?tool=game-character-style&amp;sample=characterStyle">免账号试一个缓存示例</a> · <a href="/dashboard?tool=game-character-style">登录后上传自己的图片</a> · <a href="/zh/download">申请 DLSS5 Studio</a></p>
-      <p>只想让已有图片更清晰，而不是改变它的风格？<a href="/image-quality-enhancer">打开免费的在线视觉增强器</a>，上传前先看一个参考案例。</p>
+      <p>只想让已有图片更清晰，而不是改变它的风格？先<a href="/zh/visual-enhancer">运行免登录视觉增强示例</a>，再打开<a href="/image-quality-enhancer">图像质量增强工作流</a>处理自己的图片。</p>
       <p>在几种图像工作流之间犹豫？<a href="/comparisons">对比 AI 图像工具</a>：可运行的示例、带来源的说明，以及一套可重复的检查清单。</p>
       <p>想先看结果？<a href="/zh/before-after">浏览独立的 DLSS 5 前后对比证据页</a>：每张图都标注尺寸、参数与边界，并附 6 秒参考视频。</p>
       <p>要的是测出来的证据，而不是一张截图？<a href="/zh/benchmark">打开 DLSS 5 基准证据中心</a>：我们测了什么、每条结果必须记录哪些字段，以及我们刻意留空的地方。</p>
@@ -1312,7 +1312,7 @@ function renderHomeZh(): string {
     description,
     canonicalPath: '/zh',
     language: 'zh-CN',
-    keywords: ['dlss 5 转换', 'dlss 5 图像转换器', 'dlss 5 效果转换器', 'dlss 5 风格转换', 'dlss 5 在线', 'dlss 5 中文', '游戏角色风格转换', '3d 引导神经渲染', '游戏截图神经渲染', 'dlss 5 图像放大器', 'ai 图像放大器', '免费图片放大', '4k 图片放大', 'ai 超分辨率', '神经渲染', 'dlss 4.5', 'fsr 4'],
+    keywords: ['dlss 5 转换', 'dlss 5 图像转换器', 'dlss 5 效果转换器', 'dlss 5 风格转换', 'dlss 5 视觉增强器', '图像质量增强器', '视觉增强器在线', 'dlss 5 在线', 'dlss 5 中文', '游戏角色风格转换', '3d 引导神经渲染', '游戏截图神经渲染', 'dlss 5 图像放大器', 'ai 图像放大器', '免费图片放大', '4k 图片放大', 'ai 超分辨率', '神经渲染', 'dlss 4.5', 'fsr 4'],
     alternates: [
       { hrefLang: 'en', href: `${BASE_URL}/` },
       { hrefLang: 'zh-CN', href: `${BASE_URL}/zh` },
