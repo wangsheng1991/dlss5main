@@ -43,7 +43,8 @@
 - 改动文件：`src/content/visualEnhancer.ts`、`src/pages/VisualEnhancer.tsx`。
 - 新增文案只描述已实现的免费图片示例、下载和 `/download` 桌面路径，没有新增未经验证的性能数字、官方身份或可下载承诺。
 - 页面继续保留 WebPage、FAQPage、BreadcrumbList、英文/中文 canonical 与 hreflang；新页不改变首页和 `/image-quality-enhancer` 的 title。
-- 待提交验证：lint、测试、构建、线上 `check-flagship-pages`，以及线上免费示例点击复测。
+- 已完成验证：`npm run lint` 通过，`npm test` 为 106/106，`npm run build` 通过；无来源声明闸门为 `PASS`；线上英文与中文页的 `check-flagship-pages --kind generic` 均为 `fails=0 verdict=PASS`。
+- 线上英文页免费示例已实际点击：页面显示前后对比滑块、下载结果链接和 `served from cache` 状态；Search Console 对英文页返回「已请求编入索引」，并提示已加入优先抓取队列。
 
 ## 仍需观察
 
