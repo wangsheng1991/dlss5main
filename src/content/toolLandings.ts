@@ -734,6 +734,7 @@ export function toolSchema(tool: ToolLanding) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
+      { '@type': 'WebPage', '@id': `${TOOL_BASE_URL}${tool.path}#webpage`, url: `${TOOL_BASE_URL}${tool.path}`, name: tool.heading, description: tool.description, inLanguage: tool.locale },
       { '@type': 'WebApplication', '@id': `${TOOL_BASE_URL}${tool.path}#application`, name: tool.heading,
         url: `${TOOL_BASE_URL}${tool.path}`, applicationCategory: 'MultimediaApplication', operatingSystem: 'Web',
         description: tool.description, inLanguage: tool.locale,
