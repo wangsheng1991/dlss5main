@@ -867,3 +867,12 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - 「站点地图」当前界面：`https://www.dlss5nvidia.com/sitemap.xml` 状态 **成功**；已提交网址数 **2026年10月15日**；上次读取 **2026年10月15日**；已发现网页 **90**；已发现视频 **0**。
 - 新页静态 HTML 复核：`/dlss-5-apk`、`/games`、`/games/nba-2k27`、`/benchmark`、`/studio-beta`、`/visual-enhancer` 及对应中文页均 HTTP 200，并有独立 title、meta description、H1。`/games/nba-2k27` 英文页此前在 2026/10/15 已请求编入索引；其余已在既有 URL Inspection 记录中确认收录或已提交，本轮不重复消耗配额。
 - 结论：本轮没有发现需要新增手动请求的页面；继续依靠已成功 sitemap 与 IndexNow 通知，等 Google 报告刷新后再复核 NBA 2K27 英文页及未编入索引原因。
+
+## 2026-10-16：Search Console 最新复核与新页收口
+
+- 主站 Search Console 概览当前显示 **2,782 次网页搜索点击**；网页索引摘要为 **83 个网页已编入索引、21 个网页未编入索引**。
+- 站点地图 `https://www.dlss5nvidia.com/sitemap.xml` 状态为 **成功**；已提交网址数 **2026年10月15日**；上次读取 **2026年10月15日**；已发现网页 **90**、视频 **0**。当前无需重复提交。
+- 网页索引报告上次更新 **2026/10/12**，未编入原因原文及数量：重复网页、用户未选定规范网页 **1**；网页会自动重定向 **4**；被“noindex”标记排除了 **2**；已抓取—尚未编入索引 **10**；已发现—尚未编入索引 **4**；重复网页、Google 选择的规范网页与用户指定的不同 **0**。
+- URL Inspection：`/games/nba-2k27` 当前显示「网址已收录到 Google」及「网页已编入索引」；此前的优先抓取请求已完成，不再重复提交。
+- 线上静态 HTML 复核（2026-10-16）：`/dlss-5-apk`、`/games`、`/games/nba-2k27`、`/benchmark`、`/studio-beta`、`/visual-enhancer`、`/before-after` 及对应中文页均 HTTP 200，均含独立 title、meta description、H1；线上 sitemap 共 90 条 URL。
+- 结论：本次没有发现仍需手动请求编入索引的新页；继续依靠已成功读取的 sitemap、既有 IndexNow 通知和自然抓取，待 Google 报告下一次刷新后再复核未编入原因。
