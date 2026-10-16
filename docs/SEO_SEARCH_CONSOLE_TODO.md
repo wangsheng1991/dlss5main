@@ -883,3 +883,8 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - URL Inspection：`https://www.dlss5nvidia.com/zh/status` 原文为「网址尚未收录到 Google / 已发现—尚未编入索引」；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
 - URL Inspection：`https://www.dlss5nvidia.com/zh/vs/dlss-5-vs-fsr-4` 原文为「网址尚未收录到 Google / 已发现—尚未编入索引」；点击请求后 Search Console 长时间停留在「正在测试实际网址可否编入索引（这可能需要花费 1-2 分钟）」并显示 reCAPTCHA，未出现成功确认。未重复尝试，改由 sitemap 与 IndexNow 等待自然处理。
 - `https://www.dlss5nvidia.com/zh/vs/dlss-5-vs-dlss-4-5` 保留到下一配额窗口再处理；不提交 `/terms`。
+
+## 2026-10-16：中文对比页请求完成
+
+- URL Inspection：`https://www.dlss5nvidia.com/zh/vs/dlss-5-vs-dlss-4-5` 原文为「网址尚未收录到 Google / Google 无法识别此网址」；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- 至此本轮从「已发现—尚未编入索引」明细中挑选的中文内容页 `/zh/status`、`/zh/vs/dlss-5-vs-dlss-4-5` 均已提交；`/zh/vs/dlss-5-vs-fsr-4` 因 reCAPTCHA 测试卡住未重复尝试，`/terms` 保持不请求。
