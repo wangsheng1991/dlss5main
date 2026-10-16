@@ -876,3 +876,10 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - URL Inspection：`/games/nba-2k27` 当前显示「网址已收录到 Google」及「网页已编入索引」；此前的优先抓取请求已完成，不再重复提交。
 - 线上静态 HTML 复核（2026-10-16）：`/dlss-5-apk`、`/games`、`/games/nba-2k27`、`/benchmark`、`/studio-beta`、`/visual-enhancer`、`/before-after` 及对应中文页均 HTTP 200，均含独立 title、meta description、H1；线上 sitemap 共 90 条 URL。
 - 结论：本次没有发现仍需手动请求编入索引的新页；继续依靠已成功读取的 sitemap、既有 IndexNow 通知和自然抓取，待 Google 报告下一次刷新后再复核未编入原因。
+
+## 2026-10-16：索引报告明细与新增请求
+
+- 索引报告「已发现—尚未编入索引」当前列出 4 条：`/terms`、`/zh/status`、`/zh/vs/dlss-5-vs-dlss-4-5`、`/zh/vs/dlss-5-vs-fsr-4`。法律页 `/terms` 不提交手动请求。
+- URL Inspection：`https://www.dlss5nvidia.com/zh/status` 原文为「网址尚未收录到 Google / 已发现—尚未编入索引」；已请求编入索引，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
+- URL Inspection：`https://www.dlss5nvidia.com/zh/vs/dlss-5-vs-fsr-4` 原文为「网址尚未收录到 Google / 已发现—尚未编入索引」；点击请求后 Search Console 长时间停留在「正在测试实际网址可否编入索引（这可能需要花费 1-2 分钟）」并显示 reCAPTCHA，未出现成功确认。未重复尝试，改由 sitemap 与 IndexNow 等待自然处理。
+- `https://www.dlss5nvidia.com/zh/vs/dlss-5-vs-dlss-4-5` 保留到下一配额窗口再处理；不提交 `/terms`。
