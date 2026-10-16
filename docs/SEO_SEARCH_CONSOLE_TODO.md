@@ -858,3 +858,12 @@ Search Console「效果」报告，主站 `dlss5nvidia.com`，时间范围为 28
 - `https://www.dlss5nvidia.com/games/nba-2k27`：网址检查原文「网址尚未收录到 Google」且原因为「Google 无法识别此网址」；本次点击「请求编入索引」，界面确认「已请求编入索引 / 已将网址添加到优先抓取队列中」。
 - `https://www.dlss5nvidia.com/zh/games/nba-2k27`：网址检查原文「网址已收录到 Google」；网页索引编制原文「网页已编入索引」，本轮不重复请求。
 - 页面表前十中首页为 **1,400 点击 / 8,991 展示**，`/download` 为 **330 / 5,671**；新页尚未进入该前十页面表。本轮没有重复提交其他 URL。
+
+## 2026-10-16：主站 GSC 当前读数与新页收口
+
+- Search Console「效果」→「28 天」界面窗口为 **2026/09/16–2026/10/13**，界面上次更新为「5 小时前」：总点击 **1,972**、总曝光 **2.16 万**、平均点击率 **9.1%**、平均排名 **7.2**。
+- 该窗口界面可见的前 10 个查询（点击 / 展示）：`dlss 5 online` 63 / 240；`dlss 5 image converter` 44 / 168；`dlss 5 image generator` 38 / 132；`dlss 5 download` 32 / 688；`dlss5 online` 28 / 79；`dlss 5 image enhancer` 24 / 103；`dlss 5 apk` 20 / 360；`dlss5 image converter` 19 / 91；`dlss 5 mobile download` 17 / 141；`dlss 5 visual enhancer` 16 / 807。
+- 「网页索引编制」当前界面上次更新 **2026/10/12**：已编入索引 **83**，未编入索引 **21**。未编入原因及数量：重复网页、用户未选定规范网页 **1**；网页会自动重定向 **4**；被 noindex 标记排除 **2**；已抓取—尚未编入索引 **10**；已发现—尚未编入索引 **4**；重复网页、Google 选择的规范网页与用户指定的不同 **0**。
+- 「站点地图」当前界面：`https://www.dlss5nvidia.com/sitemap.xml` 状态 **成功**；已提交网址数 **2026年10月15日**；上次读取 **2026年10月15日**；已发现网页 **90**；已发现视频 **0**。
+- 新页静态 HTML 复核：`/dlss-5-apk`、`/games`、`/games/nba-2k27`、`/benchmark`、`/studio-beta`、`/visual-enhancer` 及对应中文页均 HTTP 200，并有独立 title、meta description、H1。`/games/nba-2k27` 英文页此前在 2026/10/15 已请求编入索引；其余已在既有 URL Inspection 记录中确认收录或已提交，本轮不重复消耗配额。
+- 结论：本轮没有发现需要新增手动请求的页面；继续依靠已成功 sitemap 与 IndexNow 通知，等 Google 报告刷新后再复核 NBA 2K27 英文页及未编入索引原因。
