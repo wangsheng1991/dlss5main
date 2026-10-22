@@ -15,7 +15,7 @@
 export const STUDIO_COPY = {
   'en-US': {
     'meta.title': 'DLSS 5 Download (2026) — Free Online Converter, Mobile & Windows Studio',
-    'meta.desc': 'DLSS 5 download guide: use the free online converter on mobile or desktop, or request the independent Windows RTX Studio build. No official Android APK or standalone installer.',
+    'meta.desc': 'DLSS 5 download: request independent Windows RTX Studio access after signing in, or try a free browser example on Android. No Android APK or public installer.',
     'nav.which': 'Which DLSS?',
     'nav.features': 'Features',
     'nav.live': 'Live',
@@ -175,7 +175,7 @@ export const STUDIO_COPY = {
   },
   'zh-CN': {
     'meta.title': 'DLSS 5 下载（2026）— 免费在线转换器、手机与 Windows Studio',
-    'meta.desc': 'DLSS 5 下载指南：手机或桌面端可直接使用免费在线转换器，也可申请独立的 Windows RTX Studio。没有官方 Android APK 或独立安装包。',
+    'meta.desc': 'DLSS 5 下载：登录后申请独立 Windows RTX Studio，通过邮件获取访问；安卓用户可先免费运行浏览器示例。本站不提供 Android APK 或公开安装包。',
     'nav.which': '哪个 DLSS',
     'nav.features': '功能',
     'nav.live': 'Live',

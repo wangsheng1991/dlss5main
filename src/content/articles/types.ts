@@ -181,9 +181,11 @@ DLSS 5 是绑定特定硬件的实时游戏内技术，而它的工作方式恰�
     type: 'High-intent comparison — captures upgrade decision traffic',
     lastUpdated: 'October 2026',
     readTime: '7 min read',
-    description_en: 'DLSS 5 vs DLSS 4 vs FSR 4 in 2026: compare neural rendering, upscaling, frame generation and hardware support using current NVIDIA and AMD sources, with clear caveats instead of a synthetic winner.',
-    description_cn: 'DLSS 5、DLSS 4 与 FSR 4 的 2026 对比：按 NVIDIA 与 AMD 当前资料区分神经渲染、超分、帧生成和硬件支持，避免把不同用途混成一个“画质排名”。',
-    content_en: `DLSS 5, DLSS 4 and AMD FSR answer different questions. DLSS 5 is a renderer-grounded neural rendering stage for supported games. DLSS 4 and later updates combine upscaling, ray reconstruction, anti-aliasing and frame generation features. AMD's current documentation uses FSR Upscaling as the name for its machine-learning upscaling inside the FSR Redstone family; older launch material still calls that mode FSR 4.
+    description_en: 'DLSS 5 vs DLSS 4 vs FSR 4: compare lighting and materials, upscaling, frame generation and GPU requirements. Source-linked table; no invented FPS winner.',
+    description_cn: 'DLSS 5 vs DLSS 4 vs FSR 4：用附来源的对照表区分光照与材质、超分、帧生成和显卡要求。按游戏与硬件核对选择，不虚构帧率或通用画质赢家。',
+    content_en: `**DLSS 5 vs DLSS 4 vs FSR 4 — start with the task:** compare neural lighting and materials separately from upscaling and frame generation. Use the source-linked comparison table below to check the game and GPU requirements; browser image enhancement is a separate workflow.
+
+DLSS 5, DLSS 4 and AMD FSR answer different questions. DLSS 5 is a renderer-grounded neural rendering stage for supported games. DLSS 4 and later updates combine upscaling, ray reconstruction, anti-aliasing and frame generation features. AMD's current documentation uses FSR Upscaling as the name for its machine-learning upscaling inside the FSR Redstone family; older launch material still calls that mode FSR 4.
 
 **Quick answer:** choose by the game and the GPU you actually own. DLSS 5 currently targets GeForce RTX 50 Series GPUs and GeForce NOW, and launched in NBA 2K27 on September 1, 2026. DLSS 4 features cover more than one function and have different hardware requirements. FSR Upscaling is an AMD in-game technology that requires game integration; it is not a browser image converter. None of these facts makes a universal quality winner without a same-game, same-input test.
 
@@ -232,7 +234,9 @@ AMD's current documentation says ML-based FSR Upscaling is available on supporte
 *Sources checked October 8, 2026: [NVIDIA DLSS 5 launch](https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/), [NVIDIA DLSS 5 FAQ](https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/), [NVIDIA developer notes](https://developer.nvidia.com/blog/whats-new-for-game-developers-dlss-5-with-3d-guided-neural-rendering-nvidia-ace-updates-and-new-rtx-kit-capabilities/), [NVIDIA DLSS 4 overview](https://www.nvidia.com/en-us/geforce/news/dlss-4-multi-frame-generation-out-now/), and [AMD FSR Technologies](https://www.amd.com/en/products/graphics/technologies/fidelityfx/super-resolution.html).*
 
 *This site is independent and is not affiliated with or endorsed by NVIDIA or AMD.*`,
-    content_cn: `DLSS 5、DLSS 4 和 AMD FSR 解决的是不同问题。DLSS 5 是面向受支持游戏的、以渲染器为基础的神经渲染阶段；DLSS 4 及后续更新包含超分、光线重建、抗锯齿和帧生成等功能。AMD 当前文档把 FSR Redstone 家族里的机器学习超分称为 FSR Upscaling；较早的发布材料和部分游戏菜单仍会写 FSR 4。
+    content_cn: `**DLSS 5、DLSS 4、FSR 4 怎么选？** 先把光照与材质的神经渲染、超分和帧生成分开比较，再用下方附来源的对照表核对游戏与显卡条件。浏览器图片增强属于另一条工作流，不能用它代替游戏内测试。
+
+DLSS 5、DLSS 4 和 AMD FSR 解决的是不同问题。DLSS 5 是面向受支持游戏的、以渲染器为基础的神经渲染阶段；DLSS 4 及后续更新包含超分、光线重建、抗锯齿和帧生成等功能。AMD 当前文档把 FSR Redstone 家族里的机器学习超分称为 FSR Upscaling；较早的发布材料和部分游戏菜单仍会写 FSR 4。
 
 **快速结论：** 先看你实际拥有的显卡和要玩的游戏。DLSS 5 当前面向 GeForce RTX 50 系列显卡/笔记本和 GeForce NOW，并于 2026 年 9 月 1 日在《NBA 2K27》中上线。DLSS 4 的不同功能有不同硬件条件；FSR Upscaling 依赖游戏集成，并不是浏览器图片转换器。没有在同一游戏、同一输入和同一设置下测试，就不能宣布一个通用的画质赢家。
 

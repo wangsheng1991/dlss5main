@@ -6,7 +6,7 @@ export const VISUAL_ENHANCER_COPY = {
   en: {
     path: '/visual-enhancer',
     title: 'DLSS 5 Visual Enhancer Online — Free Example, No Login Required',
-    description: 'Try a free, no-login DLSS 5-style visual enhancer example online, then improve your own blurry or compressed image in the browser after signing in. Independent and no install.',
+    description: 'DLSS 5 visual enhancer: run a free example without login, compare lighting and material changes, then sign in for your own image. Independent; not NVIDIA DLSS.',
     eyebrow: 'Free browser visual enhancer',
     heading: 'DLSS 5 Visual Enhancer Online',
     lead: 'Run a visual-enhancement example before you upload anything. The independent browser workflow re-renders edges, texture and noise while asking the scene, framing and identity to stay recognizable.',
@@ -53,7 +53,7 @@ export const VISUAL_ENHANCER_COPY = {
   zh: {
     path: '/zh/visual-enhancer',
     title: 'DLSS 5 视觉增强器在线 — 免费示例，无需登录',
-    description: '免费、无需登录试用独立的 DLSS 5 风格视觉增强器示例。先运行缓存案例查看前后结果，再登录后在浏览器中处理自己的模糊或压缩图片。',
+    description: 'DLSS 5 视觉增强器：免登录运行免费示例，先对比光照、材质与细节变化，再登录处理自己的图片。独立图像工作流，不是 NVIDIA DLSS 游戏运行时。',
     eyebrow: '免费浏览器视觉增强器',
     heading: 'DLSS 5 视觉增强器在线使用',
     lead: '先运行一个视觉增强示例，再决定是否上传。这个独立浏览器工作流会重新渲染边缘、纹理与噪声，同时要求场景、构图和身份保持可识别。',
