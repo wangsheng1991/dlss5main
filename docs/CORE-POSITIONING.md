@@ -31,6 +31,19 @@ It is now written into the rules, for both agents.
 | Core, line A | style conversion / neural-render redraw of a game frame, character, room or portrait, guided by a prompt or a second reference image | the dashboard editor, `game-character-style`, `interior-design`, `virtual-try-on`, `virtual-makeup`, `portrait-retouch`, `ai-headshot` |
 | Core, line B | DLSS 5 Studio as the product: what the desktop app does, how a job moves through it, where its limits are | `/download`, `/studio-beta`, `/pricing`, `/enterprise` |
 
+### 1.1 叙事锚点：DLSS 5 这项技术，落在游戏人物上
+
+王胜 2026-10-23 追问「核心的主题应该是跟 DLSS5 这个技术相关的游戏人物关系比较大，你的相关主题应该都是围绕着」——这
+是提醒我们把锚点收窄：**主线的默认叙事对象是"DLSS 5 这项技术"与"游戏人物/游戏画面"**，这是搜索意图最集中、也是
+我们素材最扎实的地方。
+
+- 游戏人物、游戏帧、角色一致性、风格转换在游戏画面上的表现 → **主线默认对象**。
+- 室内、人像、商品、证件照等同能力场景 → **能力延伸**，可以做、可以排名，但不是默认选题方向；写它们必须在 head
+  block 声明 `anchor: dlss5-extended`，并在正文链回游戏人物主线。
+- 放大/修糊/去压缩 → 仍是**入口线**（见第 2 节），与"延伸场景"不是一回事。
+
+判断一个选题值不值得做，先问一句：它离"DLSS 5 + 游戏人物"有多远？远的先不做。
+
 ### The evidence, so nobody has to re-derive it
 
 - Homepage H1 comes from `src/i18n/locales/en-US.json` → `home.title` = **"DLSS 5 Style Converter Online"**;
