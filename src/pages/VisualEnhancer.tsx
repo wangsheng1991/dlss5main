@@ -1,3 +1,4 @@
+import { EnhancerChecks } from '../components/SearchEvidence';
 import { EnhancerEvidence } from '../components/RoiEvidence';
 import React from 'react';
 import { ArrowRight, Download, Loader2, Play } from 'lucide-react';
@@ -20,7 +21,7 @@ export default function VisualEnhancer({ locale = 'en' }: { locale?: VisualEnhan
     <main className="pt-32 pb-24 px-6 max-w-[1100px] mx-auto">
       <nav className="mb-8 text-sm text-zinc-500" aria-label="Breadcrumb"><Link to={isZh ? '/zh' : '/'} className="hover:text-primary">DLSS5NVIDIA</Link><span aria-hidden="true" className="mx-2">/</span><span>{copy.heading}</span></nav>
       <header className="max-w-4xl"><p className="text-primary uppercase tracking-[0.2em] text-xs font-label">{copy.eyebrow}</p><h1 className="text-4xl md:text-6xl font-headline font-bold text-white mt-4">{copy.heading}</h1><p className="text-lg leading-relaxed text-zinc-300 mt-6">{copy.lead}</p></header>
-      {!isZh && <EnhancerEvidence />}
+      {!isZh && <><EnhancerEvidence /><EnhancerChecks /></>}
       <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/[0.06] p-6 sm:p-8" aria-labelledby="visual-enhancer-sample-heading">
         <h2 id="visual-enhancer-sample-heading" className="text-2xl md:text-3xl font-headline font-bold text-white">{copy.sampleHeading}</h2><p className="mt-3 max-w-3xl text-zinc-300 leading-relaxed">{copy.sampleIntro}</p>
         {state.status === 'error' && <p role="alert" className="mt-4 text-sm text-red-300">{state.message}</p>}

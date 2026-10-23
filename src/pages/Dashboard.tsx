@@ -1,3 +1,4 @@
+import { DashboardEvidenceLinks } from '../components/SearchEvidence';
 import React, { useEffect, useRef, useState } from 'react';
 import { UploadCloud, Download, RefreshCw, AlertCircle, Gift } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -673,6 +674,7 @@ export default function Dashboard() {
         <ShowcasePanel mode={mode} signedIn={!!user} locked={locked} onUse={loadCase}/>
       </div>}
     </div>
+    <DashboardEvidenceLinks />
     </main>
   </>;
 }

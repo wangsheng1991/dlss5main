@@ -1,3 +1,4 @@
+import { CheckedComparison, isCheckedComparison } from '../components/SearchEvidence';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -32,12 +33,12 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         '@id': `https://www.dlss5nvidia.com${page.path}#article`,
         headline: page.heading,
         description: page.description,
-        dateModified: '2026-10-11',
+        dateModified: isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11',
         inLanguage: isZh ? 'zh-CN' : 'en-US',
         mainEntityOfPage: `https://www.dlss5nvidia.com${page.path}`,
         author: { '@type': 'Organization', name: 'DLSS5NVIDIA' },
       },
-      {
+      ...(!isCheckedComparison(page.path) ? [{
         '@type': 'FAQPage',
         '@id': `https://www.dlss5nvidia.com${page.path}#faq`,
         mainEntity: page.faq.map(([question, answer]) => ({
@@ -45,7 +46,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
           name: question,
           acceptedAnswer: { '@type': 'Answer', text: answer },
         })),
-      },
+      }] : []),
       ...(page.itemList ? [{
         '@type': 'ItemList',
         '@id': `https://www.dlss5nvidia.com${page.path}#itemlist`,
@@ -75,6 +76,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         <p className="text-lg leading-relaxed text-zinc-300 mt-5">{page.lead}</p>
         <p className="text-sm leading-relaxed text-zinc-400 mt-4">{page.description}</p>
       </header>
+      <CheckedComparison path={page.path} existingFaq={page.faq} />
 
       <section className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4" aria-label={isZh ? '关键事实' : 'Key facts'}>
         {page.facts.map(([label, value]) => (

@@ -107,7 +107,7 @@ export function visualEnhancerSchema(locale: VisualEnhancerLocale) {
     '@graph': [
       { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: copy.heading, description: copy.description, inLanguage: locale === 'zh' ? 'zh-CN' : 'en-US' },
       { '@type': 'BreadcrumbList', '@id': `${url}#breadcrumb`, itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${SITE_URL}/` }, { '@type': 'ListItem', position: 2, name: copy.heading, item: url }] },
-      { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: copy.faq.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
+      ...(locale === 'zh' ? [{ '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: copy.faq.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }] : []),
     ],
   };
 }

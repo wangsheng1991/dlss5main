@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-23",
+  "method": "Signed-in isolated browser build; Firebase authentication/profile/quota stubbed. Real signed upload, flux-klein inference, polling, result and browser file download. Timer: submit click to download saved. Actual output dimensions decoded from downloaded WebP. Default target factor 2, longest edge capped at 1536. No failed or replacement runs omitted. Two owned fixtures across three runs; not a production-account billing test or a speed guarantee.",
+  "runs": [
+    {
+      "run": 1,
+      "success": true,
+      "endedAt": "2026-10-23T08:29:37.997Z",
+      "sample": "public/examples/sample1.jpg",
+      "outputDimensions": {
+        "width": 1536,
+        "height": 1104
+      },
+      "taskId": "task_SsU1aJMRUZL7b326GPlahMdxQzrMBRfI",
+      "startedAt": "2026-10-23T08:29:22.128Z",
+      "model": "flux-klein",
+      "width": 1536,
+      "height": 1104,
+      "submitted": 1,
+      "polls": 4,
+      "uploadTicketMs": 1684,
+      "uploadCompletedMs": 4444,
+      "acceptedMs": 5197,
+      "resultReadyMs": 13693,
+      "downloadCompletedMs": 15869,
+      "totalSeconds": 15.869,
+      "downloadBytes": 212860,
+      "scope": "Stubbed signed-in browser; real provider signed upload, one inference task, polling and browser file download. Firebase auth/profile/quota mocked in isolated build only; production auth unchanged."
+    },
+    {
+      "run": 2,
+      "success": true,
+      "endedAt": "2026-10-23T08:29:58.775Z",
+      "sample": "public/examples/sample2.jpg",
+      "outputDimensions": {
+        "width": 1536,
+        "height": 1056
+      },
+      "taskId": "task_bcUMIhNYLoPi0CfviI2gYoY0Dw5iPgU5",
+      "startedAt": "2026-10-23T08:29:42.418Z",
+      "model": "flux-klein",
+      "width": 1536,
+      "height": 1056,
+      "submitted": 1,
+      "polls": 4,
+      "uploadTicketMs": 1508,
+      "uploadCompletedMs": 5228,
+      "acceptedMs": 6205,
+      "resultReadyMs": 14882,
+      "downloadCompletedMs": 16357,
+      "totalSeconds": 16.357,
+      "downloadBytes": 173966,
+      "scope": "Stubbed signed-in browser; real provider signed upload, one inference task, polling and browser file download. Firebase auth/profile/quota mocked in isolated build only; production auth unchanged."
+    },
+    {
+      "run": 3,
+      "success": true,
+      "endedAt": "2026-10-23T08:30:19.581Z",
+      "sample": "public/examples/sample1.jpg",
+      "outputDimensions": {
+        "width": 1536,
+        "height": 1104
+      },
+      "taskId": "task_acydlZifpvXKzvUkv4dnTOZRwnBiK4kt",
+      "startedAt": "2026-10-23T08:30:03.614Z",
+      "model": "flux-klein",
+      "width": 1536,
+      "height": 1104,
+      "submitted": 1,
+      "polls": 4,
+      "uploadTicketMs": 1424,
+      "uploadCompletedMs": 4440,
+      "acceptedMs": 5085,
+      "resultReadyMs": 13711,
+      "downloadCompletedMs": 15967,
+      "totalSeconds": 15.967,
+      "downloadBytes": 224658,
+      "scope": "Stubbed signed-in browser; real provider signed upload, one inference task, polling and browser file download. Firebase auth/profile/quota mocked in isolated build only; production auth unchanged."
+    }
+  ]
+}
