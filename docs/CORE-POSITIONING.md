@@ -78,6 +78,10 @@ re-anchored to the core. This applies equally to work produced by Penguin and by
 | `additive-20261012/check-protection-list.mjs` | no frozen page regressed | Penguin |
 | this file | the definition everything else is measured against | Wangsheng (he changes it) |
 
+The two dated gate folders are **not** in this repository — they live in the agent's session
+workspace: `~/.penguin/data/default_project/agents/default_agent/workspaces/<tmp>/tenx-20261011/`
+and `.../additive-20261012/`. Run them from there, and only for a change that touches the site.
+
 ## 5. How to change the core
 
 Only Wangsheng changes this file, and only by saying so in one line (e.g. "核心是 B"). Everything
