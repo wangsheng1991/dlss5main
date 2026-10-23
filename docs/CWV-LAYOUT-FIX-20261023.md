@@ -25,7 +25,7 @@
 
 - src/main.tsx：仅对上述五个内页，在 React 接管前读取该页已有 prerender HTML。首页和其它路由保持原行为。
 - src/App.tsx：首次 Suspense fallback 使用该页真实内容，成功挂载后通过边界内的 layout effect 释放。后续站内导航仍用原路由机制。无固定高度、无新骨架、无隐藏/删除内容，不改鉴权模型。
-- scripts/prerender-seo.ts：两轮上线 LCP 复核没有全部达到不退步，因此只给同五页添加当前路由 chunk 的 modulepreload。chunk 文件名读取本次构建 assets；没有改首页资源提示，没有预加载其它页面模块。
+- scripts/prerender-seo.ts：两轮上线 LCP 复核没有全部达到不退步，因此只给同五页添加当前路由 chunk 及其静态 import 依赖的 modulepreload（不遍历动态 import）。chunk 文件名读取本次构建 assets；没有改首页资源提示，没有预加载其它页面模块。
 - 没有修改页面组件、文案、图片、冻结 head 字段或首屏布局尺寸。构建前后排除脚本及带构建 hash 的资源标签后，全站 HTML 内容完全相同。
 
 ## 验收
@@ -45,3 +45,5 @@
 ## 首次上线的两轮性能复核
 
 51e1d5a 上线后，两轮共 24 次测量的 CLS 均达标；LCP 较好值未全部达到不退步，所以没有宣称整轮验收通过。保留两轮所有指标：[first-deployment.json](cwv-layout-20261023/first-deployment.json)。随后补当前路由 modulepreload，以消除观测到的入口 JS → 懒加载路由串行请求；重新构建、过闸门后再次部署与同脚本测量。
+
+补充定位：仅预加载 Download 入口仍未消除其静态依赖瀑布。480a7a8 的线上第二次 /download 测量中，路由入口 responseEnd=2790.4ms，但 external-link 静态依赖到 2835.8ms 才开始，5002ms 结束，耗时 2166.2ms；LCP=5136ms。因此将预加载补全至构建文件实际静态依赖闭包。不是通过隐藏内容压低指标。

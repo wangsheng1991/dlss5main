@@ -339,7 +339,19 @@ function writeRoute(route: string, html: string): void {
   if (chunkName) {
     const chunks = readdirSync(resolve(DIST, 'assets')).filter(file => file.startsWith(`${chunkName}-`) && file.endsWith('.js'));
     if (chunks.length !== 1) throw new Error(`Expected one built ${chunkName} chunk for ${route}`);
-    html = html.replace('</head>', `<link rel="modulepreload" crossorigin href="/assets/${chunks[0]}" />\n</head>`);
+    const pending = [...chunks];
+    const visited = new Set<string>();
+    const hints: string[] = [];
+    while (pending.length) {
+      const file = pending.pop()!;
+      if (visited.has(file)) continue;
+      visited.add(file);
+      const code = readFileSync(resolve(DIST, 'assets', file), 'utf8');
+      // Vite's built static imports only; never walk dynamic imports into other routes.
+      for (const match of code.matchAll(/\b(?:from\s*|import\s*)["']\.\/([^"']+\.js)["']/g)) pending.push(match[1]);
+      if (!html.includes(`"/assets/${file}"`)) hints.push(`<link rel="modulepreload" crossorigin href="/assets/${file}" />`);
+    }
+    html = html.replace('</head>', `${hints.join('\n')}\n</head>`);
   }
   const output = resolve(DIST, route.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(output), { recursive: true });

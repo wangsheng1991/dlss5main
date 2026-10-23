@@ -1,0 +1,110 @@
+[
+  {
+    "path": "/",
+    "run": 1,
+    "started": "2026-10-23T10:22:58.823Z",
+    "status": 200,
+    "ttfb": 1227.5,
+    "lcp": 3832,
+    "cls": 0
+  },
+  {
+    "path": "/",
+    "run": 2,
+    "started": "2026-10-23T10:23:19.101Z",
+    "status": 200,
+    "ttfb": 1398.9000000059605,
+    "lcp": 2980,
+    "cls": 0
+  },
+  {
+    "path": "/download",
+    "run": 1,
+    "started": "2026-10-23T10:23:41.102Z",
+    "status": 200,
+    "ttfb": 1976.4000000059605,
+    "lcp": 4912,
+    "cls": 0.002544021669238683
+  },
+  {
+    "path": "/download",
+    "run": 2,
+    "started": "2026-10-23T10:23:59.099Z",
+    "status": 200,
+    "ttfb": 1306.199999988079,
+    "lcp": 5136,
+    "cls": 0.0024691358024691358
+  },
+  {
+    "path": "/blog/core-game-frame-style-reference",
+    "run": 1,
+    "started": "2026-10-23T10:24:17.615Z",
+    "status": 200,
+    "ttfb": 1307.7000000178814,
+    "lcp": 2660,
+    "cls": 0.004941356015303499
+  },
+  {
+    "path": "/blog/core-game-frame-style-reference",
+    "run": 2,
+    "started": "2026-10-23T10:24:35.875Z",
+    "status": 200,
+    "ttfb": 1300.4000000059605,
+    "lcp": 3128,
+    "cls": 0.004941356015303499
+  },
+  {
+    "path": "/blog/core-two-reference-room-workflow",
+    "run": 1,
+    "started": "2026-10-23T10:24:53.943Z",
+    "status": 200,
+    "ttfb": 1025.300000011921,
+    "lcp": 3088,
+    "cls": 0.005001135304140947
+  },
+  {
+    "path": "/blog/core-two-reference-room-workflow",
+    "run": 2,
+    "started": "2026-10-23T10:25:11.351Z",
+    "status": 200,
+    "ttfb": 1241.6000000238419,
+    "lcp": 3352,
+    "cls": 0.005001135304140947
+  },
+  {
+    "path": "/blog/core-redraw-review-checklist",
+    "run": 1,
+    "started": "2026-10-23T10:25:29.842Z",
+    "status": 200,
+    "ttfb": 1536.7000000178814,
+    "lcp": 3380,
+    "cls": 0.0015335395300175754
+  },
+  {
+    "path": "/blog/core-redraw-review-checklist",
+    "run": 2,
+    "started": "2026-10-23T10:25:47.890Z",
+    "status": 200,
+    "ttfb": 2944.5,
+    "lcp": 5304,
+    "cls": 0.0015898392623671124
+  },
+  {
+    "path": "/visual-enhancer",
+    "run": 1,
+    "started": "2026-10-23T10:26:07.221Z",
+    "status": 200,
+    "ttfb": 2229.800000011921,
+    "lcp": 7540,
+    "cls": 7.488586676954733e-05
+  },
+  {
+    "path": "/visual-enhancer",
+    "run": 2,
+    "started": "2026-10-23T10:26:28.627Z",
+    "status": 200,
+    "ttfb": 1518.9000000059605,
+    "lcp": 3652,
+    "cls": 0.027352418164330417
+  }
+]
