@@ -207,7 +207,7 @@ function articlePath(slug: string, locale?: 'en' | 'zh'): string {
   // Keep the already indexed unprefixed English article as the canonical address. The old
   // /en/blog URL is redirected at the edge; all generated cards and related links use this helper
   // so we do not create fresh internal links to the deprecated duplicate.
-  if (locale === 'en' && DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug)) return `/blog/${slug}`;
+  if (locale === 'en' && (DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug) || ARTICLES.some(article => article.slug === slug && article.assetBase))) return `/blog/${slug}`;
   return `${locale ? `/${locale}` : ''}/blog/${slug}`;
 }
 
@@ -383,7 +383,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
   const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': article.tier === 'core' ? 'Article' : 'TechArticle',
+    '@type': article.assetBase ? 'Article' : 'TechArticle',
     headline: title,
     description,
     inLanguage: isChinese ? 'zh-CN' : 'en-US',
@@ -405,7 +405,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
         <p class="text-sm text-zinc-500 mt-4">${article.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join(' · ')}</p>
       </header>
       <figure class="rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10">
-        <img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="1600" height="700" fetchpriority="high" class="w-full object-cover" />
+        <img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="${cover.width || 1600}" height="${cover.height || 700}" fetchpriority="high" class="w-full object-cover" />
         <figcaption class="px-5 py-3 text-xs text-zinc-400">${escapeHtml((isChinese ? article.coverCaption_cn : article.coverCaption_en) || (isChinese ? '技术简报 · 来源驱动内容' : 'Technical briefing · source-led coverage'))}</figcaption>
       </figure>
       <div class="prose prose-invert prose-zinc max-w-none">${CORE_VIDEOS[article.slug] ? renderToStaticMarkup(createElement(CoreArticleVideo, { slug: article.slug, chinese: isChinese })) : ''}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonIntro)) : ''}${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : article.assetBase ? renderToStaticMarkup(createElement(CoreArticleContent, { content, assetBase: article.assetBase })) : renderMarkdown(content)}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonAnswers)) : ''}</div>
@@ -1424,7 +1424,7 @@ for (const file of ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']) {
   if (!existsSync(target)) continue;
   let original = readFileSync(target, 'utf8');
   if (file === 'sitemap.xml' && profileHas('blog')) {
-    const additions = ARTICLES.filter(article => article.tier === 'core').flatMap(article =>
+    const additions = ARTICLES.filter(article => article.assetBase).flatMap(article =>
       [undefined, 'zh'].map(locale => {
         const url = `${BASE_URL}${articlePath(article.slug, locale as 'zh' | undefined)}`;
         return original.includes(`<loc>${url}</loc>`) ? '' : `<url><loc>${url}</loc><lastmod>${article.checkedDate}</lastmod></url>`;

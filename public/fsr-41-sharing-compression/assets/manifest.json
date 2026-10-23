@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-23",
+  "sample": "sample1",
+  "cached": true,
+  "viewport": [
+    1280,
+    820
+  ],
+  "jpegQuality": 25,
+  "files": {
+    "enhanced.webp": {
+      "bytes": 157694,
+      "sha256": "c252268032bf03cb44ef03058042d2f91b9ee383df3a3bfdd2e2754013b9d7f3"
+    },
+    "comparison.png": {
+      "bytes": 569480,
+      "sha256": "e81af6fe5e9211bf1bbbcbb29ceed42e3fa57f1f8e9fed459e96fc9ad652ba5c"
+    },
+    "compression-enhancement.png": {
+      "bytes": 538077,
+      "sha256": "69cbc63dfbfed303ecdceb3661a6e8370f56ce4290bfd9667bb70bd2ff81a68b"
+    },
+    "input.jpg": {
+      "bytes": 448534,
+      "sha256": "bef2484bc4ed804d7f73c6bc2f04fa07a689a41564e250d8b11648c574b306e9"
+    },
+    "result.webp": {
+      "bytes": 117344,
+      "sha256": "6219ec4cc92ff5a96042386625ae3218c7f7fa01d06d7df7dc5ff3ef67277bac"
+    },
+    "og.png": {
+      "bytes": 569480,
+      "sha256": "e81af6fe5e9211bf1bbbcbb29ceed42e3fa57f1f8e9fed459e96fc9ad652ba5c"
+    },
+    "compressed.jpg": {
+      "bytes": 44166,
+      "sha256": "47c3e0eaf48be5140f6e763cf09fe0da4502863c077f4a1e64c4a1cc536c185a"
+    }
+  }
+}

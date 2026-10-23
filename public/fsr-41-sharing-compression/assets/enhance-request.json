@@ -1,0 +1,15 @@
+{
+  "idempotencyKey": "content-batch-20261023-00787b60-1e89-4430-a456-4cc63916ce9e",
+  "model": "flux-klein",
+  "input": "compressed.jpg",
+  "input_sha256": "47c3e0eaf48be5140f6e763cf09fe0da4502863c077f4a1e64c4a1cc536c185a",
+  "prompt": "Enhance this photo to 1536 × 992 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.",
+  "image_ids": [
+    "redacted-upload-id"
+  ],
+  "width": 1536,
+  "height": 992,
+  "seed": 42,
+  "num_inference_steps": 4,
+  "output_format": "webp"
+}

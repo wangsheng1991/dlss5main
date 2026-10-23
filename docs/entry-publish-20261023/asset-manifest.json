@@ -1,0 +1,202 @@
+[
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/compression-enhancement.png",
+    "target": "public/aiarty-review-reproducible-check/assets/compression-enhancement.png",
+    "sha256": "69cbc63dfbfed303ecdceb3661a6e8370f56ce4290bfd9667bb70bd2ff81a68b"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/detail.png",
+    "target": "public/aiarty-review-reproducible-check/assets/detail.png",
+    "sha256": "8b8627ef9d25df1d7178a7f79e5797d7c95ba4b5de1c8dc81d19be594e3bd905"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/README.md",
+    "target": "public/aiarty-review-reproducible-check/assets/README.md",
+    "sha256": "232cb04edfbe4c9206e3e7079f3a7e87aa1f70df9fe137f68109ab42b617b8fb"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/comparison.png",
+    "target": "public/aiarty-review-reproducible-check/assets/comparison.png",
+    "sha256": "e81af6fe5e9211bf1bbbcbb29ceed42e3fa57f1f8e9fed459e96fc9ad652ba5c"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/compression-enhancement.png",
+    "target": "public/fsr-41-sharing-compression/assets/compression-enhancement.png",
+    "sha256": "69cbc63dfbfed303ecdceb3661a6e8370f56ce4290bfd9667bb70bd2ff81a68b"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/README.md",
+    "target": "public/fsr-41-sharing-compression/assets/README.md",
+    "sha256": "c689ee21ef7967526dfb76909553d4de6bc2d34e56e442b95a2014bda83f5a2e"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/comparison.png",
+    "target": "public/fsr-41-sharing-compression/assets/comparison.png",
+    "sha256": "e81af6fe5e9211bf1bbbcbb29ceed42e3fa57f1f8e9fed459e96fc9ad652ba5c"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/detail.png",
+    "target": "public/lightroom-open-eyes-generation/assets/detail.png",
+    "sha256": "fbcf91c4d311e51dfecf6616958d63d09181199dbfbab46a9d465a769bb4353a"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/README.md",
+    "target": "public/lightroom-open-eyes-generation/assets/README.md",
+    "sha256": "edea275f48685ed87b0ac79588c10798b8b0b3892f81c6d2ae2a380821c46e81"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/comparison.png",
+    "target": "public/lightroom-open-eyes-generation/assets/comparison.png",
+    "sha256": "a8aff7d771bb73c591c3681afeb1c902680e16879b3279ada86483df9dd4cc0e"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/enhanced.webp",
+    "target": "public/aiarty-review-reproducible-check/assets/enhanced.webp",
+    "sha256": "c252268032bf03cb44ef03058042d2f91b9ee383df3a3bfdd2e2754013b9d7f3"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/enhance-result.json",
+    "target": "public/aiarty-review-reproducible-check/assets/enhance-result.json",
+    "sha256": "4e693dc5361383efbacc99536b7a8dba851159ef62f2056e232f1f7382b5f212"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/manifest.json",
+    "target": "public/aiarty-review-reproducible-check/assets/manifest.json",
+    "sha256": "ac6dc12b2c2c1fe1cab272dc12f4c1bc3de1a485e19d04bf66b61c81b89bdc01"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/reproduce-capture.mjs",
+    "target": "public/aiarty-review-reproducible-check/assets/reproduce-capture.mjs",
+    "sha256": "7a21bee755145f2d5f99d81e7d602172f1dd093588ec6ec8cccac4fea9f4e960"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/input.jpg",
+    "target": "public/aiarty-review-reproducible-check/assets/input.jpg",
+    "sha256": "bef2484bc4ed804d7f73c6bc2f04fa07a689a41564e250d8b11648c574b306e9"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/result.webp",
+    "target": "public/aiarty-review-reproducible-check/assets/result.webp",
+    "sha256": "6219ec4cc92ff5a96042386625ae3218c7f7fa01d06d7df7dc5ff3ef67277bac"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/og.png",
+    "target": "public/aiarty-review-reproducible-check/assets/og.png",
+    "sha256": "e81af6fe5e9211bf1bbbcbb29ceed42e3fa57f1f8e9fed459e96fc9ad652ba5c"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/run.json",
+    "target": "public/aiarty-review-reproducible-check/assets/run.json",
+    "sha256": "608091bb016b1e6da8a70b9543c8bdf89da0d64340c9e54902547020c0cd8ed7"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/audit.html",
+    "target": "public/aiarty-review-reproducible-check/assets/audit.html",
+    "sha256": "217a9bf2200604d761484ca79281b141fa38f17d98f7462ec37753fcb0d01855"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/enhance-request.json",
+    "target": "public/aiarty-review-reproducible-check/assets/enhance-request.json",
+    "sha256": "f25cf22fc01be9969a77dff32142114431ba8dd521fb6e064ede81bda1f731c4"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-aiarty-review-reproducible-check/assets/compressed.jpg",
+    "target": "public/aiarty-review-reproducible-check/assets/compressed.jpg",
+    "sha256": "47c3e0eaf48be5140f6e763cf09fe0da4502863c077f4a1e64c4a1cc536c185a"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/task.json",
+    "target": "public/fsr-41-sharing-compression/assets/task.json",
+    "sha256": "b814e0709f5b34b101b2e5823f3e67d70105b25735ddf71e4dde585fc50bb97e"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/enhanced.webp",
+    "target": "public/fsr-41-sharing-compression/assets/enhanced.webp",
+    "sha256": "c252268032bf03cb44ef03058042d2f91b9ee383df3a3bfdd2e2754013b9d7f3"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/enhance-result.json",
+    "target": "public/fsr-41-sharing-compression/assets/enhance-result.json",
+    "sha256": "4e693dc5361383efbacc99536b7a8dba851159ef62f2056e232f1f7382b5f212"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/manifest.json",
+    "target": "public/fsr-41-sharing-compression/assets/manifest.json",
+    "sha256": "7ba896d830ae961ab25c46f0f1c16b27aae09dffbb99baa1571aab41c67e3e72"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/reproduce-capture.mjs",
+    "target": "public/fsr-41-sharing-compression/assets/reproduce-capture.mjs",
+    "sha256": "7a21bee755145f2d5f99d81e7d602172f1dd093588ec6ec8cccac4fea9f4e960"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/input.jpg",
+    "target": "public/fsr-41-sharing-compression/assets/input.jpg",
+    "sha256": "bef2484bc4ed804d7f73c6bc2f04fa07a689a41564e250d8b11648c574b306e9"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/result.webp",
+    "target": "public/fsr-41-sharing-compression/assets/result.webp",
+    "sha256": "6219ec4cc92ff5a96042386625ae3218c7f7fa01d06d7df7dc5ff3ef67277bac"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/og.png",
+    "target": "public/fsr-41-sharing-compression/assets/og.png",
+    "sha256": "e81af6fe5e9211bf1bbbcbb29ceed42e3fa57f1f8e9fed459e96fc9ad652ba5c"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/run.json",
+    "target": "public/fsr-41-sharing-compression/assets/run.json",
+    "sha256": "608091bb016b1e6da8a70b9543c8bdf89da0d64340c9e54902547020c0cd8ed7"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/audit.html",
+    "target": "public/fsr-41-sharing-compression/assets/audit.html",
+    "sha256": "217a9bf2200604d761484ca79281b141fa38f17d98f7462ec37753fcb0d01855"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/enhance-request.json",
+    "target": "public/fsr-41-sharing-compression/assets/enhance-request.json",
+    "sha256": "f25cf22fc01be9969a77dff32142114431ba8dd521fb6e064ede81bda1f731c4"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-fsr-41-sharing-compression/assets/compressed.jpg",
+    "target": "public/fsr-41-sharing-compression/assets/compressed.jpg",
+    "sha256": "47c3e0eaf48be5140f6e763cf09fe0da4502863c077f4a1e64c4a1cc536c185a"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/manifest.json",
+    "target": "public/lightroom-open-eyes-generation/assets/manifest.json",
+    "sha256": "23d1cc4a5b9ddf2410590b943bfa463d4efbdce1c512215e6aedd47d66c5564b"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/reproduce-capture.mjs",
+    "target": "public/lightroom-open-eyes-generation/assets/reproduce-capture.mjs",
+    "sha256": "7a21bee755145f2d5f99d81e7d602172f1dd093588ec6ec8cccac4fea9f4e960"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/input.jpg",
+    "target": "public/lightroom-open-eyes-generation/assets/input.jpg",
+    "sha256": "1ee1ccbce28c511604011a2bf751fe00066a4f646f43f5926a5ef97bef4aa652"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/result.webp",
+    "target": "public/lightroom-open-eyes-generation/assets/result.webp",
+    "sha256": "7494071d443610c6e7f7197b6ff573a1984f6b1c26bda99391652017c1c8df63"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/og.png",
+    "target": "public/lightroom-open-eyes-generation/assets/og.png",
+    "sha256": "a8aff7d771bb73c591c3681afeb1c902680e16879b3279ada86483df9dd4cc0e"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/run.json",
+    "target": "public/lightroom-open-eyes-generation/assets/run.json",
+    "sha256": "68e650b67762491c7ea1784e25c7580769ab7e046aa5c1b59b09f0093266d9e1"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-lightroom-open-eyes-generation/assets/audit.html",
+    "target": "public/lightroom-open-eyes-generation/assets/audit.html",
+    "sha256": "ca0698d6f92e3581a471c6f5da39c22805b5d47ce4b302947a0088b02f2165f3"
+  }
+]

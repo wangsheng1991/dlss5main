@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-23",
+  "sample": "sample2",
+  "cached": true,
+  "viewport": [
+    1280,
+    820
+  ],
+  "jpegQuality": null,
+  "files": {
+    "comparison.png": {
+      "bytes": 538529,
+      "sha256": "a8aff7d771bb73c591c3681afeb1c902680e16879b3279ada86483df9dd4cc0e"
+    },
+    "input.jpg": {
+      "bytes": 642253,
+      "sha256": "1ee1ccbce28c511604011a2bf751fe00066a4f646f43f5926a5ef97bef4aa652"
+    },
+    "result.webp": {
+      "bytes": 115356,
+      "sha256": "7494071d443610c6e7f7197b6ff573a1984f6b1c26bda99391652017c1c8df63"
+    },
+    "detail.png": {
+      "bytes": 630237,
+      "sha256": "fbcf91c4d311e51dfecf6616958d63d09181199dbfbab46a9d465a769bb4353a"
+    },
+    "og.png": {
+      "bytes": 538529,
+      "sha256": "a8aff7d771bb73c591c3681afeb1c902680e16879b3279ada86483df9dd4cc0e"
+    }
+  }
+}

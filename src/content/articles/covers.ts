@@ -1,12 +1,16 @@
+import { ENTRY_COVERS } from './entry20261023';
 import { CORE_COVERS } from './core20261023';
 export interface ArticleCover {
   src: string;
+  width?: number;
+  height?: number;
   ogSrc?: string;
   alt: string;
 }
 
 export const ARTICLE_COVERS: Record<string, ArticleCover> = {
   ...CORE_COVERS,
+  ...ENTRY_COVERS,
   'seedance-2-5-video-super-resolution-cost-guide-2026': {
     src: '/blog/seedance25-video-superres.png',
     alt: 'Low-resolution AI video passing through a neural super-resolution pipeline into a crisp 4K frame',

@@ -1,0 +1,1 @@
+{"status":"SUCCEEDED","sample":"sample1","prompt":"Make it look like a real photo of this kitchen, keeping the layout identical.","input":"/examples/sample1.jpg","result":"/api/image-edit/samples?sample=sample1","contentType":"image/webp","extension":"webp","cached":true}

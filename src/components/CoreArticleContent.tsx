@@ -17,10 +17,10 @@ export default function CoreArticleContent({ content, assetBase }: {content: str
   const result: ReactNode[] = [];
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
-    const picture = block.match(/^!\[([^\]]+)\]\((assets\/[^)]+)\)$/);
+    const picture = block.match(/^!\[([^\]]+)\]\((assets\/[^)]+)\)(?:\n(\*[^\n]+\*))?$/);
     const heading = block.match(/^(#{2,3}) (.+)$/);
     if (picture) {
-      const caption = blocks[++i];
+      const caption = picture[3] || blocks[++i];
       if (!caption?.startsWith('*') || !caption.endsWith('*')) throw new Error('An article image requires its original caption');
       result.push(<figure key={i}><img src={`${assetBase}${picture[2]}`} alt={picture[1]} loading="lazy" className="w-full h-auto" /><figcaption>{inline(caption.slice(1, -1))}</figcaption></figure>);
     } else if (block.startsWith('```')) {
@@ -29,6 +29,11 @@ export default function CoreArticleContent({ content, assetBase }: {content: str
       result.push(<pre key={i} className="overflow-x-auto"><code>{fenced.replace(/^```[^\n]*\n/, '').replace(/\n```$/, '')}</code></pre>);
     } else if (heading) {
       result.push(heading[1].length === 2 ? <h2 key={i}>{inline(heading[2])}</h2> : <h3 key={i}>{inline(heading[2])}</h3>);
+     } else if (block.startsWith('> ')) {
+      const lines = block.split('\n').map(line => line.replace(/^> ?/, ''));
+      result.push(<blockquote key={i}>{lines.every(line => line.startsWith('- '))
+        ? <ul>{lines.map((line, k) => <li key={k}>{inline(line.slice(2))}</li>)}</ul>
+        : <p>{inline(lines.join('\n'))}</p>}</blockquote>);
     } else if (/^[-*] /.test(block)) {
       result.push(<ul key={i}>{block.split('\n').map((line, k) => <li key={k}>{inline(line.replace(/^[-*] /, ''))}</li>)}</ul>);
     } else if (/^\d+\. /.test(block)) {

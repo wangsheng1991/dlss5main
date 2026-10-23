@@ -130,9 +130,9 @@ export default function Blog() {
   const { i18n } = useTranslation();
   const { slug, locale: paramLocale } = useParams<{ slug?: string; locale?: 'en' | 'zh' }>();
   const { pathname } = useLocation();
-  const isCoreArticle = ARTICLES.some(article => article.slug === slug && article.tier === 'core');
-  const routeLocale = paramLocale || (isCoreArticle && pathname.startsWith('/zh/') ? 'zh' : undefined);
-  const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' || isCoreArticle ? 'en-US' : undefined;
+  const isLibraryArticle = ARTICLES.some(article => article.slug === slug && Boolean(article.assetBase));
+  const routeLocale = paramLocale || (isLibraryArticle && pathname.startsWith('/zh/') ? 'zh' : undefined);
+  const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' || isLibraryArticle ? 'en-US' : undefined;
   const locale = (routeLanguage || i18n.resolvedLanguage || i18n.language || 'en-US') as BlogLocale;
   const copy = BLOG_COPY[locale] || BLOG_COPY['en-US'];
   // The unprefixed path is the x-default canonical. Keep its head metadata in the same English
@@ -171,7 +171,7 @@ export default function Blog() {
   ]);
   const localizedBlogPath = (language: 'en' | 'zh') => {
     if (language === 'en' && !slug) return '/blog';
-    if (language === 'en' && slug && DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug)) return `/blog/${slug}`;
+    if (language === 'en' && slug && (DEFAULT_ENGLISH_ARTICLE_SLUGS.has(slug) || isLibraryArticle)) return `/blog/${slug}`;
     return `/${language}/blog${slug ? `/${slug}` : ''}`;
   };
   const canonicalPath = routeLocale ? localizedBlogPath(routeLocale) : `/blog${slug ? `/${slug}` : ''}`;
@@ -206,7 +206,7 @@ export default function Blog() {
           {[...ARTICLES].sort((a, b) => Number(!!b.datePublished) - Number(!!a.datePublished)).map(article => (
             <Link
               key={article.slug}
-              to={`${routeLocale ? `/${routeLocale}` : article.tier === 'core' && pathname.startsWith('/zh/') ? '/zh' : ''}/blog/${article.slug}`}
+              to={`${routeLocale ? `/${routeLocale}` : Boolean(article.assetBase) && pathname.startsWith('/zh/') ? '/zh' : ''}/blog/${article.slug}`}
               className="bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden hover:border-primary/50 transition-colors group"
             >
               <div className="relative aspect-[16/7] overflow-hidden bg-surface-high">
@@ -256,7 +256,7 @@ export default function Blog() {
   const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': article.tier === 'core' ? 'Article' : 'TechArticle',
+    '@type': Boolean(article.assetBase) ? 'Article' : 'TechArticle',
     headline: seoTitle,
     description: seoDescription,
     inLanguage: seoActiveLang === 'cn' ? 'zh-CN' : 'en-US',
@@ -497,10 +497,10 @@ export default function Blog() {
           </div>
         </header>
 
-        <figure className={article.tier === 'core' ? "rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10" : "relative aspect-[16/7] rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10"}>
-          <img src={cover.src} alt={cover.alt} className={article.tier === 'core' ? "w-full h-auto" : "w-full h-full object-cover"} />
-          {article.tier !== 'core' && <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />}
-          <figcaption className={article.tier === 'core' ? "px-5 py-3 text-xs text-zinc-400" : "absolute bottom-4 left-5 right-5 text-xs text-zinc-200/80"}>{(activeLang === 'cn' ? article.coverCaption_cn : article.coverCaption_en) || copy.figureCaption}</figcaption>
+        <figure className={Boolean(article.assetBase) ? "rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10" : "relative aspect-[16/7] rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10"}>
+          <img src={cover.src} alt={cover.alt} width={cover.width} height={cover.height} className={Boolean(article.assetBase) ? "w-full h-auto" : "w-full h-full object-cover"} />
+          {!article.assetBase && <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />}
+          <figcaption className={Boolean(article.assetBase) ? "px-5 py-3 text-xs text-zinc-400" : "absolute bottom-4 left-5 right-5 text-xs text-zinc-200/80"}>{(activeLang === 'cn' ? article.coverCaption_cn : article.coverCaption_en) || copy.figureCaption}</figcaption>
         </figure>
 
         {/* SEO Keywords for crawlers */}

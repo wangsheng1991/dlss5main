@@ -1,0 +1,1 @@
+{"status":"SUCCEEDED","sample":"sample2","prompt":"Turn this render into a photorealistic photo with soft morning light.","input":"/examples/sample2.jpg","result":"/api/image-edit/samples?sample=sample2","contentType":"image/webp","extension":"webp","cached":true}
