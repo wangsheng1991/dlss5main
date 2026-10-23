@@ -1,0 +1,12 @@
+[
+  {
+    "file": "room-source.jpg",
+    "source": "/Users/wangsheng/code/shou/dlss5main/public/examples/interior-room.jpg",
+    "sha256": "7ed227ca9f876bfb714cdf4777b1c2443a5357c7b7c5d32674409ae58a5c4111"
+  },
+  {
+    "file": "room-historical-result.jpg",
+    "source": "/Users/wangsheng/code/shou/dlss5main/public/examples/interior-ref-after.jpg",
+    "sha256": "e72a4fff1d498a658c041d73ef044ec7d5045dbcafc7b0ed6bafcf5b2c727a6a"
+  }
+]

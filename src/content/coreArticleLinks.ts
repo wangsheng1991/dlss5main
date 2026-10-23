@@ -6,3 +6,11 @@ export const CORE_ARTICLE_LINKS: Record<string, {path: string; label: string}> =
   '/vs/dlss-5-vs-dlss-4-5': {path: '/blog/core-game-frame-style-reference', label: 'Explore independent static style conversion with a saved frame'},
   '/vs/dlss-5-vs-fsr-4': {path: '/blog/core-redraw-review-checklist', label: 'Check the limits of independent static neural redraws'},
 };
+
+const NEXT_CORE_ARTICLE_LINKS: typeof CORE_ARTICLE_LINKS = {
+  '/game-character-style': {path: '/blog/core-character-consistency-style-conversion', label: 'Check character identity before accepting a style conversion'},
+  '/interior-design': {path: '/blog/core-named-interior-style-room-restyle', label: 'Choose Japandi, Nordic or industrial styling and check the room structure'},
+};
+export function coreArticleLinksFor(route: string) {
+  return [CORE_ARTICLE_LINKS[route], NEXT_CORE_ARTICLE_LINKS[route]].filter(Boolean);
+}

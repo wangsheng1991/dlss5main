@@ -2,7 +2,7 @@ import CoreArticleVideo from '../src/components/CoreArticleVideo';
 import { CORE_VIDEOS, coreVideoCopy } from '../src/content/articles/coreVideo20261023';
 import CoreArticleContent from '../src/components/CoreArticleContent';
 import { withArticleEvidence } from '../src/content/articles/coreSchema';
-import { CORE_ARTICLE_LINKS } from '../src/content/coreArticleLinks';
+import { coreArticleLinksFor } from '../src/content/coreArticleLinks';
 import { reviewedPageSchema, ARTICLE_CHECK_PATHS, SCHEMA_REVIEW_DATE } from '../src/content/schemaReview';
 import { ChineseEnhancer, ToolEvidence } from '../src/components/LocalizedEvidence';
 import { CheckedComparison, isCheckedComparison, EnhancerChecks, DashboardEvidenceLinks } from '../src/components/SearchEvidence';
@@ -360,8 +360,8 @@ function writeRoute(route: string, html: string): void {
   }
   const output = resolve(DIST, route.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(output), { recursive: true });
-  const coreLink = CORE_ARTICLE_LINKS[route];
-  if (coreLink) html = html.replace('</main>', `</main><p data-core-article-link class="mx-auto max-w-[1000px] px-6 pb-8"><a class="text-primary underline" href="${escapeHtml(coreLink.path)}">${escapeHtml(coreLink.label)}</a></p>`);
+  const coreLinks = coreArticleLinksFor(route);
+  if (coreLinks.length) html = html.replace('</main>', `</main>${coreLinks.map(coreLink => `<p data-core-article-link class="mx-auto max-w-[1000px] px-6 pb-8"><a class="text-primary underline" href="${escapeHtml(coreLink.path)}">${escapeHtml(coreLink.label)}</a></p>`).join('')}`);
   const links = RELATED_ADDITIONS[route];
   const related = links && isPublishedPath(route)
     ? `<aside class="mx-auto max-w-[1000px] px-6 pb-20" aria-label="${route.startsWith('/zh/') ? '相关页面' : 'Related pages'}"><div class="border-t border-outline-variant/20 pt-7"><h2 class="text-xl font-bold text-white">${route.startsWith('/zh/') ? '相关' : 'Related'}</h2><p class="mt-2 text-sm text-zinc-400">${route.startsWith('/zh/') ? '继续核对案例、支持状态与使用条件。' : 'Continue with examples, support status and practical requirements.'}</p><ul class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">${links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(route.startsWith('/zh/') ? link.zh : link.en)} →</a></li>`).join('')}</ul></div></aside>`

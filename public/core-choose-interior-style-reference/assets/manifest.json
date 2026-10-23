@@ -1,0 +1,17 @@
+[
+  {
+    "file": "style-reference.jpg",
+    "source": "/Users/wangsheng/code/shou/dlss5main/public/examples/interior-style-ref.jpg",
+    "sha256": "cc5ab08df90032abb55ec7c6a8b57b548aead9af5011a577c71799f2efa39308"
+  },
+  {
+    "file": "room-source.jpg",
+    "source": "/Users/wangsheng/code/shou/dlss5main/public/examples/interior-room.jpg",
+    "sha256": "7ed227ca9f876bfb714cdf4777b1c2443a5357c7b7c5d32674409ae58a5c4111"
+  },
+  {
+    "file": "historical-result.jpg",
+    "source": "/Users/wangsheng/code/shou/dlss5main/public/examples/interior-ref-after.jpg",
+    "sha256": "e72a4fff1d498a658c041d73ef044ec7d5045dbcafc7b0ed6bafcf5b2c727a6a"
+  }
+]

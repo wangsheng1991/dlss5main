@@ -1,0 +1,77 @@
+{
+  "sitemapCount": 116,
+  "pages": [
+    {
+      "path": "/blog/core-character-consistency-style-conversion",
+      "HTTP": 200,
+      "schema": "Article",
+      "dateModified": "2026-10-23",
+      "lastChecked": true,
+      "hreflang": true,
+      "images": 6,
+      "imageHTTP": 200,
+      "originalBodyPreserved": true,
+      "FAQPage": false
+    },
+    {
+      "path": "/zh/blog/core-character-consistency-style-conversion",
+      "HTTP": 200,
+      "schema": "Article",
+      "dateModified": "2026-10-23",
+      "lastChecked": true,
+      "hreflang": true,
+      "images": 6,
+      "imageHTTP": 200,
+      "originalBodyPreserved": true,
+      "FAQPage": false
+    },
+    {
+      "path": "/blog/core-named-interior-style-room-restyle",
+      "HTTP": 200,
+      "schema": "Article",
+      "dateModified": "2026-10-23",
+      "lastChecked": true,
+      "hreflang": true,
+      "images": 6,
+      "imageHTTP": 200,
+      "originalBodyPreserved": true,
+      "FAQPage": false
+    },
+    {
+      "path": "/zh/blog/core-named-interior-style-room-restyle",
+      "HTTP": 200,
+      "schema": "Article",
+      "dateModified": "2026-10-23",
+      "lastChecked": true,
+      "hreflang": true,
+      "images": 6,
+      "imageHTTP": 200,
+      "originalBodyPreserved": true,
+      "FAQPage": false
+    },
+    {
+      "path": "/blog/core-choose-interior-style-reference",
+      "HTTP": 200,
+      "schema": "Article",
+      "dateModified": "2026-10-23",
+      "lastChecked": true,
+      "hreflang": true,
+      "images": 7,
+      "imageHTTP": 200,
+      "originalBodyPreserved": true,
+      "FAQPage": false
+    },
+    {
+      "path": "/zh/blog/core-choose-interior-style-reference",
+      "HTTP": 200,
+      "schema": "Article",
+      "dateModified": "2026-10-23",
+      "lastChecked": true,
+      "hreflang": true,
+      "images": 7,
+      "imageHTTP": 200,
+      "originalBodyPreserved": true,
+      "FAQPage": false
+    }
+  ]
+}

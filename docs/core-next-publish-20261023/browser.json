@@ -1,0 +1,42 @@
+[
+  {
+    "path": "/blog/core-character-consistency-style-conversion",
+    "h1": 1,
+    "main": 1,
+    "title": "Character consistency after style conversion: will you still recognize them?",
+    "figures": 3,
+    "captions": 3,
+    "unrenderedImageMarkdown": false,
+    "canonical": "https://www.dlss5nvidia.com/blog/core-character-consistency-style-conversion"
+  },
+  {
+    "path": "/zh/blog/core-choose-interior-style-reference",
+    "h1": 1,
+    "main": 1,
+    "title": "什么样的图适合当室内风格参考？先把想借的东西说清",
+    "figures": 4,
+    "captions": 4,
+    "unrenderedImageMarkdown": false,
+    "canonical": "https://www.dlss5nvidia.com/zh/blog/core-choose-interior-style-reference"
+  },
+  {
+    "path": "/game-character-style",
+    "h1": 1,
+    "main": 1,
+    "title": "20 组游戏人物前后对比案例",
+    "figures": 0,
+    "captions": 0,
+    "unrenderedImageMarkdown": false,
+    "canonical": "https://www.dlss5nvidia.com/game-character-style"
+  },
+  {
+    "path": "/interior-design",
+    "h1": 1,
+    "main": 1,
+    "title": "AI Interior Design Render",
+    "figures": 1,
+    "captions": 1,
+    "unrenderedImageMarkdown": false,
+    "canonical": "https://www.dlss5nvidia.com/interior-design"
+  }
+]
