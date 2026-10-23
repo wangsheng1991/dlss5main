@@ -13,3 +13,9 @@ https://www.dlss5nvidia.com/blog/core-named-interior-style-room-restyle
 https://www.dlss5nvidia.com/zh/blog/core-named-interior-style-room-restyle
 https://www.dlss5nvidia.com/blog/core-choose-interior-style-reference
 https://www.dlss5nvidia.com/zh/blog/core-choose-interior-style-reference
+https://www.dlss5nvidia.com/blog/core-game-character-style-matrix
+https://www.dlss5nvidia.com/zh/blog/core-game-character-style-matrix
+https://www.dlss5nvidia.com/blog/core-game-hud-text-redraw-review
+https://www.dlss5nvidia.com/zh/blog/core-game-hud-text-redraw-review
+https://www.dlss5nvidia.com/blog/core-game-character-reference-board
+https://www.dlss5nvidia.com/zh/blog/core-game-character-reference-board

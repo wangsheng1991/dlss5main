@@ -1,3 +1,4 @@
+import { GAME_ANCHOR_COVERS } from './gameAnchor20261023';
 import { ENTRY_COVERS } from './entry20261023';
 import { CORE_COVERS } from './core20261023';
 export interface ArticleCover {
@@ -10,6 +11,7 @@ export interface ArticleCover {
 
 export const ARTICLE_COVERS: Record<string, ArticleCover> = {
   ...CORE_COVERS,
+  ...GAME_ANCHOR_COVERS,
   ...ENTRY_COVERS,
   'seedance-2-5-video-super-resolution-cost-guide-2026': {
     src: '/blog/seedance25-video-superres.png',

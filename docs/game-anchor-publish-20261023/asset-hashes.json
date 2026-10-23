@@ -1,0 +1,106 @@
+[
+  {
+    "file": "public/core-game-hud-text-redraw-review/assets/frame-historical-result.webp",
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  },
+  {
+    "file": "public/core-game-hud-text-redraw-review/assets/frame-source.jpg",
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  {
+    "file": "public/core-game-hud-text-redraw-review/assets/README.md",
+    "sha256": "608fb03416130b4953e889600eaeafb69c3e30592a1539d1f75f18aafbee7851"
+  },
+  {
+    "file": "public/core-game-hud-text-redraw-review/assets/manifest.json",
+    "sha256": "bcafaaed1508d24db672bbb2149a53e5e7e77c2c159fd6cba818ff81263aaee8"
+  },
+  {
+    "file": "public/core-game-hud-text-redraw-review/assets/og.jpg",
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/reproduced-compressed.jpg",
+    "sha256": "87374b2df42f3a64408c28ab8381ec601e2c1d20c48c1fac27d41ab65663f577"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/reproduced-reference.png",
+    "sha256": "cb7f8cb268f12c56135d35b5716cfe2ef7e7f44a94460c85aaf07950a32a5477"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/README.md",
+    "sha256": "e6704685ba1d0d45efa0f4bc47ad1d2ee3cc7437cc23c1cfade023f14d946b4e"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/capture-run.json",
+    "sha256": "a612ebf4e68b52967bef6ef1d001fad731a03ac4ec582f51e14cc3dfb9917756"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/manifest.json",
+    "sha256": "cb64eee291af4608e69730ad9e0f6fbb5916171ba8896f031b11ed957cc066a5"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/reproduce-capture.mjs",
+    "sha256": "7a21bee755145f2d5f99d81e7d602172f1dd093588ec6ec8cccac4fea9f4e960"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/output.webp",
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/input.jpg",
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/og.png",
+    "sha256": "cb7f8cb268f12c56135d35b5716cfe2ef7e7f44a94460c85aaf07950a32a5477"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/run.json",
+    "sha256": "654897000b76f5361c990746bd2edcb222617416591920eecd61a29fb9b716bc"
+  },
+  {
+    "file": "public/core-game-frame-style-reference/assets/audit.html",
+    "sha256": "502628085f53421b229a2f934483b6a8b71067ef9b08152d12bea98bd9743726"
+  },
+  {
+    "file": "public/core-game-character-style-matrix/assets/historical-result.webp",
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  },
+  {
+    "file": "public/core-game-character-style-matrix/assets/README.md",
+    "sha256": "cc4f36d2ac8125e828568489f72696cd1323114473fdb84d1709e8f2d5cad9a4"
+  },
+  {
+    "file": "public/core-game-character-style-matrix/assets/manifest.json",
+    "sha256": "debb18809af10cea3f9e61bc2d10d98400f4a46bcaa7657e96a9187abb47a247"
+  },
+  {
+    "file": "public/core-game-character-style-matrix/assets/source.jpg",
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  {
+    "file": "public/core-game-character-style-matrix/assets/og.jpg",
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  {
+    "file": "public/core-game-character-reference-board/assets/anime-reference.jpg",
+    "sha256": "71ff0aaff0eada84db4de0b05b90b093224e0089249a4d86f14176475d5390e0"
+  },
+  {
+    "file": "public/core-game-character-reference-board/assets/README.md",
+    "sha256": "b862950e335f2f0570e41fc0426fcf26c227877c0191b5e3b4aa4a044434938d"
+  },
+  {
+    "file": "public/core-game-character-reference-board/assets/cyber-reference.webp",
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  },
+  {
+    "file": "public/core-game-character-reference-board/assets/manifest.json",
+    "sha256": "992fb26f063b37156896ce292230bc843f371f33b8a9fee926d577000fb231e1"
+  },
+  {
+    "file": "public/core-game-character-reference-board/assets/og.jpg",
+    "sha256": "71ff0aaff0eada84db4de0b05b90b093224e0089249a4d86f14176475d5390e0"
+  }
+]

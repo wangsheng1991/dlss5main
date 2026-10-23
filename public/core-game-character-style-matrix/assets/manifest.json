@@ -1,0 +1,12 @@
+[
+  {
+    "file": "source.jpg",
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-core-game-frame-style-reference/assets/input.jpg",
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  {
+    "file": "historical-result.webp",
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-23-core-game-frame-style-reference/assets/output.webp",
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  }
+]

@@ -23,6 +23,9 @@ export default function CoreArticleContent({ content, assetBase }: {content: str
       const caption = picture[3] || blocks[++i];
       if (!caption?.startsWith('*') || !caption.endsWith('*')) throw new Error('An article image requires its original caption');
       result.push(<figure key={i}><img src={`${assetBase}${picture[2]}`} alt={picture[1]} loading="lazy" className="w-full h-auto" /><figcaption>{inline(caption.slice(1, -1))}</figcaption></figure>);
+    } else if (assetBase === '/core-game-character-style-matrix/' && /^\|.+\n\|[ :|\-]+\|/.test(block)) {
+      const rows = block.split('\n').map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+      result.push(<div key={i} className="overflow-x-auto"><table><thead><tr>{rows[0].map((cell, k) => <th key={k}>{inline(cell)}</th>)}</tr></thead><tbody>{rows.slice(2).map((row, r) => <tr key={r}>{row.map((cell, c) => <td key={c}>{inline(cell)}</td>)}</tr>)}</tbody></table></div>);
     } else if (block.startsWith('```')) {
       let fenced = block;
       while (!fenced.trimEnd().endsWith('```') && i + 1 < blocks.length) fenced += `\n\n${blocks[++i]}`;

@@ -1,3 +1,4 @@
+import { GAME_ANCHOR_ARTICLES } from './gameAnchor20261023';
 import { ENTRY_ARTICLES } from './entry20261023';
 import { CORE_ARTICLES } from './core20261023';
 export interface Article {
@@ -683,5 +684,6 @@ DLSS 5 不是从定义上威胁艺术灵魂。它是在默认配置、当前实�
     content_cn: `## 先看结论\n\n本月 DLSS 最值得关注的变化，是模型“负责什么”发生了变化。DLSS 4.5 重点在 Transformer 超分和帧生成；DLSS 5 则进一步走向 3D 引导神经渲染，让 AI 参与最终光照和材质外观，同时继续绑定游戏场景数据。\n\nGPT-6 Astra 适合做这些系统周边的工作，而不是替代渲染器。OpenAI 将 Astra 定位为可通过 API 使用的通用推理模型；NVIDIA 将 DLSS 5 定位为 RTX 50 系列游戏管线中的本地渲染阶段。\n\n## 1. DLSS 5 已被明确描述为生成式渲染\n\nNVIDIA ADLR 研究页将 DLSS 5 描述为运行在 GeForce RTX 50 系列现有游戏管线中的实时生成式渲染阶段。产品公告解释了它的约束来源：模型接收颜色和运动向量，输出锚定源 3D 内容，并在帧间保持一致。\n\n这也是 DLSS 5 与文字生图模型最重要的区别。DLSS 5 仍然是渲染阶段技术，游戏引擎是事实来源；通用图像模型如果没有应用层约束和检查，可能会重新解释输入内容。\n\n## 2. DLSS 4.5 仍然是当下的性能层\n\nNVIDIA 表示，第二代 Transformer 超分模型可以通过 NVIDIA App 提供给 GeForce RTX 用户；动态多帧生成和 6X 模式面向 RTX 50 系列。NVIDIA 称 6X 模式可以为每个传统渲染帧生成额外五帧，并根据显示器刷新目标动态调整倍数。\n\n可靠的对比至少要同时报告渲染 FPS、显示 FPS 和端到端延迟。显示帧数更高，不等于输入延迟更低，也不等于原生画面更好。\n\n## 3. GPT-6 Astra 在哪里发挥作用\n\nOpenAI 公告给出的 API 模型 ID 是 gpt-6-astra。它适合把美术要求转换成受约束 brief、映射到受支持的控制项、生成光照和文字测试用例，并复核帧样本中的明显回归。\n\n它不应臆造运动向量、替换场景图，也不应声称视觉结果像素级一致。这些工作应由渲染器和确定性验证负责。\n\n## 4. 接下来应该关注什么\n\n真正重要的问题是开发者如何暴露遮罩、对象类别、时间约束和用户开关，而不是一张截图有多逼真。严肃评测应包含镜头移动、细小几何体、透明表面、头发、植被、招牌文字和 UI。\n\n高质量流程应保存输入帧、模型和设置版本、输出帧以及验收标准。GPT-6 Astra 可以帮助总结证据，但证据本身必须能被人检查。\n\n## 编辑标准\n\n我们优先引用 NVIDIA 和 OpenAI 一手资料，将建议中的工作流明确标为建议，不把厂商宣传直接写成独立基准测试。功能、硬件支持和模型可用性会变化；本文带日期，并计划每月复核。\n\n*本站独立运营，不隶属于或受 NVIDIA Corporation、OpenAI 支持或认可。*`
   },
   ...CORE_ARTICLES,
+  ...GAME_ANCHOR_ARTICLES,
   ...ENTRY_ARTICLES,
 ];

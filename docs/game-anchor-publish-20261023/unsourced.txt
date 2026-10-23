@@ -1,0 +1,6 @@
+
+== /Users/wangsheng/code/shou/dlss5app —— 0 个文件命中（共扫 37 个文件）
+
+== /Users/wangsheng/code/shou/dlss5main —— 0 个文件命中（共扫 283 个文件）
+
+判定: PASS — 没有无来源的数字/引语/技术名
