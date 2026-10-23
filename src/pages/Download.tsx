@@ -1,3 +1,4 @@
+import { DownloadEvidence } from '../components/RoiEvidence';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -155,6 +156,8 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
           <figcaption className="mt-3 text-sm text-zinc-500">{t('hero.shot.cap')}</figcaption>
         </figure>
       </section>
+
+      {!isZh && <DownloadEvidence />}
 
       {/* ── 索取下载（注册后可见邮箱 + 一键发信） ─────────────────────── */}
       <section id="request" className="mb-16 scroll-mt-28">

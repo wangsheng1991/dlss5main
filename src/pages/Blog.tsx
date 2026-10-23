@@ -1,3 +1,4 @@
+import { ComparisonIntro, ComparisonAnswers } from '../components/RoiEvidence';
 import FeaturePicker from '../components/FeaturePicker';
 import { FEATURE_PICKER_MARKER, FEATURE_PICKER_SLUG } from '../content/featurePicker';
 import React, { useEffect, useState } from 'react';
@@ -504,7 +505,9 @@ export default function Blog() {
         {/* Article Content */}
         <div className="prose prose-invert prose-zinc max-w-none" style={article.slug === FEATURE_PICKER_SLUG ? { overflowWrap: 'anywhere' } : undefined}>
           {!isArticleLocaleSupported && <p className="not-prose rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-zinc-300" role="status">{copy.translationNotice}</p>}
+          {canonicalPath === '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026' && activeLang !== 'cn' && <ComparisonIntro />}
           {renderContent(content)}
+          {canonicalPath === '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026' && activeLang !== 'cn' && <ComparisonAnswers />}
         </div>
 
         {article.sources?.length ? <aside className="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5">
