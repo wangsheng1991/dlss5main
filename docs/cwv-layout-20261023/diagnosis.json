@@ -1,0 +1,1728 @@
+[
+  {
+    "path": "/download",
+    "rects": [
+      {
+        "time": 1543.5,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 6446.09375
+        },
+        "main": {
+          "x": 220,
+          "y": 0,
+          "width": 1000,
+          "height": 6217.09375
+        },
+        "footer": null,
+        "navLinks": null
+      },
+      {
+        "time": 2397.2999999821186,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1486
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1206
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 940.640625,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading\u2026</div></div>"
+      },
+      {
+        "time": 2469.4000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1510
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading\u2026</div></div>"
+      },
+      {
+        "time": 3902.0999999940395,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 12492.234375
+        },
+        "main": {
+          "x": 170,
+          "y": 0,
+          "width": 1100,
+          "height": 11033.234375
+        },
+        "footer": {
+          "x": 0,
+          "y": 11262.234375,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      },
+      {
+        "time": 3945,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 12902.234375
+        },
+        "main": {
+          "x": 170,
+          "y": 0,
+          "width": 1100,
+          "height": 11443.234375
+        },
+        "footer": {
+          "x": 0,
+          "y": 11672.234375,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      }
+    ],
+    "shifts": [
+      {
+        "value": 0.7202592592592593,
+        "startTime": 3905.2999999821186,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 280,
+              "width": 1440,
+              "height": 620,
+              "top": 280,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 11262.234375,
+              "width": 1440,
+              "height": 1230
+            }
+          },
+          {
+            "node": "DIV.hidden md:flex gap-6 items-center ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricing",
+            "previousRect": {
+              "x": 128.03125,
+              "y": 8,
+              "width": 843.5,
+              "height": 48,
+              "top": 8,
+              "right": 971.53125,
+              "bottom": 56,
+              "left": 128.03125
+            },
+            "currentRect": {
+              "x": 124.59375,
+              "y": 8,
+              "width": 846.9375,
+              "height": 48,
+              "top": 8,
+              "right": 971.53125,
+              "bottom": 56,
+              "left": 124.59375
+            },
+            "observedRect": {
+              "x": 124.59375,
+              "y": 8,
+              "width": 846.9375,
+              "height": 48
+            }
+          }
+        ]
+      }
+    ],
+    "dom": [
+      {
+        "time": 1040.199999988079,
+        "changes": [
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HTML. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HTML. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent gui"
+            ],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent gui",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent gui",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent gui",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent gui",
+            "added": [
+              "DIV. DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent guideDLSS 5 D"
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV. DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent guideDLSS 5 D",
+            "added": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[1000px] mx-auto DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent guideDLSS 5 D"
+            ],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[1000px] mx-auto DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent guideDLSS 5 D",
+            "added": [
+              "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by Request"
+            ],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by Request",
+            "added": [
+              "A. DLSS5NVIDIA"
+            ],
+            "removed": []
+          },
+          {
+            "target": "A. DLSS5NVIDIA",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by Request",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by Request",
+            "added": [
+              "SPAN. /"
+            ],
+            "removed": []
+          },
+          {
+            "target": "SPAN. /",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by Request",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by Request",
+            "added": [
+              "SPAN. DLSS 5 Download Guide \u2014 DLSS5 Studio by Request"
+            ],
+            "removed": []
+          },
+          {
+            "target": "SPAN. DLSS 5 Download Guide \u2014 DLSS5 Studio by Request",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[1000px] mx-auto DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent guideDLSS 5 D",
+            "added": [
+              "HEADER.max-w-3xl DLSS5NVIDIA \u00b7 independent guideDLSS 5 Download Guide \u2014 DLSS5 Studio by RequestChoose the right DLSS "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEADER.max-w-3xl DLSS5NVIDIA \u00b7 independent guideDLSS 5 Download Guide \u2014 DLSS5 Studio by RequestChoose the right DLSS ",
+            "added": [
+              "P.text-primary uppercase tracking-widest text-xs DLSS5NVIDIA \u00b7 independent guide"
+            ],
+            "removed": []
+          },
+          {
+            "target": "P.text-primary uppercase tracking-widest text-xs DLSS5NVIDIA \u00b7 independent guide",
+            "added": [],
+            "removed": []
+          }
+        ]
+      },
+      {
+        "time": 2377.0999999940395,
+        "changes": [
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio\n    \n   ",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV. DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin",
+            "added": [],
+            "removed": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[1000px] mx-auto DLSS5NVIDIA / DLSS 5 Download Guide \u2014 DLSS5 Studio by RequestDLSS5NVIDIA \u00b7 independent guideDLSS 5 D",
+              "ASIDE.mx-auto max-w-[1000px] px-6 pb-20 RelatedContinue with examples, support status and practical requirements.Try the free browser visual"
+            ]
+          },
+          {
+            "target": "DIV. DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin",
+            "added": [
+              "DIV.min-h-screen bg-background text-on-surface font-body selection:bg-primary selection:text-black flex flex-col DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin"
+            ],
+            "removed": []
+          }
+        ]
+      },
+      {
+        "time": 3825,
+        "changes": [
+          {
+            "target": "DIV.flex-1 {\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.dlss5nvidia.co",
+            "added": [],
+            "removed": [
+              "DIV.pt-40 pb-24 text-center text-zinc-500 Loading\u2026"
+            ]
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "TITLE. DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows Studio"
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Download (2026) \u2014 Free Online Converter, Mobile & Windows StudioDLSS 5 Do",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV.flex-1 {\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.dlss5nvidia.co",
+            "added": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[1100px] mx-auto {\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.dlss5nvidia.co"
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV.flex-1 {\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.dlss5nvidia.co",
+            "added": [
+              "ASIDE.mx-auto max-w-[1000px] px-6 pb-20 RelatedContinue with examples, support status and practical requirements.Try the free browser visual"
+            ],
+            "removed": []
+          }
+        ]
+      }
+    ],
+    "chunks": [
+      {
+        "name": "https://www.dlss5nvidia.com/assets/index-4urNevfo.js",
+        "startTime": 1034.699999988079,
+        "responseEnd": 2219.699999988079
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/react-BzgHHHn1.js",
+        "startTime": 1034.9000000059605,
+        "responseEnd": 2325.0999999940395
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/i18n-7IQxcBXm.js",
+        "startTime": 1035,
+        "responseEnd": 1643.0999999940395
+      },
+      {
+        "name": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+        "startTime": 1035.4000000059605,
+        "responseEnd": 2322.9000000059605
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/Download-DrXzLEt-.js",
+        "startTime": 2370.9000000059605,
+        "responseEnd": 3804.5
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/studioRequest-BBr2YGZQ.js",
+        "startTime": 2371.0999999940395,
+        "responseEnd": 3805.2999999821186
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/RoiEvidence-DjLq5-fM.js",
+        "startTime": 2371.0999999940395,
+        "responseEnd": 3807.5
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/GoogleSignInButton-CQA7SOlg.js",
+        "startTime": 2371.2999999821186,
+        "responseEnd": 3806.5999999940395
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/clock-BfaK8WiC.js",
+        "startTime": 2371.4000000059605,
+        "responseEnd": 3806
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/external-link-OGnsAbo8.js",
+        "startTime": 2371.5,
+        "responseEnd": 3807
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/firebase-client-DowiVcT5.js",
+        "startTime": 2406.199999988079,
+        "responseEnd": 3812
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/firebase-DEWJDRgn.js",
+        "startTime": 2406.2999999821186,
+        "responseEnd": 3812.199999988079
+      },
+      {
+        "name": "https://scripts.clarity.ms/0.8.75-beta/clarity.js",
+        "startTime": 5278.4000000059605,
+        "responseEnd": 6713.299999982119
+      }
+    ],
+    "sampleRequests": []
+  },
+  {
+    "path": "/blog/core-two-reference-room-workflow",
+    "rects": [
+      {
+        "time": 2575.7000000178814,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 4841.5
+        },
+        "main": {
+          "x": 270,
+          "y": 0,
+          "width": 900,
+          "height": 4841.5
+        },
+        "footer": null,
+        "navLinks": null
+      },
+      {
+        "time": 2783.7000000178814,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 5606.859375
+        },
+        "main": {
+          "x": 270,
+          "y": 0,
+          "width": 900,
+          "height": 5606.859375
+        },
+        "footer": null,
+        "navLinks": null
+      },
+      {
+        "time": 2835.4000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1486
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1206
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 940.640625,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading\u2026</div></div>"
+      },
+      {
+        "time": 3290,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1510
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading\u2026</div></div>"
+      },
+      {
+        "time": 3402.2000000178814,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 7165.140625
+        },
+        "main": {
+          "x": 270,
+          "y": 0,
+          "width": 900,
+          "height": 5935.140625
+        },
+        "footer": {
+          "x": 294,
+          "y": 5742.140625,
+          "width": 852,
+          "height": 45
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      },
+      {
+        "time": 3687.300000011921,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 7732.875
+        },
+        "main": {
+          "x": 270,
+          "y": 0,
+          "width": 900,
+          "height": 6502.875
+        },
+        "footer": {
+          "x": 294,
+          "y": 6309.875,
+          "width": 852,
+          "height": 45
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      },
+      {
+        "time": 3754,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 8584.875
+        },
+        "main": {
+          "x": 270,
+          "y": 0,
+          "width": 900,
+          "height": 7354.875
+        },
+        "footer": {
+          "x": 294,
+          "y": 7161.875,
+          "width": 852,
+          "height": 45
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      }
+    ],
+    "shifts": [
+      {
+        "value": 0.6888888888888889,
+        "startTime": 3403.800000011921,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 280,
+              "width": 1440,
+              "height": 620,
+              "top": 280,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 5935.140625,
+              "width": 1440,
+              "height": 1230
+            }
+          }
+        ]
+      }
+    ],
+    "dom": [
+      {
+        "time": 1517.800000011921,
+        "changes": [
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HTML. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HTML. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "BODY. \n    \n    \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style "
+            ],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style ",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style ",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style ",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style ",
+            "added": [
+              "DIV. \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:"
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV. \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:",
+            "added": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[900px] mx-auto \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:"
+            ],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[900px] mx-auto \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[900px] mx-auto \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:",
+            "added": [
+              "NAV.mb-8 \u2190 Back to Blog"
+            ],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 \u2190 Back to Blog",
+            "added": [
+              "A.text-zinc-400 \u2190 Back to Blog"
+            ],
+            "removed": []
+          },
+          {
+            "target": "A.text-zinc-400 \u2190 Back to Blog",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[900px] mx-auto \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[900px] mx-auto \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:",
+            "added": [
+              "ARTICLE. \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a vi"
+            ],
+            "removed": []
+          },
+          {
+            "target": "ARTICLE. \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a vi",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "ARTICLE. \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a vi",
+            "added": [
+              "HEADER.mb-8 \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a visual di"
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEADER.mb-8 \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a visual di",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HEADER.mb-8 \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a visual di",
+            "added": [
+              "P.text-xs uppercase tracking-widest text-primary P0 \u00b7  \u00b7 2026-10-23"
+            ],
+            "removed": []
+          },
+          {
+            "target": "P.text-xs uppercase tracking-widest text-primary P0 \u00b7  \u00b7 2026-10-23",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HEADER.mb-8 \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference: give a room redraw a visual di",
+            "added": [],
+            "removed": []
+          }
+        ]
+      },
+      {
+        "time": 2811,
+        "changes": [
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV. DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin",
+            "added": [],
+            "removed": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[900px] mx-auto \n    \u2190 Back to Blog\n    \n      \n        P0 \u00b7  \u00b7 2026-10-23\n        Source image and style reference:"
+            ]
+          },
+          {
+            "target": "DIV. DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin",
+            "added": [
+              "DIV.min-h-screen bg-background text-on-surface font-body selection:bg-primary selection:text-black flex flex-col DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin"
+            ],
+            "removed": []
+          }
+        ]
+      },
+      {
+        "time": 3376.5999999940395,
+        "changes": [
+          {
+            "target": "DIV.flex-1 {\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.dlss5nvidia.co",
+            "added": [],
+            "removed": [
+              "DIV.pt-40 pb-24 text-center text-zinc-500 Loading\u2026"
+            ]
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "TITLE. Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5 Blog"
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    Source image and style reference: give a room redraw a visual direction \u2014 DLSS 5",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          }
+        ]
+      }
+    ],
+    "chunks": [
+      {
+        "name": "https://www.dlss5nvidia.com/assets/index-4urNevfo.js",
+        "startTime": 1509.5,
+        "responseEnd": 2754.0999999940395
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/react-BzgHHHn1.js",
+        "startTime": 1509.800000011921,
+        "responseEnd": 2530.5
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/i18n-7IQxcBXm.js",
+        "startTime": 1509.9000000059605,
+        "responseEnd": 2058.800000011921
+      },
+      {
+        "name": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+        "startTime": 1510.300000011921,
+        "responseEnd": 2734
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/Blog-C1neg3tB.js",
+        "startTime": 2803.2000000178814,
+        "responseEnd": 3366
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/RoiEvidence-DjLq5-fM.js",
+        "startTime": 2803.5999999940395,
+        "responseEnd": 3282.2000000178814
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/clock-BfaK8WiC.js",
+        "startTime": 2803.800000011921,
+        "responseEnd": 3365.2000000178814
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/firebase-client-DowiVcT5.js",
+        "startTime": 2845.300000011921,
+        "responseEnd": 3365.5999999940395
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/firebase-DEWJDRgn.js",
+        "startTime": 2845.4000000059605,
+        "responseEnd": 3391.2000000178814
+      },
+      {
+        "name": "https://scripts.clarity.ms/0.8.75-beta/clarity.js",
+        "startTime": 5153.0999999940395,
+        "responseEnd": 6942
+      }
+    ],
+    "sampleRequests": []
+  },
+  {
+    "path": "/visual-enhancer",
+    "rects": [
+      {
+        "time": 2606.9000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 4121.5
+        },
+        "main": {
+          "x": 170,
+          "y": 0,
+          "width": 1100,
+          "height": 3920.5
+        },
+        "footer": null,
+        "navLinks": null
+      },
+      {
+        "time": 2887.4000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1486
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1206
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 940.640625,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading\u2026</div></div>"
+      },
+      {
+        "time": 3232.199999988079,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1510
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading\u2026</div></div>"
+      },
+      {
+        "time": 3501.9000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 5605.5
+        },
+        "main": {
+          "x": 170,
+          "y": 0,
+          "width": 1100,
+          "height": 4174.5
+        },
+        "footer": {
+          "x": 0,
+          "y": 4375.5,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      },
+      {
+        "time": 3516.5999999940395,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 5649.5
+        },
+        "main": {
+          "x": 170,
+          "y": 0,
+          "width": 1100,
+          "height": 4218.5
+        },
+        "footer": {
+          "x": 0,
+          "y": 4419.5,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      }
+    ],
+    "shifts": [
+      {
+        "value": 0.6888888888888889,
+        "startTime": 3503.300000011921,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 280,
+              "width": 1440,
+              "height": 620,
+              "top": 280,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 4375.5,
+              "width": 1440,
+              "height": 1230
+            }
+          }
+        ]
+      }
+    ],
+    "dom": [
+      {
+        "time": 1543.4000000059605,
+        "changes": [
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HTML. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "HTML. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhan"
+            ],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhan",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhan",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhan",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "BODY. \n    \n    DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhan",
+            "added": [
+              "DIV. DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhancer Online"
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV. DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhancer Online",
+            "added": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[1100px] mx-auto DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhancer Online"
+            ],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[1100px] mx-auto DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhancer Online",
+            "added": [
+              "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Visual Enhancer Online"
+            ],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Visual Enhancer Online",
+            "added": [
+              "A. DLSS5NVIDIA"
+            ],
+            "removed": []
+          },
+          {
+            "target": "A. DLSS5NVIDIA",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Visual Enhancer Online",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Visual Enhancer Online",
+            "added": [
+              "SPAN. /"
+            ],
+            "removed": []
+          },
+          {
+            "target": "SPAN. /",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Visual Enhancer Online",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "NAV.mb-8 text-sm text-zinc-500 DLSS5NVIDIA / DLSS 5 Visual Enhancer Online",
+            "added": [
+              "SPAN. DLSS 5 Visual Enhancer Online"
+            ],
+            "removed": []
+          },
+          {
+            "target": "SPAN. DLSS 5 Visual Enhancer Online",
+            "added": [],
+            "removed": []
+          },
+          {
+            "target": "MAIN.pt-32 pb-24 px-6 max-w-[1100px] mx-auto DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhancer Online",
+            "added": [
+              "HEADER.max-w-4xl Free browser visual enhancerDLSS 5 Visual Enhancer OnlineRun a visual-enhancement example before you"
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEADER.max-w-4xl Free browser visual enhancerDLSS 5 Visual Enhancer OnlineRun a visual-enhancement example before you",
+            "added": [
+              "P.text-primary uppercase tracking-[0.2em] text-xs Free browser visual enhancer"
+            ],
+            "removed": []
+          },
+          {
+            "target": "P.text-primary uppercase tracking-[0.2em] text-xs Free browser visual enhancer",
+            "added": [],
+            "removed": []
+          }
+        ]
+      },
+      {
+        "time": 2864.199999988079,
+        "changes": [
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required\n    \n    \n\n    \n",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "DIV. DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin",
+            "added": [],
+            "removed": [
+              "MAIN.pt-32 pb-24 px-6 max-w-[1100px] mx-auto DLSS5NVIDIA / DLSS 5 Visual Enhancer OnlineFree browser visual enhancerDLSS 5 Visual Enhancer Online",
+              "ASIDE.mx-auto max-w-[1000px] px-6 pb-20 RelatedContinue with examples, support status and practical requirements.Image quality enhancer \u2192AI "
+            ]
+          },
+          {
+            "target": "DIV. DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin",
+            "added": [
+              "DIV.min-h-screen bg-background text-on-surface font-body selection:bg-primary selection:text-black flex flex-col DLSS 5ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricingLogin"
+            ],
+            "removed": []
+          }
+        ]
+      },
+      {
+        "time": 3474,
+        "changes": [
+          {
+            "target": "DIV.flex-1 {\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.dlss5nvidia.co",
+            "added": [],
+            "removed": [
+              "DIV.pt-40 pb-24 text-center text-zinc-500 Loading\u2026"
+            ]
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "TITLE. DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login Required"
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "META. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          },
+          {
+            "target": "HEAD. \n    \n    \n    \n    DLSS 5 Visual Enhancer Online \u2014 Free Example, No Login RequiredDLSS 5 Visual Enh",
+            "added": [
+              "LINK. "
+            ],
+            "removed": []
+          }
+        ]
+      }
+    ],
+    "chunks": [
+      {
+        "name": "https://www.dlss5nvidia.com/assets/index-4urNevfo.js",
+        "startTime": 1537.199999988079,
+        "responseEnd": 2575.9000000059605
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/react-BzgHHHn1.js",
+        "startTime": 1537.5999999940395,
+        "responseEnd": 2743.4000000059605
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/i18n-7IQxcBXm.js",
+        "startTime": 1537.800000011921,
+        "responseEnd": 2812.699999988079
+      },
+      {
+        "name": "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+        "startTime": 1538,
+        "responseEnd": 2769.5
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/VisualEnhancer-CHB1nZmB.js",
+        "startTime": 2858.0999999940395,
+        "responseEnd": 3212.9000000059605
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/SearchEvidence-CLyjdTmc.js",
+        "startTime": 2858.300000011921,
+        "responseEnd": 3215
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/RoiEvidence-DjLq5-fM.js",
+        "startTime": 2858.4000000059605,
+        "responseEnd": 3214.5
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/useSampleRun-CIagkSFB.js",
+        "startTime": 2858.5,
+        "responseEnd": 3464.0999999940395
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/play-Cu9PwuLG.js",
+        "startTime": 2858.5999999940395,
+        "responseEnd": 3213.9000000059605
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/useGeneration-CFGbZQ5d.js",
+        "startTime": 2858.5999999940395,
+        "responseEnd": 3215.800000011921
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/download-DpCSF54m.js",
+        "startTime": 2858.699999988079,
+        "responseEnd": 3213.4000000059605
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/firebase-client-DowiVcT5.js",
+        "startTime": 2896.9000000059605,
+        "responseEnd": 3217
+      },
+      {
+        "name": "https://www.dlss5nvidia.com/assets/firebase-DEWJDRgn.js",
+        "startTime": 2897.0999999940395,
+        "responseEnd": 3462.0999999940395
+      },
+      {
+        "name": "https://scripts.clarity.ms/0.8.75-beta/clarity.js",
+        "startTime": 5623.699999988079,
+        "responseEnd": 7080.5
+      }
+    ],
+    "sampleRequests": []
+  }
+]

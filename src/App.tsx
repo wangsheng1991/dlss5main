@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect, useLayoutEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
@@ -68,7 +68,14 @@ const DlssChecker = import.meta.env.DEV ? lazy(() => import('./pages/DlssChecker
 const orHome = (section: SiteSection, page: React.ReactNode): React.ReactNode =>
   profileHas(section) ? page : <Navigate to="/" replace />;
 
-export default function App() {
+function InitialRouteReady({ release }: { release: React.Dispatch<React.SetStateAction<string | undefined>> }) {
+  // Inside Suspense: this only commits after the real route has mounted.
+  useLayoutEffect(() => release(undefined), [release]);
+  return null;
+}
+
+export default function App({ prerenderedPage }: { prerenderedPage?: string } = {}) {
+  const [initialPage, releaseInitialPage] = useState(prerenderedPage);
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -77,7 +84,9 @@ export default function App() {
           <div className="min-h-screen bg-background text-on-surface font-body selection:bg-primary selection:text-black flex flex-col">
             <Navbar />
             <div className="flex-1">
-              <Suspense fallback={<div className="pt-40 pb-24 text-center text-zinc-500">Loading…</div>}>
+              <Suspense fallback={initialPage
+                ? <div data-prerender-fallback dangerouslySetInnerHTML={{ __html: initialPage }} />
+                : <div className="pt-40 pb-24 text-center text-zinc-500">Loading…</div>}>
                 <Routes>
                   <Route path="/" element={<Home />} />
                   {/* The Chinese edition of the home page at its own indexable URL. `/` stays the
@@ -159,6 +168,7 @@ export default function App() {
                   {DlssChecker && <Route path="/dlss-checker" element={<DlssChecker />} />}
                 </Routes>
                 <RelatedAdditions />
+                {initialPage && <InitialRouteReady release={releaseInitialPage} />}
               </Suspense>
             </div>
             <Footer />

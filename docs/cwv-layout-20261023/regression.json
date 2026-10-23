@@ -1,0 +1,131 @@
+[
+  {
+    "mode": "old-firebase-blocked",
+    "path": "/download",
+    "main": 1,
+    "shifts": [
+      {
+        "time": 130.69999998807907,
+        "value": 0.0008949957032589591,
+        "sources": [
+          "undefined.undefined",
+          "undefined.undefined"
+        ]
+      },
+      {
+        "time": 193.89999997615814,
+        "value": 0.00007488586676954733,
+        "sources": [
+          "DIV.hidden md:flex gap-6 items-center"
+        ]
+      },
+      {
+        "time": 3259.699999988079,
+        "value": 0.6888888888888889,
+        "sources": [
+          "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mode": "old-firebase-blocked",
+    "path": "/blog/core-two-reference-room-workflow",
+    "main": 1,
+    "shifts": [
+      {
+        "time": 105.30000001192093,
+        "value": 0.00003237817081404321,
+        "sources": [
+          "undefined.undefined"
+        ]
+      },
+      {
+        "time": 3168.4000000059605,
+        "value": 0.6888888888888889,
+        "sources": [
+          "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mode": "old-firebase-blocked",
+    "path": "/visual-enhancer",
+    "main": 1,
+    "shifts": [
+      {
+        "time": 153.69999998807907,
+        "value": 0.00007488586676954733,
+        "sources": [
+          "DIV.hidden md:flex gap-6 items-center"
+        ]
+      },
+      {
+        "time": 3162.800000011921,
+        "value": 0.6888888888888889,
+        "sources": [
+          "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mode": "fixed-slow-route",
+    "path": "/download",
+    "main": 1,
+    "shifts": [
+      {
+        "time": 198.59999999403954,
+        "value": 0.00007488586676954733,
+        "sources": [
+          "DIV.hidden md:flex gap-6 items-center"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mode": "fixed-slow-route",
+    "path": "/blog/core-two-reference-room-workflow",
+    "main": 1,
+    "shifts": [
+      {
+        "time": 84.30000001192093,
+        "value": 0.00003237817081404321,
+        "sources": [
+          "undefined.undefined"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mode": "fixed-slow-route",
+    "path": "/visual-enhancer",
+    "main": 1,
+    "shifts": [
+      {
+        "time": 92.69999998807907,
+        "value": 0.02727753229756087,
+        "sources": [
+          "undefined.undefined",
+          "undefined.undefined",
+          "undefined.undefined",
+          "undefined.undefined"
+        ]
+      },
+      {
+        "time": 166.30000001192093,
+        "value": 0.00007488586676954733,
+        "sources": [
+          "DIV.hidden md:flex gap-6 items-center"
+        ]
+      }
+    ],
+    "errors": []
+  }
+]

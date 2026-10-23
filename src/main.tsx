@@ -18,10 +18,20 @@ if (typeof window !== 'undefined') {
   }
 }
 
-const root = createRoot(document.getElementById('root')!);
+const rootElement = document.getElementById('root')!;
+// These prerendered pages must retain their real content while the initial route loads.
+const retainedRoutes = new Set([
+  '/download', '/visual-enhancer',
+  '/blog/core-game-frame-style-reference',
+  '/blog/core-two-reference-room-workflow',
+  '/blog/core-redraw-review-checklist',
+]);
+const prerenderedPage = retainedRoutes.has(window.location.pathname.replace(/\/+$/, ''))
+  && rootElement.querySelector('main') ? rootElement.innerHTML : undefined;
+const root = createRoot(rootElement);
 const draw = () => root.render(
   <StrictMode>
-    <App />
+    <App prerenderedPage={prerenderedPage} />
   </StrictMode>,
 );
 
