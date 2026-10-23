@@ -1,3 +1,4 @@
+import { assertArticleMarkdownRendered } from './check-article-markdown';
 import CoreArticleVideo from '../src/components/CoreArticleVideo';
 import { CORE_VIDEOS, coreVideoCopy } from '../src/content/articles/coreVideo20261023';
 import CoreArticleContent from '../src/components/CoreArticleContent';
@@ -1451,3 +1452,5 @@ for (const file of ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']) {
 }
 
 console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${PODCAST_EPISODES.length + 1} podcast routes, ${TOOL_LANDINGS.length} SEO tools, ${USE_CASES.length} workflow guides and ${publishableSpecs().length + 1} micro tool routes, blog indexes and dashboard noindex.`);
+
+if (profileHas('blog')) assertArticleMarkdownRendered(DIST);

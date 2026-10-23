@@ -1,0 +1,18 @@
+ARTICLE-MARKDOWN: FAIL
+core-game-character-style-matrix (/Users/wangsheng/code/shou/dlss5main/dist/blog/core-game-character-style-matrix/index.html): "| --- |![deliberate regression fixture]A game character style test needs"
+core-game-character-style-matrix (/Users/wangsheng/code/shou/dlss5main/dist/blog/core-game-character-style-matrix/index.html): "| --- |![deliberate regression fixture]A game character style test needs o"
+/Users/wangsheng/code/shou/dlss5main/scripts/check-article-markdown.ts:51
+    throw new Error(`${failures.length} article Markdown rendering failure(s)`);
+          ^
+
+
+Error: 2 article Markdown rendering failure(s)
+    at assertArticleMarkdownRendered (/Users/wangsheng/code/shou/dlss5main/scripts/check-article-markdown.ts:51:11)
+    at <anonymous> (/Users/wangsheng/code/shou/dlss5main/scripts/check-article-markdown.ts:56:85)
+    at ModuleJob.run (node:internal/modules/esm/module_job:371:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:669:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.6.0
+
+EXIT_CODE=1

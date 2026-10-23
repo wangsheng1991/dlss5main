@@ -1,0 +1,2 @@
+ARTICLE-MARKDOWN: PASS — 32 pages, 16 assetBase articles, no raw table separators or image Markdown
+EXIT_CODE=0
