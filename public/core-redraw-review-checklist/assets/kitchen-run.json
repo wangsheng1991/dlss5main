@@ -1,0 +1,14 @@
+{
+  "model": "flux-klein",
+  "prompt": "Make this clear kitchen CG render look like a physically lit real photograph, only improving lighting and surface response. Keep exact original camera, framing, room dimensions, all cupboard doors, stove, sink, water heater, small appliances, bowls and other objects in exactly their original shapes and positions. Preserve the same daylight direction from the existing right window. Introduce soft realistic indirect bounce, gentle ambient contact shadows, subtle wood roughness, restrained stainless-steel reflections, ceramic response and convincing natural light falloff. Keep original palette and design. Do not add, remove or replace anything; no redesign, no sharpening or blur, no deliberate resolution change. Any small interface overlay must remain unchanged, not become scene geometry.",
+  "width": 1216,
+  "height": 880,
+  "seed": 2101,
+  "num_inference_steps": 4,
+  "taskId": "task_UQY0zkjlPlrxZujpMJAAS1GlTVeJAqBv",
+  "status": "SUCCESS",
+  "date": "2026-10-21",
+  "outputWidth": 1216,
+  "outputHeight": 880,
+  "seconds": 16.5
+}

@@ -1,0 +1,14 @@
+    stepsHeading: 'How to create a room concept',
+    steps: [
+      { name: 'Upload a room photo', text: 'Choose a view where the walls, floor, windows and doors are visible. Keep the camera angle stable for a useful comparison.' },
+      { name: 'Choose room and style', text: 'Pick the room type and a named material recipe such as Nordic, Japandi, industrial or modern Chinese.' },
+      { name: 'Check the geometry', text: 'Compare windows, doors, floor lines, furniture scale and lighting before using the render in a presentation.' },
+    ],
+    checks: ['Check that walls, windows and doors stayed in the same locations.', 'Inspect straight lines, floor perspective and furniture scale.', 'Compare material, lighting and colour with the selected style.'],
+    featureList: ['Named interior style recipes', 'Room type presets', 'Optional style reference image'],
+    faqs: [
+      { question: 'Can this create a real floor plan?', answer: 'No. It creates a visual interior concept from a room photo. Use measured drawings or a design tool for dimensions, construction and furniture fit.' },
+      { question: 'Which room styles are available?', answer: 'The studio offers named recipes including Nordic, warm minimal, Japandi, modern Chinese, industrial loft and French classic, plus room-type presets.' },
+      { question: 'Will it keep my windows and walls?', answer: 'The workflow asks the model to preserve the room geometry, but generative results can drift. Review straight lines, openings and perspective before sharing.' },
+    ],
+    related: [

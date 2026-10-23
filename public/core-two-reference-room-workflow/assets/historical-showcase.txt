@@ -1,0 +1,20 @@
+  {
+    id: 'interior-japandi-ref',
+    mode: 'interior',
+    title: 'A style reference photo drives the palette',
+    choices: ['Style: Japandi', 'Room: living room', 'Second reference: a style photo'],
+    options: { style: 'japandi', room_type: 'living_room' },
+    inputs: [
+      { src: '/examples/interior-room.jpg', label: 'Empty room' },
+      { src: '/examples/interior-style-ref.jpg', label: 'Style reference' },
+    ],
+    output: { src: '/examples/interior-ref-after.jpg', label: 'Japandi render', width: 1152, height: 768 },
+    seconds: '60 s',
+    look: [
+      'The reference’s muted palette and material mood show up in the render.',
+      'Its layout is not copied — the room is still the one in the first photo.',
+      'Architecture held once more: same window, same camera, same floor plane.',
+    ],
+    limit: 'The second image steers palette and materials only; it cannot add a wall or move a window.',
+    measured: '2026-09-25',
+  },

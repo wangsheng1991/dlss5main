@@ -1,10 +1,12 @@
+import CoreArticleContent from '../components/CoreArticleContent';
+import { withManuscriptFaq } from '../content/articles/coreSchema';
 import { ARTICLE_CHECK_PATHS, SCHEMA_REVIEW_DATE } from '../content/schemaReview';
 import { ComparisonIntro, ComparisonAnswers } from '../components/RoiEvidence';
 import FeaturePicker from '../components/FeaturePicker';
 import { FEATURE_PICKER_MARKER, FEATURE_PICKER_SLUG } from '../content/featurePicker';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams, Navigate } from 'react-router-dom';
+import { Link, useParams, useLocation, Navigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import { ARTICLES } from '../content/articles/types';
 import { ARTICLE_COVERS } from '../content/articles/covers';
@@ -125,8 +127,11 @@ const BLOG_COPY: Record<BlogLocale, {
 
 export default function Blog() {
   const { i18n } = useTranslation();
-  const { slug, locale: routeLocale } = useParams<{ slug?: string; locale?: 'en' | 'zh' }>();
-  const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' ? 'en-US' : undefined;
+  const { slug, locale: paramLocale } = useParams<{ slug?: string; locale?: 'en' | 'zh' }>();
+  const { pathname } = useLocation();
+  const isCoreArticle = ARTICLES.some(article => article.slug === slug && article.tier === 'core');
+  const routeLocale = paramLocale || (isCoreArticle && pathname.startsWith('/zh/') ? 'zh' : undefined);
+  const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' || isCoreArticle ? 'en-US' : undefined;
   const locale = (routeLanguage || i18n.resolvedLanguage || i18n.language || 'en-US') as BlogLocale;
   const copy = BLOG_COPY[locale] || BLOG_COPY['en-US'];
   // The unprefixed path is the x-default canonical. Keep its head metadata in the same English
@@ -149,6 +154,10 @@ export default function Blog() {
   // English body, title and purpose were identical. Keep the already indexed unprefixed URL as
   // the only English address; the edge redirect in vercel.json handles old inbound links.
   const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
+  'core-game-frame-style-reference',
+  'core-two-reference-room-workflow',
+  'core-redraw-review-checklist',
+
     'dlss-5-online-image-upscaler-guide',
     'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
     'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
@@ -196,7 +205,7 @@ export default function Blog() {
           {[...ARTICLES].sort((a, b) => Number(!!b.datePublished) - Number(!!a.datePublished)).map(article => (
             <Link
               key={article.slug}
-              to={`${routeLocale ? `/${routeLocale}` : ''}/blog/${article.slug}`}
+              to={`${routeLocale ? `/${routeLocale}` : article.tier === 'core' && pathname.startsWith('/zh/') ? '/zh' : ''}/blog/${article.slug}`}
               className="bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden hover:border-primary/50 transition-colors group"
             >
               <div className="relative aspect-[16/7] overflow-hidden bg-surface-high">
@@ -246,11 +255,11 @@ export default function Blog() {
   const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'TechArticle',
+    '@type': article.tier === 'core' ? 'Article' : 'TechArticle',
     headline: seoTitle,
     description: seoDescription,
     inLanguage: seoActiveLang === 'cn' ? 'zh-CN' : 'en-US',
-    dateModified: article.datePublished || undefined,
+    dateModified: article.checkedDate || article.datePublished || undefined,
     datePublished: article.datePublished || undefined,
     author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk' },
     publisher: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: SITE_URL },
@@ -421,7 +430,7 @@ export default function Blog() {
         image={cover.ogSrc || cover.src}
         language={seoActiveLang === 'cn' ? 'zh-CN' : 'en-US'}
         alternates={alternateLinks}
-        structuredData={structuredData}
+        structuredData={withManuscriptFaq(structuredData, article, seoActiveLang === 'cn')}
       />
       {/* Language Toggle */}
       <div className="flex items-center gap-4 mb-8">
@@ -487,10 +496,10 @@ export default function Blog() {
           </div>
         </header>
 
-        <figure className="relative aspect-[16/7] rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10">
-          <img src={cover.src} alt={cover.alt} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-          <figcaption className="absolute bottom-4 left-5 right-5 text-xs text-zinc-200/80">{copy.figureCaption}</figcaption>
+        <figure className={article.tier === 'core' ? "rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10" : "relative aspect-[16/7] rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10"}>
+          <img src={cover.src} alt={cover.alt} className={article.tier === 'core' ? "w-full h-auto" : "w-full h-full object-cover"} />
+          {article.tier !== 'core' && <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />}
+          <figcaption className={article.tier === 'core' ? "px-5 py-3 text-xs text-zinc-400" : "absolute bottom-4 left-5 right-5 text-xs text-zinc-200/80"}>{(activeLang === 'cn' ? article.coverCaption_cn : article.coverCaption_en) || copy.figureCaption}</figcaption>
         </figure>
 
         {/* SEO Keywords for crawlers */}
@@ -507,7 +516,7 @@ export default function Blog() {
         <div className="prose prose-invert prose-zinc max-w-none" style={article.slug === FEATURE_PICKER_SLUG ? { overflowWrap: 'anywhere' } : undefined}>
           {!isArticleLocaleSupported && <p className="not-prose rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-zinc-300" role="status">{copy.translationNotice}</p>}
           {canonicalPath === '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026' && activeLang !== 'cn' && <ComparisonIntro />}
-          {renderContent(content)}
+          {article.assetBase ? <CoreArticleContent content={content} assetBase={article.assetBase} /> : renderContent(content)}
           {canonicalPath === '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026' && activeLang !== 'cn' && <ComparisonAnswers />}
         </div>
 
@@ -558,7 +567,7 @@ export default function Blog() {
           </p>
         </footer>
       </article>
-      {ARTICLE_CHECK_PATHS.includes(canonicalPath) && <p data-schema-check-date className="mt-8 text-sm text-zinc-500">Last checked: <time dateTime={SCHEMA_REVIEW_DATE}>{SCHEMA_REVIEW_DATE}</time></p>}
+      {(article.checkedDate || ARTICLE_CHECK_PATHS.includes(canonicalPath)) && <p data-schema-check-date className="mt-8 text-sm text-zinc-500">Last checked: <time dateTime={SCHEMA_REVIEW_DATE}>{SCHEMA_REVIEW_DATE}</time></p>}
     </main>
   );
 }

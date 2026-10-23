@@ -1,0 +1,14 @@
+{
+  "model": "flux-klein",
+  "prompt": "Re-render this clear interior CG scene with physically plausible cinematic daylight and richer material response. Keep the exact camera, room layout, all furniture, artwork, window, bedding and object positions identical. Make the existing left window the same light source: soft directional daylight, realistic indirect bounce, grounded contact shadows under bed and bench, dimensional folds in the same bedding, believable wood-grain roughness and restrained metallic highlights. Preserve existing colors, geometry and design; no new furniture or decoration, no changed time of day, no blur, no oversharpening, no exaggerated contrast. The goal is lighting and material realism, not sharpening or enlarging.",
+  "width": 1520,
+  "height": 1040,
+  "seed": 2101,
+  "num_inference_steps": 4,
+  "taskId": "task_5OxOCGFd0EU73jOkoW0k3ZpMBKCGjzB2",
+  "status": "SUCCESS",
+  "date": "2026-10-21",
+  "outputWidth": 1520,
+  "outputHeight": 1040,
+  "seconds": 20.9
+}

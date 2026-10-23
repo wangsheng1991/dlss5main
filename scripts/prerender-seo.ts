@@ -1,3 +1,6 @@
+import CoreArticleContent from '../src/components/CoreArticleContent';
+import { withManuscriptFaq } from '../src/content/articles/coreSchema';
+import { CORE_ARTICLE_LINKS } from '../src/content/coreArticleLinks';
 import { reviewedPageSchema, ARTICLE_CHECK_PATHS, SCHEMA_REVIEW_DATE } from '../src/content/schemaReview';
 import { ChineseEnhancer, ToolEvidence } from '../src/components/LocalizedEvidence';
 import { CheckedComparison, isCheckedComparison, EnhancerChecks, DashboardEvidenceLinks } from '../src/components/SearchEvidence';
@@ -183,6 +186,10 @@ function absoluteUrl(path: string): string {
 // canonical URL and redirect the redundant /en/blog copy instead of asking
 // Google to choose between identical pages.
 const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
+  'core-game-frame-style-reference',
+  'core-two-reference-room-workflow',
+  'core-redraw-review-checklist',
+
   'dlss-5-online-image-upscaler-guide',
   'dlss-5-gpt-6-astra-ai-rendering-workflow-2026',
   'dlss5-vs-dlss4-vs-fsr4-comparison-2026',
@@ -320,6 +327,8 @@ function withoutHiddenUrls(text: string): string {
 function writeRoute(route: string, html: string): void {
   const output = resolve(DIST, route.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(output), { recursive: true });
+  const coreLink = CORE_ARTICLE_LINKS[route];
+  if (coreLink) html = html.replace('</main>', `</main><p data-core-article-link class="mx-auto max-w-[1000px] px-6 pb-8"><a class="text-primary underline" href="${escapeHtml(coreLink.path)}">${escapeHtml(coreLink.label)}</a></p>`);
   const links = RELATED_ADDITIONS[route];
   const related = links && isPublishedPath(route)
     ? `<aside class="mx-auto max-w-[1000px] px-6 pb-20" aria-label="${route.startsWith('/zh/') ? '相关页面' : 'Related pages'}"><div class="border-t border-outline-variant/20 pt-7"><h2 class="text-xl font-bold text-white">${route.startsWith('/zh/') ? '相关' : 'Related'}</h2><p class="mt-2 text-sm text-zinc-400">${route.startsWith('/zh/') ? '继续核对案例、支持状态与使用条件。' : 'Continue with examples, support status and practical requirements.'}</p><ul class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">${links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(route.startsWith('/zh/') ? link.zh : link.en)} →</a></li>`).join('')}</ul></div></aside>`
@@ -341,12 +350,12 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
   const relatedArticles = ARTICLES.filter(candidate => candidate.slug !== article.slug).slice(0, 3);
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'TechArticle',
+    '@type': article.tier === 'core' ? 'Article' : 'TechArticle',
     headline: title,
     description,
     inLanguage: isChinese ? 'zh-CN' : 'en-US',
     image: absoluteUrl(cover.ogSrc || cover.src),
-    dateModified: article.datePublished,
+    dateModified: article.checkedDate || article.datePublished,
     datePublished: article.datePublished,
     author: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk' },
     publisher: { '@type': 'Organization', name: 'DLSS5 Independent Research Desk', url: BASE_URL },
@@ -364,13 +373,13 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
       </header>
       <figure class="rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low mb-10">
         <img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="1600" height="700" fetchpriority="high" class="w-full object-cover" />
-        <figcaption class="px-5 py-3 text-xs text-zinc-400">${isChinese ? '技术简报 · 来源驱动内容' : 'Technical briefing · source-led coverage'}</figcaption>
+        <figcaption class="px-5 py-3 text-xs text-zinc-400">${escapeHtml((isChinese ? article.coverCaption_cn : article.coverCaption_en) || (isChinese ? '技术简报 · 来源驱动内容' : 'Technical briefing · source-led coverage'))}</figcaption>
       </figure>
-      <div class="prose prose-invert prose-zinc max-w-none">${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonIntro)) : ''}${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : renderMarkdown(content)}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonAnswers)) : ''}</div>
+      <div class="prose prose-invert prose-zinc max-w-none">${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonIntro)) : ''}${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : article.assetBase ? renderToStaticMarkup(createElement(CoreArticleContent, { content, assetBase: article.assetBase })) : renderMarkdown(content)}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonAnswers)) : ''}</div>
       ${article.sources?.length ? `<aside class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h2>${isChinese ? '资料与来源' : 'Sources and methodology'}</h2><ul>${article.sources.map(source => `<li><a href="${escapeHtml(source.url)}" rel="noreferrer">${escapeHtml(source.label)}</a></li>`).join('')}</ul></aside>` : ''}
       <aside class="mt-12" aria-labelledby="related-articles-heading"><h2 id="related-articles-heading">${isChinese ? '继续阅读' : 'Related reading'}</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">${relatedArticles.map(related => { const relatedCover = coverFor(related); return `<a href="${articlePath(related.slug, locale)}"><img src="${escapeHtml(relatedCover.src)}" alt="${escapeHtml(relatedCover.alt)}" width="1600" height="700" loading="lazy" /><span>${escapeHtml(isChinese ? related.title_cn : related.title_en)}</span></a>`; }).join('')}</div></aside>
       <p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a> · <a href="https://www.dlss5.app/en/supported-cards" class="text-primary">${isChinese ? '查看来源驱动的显卡证据' : 'Check the source-linked GPU evidence'}</a></p>
-    </article>${ARTICLE_CHECK_PATHS.includes(canonicalPath) ? `<p data-schema-check-date class="mt-8 text-sm text-zinc-500">Last checked: <time datetime="${SCHEMA_REVIEW_DATE}">${SCHEMA_REVIEW_DATE}</time></p>` : ''}
+    </article>${(article.checkedDate || ARTICLE_CHECK_PATHS.includes(canonicalPath)) ? `<p data-schema-check-date class="mt-8 text-sm text-zinc-500">Last checked: <time datetime="${SCHEMA_REVIEW_DATE}">${SCHEMA_REVIEW_DATE}</time></p>` : ''}
   </main>`;
   const html = withRoot(withHead(TEMPLATE, {
     title: `${title} — DLSS 5 Blog`,
@@ -380,7 +389,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
     image: cover.ogSrc || cover.src,
     keywords: isChinese ? article.target_keywords_cn : article.target_keywords_en,
     type: 'article',
-    structuredData,
+    structuredData: withManuscriptFaq(structuredData, article, isChinese),
   }), root);
   return { html, title };
 }
@@ -1380,7 +1389,16 @@ writeFileSync(resolve(DIST, 'index.html'), forThisDeployment(TEMPLATE));
 for (const file of ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']) {
   const target = resolve(DIST, file);
   if (!existsSync(target)) continue;
-  const original = readFileSync(target, 'utf8');
+  let original = readFileSync(target, 'utf8');
+  if (file === 'sitemap.xml' && profileHas('blog')) {
+    const additions = ARTICLES.filter(article => article.tier === 'core').flatMap(article =>
+      [undefined, 'zh'].map(locale => {
+        const url = `${BASE_URL}${articlePath(article.slug, locale as 'zh' | undefined)}`;
+        return original.includes(`<loc>${url}</loc>`) ? '' : `<url><loc>${url}</loc><lastmod>${article.checkedDate}</lastmod></url>`;
+      })).join('\n');
+    original = original.replace('</urlset>', `${additions}\n</urlset>`);
+    writeFileSync(target, original);
+  }
   const adapted = withoutHiddenUrls(
     forThisDeployment(
       original.replaceAll(DEFAULT_SITE_URL, BASE_URL).replaceAll(DEFAULT_SUPPORT_EMAIL, SUPPORT_EMAIL),

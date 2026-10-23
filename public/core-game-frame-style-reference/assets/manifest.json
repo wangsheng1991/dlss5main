@@ -1,0 +1,45 @@
+{
+  "recorded": "2026-10-23",
+  "files": [
+    {
+      "file": "capture-run.json",
+      "bytes": 89,
+      "sha256": "a612ebf4e68b52967bef6ef1d001fad731a03ac4ec582f51e14cc3dfb9917756"
+    },
+    {
+      "file": "input.jpg",
+      "bytes": 10690,
+      "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+    },
+    {
+      "file": "output.webp",
+      "bytes": 305718,
+      "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+    },
+    {
+      "file": "reproduce-capture.mjs",
+      "bytes": 901,
+      "sha256": "7a21bee755145f2d5f99d81e7d602172f1dd093588ec6ec8cccac4fea9f4e960"
+    },
+    {
+      "file": "reproduced-compressed.jpg",
+      "bytes": 57110,
+      "sha256": "87374b2df42f3a64408c28ab8381ec601e2c1d20c48c1fac27d41ab65663f577"
+    },
+    {
+      "file": "reproduced-reference.png",
+      "bytes": 1031908,
+      "sha256": "cb7f8cb268f12c56135d35b5716cfe2ef7e7f44a94460c85aaf07950a32a5477"
+    },
+    {
+      "file": "run.json",
+      "bytes": 359,
+      "sha256": "654897000b76f5361c990746bd2edcb222617416591920eecd61a29fb9b716bc"
+    },
+    {
+      "file": "og.png",
+      "bytes": 1031908,
+      "sha256": "cb7f8cb268f12c56135d35b5716cfe2ef7e7f44a94460c85aaf07950a32a5477"
+    }
+  ]
+}

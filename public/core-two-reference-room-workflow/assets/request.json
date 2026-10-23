@@ -1,0 +1,11 @@
+{
+  "model": "interior-quality",
+  "image_ids": [
+    "input.jpg",
+    "reference.jpg"
+  ],
+  "style": "japandi",
+  "room_type": "living_room",
+  "idempotencyKey": "core-content-room-f4df7a4b-ebce-481a-9f57-7d3a3ed4f228",
+  "date": "2026-10-23"
+}
