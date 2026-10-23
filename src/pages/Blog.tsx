@@ -1,5 +1,6 @@
+import CoreArticleVideo from '../components/CoreArticleVideo';
 import CoreArticleContent from '../components/CoreArticleContent';
-import { withManuscriptFaq } from '../content/articles/coreSchema';
+import { withArticleEvidence } from '../content/articles/coreSchema';
 import { ARTICLE_CHECK_PATHS, SCHEMA_REVIEW_DATE } from '../content/schemaReview';
 import { ComparisonIntro, ComparisonAnswers } from '../components/RoiEvidence';
 import FeaturePicker from '../components/FeaturePicker';
@@ -430,7 +431,7 @@ export default function Blog() {
         image={cover.ogSrc || cover.src}
         language={seoActiveLang === 'cn' ? 'zh-CN' : 'en-US'}
         alternates={alternateLinks}
-        structuredData={withManuscriptFaq(structuredData, article, seoActiveLang === 'cn')}
+        structuredData={withArticleEvidence(structuredData, article, seoActiveLang === 'cn')}
       />
       {/* Language Toggle */}
       <div className="flex items-center gap-4 mb-8">
@@ -516,6 +517,7 @@ export default function Blog() {
         <div className="prose prose-invert prose-zinc max-w-none" style={article.slug === FEATURE_PICKER_SLUG ? { overflowWrap: 'anywhere' } : undefined}>
           {!isArticleLocaleSupported && <p className="not-prose rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-zinc-300" role="status">{copy.translationNotice}</p>}
           {canonicalPath === '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026' && activeLang !== 'cn' && <ComparisonIntro />}
+          <CoreArticleVideo slug={article.slug} chinese={activeLang === 'cn'} />
           {article.assetBase ? <CoreArticleContent content={content} assetBase={article.assetBase} /> : renderContent(content)}
           {canonicalPath === '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026' && activeLang !== 'cn' && <ComparisonAnswers />}
         </div>
