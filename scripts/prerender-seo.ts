@@ -11,7 +11,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import FeaturePicker from '../src/components/FeaturePicker';
 import { FEATURE_PICKER_MARKER, FEATURE_PICKER_SLUG } from '../src/content/featurePicker';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { ARTICLE_COVERS } from '../src/content/articles/covers';
 import { ARTICLES, type Article } from '../src/content/articles/types';
@@ -327,6 +327,20 @@ function withoutHiddenUrls(text: string): string {
 }
 
 function writeRoute(route: string, html: string): void {
+  // Fetch only this page's lazy chunk alongside the entry, rather than after it executes.
+  const initialChunks: Record<string, string> = {
+    '/download': 'Download',
+    '/visual-enhancer': 'VisualEnhancer',
+    '/blog/core-game-frame-style-reference': 'Blog',
+    '/blog/core-two-reference-room-workflow': 'Blog',
+    '/blog/core-redraw-review-checklist': 'Blog',
+  };
+  const chunkName = initialChunks[route];
+  if (chunkName) {
+    const chunks = readdirSync(resolve(DIST, 'assets')).filter(file => file.startsWith(`${chunkName}-`) && file.endsWith('.js'));
+    if (chunks.length !== 1) throw new Error(`Expected one built ${chunkName} chunk for ${route}`);
+    html = html.replace('</head>', `<link rel="modulepreload" crossorigin href="/assets/${chunks[0]}" />\n</head>`);
+  }
   const output = resolve(DIST, route.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(output), { recursive: true });
   const coreLink = CORE_ARTICLE_LINKS[route];

@@ -1,0 +1,222 @@
+{
+  "after": [
+    {
+      "path": "/",
+      "run": 1,
+      "started": "2026-10-23T10:08:59.971Z",
+      "status": 200,
+      "ttfb": 2269.4000000059605,
+      "lcp": 4864,
+      "cls": 0
+    },
+    {
+      "path": "/",
+      "run": 2,
+      "started": "2026-10-23T10:09:20.300Z",
+      "status": 200,
+      "ttfb": 1525.0999999940395,
+      "lcp": 3100,
+      "cls": 0
+    },
+    {
+      "path": "/download",
+      "run": 1,
+      "started": "2026-10-23T10:09:39.085Z",
+      "status": 200,
+      "ttfb": 1303.2000000178814,
+      "lcp": 4172,
+      "cls": 0
+    },
+    {
+      "path": "/download",
+      "run": 2,
+      "started": "2026-10-23T10:09:57.219Z",
+      "status": 200,
+      "ttfb": 1530.5,
+      "lcp": 4592,
+      "cls": 0.002544021669238683
+    },
+    {
+      "path": "/blog/core-game-frame-style-reference",
+      "run": 1,
+      "started": "2026-10-23T10:10:15.104Z",
+      "status": 200,
+      "ttfb": 1888.0999999940395,
+      "lcp": 3472,
+      "cls": 7.488586676954733e-05
+    },
+    {
+      "path": "/blog/core-game-frame-style-reference",
+      "run": 2,
+      "started": "2026-10-23T10:10:33.500Z",
+      "status": 200,
+      "ttfb": 1042.300000011921,
+      "lcp": 2468,
+      "cls": 0.004941356015303499
+    },
+    {
+      "path": "/blog/core-two-reference-room-workflow",
+      "run": 1,
+      "started": "2026-10-23T10:10:50.581Z",
+      "status": 200,
+      "ttfb": 1395.800000011921,
+      "lcp": 3300,
+      "cls": 0.005057435036490484
+    },
+    {
+      "path": "/blog/core-two-reference-room-workflow",
+      "run": 2,
+      "started": "2026-10-23T10:11:07.451Z",
+      "status": 200,
+      "ttfb": 1526.5,
+      "lcp": 3684,
+      "cls": 0.005001135304140947
+    },
+    {
+      "path": "/blog/core-redraw-review-checklist",
+      "run": 1,
+      "started": "2026-10-23T10:11:24.627Z",
+      "status": 200,
+      "ttfb": 1410.7000000178814,
+      "lcp": 4360,
+      "cls": 0.0015335395300175754
+    },
+    {
+      "path": "/blog/core-redraw-review-checklist",
+      "run": 2,
+      "started": "2026-10-23T10:11:41.983Z",
+      "status": 200,
+      "ttfb": 1237.699999988079,
+      "lcp": 3696,
+      "cls": 0.0015335395300175754
+    },
+    {
+      "path": "/visual-enhancer",
+      "run": 1,
+      "started": "2026-10-23T10:12:00.657Z",
+      "status": 200,
+      "ttfb": 1387.0999999940395,
+      "lcp": 3716,
+      "cls": 0
+    },
+    {
+      "path": "/visual-enhancer",
+      "run": 2,
+      "started": "2026-10-23T10:12:17.841Z",
+      "status": 200,
+      "ttfb": 1263.2999999821186,
+      "lcp": 4044,
+      "cls": 7.488586676954733e-05
+    }
+  ],
+  "after-confirmation": [
+    {
+      "path": "/",
+      "run": 1,
+      "started": "2026-10-23T10:12:55.979Z",
+      "status": 200,
+      "ttfb": 2298.7000000178814,
+      "lcp": 3848,
+      "cls": 0
+    },
+    {
+      "path": "/",
+      "run": 2,
+      "started": "2026-10-23T10:13:15.860Z",
+      "status": 200,
+      "ttfb": 1234.7000000178814,
+      "lcp": 2892,
+      "cls": 0
+    },
+    {
+      "path": "/download",
+      "run": 1,
+      "started": "2026-10-23T10:13:35.657Z",
+      "status": 200,
+      "ttfb": 1275,
+      "lcp": 4776,
+      "cls": 0
+    },
+    {
+      "path": "/download",
+      "run": 2,
+      "started": "2026-10-23T10:13:54.628Z",
+      "status": 200,
+      "ttfb": 1330.5999999940395,
+      "lcp": 4212,
+      "cls": 0.002544021669238683
+    },
+    {
+      "path": "/blog/core-game-frame-style-reference",
+      "run": 1,
+      "started": "2026-10-23T10:14:11.568Z",
+      "status": 200,
+      "ttfb": 1757.5999999940395,
+      "lcp": 2480,
+      "cls": 0
+    },
+    {
+      "path": "/blog/core-game-frame-style-reference",
+      "run": 2,
+      "started": "2026-10-23T10:14:27.346Z",
+      "status": 200,
+      "ttfb": 1539.300000011921,
+      "lcp": 2984,
+      "cls": 0.005069153083204734
+    },
+    {
+      "path": "/blog/core-two-reference-room-workflow",
+      "run": 1,
+      "started": "2026-10-23T10:14:45.868Z",
+      "status": 200,
+      "ttfb": 1264.0999999940395,
+      "lcp": 3300,
+      "cls": 0.005001135304140947
+    },
+    {
+      "path": "/blog/core-two-reference-room-workflow",
+      "run": 2,
+      "started": "2026-10-23T10:15:02.560Z",
+      "status": 200,
+      "ttfb": 1233.5,
+      "lcp": 5312,
+      "cls": 0.005001135304140947
+    },
+    {
+      "path": "/blog/core-redraw-review-checklist",
+      "run": 1,
+      "started": "2026-10-23T10:15:21.430Z",
+      "status": 200,
+      "ttfb": 1251.0999999940395,
+      "lcp": 3516,
+      "cls": 7.488586676954733e-05
+    },
+    {
+      "path": "/blog/core-redraw-review-checklist",
+      "run": 2,
+      "started": "2026-10-23T10:15:39.167Z",
+      "status": 200,
+      "ttfb": 1532.4000000059605,
+      "lcp": 4460,
+      "cls": 0.0015335395300175754
+    },
+    {
+      "path": "/visual-enhancer",
+      "run": 1,
+      "started": "2026-10-23T10:15:57.542Z",
+      "status": 200,
+      "ttfb": 1031.199999988079,
+      "lcp": 3540,
+      "cls": 0
+    },
+    {
+      "path": "/visual-enhancer",
+      "run": 2,
+      "started": "2026-10-23T10:16:14.378Z",
+      "status": 200,
+      "ttfb": 1463.5999999940395,
+      "lcp": 5064,
+      "cls": 0.027352418164330417
+    }
+  ]
+}
