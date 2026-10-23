@@ -1,0 +1,13 @@
+Archive:  public/downloads/dlss5-review-kit.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+     1282  10-23-2026 00:00   README.md
+      207  10-23-2026 00:00   accept-reject-record.csv
+     3495  10-23-2026 00:00   core-game-character-style-matrix.en.md
+     2904  10-23-2026 00:00   core-game-character-style-matrix.zh.md
+     1327  10-23-2026 00:00   core-game-frame-style-reference.en.md
+     1150  10-23-2026 00:00   core-game-frame-style-reference.zh.md
+     7271  10-23-2026 00:00   core-redraw-review-checklist.en.md
+     5669  10-23-2026 00:00   core-redraw-review-checklist.zh.md
+---------                     -------
+    23305                     8 files

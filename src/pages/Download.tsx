@@ -1,3 +1,4 @@
+import DownloadIntent from '../components/DownloadIntent';
 import { DownloadEvidence } from '../components/RoiEvidence';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -157,6 +158,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
         </figure>
       </section>
 
+      <DownloadIntent chinese={isZh} />
       {!isZh && <DownloadEvidence />}
 
       {/* ── 索取下载（注册后可见邮箱 + 一键发信） ─────────────────────── */}

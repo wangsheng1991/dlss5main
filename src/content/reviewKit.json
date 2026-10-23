@@ -1,0 +1,15 @@
+{
+  "path": "/downloads/dlss5-review-kit.zip",
+  "bytes": 24437,
+  "sha256": "3b472ea6b2ab32df9c3abb594a94b2833674ebae716a3098dd948ac37dfb766c",
+  "files": [
+    "README.md",
+    "accept-reject-record.csv",
+    "core-game-character-style-matrix.en.md",
+    "core-game-character-style-matrix.zh.md",
+    "core-game-frame-style-reference.en.md",
+    "core-game-frame-style-reference.zh.md",
+    "core-redraw-review-checklist.en.md",
+    "core-redraw-review-checklist.zh.md"
+  ]
+}

@@ -1,3 +1,4 @@
+import DownloadIntent from '../src/components/DownloadIntent';
 import { assertArticleMarkdownRendered } from './check-article-markdown';
 import CoreArticleVideo from '../src/components/CoreArticleVideo';
 import { CORE_VIDEOS, coreVideoCopy } from '../src/content/articles/coreVideo20261023';
@@ -1140,7 +1141,7 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
     { hrefLang: 'x-default', href: `${BASE_URL}/download` },
   ],
   links: [{ label: 'Free DLSS 5 visual enhancer', path: '/image-quality-enhancer' }, { label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Before-and-after evidence', path: '/before-after' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }, { label: 'GPU compatibility evidence', path: 'https://www.dlss5.app/en/supported-cards' }, { label: 'Studio readiness by GPU', path: 'https://www.dlss5.app/en/studio' }, { label: 'Request the limited Studio beta', path: '/studio-beta' }],
-  extraHtml: `${renderToStaticMarkup(createElement(DownloadEvidence))}${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}${studioStaticVideo}`,
+  extraHtml: `${renderToStaticMarkup(createElement(DownloadIntent))}${renderToStaticMarkup(createElement(DownloadEvidence))}${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}${studioStaticVideo}`,
 }));
 const studioStaticZh = STUDIO_COPY['zh-CN'];
 const studioStaticZhCases = [
@@ -1169,7 +1170,7 @@ if (profileHas('download')) writeRoute('/zh/download', renderPublicGuide({
   coversHeading: '本页包含什么',
   relatedHeading: '继续探索',
   links: [{ label: '免费 DLSS 5 视觉增强器', path: '/image-quality-enhancer' }, { label: '免费 AI 图片放大器', path: '/image-upscaler' }, { label: '前后对比证据页', path: '/zh/before-after' }, { label: '最新 DLSS 5 新闻', path: '/zh/blog/dlss-5-latest-news-september-2026' }, { label: '模型与工作流', path: '/models' }, { label: 'GPU 兼容性证据', path: 'https://www.dlss5.app/zh-CN/supported-cards' }, { label: '按 GPU 查看 Studio 准备度', path: 'https://www.dlss5.app/zh-CN/studio' }, { label: '申请 Studio 有限名额内测', path: '/zh/studio-beta' }],
-  extraHtml: `${studioStaticZhAtAGlance}${studioStaticZhAndroid}${studioStaticZhShowcase}${studioStaticZhVideo}`,
+  extraHtml: `${renderToStaticMarkup(createElement(DownloadIntent, { chinese: true }))}${studioStaticZhAtAGlance}${studioStaticZhAndroid}${studioStaticZhShowcase}${studioStaticZhVideo}`,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({
@@ -1454,3 +1455,14 @@ for (const file of ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']) {
 console.log(`Pre-rendered ${ARTICLES.length} articles in 3 locales plus ${PODCAST_EPISODES.length + 1} podcast routes, ${TOOL_LANDINGS.length} SEO tools, ${USE_CASES.length} workflow guides and ${publishableSpecs().length + 1} micro tool routes, blog indexes and dashboard noindex.`);
 
 if (profileHas('blog')) assertArticleMarkdownRendered(DIST);
+
+// The English home is the static template, so it does not pass through writeRoute.
+const homeDownloadLinks = coreArticleLinksFor('/');
+if (profileHas('download') && homeDownloadLinks.length) {
+  const homePath = resolve(DIST, 'index.html');
+  const homeHtml = readFileSync(homePath, 'utf8');
+  const additions = homeDownloadLinks.map(link => `<p data-core-article-link class="mx-auto max-w-[1000px] px-6 pb-8"><a class="text-primary underline" href="${escapeHtml(link.path)}">${escapeHtml(link.label)}</a></p>`).join('');
+  const rootEnd = '</div>\n    <noscript>';
+  if (!homeHtml.includes(rootEnd)) throw new Error('Missing home root boundary for additive links');
+  writeFileSync(homePath, homeHtml.replace(rootEnd, `${additions}${rootEnd}`));
+}

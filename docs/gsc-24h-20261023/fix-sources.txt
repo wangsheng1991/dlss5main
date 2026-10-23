@@ -1,0 +1,7 @@
+R1/R3/R4: source checks for download intent additions (2026-10-23).
+https://developer.nvidia.com/rtx/dlss — official integration resources; does not establish a universal consumer DLSS 5 install path.
+https://www.nvidia.com/en-us/geforce/news/dlss-4-5-super-resolution-available-now/ — NVIDIA app rollout for DLSS 4.5 Super Resolution; also documents a game update adding DLSS support.
+https://schema.org/sha256 — property applies to MediaObject; ZIP hash stored on DigitalDocument.encoding (MediaObject) and in visible copy.
+Third-party mirror existence uses supplied, previously verified SERP evidence in docs/GSC-DOWNLOAD-QUERY-20261023.md; no content-quality inference, download links or installation instructions added.
+GSC fixed inputs: query 24h 2/110/1.8%/10.1; query 7d 26/572/4.5%/9.7; download page 24h 48/688/7%/7.6. Single query landing: /download. No additional GSC numbers used.
+React review: shared stateless bilingual component used by SPA and prerender; stable list keys; named sections/headings; native download anchor; no extra data fetching, effects or dependencies; JSON-LD escapes less-than.

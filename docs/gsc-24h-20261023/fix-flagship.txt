@@ -1,0 +1,105 @@
+
+== https://www.dlss5nvidia.com/zh  (home/zh)
+   OK   title 存在 — DLSS 5 风格转换器在线 — 免费图像质量与视觉增强工具
+   OK   meta description 存在 — 免费的 DLSS 5 风格图像转换器，另有独立的图像质量增强器：上传游戏帧或人物图，先用免登录缓存示例看效果，再比较前后差异并生成新的风格、
+   OK   canonical 自指 — https://www.dlss5nvidia.com/zh
+   OK   robots 允许索引 — index,follow,max-image-preview:large
+   OK   h1 存在 — DLSS 5 风格转换器在线版
+   OK   正文体量 — 1568 中文字
+   info 图片 10 张（该页型不强制）
+   OK   图片 alt 齐全
+   OK   JSON-LD 可解析 — 2 个节点
+   OK   schema 含 WebPage
+   OK   「官方/official」无未加否定的用法 — 出现 2 次，均在否定/澄清语境
+   OK   无「已可下载/已支持」类越界表述
+   OK   无「无来源的帧数/倍数」
+   OK   已在 sitemap 中
+
+== https://www.dlss5nvidia.com/before-after  (before-after/en)
+   OK   title 存在 — DLSS 5 Before and After — Independent Image Conversion Examples
+   OK   meta description 存在 — Compare independent DLSS 5-style image conversion examples: same-input
+   OK   canonical 自指 — https://www.dlss5nvidia.com/before-after
+   OK   robots 允许索引 — index,follow,max-image-preview:large
+   OK   h1 存在 — DLSS 5 before and after: inspect the conversion, not the promise
+   OK   正文体量 — 3736 词
+   OK   有图片 — 48 张
+   OK   图片 alt 齐全
+   OK   有 <video> — 2 个
+   OK   video 有 poster
+   OK   视频/对比有文字结论（AI 可读） — 候选 139 段
+   OK   JSON-LD 可解析 — 55 个节点
+   OK   schema 含 WebPage
+   OK   schema 含 FAQPage
+   OK   schema 含 ImageObject
+   OK   schema 含 BreadcrumbList
+   OK   FAQ 至少 6 条 — 9 条
+   OK   FAQ 有内容
+   OK   「官方/official」无未加否定的用法 — 出现 1 次，均在否定/澄清语境
+   OK   无「已可下载/已支持」类越界表述
+   OK   无「无来源的帧数/倍数」
+   OK   已在 sitemap 中
+
+== https://www.dlss5nvidia.com/zh/before-after  (before-after/zh)
+   OK   title 存在 — DLSS 5 前后对比 — 独立图像转换案例
+   OK   meta description 存在 — 查看独立的 DLSS 5 风格图像转换案例：同输入放大、人像修复、对象擦除和游戏视觉参考，逐组标注尺寸、参数与边界。
+   OK   canonical 自指 — https://www.dlss5nvidia.com/zh/before-after
+   OK   robots 允许索引 — index,follow,max-image-preview:large
+   OK   h1 存在 — DLSS 5 前后对比：看清转换结果，而不是只看宣传
+   OK   正文体量 — 3885 中文字
+   OK   有图片 — 48 张
+   OK   图片 alt 齐全
+   OK   有 <video> — 2 个
+   OK   video 有 poster
+   OK   视频/对比有文字结论（AI 可读） — 候选 74 段
+   OK   JSON-LD 可解析 — 55 个节点
+   OK   schema 含 WebPage
+   OK   schema 含 FAQPage
+   OK   schema 含 ImageObject
+   OK   schema 含 BreadcrumbList
+   OK   FAQ 至少 6 条 — 9 条
+   OK   FAQ 有内容
+   OK   「官方/official」无未加否定的用法 — 出现 1 次，均在否定/澄清语境
+   OK   无「已可下载/已支持」类越界表述
+   OK   无「无来源的帧数/倍数」
+   OK   已在 sitemap 中
+
+== https://www.dlss5nvidia.com/download  (download/en)
+   OK   title 存在 — DLSS 5 Download (2026) — Free Online Converter, Mobile &amp; Windows Studio
+   OK   meta description 存在 — DLSS 5 download: request independent Windows RTX Studio access after s
+   OK   canonical 自指 — https://www.dlss5nvidia.com/download
+   OK   robots 允许索引 — index,follow,max-image-preview:large
+   OK   h1 存在 — DLSS 5 Download Guide — DLSS5 Studio by Request
+   OK   正文体量 — 1226 词
+   OK   有图片 — 6 张
+   OK   图片 alt 齐全
+   OK   有界面录屏（video 或 gif） — 2 个 video
+   OK   video 有 poster
+   OK   JSON-LD 可解析 — 6 个节点
+   OK   schema 含 WebPage
+   OK   schema 含 BreadcrumbList
+   OK   FAQ 有内容
+   OK   「官方/official」无未加否定的用法 — 出现 5 次，均在否定/澄清语境
+   OK   无「已可下载/已支持」类越界表述
+   OK   无「无来源的帧数/倍数」
+   OK   已在 sitemap 中
+
+== https://www.dlss5nvidia.com/zh/download  (download/zh)
+   OK   title 存在 — DLSS 5 下载（2026）— 免费在线转换器、手机与 Windows Studio
+   OK   meta description 存在 — DLSS 5 下载：登录后申请独立 Windows RTX Studio，通过邮件获取访问；安卓用户可先免费运行浏览器示例。本站不提供 An
+   OK   canonical 自指 — https://www.dlss5nvidia.com/zh/download
+   OK   robots 允许索引 — index,follow,max-image-preview:large
+   OK   h1 存在 — DLSS 5 下载指南 —— DLSS5 Studio 申请
+   OK   正文体量 — 1168 中文字
+   OK   有图片 — 6 张
+   OK   图片 alt 齐全
+   OK   有界面录屏（video 或 gif） — 2 个 video
+   OK   video 有 poster
+   OK   JSON-LD 可解析 — 4 个节点
+   OK   schema 含 WebPage
+   OK   schema 含 BreadcrumbList
+   OK   「官方/official」无未加否定的用法 — 出现 4 次，均在否定/澄清语境
+   OK   无「已可下载/已支持」类越界表述
+   OK   无「无来源的帧数/倍数」
+   OK   已在 sitemap 中
+
+FLAGSHIP-PAGES: fails=0 verdict=PASS

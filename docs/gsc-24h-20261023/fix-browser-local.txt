@@ -1,0 +1,4 @@
+{"route":"/download","h1":1,"main":1,"PAA":true,"DigitalDocument":true,"zipUrl":"https://www.dlss5nvidia.com/downloads/dlss5-review-kit.zip","lastChecked":true,"sha256":"3b472ea6b2ab32df9c3abb594a94b2833674ebae716a3098dd948ac37dfb766c","thirdPartyLinks":0,"download":"clicked and verified","bytes":24437}
+{"route":"/zh/download","h1":1,"main":1,"PAA":true,"DigitalDocument":true,"zipUrl":"https://www.dlss5nvidia.com/downloads/dlss5-review-kit.zip","lastChecked":true,"sha256":"3b472ea6b2ab32df9c3abb594a94b2833674ebae716a3098dd948ac37dfb766c","thirdPartyLinks":0,"download":"clicked and verified","bytes":24437}
+{"route":"/","exactMatchLinks":1}
+{"route":"/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","exactMatchLinks":1}

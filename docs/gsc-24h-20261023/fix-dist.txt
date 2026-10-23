@@ -1,0 +1,4 @@
+download h1=1 main=1 PAA=3 DigitalDocument=1 download-attribute=1 checked=2026-10-23
+zh/download h1=1 main=1 PAA=3 DigitalDocument=1 download-attribute=1 checked=2026-10-23
+index.html exact-match link present
+blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026/index.html exact-match link present

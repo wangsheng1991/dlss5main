@@ -1,5 +1,7 @@
 // Additive links per approved route; preserve every existing link.
 export const CORE_ARTICLE_LINKS: Record<string, {path: string; label: string}[]> = {
+  '/': [{path: '/download', label: 'DLSS 5 download'}],
+  '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026': [{path: '/download', label: 'DLSS 5 download'}],
   '/game-character-style': [{path: '/blog/core-game-frame-style-reference', label: 'Review a saved game frame as a style-conversion reference'}],
   '/interior-design': [{path: '/blog/core-two-reference-room-workflow', label: 'Give a room source and a style reference different roles'}],
   '/before-after': [{path: '/blog/core-redraw-review-checklist', label: 'Review what changed in a neural redraw before sharing it'}],
