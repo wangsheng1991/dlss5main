@@ -1,0 +1,837 @@
+[
+  {
+    "run": 1,
+    "cls": 0.2661315200617284,
+    "shifts": [
+      {
+        "value": 0.0006788966049382716,
+        "startTime": 4706.699999988079,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "LI. Image to SVG",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 729,
+              "width": 189.34375,
+              "height": 24,
+              "top": 729,
+              "right": 933.328125,
+              "bottom": 753,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 753,
+              "width": 189.34375,
+              "height": 24,
+              "top": 753,
+              "right": 933.328125,
+              "bottom": 777,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 753,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. Erase Object",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 689,
+              "width": 189.34375,
+              "height": 24,
+              "top": 689,
+              "right": 933.328125,
+              "bottom": 713,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 713,
+              "width": 189.34375,
+              "height": 24,
+              "top": 713,
+              "right": 933.328125,
+              "bottom": 737,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 713,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. AI Interior Design Render",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 809,
+              "width": 189.34375,
+              "height": 24,
+              "top": 809,
+              "right": 933.328125,
+              "bottom": 833,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 833,
+              "width": 189.34375,
+              "height": 24,
+              "top": 833,
+              "right": 933.328125,
+              "bottom": 857,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 833,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. Virtual Try-On",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 769,
+              "width": 189.34375,
+              "height": 24,
+              "top": 769,
+              "right": 933.328125,
+              "bottom": 793,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 793,
+              "width": 189.34375,
+              "height": 24,
+              "top": 793,
+              "right": 933.328125,
+              "bottom": 817,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 793,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. Remove Background",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 649,
+              "width": 189.34375,
+              "height": 24,
+              "top": 649,
+              "right": 933.328125,
+              "bottom": 673,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 673,
+              "width": 189.34375,
+              "height": 24,
+              "top": 673,
+              "right": 933.328125,
+              "bottom": 697,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 673,
+              "width": 189.34375,
+              "height": 24
+            }
+          }
+        ]
+      },
+      {
+        "value": 0.21049382716049383,
+        "startTime": 4767.4000000059605,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 280,
+              "width": 1440,
+              "height": 620,
+              "top": 280,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 720,
+              "width": 1440,
+              "height": 180,
+              "top": 720,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 720,
+              "width": 1440,
+              "height": 1230
+            }
+          }
+        ]
+      },
+      {
+        "value": 0.0549587962962963,
+        "startTime": 5582.799999982119,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 720,
+              "width": 1440,
+              "height": 180,
+              "top": 720,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 794,
+              "width": 1440,
+              "height": 106,
+              "top": 794,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 794,
+              "width": 1440,
+              "height": 1230
+            }
+          },
+          {
+            "node": "DIV.hidden md:flex gap-6 items-center ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricing",
+            "previousRect": {
+              "x": 128.03125,
+              "y": 8,
+              "width": 843.5,
+              "height": 48,
+              "top": 8,
+              "right": 971.53125,
+              "bottom": 56,
+              "left": 128.03125
+            },
+            "currentRect": {
+              "x": 124.59375,
+              "y": 8,
+              "width": 846.9375,
+              "height": 48,
+              "top": 8,
+              "right": 971.53125,
+              "bottom": 56,
+              "left": 124.59375
+            },
+            "observedRect": {
+              "x": 124.59375,
+              "y": 8,
+              "width": 846.9375,
+              "height": 48
+            }
+          },
+          {
+            "node": "P.text-center text-xs text-zinc-500 mt-10 Subscriptions renew monthly and can be cancelled any time; unused credits do not roll over. Question",
+            "previousRect": {
+              "x": 168,
+              "y": 376,
+              "width": 1104,
+              "height": 16,
+              "top": 376,
+              "right": 1272,
+              "bottom": 392,
+              "left": 168
+            },
+            "currentRect": {
+              "x": 168,
+              "y": 682,
+              "width": 1104,
+              "height": 16,
+              "top": 682,
+              "right": 1272,
+              "bottom": 698,
+              "left": 168
+            },
+            "observedRect": {
+              "x": 168,
+              "y": 682,
+              "width": 1104,
+              "height": 16
+            }
+          }
+        ]
+      }
+    ],
+    "rects": [
+      {
+        "time": 4140.199999988079,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 750.25
+        },
+        "main": {
+          "x": 220,
+          "y": 0,
+          "width": 1000,
+          "height": 750.25
+        },
+        "footer": null,
+        "navLinks": null
+      },
+      {
+        "time": 4476.9000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1486
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1206
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 940.640625,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading…</div></div>"
+      },
+      {
+        "time": 4705.5,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1510
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading…</div></div>"
+      },
+      {
+        "time": 4766.9000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1950
+        },
+        "main": {
+          "x": 144,
+          "y": 0,
+          "width": 1152,
+          "height": 720
+        },
+        "footer": {
+          "x": 0,
+          "y": 720,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      },
+      {
+        "time": 5582.299999982119,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 2024
+        },
+        "main": {
+          "x": 144,
+          "y": 0,
+          "width": 1152,
+          "height": 794
+        },
+        "footer": {
+          "x": 0,
+          "y": 794,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      }
+    ],
+    "plansRequests": [
+      {
+        "startTime": 4752.299999982119,
+        "responseEnd": 5574.4000000059605,
+        "responseStatus": 200
+      }
+    ]
+  },
+  {
+    "run": 2,
+    "cls": 0.25954020222479424,
+    "shifts": [
+      {
+        "value": 0.0006788966049382716,
+        "startTime": 3987.5,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "LI. Image to SVG",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 729,
+              "width": 189.34375,
+              "height": 24,
+              "top": 729,
+              "right": 933.328125,
+              "bottom": 753,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 753,
+              "width": 189.34375,
+              "height": 24,
+              "top": 753,
+              "right": 933.328125,
+              "bottom": 777,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 753,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. Erase Object",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 689,
+              "width": 189.34375,
+              "height": 24,
+              "top": 689,
+              "right": 933.328125,
+              "bottom": 713,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 713,
+              "width": 189.34375,
+              "height": 24,
+              "top": 713,
+              "right": 933.328125,
+              "bottom": 737,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 713,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. AI Interior Design Render",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 809,
+              "width": 189.34375,
+              "height": 24,
+              "top": 809,
+              "right": 933.328125,
+              "bottom": 833,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 833,
+              "width": 189.34375,
+              "height": 24,
+              "top": 833,
+              "right": 933.328125,
+              "bottom": 857,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 833,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. Virtual Try-On",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 769,
+              "width": 189.34375,
+              "height": 24,
+              "top": 769,
+              "right": 933.328125,
+              "bottom": 793,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 793,
+              "width": 189.34375,
+              "height": 24,
+              "top": 793,
+              "right": 933.328125,
+              "bottom": 817,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 793,
+              "width": 189.34375,
+              "height": 24
+            }
+          },
+          {
+            "node": "LI. Remove Background",
+            "previousRect": {
+              "x": 743.984375,
+              "y": 649,
+              "width": 189.34375,
+              "height": 24,
+              "top": 649,
+              "right": 933.328125,
+              "bottom": 673,
+              "left": 743.984375
+            },
+            "currentRect": {
+              "x": 743.984375,
+              "y": 673,
+              "width": 189.34375,
+              "height": 24,
+              "top": 673,
+              "right": 933.328125,
+              "bottom": 697,
+              "left": 743.984375
+            },
+            "observedRect": {
+              "x": 743.984375,
+              "y": 673,
+              "width": 189.34375,
+              "height": 24
+            }
+          }
+        ]
+      },
+      {
+        "value": 7.488586676954733e-05,
+        "startTime": 4197.9000000059605,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "DIV.hidden md:flex gap-6 items-center ModelsFree toolsUse casesSmall toolsAboutBlogPodcastAPI DocsDLSS5 StudioEnterprisePricing",
+            "previousRect": {
+              "x": 128.03125,
+              "y": 8,
+              "width": 843.5,
+              "height": 48,
+              "top": 8,
+              "right": 971.53125,
+              "bottom": 56,
+              "left": 128.03125
+            },
+            "currentRect": {
+              "x": 124.59375,
+              "y": 8,
+              "width": 846.9375,
+              "height": 48,
+              "top": 8,
+              "right": 971.53125,
+              "bottom": 56,
+              "left": 124.59375
+            },
+            "observedRect": {
+              "x": 124.59375,
+              "y": 8,
+              "width": 846.9375,
+              "height": 48
+            }
+          }
+        ]
+      },
+      {
+        "value": 0.21049382716049383,
+        "startTime": 4711.299999982119,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 280,
+              "width": 1440,
+              "height": 620,
+              "top": 280,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 720,
+              "width": 1440,
+              "height": 180,
+              "top": 720,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 720,
+              "width": 1440,
+              "height": 1230
+            }
+          }
+        ]
+      },
+      {
+        "value": 0.048292592592592595,
+        "startTime": 4965.4000000059605,
+        "hadRecentInput": false,
+        "sources": [
+          {
+            "node": "FOOTER.bg-surface-lowest w-full py-16 border-t border-outline-variant/10 DLSS 5Advancing the frontier of neural super-resolution and high-resolution AI upscaling for a clear",
+            "previousRect": {
+              "x": 0,
+              "y": 720,
+              "width": 1440,
+              "height": 180,
+              "top": 720,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "currentRect": {
+              "x": 0,
+              "y": 794,
+              "width": 1440,
+              "height": 106,
+              "top": 794,
+              "right": 1440,
+              "bottom": 900,
+              "left": 0
+            },
+            "observedRect": {
+              "x": 0,
+              "y": 794,
+              "width": 1440,
+              "height": 1230
+            }
+          },
+          {
+            "node": "P.text-center text-xs text-zinc-500 mt-10 Subscriptions renew monthly and can be cancelled any time; unused credits do not roll over. Question",
+            "previousRect": {
+              "x": 168,
+              "y": 376,
+              "width": 1104,
+              "height": 16,
+              "top": 376,
+              "right": 1272,
+              "bottom": 392,
+              "left": 168
+            },
+            "currentRect": {
+              "x": 168,
+              "y": 682,
+              "width": 1104,
+              "height": 16,
+              "top": 682,
+              "right": 1272,
+              "bottom": 698,
+              "left": 168
+            },
+            "observedRect": {
+              "x": 168,
+              "y": 682,
+              "width": 1104,
+              "height": 16
+            }
+          }
+        ]
+      }
+    ],
+    "rects": [
+      {
+        "time": 3423.5999999940395,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 750.25
+        },
+        "main": {
+          "x": 220,
+          "y": 0,
+          "width": 1000,
+          "height": 750.25
+        },
+        "footer": null,
+        "navLinks": null
+      },
+      {
+        "time": 3520.0999999940395,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1486
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1206
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 940.640625,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading…</div></div>"
+      },
+      {
+        "time": 3986.199999988079,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1510
+        },
+        "main": null,
+        "footer": {
+          "x": 0,
+          "y": 280,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        },
+        "fallback": "<div class=\"flex-1\"><div class=\"pt-40 pb-24 text-center text-zinc-500\">Loading…</div></div>"
+      },
+      {
+        "time": 4710.9000000059605,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1950
+        },
+        "main": {
+          "x": 144,
+          "y": 0,
+          "width": 1152,
+          "height": 720
+        },
+        "footer": {
+          "x": 0,
+          "y": 720,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      },
+      {
+        "time": 4965,
+        "root": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 2024
+        },
+        "main": {
+          "x": 144,
+          "y": 0,
+          "width": 1152,
+          "height": 794
+        },
+        "footer": {
+          "x": 0,
+          "y": 794,
+          "width": 1440,
+          "height": 1230
+        },
+        "navLinks": {
+          "x": 32,
+          "y": 0,
+          "width": 939.53125,
+          "height": 64
+        }
+      }
+    ],
+    "plansRequests": [
+      {
+        "startTime": 4694.4000000059605,
+        "responseEnd": 4947.699999988079,
+        "responseStatus": 200
+      }
+    ]
+  }
+]

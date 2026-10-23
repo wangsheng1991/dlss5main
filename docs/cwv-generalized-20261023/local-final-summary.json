@@ -1,0 +1,182 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "cls": 0.008653732638888889,
+    "h1": 1,
+    "main": 1,
+    "retained": false,
+    "duplicate": null
+  },
+  {
+    "path": "/download",
+    "status": 200,
+    "cls": 0.0009698815700285064,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/comparisons",
+    "status": 200,
+    "cls": 0.0006370002066320516,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/pricing",
+    "status": 200,
+    "cls": 0.048292592592592595,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/interior-design",
+    "status": 200,
+    "cls": 0.02155959271717464,
+    "h1": 1,
+    "main": 1,
+    "retained": false,
+    "duplicate": null
+  },
+  {
+    "path": "/vs/dlss-5-vs-dlss-4-5",
+    "status": 200,
+    "cls": 0.003800481951678241,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/vs/dlss-5-vs-fsr-4",
+    "status": 200,
+    "cls": 0.004085345082224151,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026",
+    "status": 200,
+    "cls": 7.045586982381687e-05,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/blog/core-two-reference-room-workflow",
+    "status": 200,
+    "cls": 3.237817081404321e-05,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/visual-enhancer",
+    "status": 200,
+    "cls": 7.488586676954733e-05,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/zh",
+    "status": 200,
+    "cls": 0.047348739460760673,
+    "h1": 1,
+    "main": 1,
+    "retained": false,
+    "duplicate": null
+  },
+  {
+    "path": "/zh/visual-enhancer",
+    "status": 200,
+    "cls": 0.00015114968800904492,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/zh/vs/dlss-5-vs-dlss-4-5",
+    "status": 200,
+    "cls": 0.000718569824888546,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/image-quality-enhancer",
+    "status": 200,
+    "cls": 0.00885965993119856,
+    "h1": 1,
+    "main": 1,
+    "retained": false,
+    "duplicate": null
+  },
+  {
+    "path": "/image-upscaler",
+    "status": 200,
+    "cls": 0.0016388125991298012,
+    "h1": 1,
+    "main": 1,
+    "retained": false,
+    "duplicate": null
+  },
+  {
+    "path": "/unblur-image",
+    "status": 200,
+    "cls": 0.0011269563400205763,
+    "h1": 1,
+    "main": 1,
+    "retained": false,
+    "duplicate": null
+  },
+  {
+    "path": "/models",
+    "status": 200,
+    "cls": 7.488586676954733e-05,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/about",
+    "status": 200,
+    "cls": 0.00010171481159979424,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/before-after",
+    "status": 200,
+    "cls": 0.020005441422325104,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  },
+  {
+    "path": "/game-character-style",
+    "status": 200,
+    "cls": 0.00015016393255958506,
+    "h1": 1,
+    "main": 1,
+    "retained": true,
+    "duplicate": null
+  }
+]

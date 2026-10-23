@@ -326,7 +326,12 @@ function withoutHiddenUrls(text: string): string {
     .join('\n');
 }
 
+function markPrerendered(html: string, route: string): string {
+  return html.replace('<div id="root">', `<div id="root" data-prerendered="${escapeHtml(route)}">`);
+}
+
 function writeRoute(route: string, html: string): void {
+  html = markPrerendered(html, route);
   // Fetch only this page's lazy chunk alongside the entry, rather than after it executes.
   const initialChunks: Record<string, string> = {
     '/download': 'Download',
@@ -1408,7 +1413,7 @@ function renderVisualEnhancerStatic(locale: VisualEnhancerLocale): string {
 }
 
 /** Routes that are not prerendered fall back to the shell, so it carries the same origin as well. */
-writeFileSync(resolve(DIST, 'index.html'), forThisDeployment(TEMPLATE));
+writeFileSync(resolve(DIST, 'index.html'), forThisDeployment(markPrerendered(TEMPLATE, '/')));
 
 /**
  * `public/` is copied verbatim, and these files state the origin as an absolute URL. Rewriting them
