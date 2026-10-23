@@ -1,6 +1,12 @@
 interface RecordedVideo { slug: string; contentPath: string; thumbnailPath: string; duration: string; seconds: number; width: number; height: number; frames: number; bytes: number; uploadDate: string }
 // Measured final files; evidence lives in public/videos.
 export const CORE_VIDEOS: Record<string, RecordedVideo> = {
+  "adobe-topaz-acquisition-image-upscaling": {
+    slug: "adobe-topaz-acquisition-image-upscaling",
+    contentPath: "/adobe-topaz-acquisition-image-upscaling/video/landscape-11s.mp4",
+    thumbnailPath: "/adobe-topaz-acquisition-image-upscaling/video/first-frame.jpg",
+    duration: "PT11S", seconds: 11, width: 1440, height: 810, frames: 275, bytes: 365296, uploadDate: "2026-10-23"
+  },
   "core-game-frame-style-reference": {
     "slug": "core-game-frame-style-reference",
     "contentPath": "/videos/game-character-style-example-19s-1280x900-475f.mp4",
@@ -41,6 +47,9 @@ export const CORE_VIDEOS: Record<string, RecordedVideo> = {
 export function coreVideoCopy(slug: string, chinese: boolean) {
   const video = CORE_VIDEOS[slug];
   const copies: Record<string, {title: string; description: string}[]> = {
+    'adobe-topaz-acquisition-image-upscaling': [
+      {title: 'Site-owned browser workflow recording', description: 'Recorded on 2026-10-17 at /visual-enhancer: the existing guest example and comparison. This is a cached site-owned sample, not an Adobe or NVIDIA product capture or a performance benchmark.'},
+      {title: '本站浏览器流程录屏', description: '2026-10-17 录制于 /visual-enhancer，展示已有的免登录示例与对比。这是本站自有缓存样张，不是 Adobe 或 NVIDIA 产品演示，也不是性能测试。'}],
     'core-game-frame-style-reference': [
       {title: 'No-login cached example: character style comparison', description: 'Open the no-login example, wait for the cached result and drag the comparison. Original-speed screen recording; this is a stored example, not live model inference. The frozen tail has been removed.'},
       {title: '免登录缓存示例：角色风格前后对比', description: '打开免登录示例，等待缓存结果并拖动对比。真实原速录屏，已裁去冻结尾段；这是已存储的示例，不是模型实时推理。'}],

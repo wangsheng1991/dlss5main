@@ -1,0 +1,122 @@
+[
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-adobe-topaz-acquisition-image-upscaling/assets/case-product-low.jpg",
+    "target": "public/adobe-topaz-acquisition-image-upscaling/assets/case-product-low.jpg",
+    "sha256": "901bb72b47508969a8211c3be99a1624e4f7a634db651ba4677032574e30a94b"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-adobe-topaz-acquisition-image-upscaling/assets/case-product.jpg",
+    "target": "public/adobe-topaz-acquisition-image-upscaling/assets/case-product.jpg",
+    "sha256": "121a121294888791739bc96d66d1fb872da815c602ad1cb096e1de248350d975"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-adobe-topaz-acquisition-image-upscaling/assets/portrait-source.jpg",
+    "target": "public/adobe-topaz-acquisition-image-upscaling/assets/portrait-source.jpg",
+    "sha256": "70d421893b43f32dbe92cc6a9afbff6f653e87682f91e00a0370698494c5e7c5"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-adobe-topaz-acquisition-image-upscaling/assets/retouch-after.jpg",
+    "target": "public/adobe-topaz-acquisition-image-upscaling/assets/retouch-after.jpg",
+    "sha256": "c1bd7c9051acb6fa6b8ba2ddc4fbe3b636b9d4cbc4df6f857076e62074c7d6d5"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-adobe-topaz-acquisition-image-upscaling/assets/README.md",
+    "target": "public/adobe-topaz-acquisition-image-upscaling/assets/README.md",
+    "sha256": "0d27dc40de12a9d9442c072dfe08a13eb7f6174c6718f2d35010a977c55b6f1d"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-broadcast-2-3-upscaling/assets/case-portrait.jpg",
+    "target": "public/broadcast-2-3-upscaling/assets/case-portrait.jpg",
+    "sha256": "ed9bd9aab35cc21c0d7b7b70c536e7f51a24c7181938cd36b52cc78386e9afd6"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-broadcast-2-3-upscaling/assets/case-architecture.jpg",
+    "target": "public/broadcast-2-3-upscaling/assets/case-architecture.jpg",
+    "sha256": "1b6e4ba3f70d700fce3c630b98e29ac1cf8881dcbadfd7eefa5c9f7be86b4f4e"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-broadcast-2-3-upscaling/assets/case-architecture-low.jpg",
+    "target": "public/broadcast-2-3-upscaling/assets/case-architecture-low.jpg",
+    "sha256": "1cccd0bf9940fb721f9cc7c676d1ee9fe85b9f70da3c52fac14900073a0e913a"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-broadcast-2-3-upscaling/assets/case-portrait-low.jpg",
+    "target": "public/broadcast-2-3-upscaling/assets/case-portrait-low.jpg",
+    "sha256": "094116a3ebb09c03845a5419f2ac0c393e26f112339d9a9ca467d3c82662f76b"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-broadcast-2-3-upscaling/assets/README.md",
+    "target": "public/broadcast-2-3-upscaling/assets/README.md",
+    "sha256": "cabe270544da2fe6057cc20db56a4e19d60e7bdc563d6c41aa05e8c2e8b9726a"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-rtx-video-comfyui-open-pipeline/assets/cutout-teapot.jpg",
+    "target": "public/rtx-video-comfyui-open-pipeline/assets/cutout-teapot.jpg",
+    "sha256": "d84a36c2991032fbe48669e59cd272b1c94f02ffec3ecd586dfd0d93d2e3e206"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-rtx-video-comfyui-open-pipeline/assets/cutout-teapot-after.jpg",
+    "target": "public/rtx-video-comfyui-open-pipeline/assets/cutout-teapot-after.jpg",
+    "sha256": "4658fac91b5fe7ef36f4216efd2032b115f2386921db9c9219a46b3f36a1f0d4"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-rtx-video-comfyui-open-pipeline/assets/case-architecture.jpg",
+    "target": "public/rtx-video-comfyui-open-pipeline/assets/case-architecture.jpg",
+    "sha256": "1b6e4ba3f70d700fce3c630b98e29ac1cf8881dcbadfd7eefa5c9f7be86b4f4e"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-rtx-video-comfyui-open-pipeline/assets/case-architecture-low.jpg",
+    "target": "public/rtx-video-comfyui-open-pipeline/assets/case-architecture-low.jpg",
+    "sha256": "1cccd0bf9940fb721f9cc7c676d1ee9fe85b9f70da3c52fac14900073a0e913a"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-rtx-video-comfyui-open-pipeline/assets/README.md",
+    "target": "public/rtx-video-comfyui-open-pipeline/assets/README.md",
+    "sha256": "050493941b827f7b280c8d854cf53247fba38377425b59705793fc78534b4266"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-tesla-roadster-compressed-image/assets/case-product-low.jpg",
+    "target": "public/tesla-roadster-compressed-image/assets/case-product-low.jpg",
+    "sha256": "901bb72b47508969a8211c3be99a1624e4f7a634db651ba4677032574e30a94b"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-tesla-roadster-compressed-image/assets/case-product.jpg",
+    "target": "public/tesla-roadster-compressed-image/assets/case-product.jpg",
+    "sha256": "121a121294888791739bc96d66d1fb872da815c602ad1cb096e1de248350d975"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-tesla-roadster-compressed-image/assets/sample2.jpg",
+    "target": "public/tesla-roadster-compressed-image/assets/sample2.jpg",
+    "sha256": "1ee1ccbce28c511604011a2bf751fe00066a4f646f43f5926a5ef97bef4aa652"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-tesla-roadster-compressed-image/assets/sample1.jpg",
+    "target": "public/tesla-roadster-compressed-image/assets/sample1.jpg",
+    "sha256": "bef2484bc4ed804d7f73c6bc2f04fa07a689a41564e250d8b11648c574b306e9"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-tesla-roadster-compressed-image/assets/README.md",
+    "target": "public/tesla-roadster-compressed-image/assets/README.md",
+    "sha256": "57ecaa4b4cae216b404be86d9c2dc58b36f0710ec41126b7dc4d324c2698e356"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-adobe-topaz-acquisition-image-upscaling/assets/cards.json",
+    "target": "public/adobe-topaz-acquisition-image-upscaling/assets/cards.json",
+    "sha256": "7a4d1e45883fef1f06b74653bc8d6de649eafde87799a1087fe94f9895eaf789"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-broadcast-2-3-upscaling/assets/cards.json",
+    "target": "public/broadcast-2-3-upscaling/assets/cards.json",
+    "sha256": "eb821071150af5ca8e526aacd12fbf0d5e483e74fe3af76917c2649ed4b7c46d"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-rtx-video-comfyui-open-pipeline/assets/cards.json",
+    "target": "public/rtx-video-comfyui-open-pipeline/assets/cards.json",
+    "sha256": "1d90ea2fe7ca9cb15c12997064f1d665184989d308e90972576176e45a6e3726"
+  },
+  {
+    "source": "/Users/wangsheng/code/shou/artifacts/content-library/2026-10-16-tesla-roadster-compressed-image/assets/cards.json",
+    "target": "public/tesla-roadster-compressed-image/assets/cards.json",
+    "sha256": "b2542a6709a5dddbcae7b2d36203c42c53072bd74f9b44b823b631c5cdbf588d"
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "brand": "DLSS5 Independent Workflow",
+  "source": "Site-owned sample · 2026-10-16",
+  "cards": [
+    {
+      "kicker": "HOT TAKE",
+      "title": "Adobe and Topaz Labs: what an acquisition change",
+      "size": "sm",
+      "lede": "A controlled visual check, not a benchmark.",
+      "rows": [
+        {
+          "main": "Keep the source",
+          "sub": "Input and output stay side by side",
+          "tag": "01"
+        },
+        {
+          "main": "Record the run",
+          "sub": "Dimensions · operation · date",
+          "tag": "02"
+        },
+        {
+          "main": "Inspect edges",
+          "sub": "Text · faces · logos · texture",
+          "tag": "03"
+        },
+        {
+          "main": "State limits",
+          "sub": "No vendor claim or performance promise",
+          "tag": "04"
+        }
+      ],
+      "note": "Independent project · not affiliated with NVIDIA",
+      "page": "1/2"
+    },
+    {
+      "kicker": "REPRODUCIBLE",
+      "title": "What to record",
+      "steps": [
+        {
+          "title": "Open input",
+          "desc": "Use a licensed or site-owned image."
+        },
+        {
+          "title": "Run once",
+          "desc": "Keep the operation and output visible."
+        },
+        {
+          "title": "Compare",
+          "desc": "Use the same display size."
+        },
+        {
+          "title": "Report",
+          "desc": "Keep one limitation with the result."
+        }
+      ],
+      "note": "See the article and landing page for the full check.",
+      "page": "2/2"
+    }
+  ]
+}
