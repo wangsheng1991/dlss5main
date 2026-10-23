@@ -1,0 +1,9 @@
+R1/R4: v2 content and local tool verification
+Two ZIP builds are byte-identical (cmp exit 0).
+v1 unchanged: 24437 bytes; 3b472ea6b2ab32df9c3abb594a94b2833674ebae716a3098dd948ac37dfb766c
+All 6 bilingual checklist excerpts identical between v1 and v2.
+Extracted review-pair ran on real site JPEG/WebP; dimensions match independent ffprobe; byte counts/hashes match files.
+SourceForge and Nexus: actual Chrome HTTP 403, Cloudflare security/block pages; not a 404 dead-link result. Target content not verified behind the security response.
+characterStyle: prompt byte-for-byte equal to sample definition
+sample1: prompt byte-for-byte equal to sample definition
+sample2: prompt byte-for-byte equal to sample definition

@@ -1,0 +1,5 @@
+/private/tmp/kit-v2-20261023/extracted/tools/review-pair-9Q70Ld
+  candidate.webp
+  index.html
+  pair.json
+  source.jpg

@@ -1,0 +1,20 @@
+Archive:  public/downloads/dlss5-style-recipe-kit-v2.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+     2346  10-23-2026 00:00   README.md
+      207  10-23-2026 00:00   accept-reject-record.csv
+     3495  10-23-2026 00:00   checklists/core-game-character-style-matrix.en.md
+     2904  10-23-2026 00:00   checklists/core-game-character-style-matrix.zh.md
+     1327  10-23-2026 00:00   checklists/core-game-frame-style-reference.en.md
+     1150  10-23-2026 00:00   checklists/core-game-frame-style-reference.zh.md
+     7271  10-23-2026 00:00   checklists/core-redraw-review-checklist.en.md
+     5669  10-23-2026 00:00   checklists/core-redraw-review-checklist.zh.md
+     1115  10-23-2026 00:00   prompts/README.md
+     1366  10-23-2026 00:00   prompts/catalog.json
+      128  10-23-2026 00:00   prompts/characterStyle.txt
+     2080  10-23-2026 00:00   prompts/five-direction-brief-template.md
+       77  10-23-2026 00:00   prompts/sample1.txt
+       69  10-23-2026 00:00   prompts/sample2.txt
+     4504  10-23-2026 00:00   tools/review-pair.mjs
+---------                     -------
+    33708                     15 files

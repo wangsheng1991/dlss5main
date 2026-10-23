@@ -1,0 +1,37 @@
+{
+  "path": "/downloads/dlss5-style-recipe-kit-v2.zip",
+  "bytes": 35828,
+  "sha256": "58f760ae41de528784aecf17de20cbc666ed4223bbd182e4c11c8b891c4056cb",
+  "files": [
+    "README.md",
+    "accept-reject-record.csv",
+    "checklists/core-game-character-style-matrix.en.md",
+    "checklists/core-game-character-style-matrix.zh.md",
+    "checklists/core-game-frame-style-reference.en.md",
+    "checklists/core-game-frame-style-reference.zh.md",
+    "checklists/core-redraw-review-checklist.en.md",
+    "checklists/core-redraw-review-checklist.zh.md",
+    "prompts/README.md",
+    "prompts/catalog.json",
+    "prompts/characterStyle.txt",
+    "prompts/five-direction-brief-template.md",
+    "prompts/sample1.txt",
+    "prompts/sample2.txt",
+    "tools/review-pair.mjs"
+  ],
+  "previous": {
+    "path": "/downloads/dlss5-review-kit.zip",
+    "bytes": 24437,
+    "sha256": "3b472ea6b2ab32df9c3abb594a94b2833674ebae716a3098dd948ac37dfb766c",
+    "files": [
+      "README.md",
+      "accept-reject-record.csv",
+      "core-game-character-style-matrix.en.md",
+      "core-game-character-style-matrix.zh.md",
+      "core-game-frame-style-reference.en.md",
+      "core-game-frame-style-reference.zh.md",
+      "core-redraw-review-checklist.en.md",
+      "core-redraw-review-checklist.zh.md"
+    ]
+  }
+}

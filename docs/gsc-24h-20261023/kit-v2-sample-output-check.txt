@@ -1,0 +1,23 @@
+[
+  {
+    "sample": "sample1",
+    "response": "200 image/webp",
+    "error": "",
+    "bytes": 117344,
+    "sha256": "6219ec4cc92ff5a96042386625ae3218c7f7fa01d06d7df7dc5ff3ef67277bac"
+  },
+  {
+    "sample": "sample2",
+    "response": "200 image/webp",
+    "error": "",
+    "bytes": 115356,
+    "sha256": "7494071d443610c6e7f7197b6ff573a1984f6b1c26bda99391652017c1c8df63"
+  },
+  {
+    "sample": "characterStyle",
+    "response": "200 image/webp",
+    "error": "",
+    "bytes": 305718,
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  }
+]

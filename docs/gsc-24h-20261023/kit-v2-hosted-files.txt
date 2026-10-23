@@ -1,0 +1,2 @@
+public/downloads/dlss5-style-recipe-kit-v2.zip
+public/downloads/dlss5-review-kit.zip

@@ -1,0 +1,1 @@
+FROZEN: 132 HTML pages; all text outside declared download-intent block unchanged; frozen head fields unchanged

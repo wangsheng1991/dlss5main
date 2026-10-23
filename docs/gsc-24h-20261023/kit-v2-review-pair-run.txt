@@ -1,0 +1,23 @@
+{
+  "directory": "/private/tmp/kit-v2-20261023/extracted/tools/review-pair-9Q70Ld",
+  "generatedAt": "2026-10-23T14:22:41.814Z",
+  "dimensionsMeaning": "Encoded pixel dimensions; EXIF orientation is not applied.",
+  "source": {
+    "file": "source.jpg",
+    "format": "jpg",
+    "width": 269,
+    "height": 179,
+    "bytes": 10690,
+    "sha256": "0f47504808d901c1076a8b53e66b1b429212626d991367fcd13abd865b3625a1"
+  },
+  "candidate": {
+    "file": "historical-result.webp",
+    "format": "webp",
+    "width": 1024,
+    "height": 1024,
+    "bytes": 305718,
+    "sha256": "4f6b9e158fd67b95a704f289dc20b9e098b690d19d81e40bb227cf138bc16eb1"
+  },
+  "decision": "",
+  "acceptRejectReason": ""
+}
