@@ -1,0 +1,245 @@
+{
+  "property": "sc-domain:dlss5nvidia.com",
+  "property_type_raw": "网域资源",
+  "account": "wustwangsheng@gmail.com",
+  "page": "https://www.dlss5nvidia.com/download",
+  "method": "Codex内置浏览器GSC界面，可访问性树逐行读取；未用API，未向Google账号导出。",
+  "read_only_note": "仅选择本任务要求的日期、页签、排序、分页和网页查看条件；未修改GSC持久设置、站点、验证、资源、sitemap或索引请求。",
+  "number_policy": "数字全部保存为界面原文字串，包括1.11万约数、千位逗号、7.0等；不换算、不重新计算CTR、占比或派生展示。缺失字段使用null并注明界面未显示。",
+  "download_28d": {
+    "window": "28 天",
+    "range_raw": "图表，包含从 2026年9月24日到 2026年10月21日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+    "captured_at": "2026-10-23T22:35:32.388000+08:00",
+    "last_updated_raw": "上次更新日期：3小时前",
+    "pagination_raw": "第 1-50 行，共 432 行",
+    "start_time": null,
+    "end_time": null,
+    "missing_note": "精确起止时分秒：界面未显示。",
+    "totals": {
+      "clicks": "900",
+      "impressions": "1.11万",
+      "ctr": "8.1%",
+      "position": "7.6"
+    },
+    "queries_file": "queries-28d.csv",
+    "sort": "展示降序；同值保留界面顺序",
+    "limit": 50,
+    "filters_raw": [
+      "搜索类型：网络",
+      "网页：https://www.dlss5nvidia.com/download"
+    ]
+  },
+  "download_7d": {
+    "window": "7 天",
+    "range_raw": "图表，包含从 2026年10月15日到 2026年10月21日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+    "captured_at": "2026-10-23T22:37:27.924000+08:00",
+    "last_updated_raw": "上次更新日期：3小时前",
+    "pagination_raw": "第 1-50 行，共 345 行",
+    "start_time": null,
+    "end_time": null,
+    "missing_note": "精确起止时分秒：界面未显示。",
+    "totals": {
+      "clicks": "543",
+      "impressions": "5,982",
+      "ctr": "9.1%",
+      "position": "7"
+    },
+    "queries_file": "queries-7d.csv",
+    "sort": "展示降序；同值保留界面顺序",
+    "limit": 30,
+    "filters_raw": [
+      "搜索类型：网络",
+      "网页：https://www.dlss5nvidia.com/download"
+    ]
+  },
+  "download_24h_devices": {
+    "file": "devices-24h.json",
+    "window": "24 小时",
+    "range_raw": "图表，包含从 2026年10月22日到 2026年10月23日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+    "captured_at": "2026-10-23T22:38:49.926000+08:00",
+    "last_updated_raw": "上次更新日期：3小时前",
+    "pagination_raw": "第 1-3 行，共 3 行",
+    "start_time": null,
+    "end_time": null,
+    "missing_note": "精确起止时分秒：界面未显示。",
+    "totals": {
+      "clicks": "43",
+      "impressions": "619",
+      "ctr": "6.9%",
+      "position": "7.7"
+    },
+    "mobile_impressions": "124",
+    "mobile_impression_share": null,
+    "note": "占比界面未显示；设备行与顶部汇总不一致，不强算。"
+  },
+  "search_appearance": {
+    "24h": {
+      "window": "24 小时",
+      "range_raw": "图表，包含从 2026年10月22日到 2026年10月23日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+      "captured_at": "2026-10-23T22:39:30.249000+08:00",
+      "last_updated_raw": "上次更新日期：3小时前",
+      "pagination_raw": null,
+      "start_time": null,
+      "end_time": null,
+      "missing_note": "精确起止时分秒：界面未显示。",
+      "status_raw": "无数据",
+      "rows": [],
+      "filters_raw": [
+        "搜索类型：网络",
+        "网页：https://www.dlss5nvidia.com/download"
+      ],
+      "note": "界面未显示任何视频/常见问题等类型行，不填0或编造类型。"
+    },
+    "28d": {
+      "window": "28 天",
+      "range_raw": "图表，包含从 2026年9月24日到 2026年10月21日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+      "captured_at": "2026-10-23T22:36:05.906000+08:00",
+      "last_updated_raw": "上次更新日期：3小时前",
+      "pagination_raw": null,
+      "start_time": null,
+      "end_time": null,
+      "missing_note": "精确起止时分秒：界面未显示。",
+      "status_raw": "无数据",
+      "rows": [],
+      "filters_raw": [
+        "搜索类型：网络",
+        "网页：https://www.dlss5nvidia.com/download"
+      ],
+      "note": "界面未显示任何视频/常见问题等类型行，不填0或编造类型。"
+    }
+  },
+  "site_pages_24h": {
+    "window": "24 小时",
+    "range_raw": "图表，包含从 2026年10月22日到 2026年10月23日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+    "captured_at": "2026-10-23T22:40:24.446000+08:00",
+    "last_updated_raw": "上次更新日期：3小时前",
+    "pagination_raw": "第 1-10 行，共 62 行",
+    "start_time": null,
+    "end_time": null,
+    "missing_note": "精确起止时分秒：界面未显示。",
+    "totals": {
+      "clicks": "107",
+      "impressions": "1,553",
+      "ctr": "6.9%",
+      "position": "7.1"
+    },
+    "filters_raw": [
+      "搜索类型：网络"
+    ],
+    "sort": "点击次数降序，同值保留界面顺序",
+    "rows": [
+      {
+        "url": "https://www.dlss5nvidia.com/download",
+        "clicks": "43",
+        "impressions": "619",
+        "ctr": "6.9%",
+        "position": "7.7",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/",
+        "clicks": "32",
+        "impressions": "163",
+        "ctr": "19.6%",
+        "position": "4.1",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/visual-enhancer",
+        "clicks": "16",
+        "impressions": "185",
+        "ctr": "8.6%",
+        "position": "5.3",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/image-quality-enhancer",
+        "clicks": "7",
+        "impressions": "119",
+        "ctr": "5.9%",
+        "position": "7.5",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026",
+        "clicks": "5",
+        "impressions": "239",
+        "ctr": "2.1%",
+        "position": "6.3",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/video-upscaler",
+        "clicks": "2",
+        "impressions": "11",
+        "ctr": "18.2%",
+        "position": "6.0",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/games",
+        "clicks": "1",
+        "impressions": "39",
+        "ctr": "2.6%",
+        "position": "8.2",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/blog/dlss-5-online-image-upscaler-guide",
+        "clicks": "1",
+        "impressions": "38",
+        "ctr": "2.6%",
+        "position": "8.9",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/models",
+        "clicks": "1",
+        "impressions": "11",
+        "ctr": "9.1%",
+        "position": "9.5",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      },
+      {
+        "url": "https://www.dlss5nvidia.com/podcast/gpt-6-dlss-5-convert-game-frame-workflow",
+        "clicks": "1",
+        "impressions": "2",
+        "ctr": "50%",
+        "position": "8.5",
+        "window": "24 小时",
+        "captured_at": "2026-10-23T22:40:24.446000+08:00"
+      }
+    ],
+    "download_is_first_visible_row": true
+  },
+  "intent_inference": "推断：下载页按展示排序的Top50可见查询里，APK/安卓/手机需求出现频繁且有多条较高点击；桌面Studio词也存在，但不能用截断查询表代表页面900点击的全部归因。内容优先解释安卓使用边界与浏览器可运行步骤、再明确Windows Studio申请路径，不承诺APK或新增硬件支持。",
+  "limitations": [
+    "28天与7天为不同窗口，不能直接用点击数比较增长或日均；24小时为读取时刻的滚动窗口。",
+    "查询表只取按要求的前50/30，匿名查询与截断长尾不可见，不能与页面总量强制相加。",
+    "24小时设备行与页面汇总不一致，保留原值，无法确认完整设备份额。",
+    "24小时与28天搜索结果呈现均显示无数据；不等于页面没有普通搜索流量，也不能推出某类rich result绝对没有。",
+    "上个24小时核查曾读到48/688，本轮读到43/619，窗口和抓取时刻不同，不能混用旧分母；未推断变动原因。"
+  ],
+  "screenshots": [
+    "screens/queries-28d.png",
+    "screens/devices-24h.png",
+    "screens/pages-24h.png"
+  ],
+  "raw_files": [
+    "appearance-24h-raw.json",
+    "appearance-28d-raw.json",
+    "devices-24h-raw.json",
+    "pages-24h-raw.json",
+    "queries-28d-raw.json",
+    "queries-7d-raw.json"
+  ]
+}

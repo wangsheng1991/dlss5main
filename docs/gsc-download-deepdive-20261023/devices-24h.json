@@ -1,0 +1,50 @@
+{
+  "property": "sc-domain:dlss5nvidia.com",
+  "page": "https://www.dlss5nvidia.com/download",
+  "window": "24 小时",
+  "range_raw": "图表，包含从 2026年10月22日到 2026年10月23日的总点击次数、总曝光次数、平均点击率和平均排名计数",
+  "captured_at": "2026-10-23T22:38:49.926000+08:00",
+  "last_updated_raw": "上次更新日期：3小时前",
+  "pagination_raw": "第 1-3 行，共 3 行",
+  "start_time": null,
+  "end_time": null,
+  "missing_note": "手机展示占比：界面未显示；未计算。精确窗口起止时分秒：界面未显示。",
+  "totals": {
+    "clicks": "43",
+    "impressions": "619",
+    "ctr": "6.9%",
+    "position": "7.7"
+  },
+  "devices": [
+    {
+      "device": "桌面",
+      "clicks": "5",
+      "impressions": "205",
+      "ctr": "2.4%",
+      "position": "8.9",
+      "window": "24 小时",
+      "captured_at": "2026-10-23T22:38:49.926000+08:00"
+    },
+    {
+      "device": "移动设备",
+      "clicks": "13",
+      "impressions": "124",
+      "ctr": "10.5%",
+      "position": "7.7",
+      "window": "24 小时",
+      "captured_at": "2026-10-23T22:38:49.926000+08:00"
+    },
+    {
+      "device": "平板电脑",
+      "clicks": "1",
+      "impressions": "3",
+      "ctr": "33.3%",
+      "position": "14.7",
+      "window": "24 小时",
+      "captured_at": "2026-10-23T22:38:49.926000+08:00"
+    }
+  ],
+  "mobile_impressions_raw": "124",
+  "mobile_impression_share": null,
+  "consistency_note": "界面设备行与同屏页面顶部汇总不一致；原因界面未说明，不补齐、不按任一分母推算占比。screens/devices-24h.png与devices-24h-raw.json保留原文。"
+}

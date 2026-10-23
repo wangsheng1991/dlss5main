@@ -1,0 +1,364 @@
+{
+  "window": "7 天",
+  "captured_at": "2026-10-23T14:37:27.924Z",
+  "ax": "Browser tab: 14, Title: \"在 Google 搜索结果中的表现\", URL: \"https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Adlss5nvidia.com&metrics=CLICKS%2CIMPRESSIONS%2CCTR%2CPOSITION&breakdown=query&page=!https%3A%2F%2Fwww.dlss5nvidia.com%2Fdownload&num_of_days=7\".\n0 AXWebArea 在 Google 搜索结果中的表现, URL: search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Adlss5nvidia.com&metrics=CLICKS%2CIMPRESSIONS%2CCTR%2CPOSITION&breakdown=query&page=!https%3A%2F%2Fwww.dlss5nvidia.com%2Fdownload&num_of_days=7\n\t1 container\n\t\t2 container yDmH0d\n\t\t\t3 container gb\n\t\t\t\t4 container\n\t\t\t\t\t5 button (collapsed) Description: 主菜单, Secondary Actions: Expand\n\t\t\t\t\t\t6 image\n\t\t\t\t\t7 link Description: Google Search Console, Value: search.google.com/search-console?resource_id=sc-domain%3Adlss5nvidia.com, ID: sdgBod\n\t\t\t\t\t8 container\n\t\t\t\t\t\t9 combo box (collapsed, settable) Description: 检查 dlss5nvidia.com 中的任何网址, Secondary Actions: Expand\n\t\t\t\t\t10 button 搜索\n\t\t\t\t\t\t11 image\n\t\t\t\t\t12 button 帮助\n\t\t\t\t\t13 button 用户设置\n\t\t\t\t\t14 container\n\t\t\t\t\t\t15 button 未读消息：31 条\n\t\t\t\t\t\t16 text 31\n\t\t\t\t\t17 button (collapsed) Description: Google 应用, Secondary Actions: Expand\n\t\t\t\t\t18 button (collapsed) Description: Google 账号： Sheng Wang (wustwangsheng@gmail.com), Secondary Actions: Expand\n\t\t\t19 container navigational drawer\n\t\t\t\t20 container\n\t\t\t\t\t21 container 主要\n\t\t\t\t\t\t22 pop up button (collapsed) Description: 搜索资源, Secondary Actions: Expand\n\t\t\t\t\t\t\t23 image 网站图标\n\t\t\t\t\t\t\t24 combo box (collapsed, settable) Description: dlss5nvidia.com, Secondary Actions: Expand\n\t\t\t\t\t\t25 container\n\t\t\t\t\t\t\t26 link Description: 概述, Value: search.google.com/search-console?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t27 link Description: 数据洞见, Value: search.google.com/search-console/performance/insights?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t28 container\n\t\t\t\t\t\t\t\t29 link Description: 效果, Value: search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t\t30 button (collapsed) Description: “效果”报告部分, Secondary Actions: Expand\n\t\t\t\t\t\t\t31 button 网址检查\n\t\t\t\t\t\t\t\t32 text 网址检查\n\t\t\t\t\t\t\t33 container\n\t\t\t\t\t\t\t\t34 text 编制索引\n\t\t\t\t\t\t\t\t35 button (expanded) Description: “编制索引”报告部分, Secondary Actions: Collapse\n\t\t\t\t\t\t\t\t36 link Description: 网页, Value: search.google.com/search-console/index?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t\t37 link Description: 视频, Value: search.google.com/search-console/video-index?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t\t38 link Description: 站点地图, Value: search.google.com/search-console/sitemaps?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t\t39 link Description: 移除, Value: search.google.com/search-console/removals?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t40 container\n\t\t\t\t\t\t\t\t41 text 体验\n\t\t\t\t\t\t\t\t42 button (expanded) Description: “体验”报告部分, Secondary Actions: Collapse\n\t\t\t\t\t\t\t\t43 link Description: 核心网页指标, Value: search.google.com/search-console/core-web-vitals?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t\t44 link Description: HTTPS, Value: search.google.com/search-console/https?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t45 container\n\t\t\t\t\t\t\t\t46 text 增强功能\n\t\t\t\t\t\t\t\t47 button (expanded) Description: “增强功能”报告部分, Secondary Actions: Collapse\n\t\t\t\t\t\t\t\t48 link Description: 路径, Value: search.google.com/search-console/r/breadcrumbs?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t\t49 link Description: 视频, Value: search.google.com/search-console/r/videos?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t50 container\n\t\t\t\t\t\t\t\t51 text 安全问题和人工处置措施\n\t\t\t\t\t\t\t\t52 button (collapsed) Description: “安全问题和人工处置措施”报告部分, Secondary Actions: Expand\n\t\t\t\t\t\t\t53 link Description: “链接”报告, Value: search.google.com/search-console/links?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t54 link Description: 成就, Value: search.google.com/search-console/achievements?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t55 link Description: 设置, Value: search.google.com/search-console/settings?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t\t\t56 button 提交反馈\n\t\t\t\t\t\t\t\t57 text 提交反馈\n\t\t\t\t\t\t\t58 button Search Console 简介\n\t\t\t\t\t\t\t\t59 text Search Console 简介\n\t\t\t\t\t\t\t60 link Description: 隐私权, Value: myaccount.google.com/privacypolicy?hl=zh-CN\n\t\t\t\t\t\t\t61 link Description: 条款, Value: myaccount.google.com/termsofservice?hl=zh-CN\n\t\t\t62 container\n\t\t\t\t63 container 路径\n\t\t\t\t\t64 heading 效果, Value: 1\n\t\t\t\t\t\t65 text 效果\n\t\t\t\t66 pop up button (collapsed) Description: 导出, Secondary Actions: Expand\n\t\t\t\t67 container\n\t\t\t\t\t68 Select time range\n\t\t\t\t\t\t69 radio button 24 小时, Value: 0\n\t\t\t\t\t\t70 radio button 7 天, Value: 1\n\t\t\t\t\t\t71 radio button 28 天, Value: 0\n\t\t\t\t\t\t72 radio button 3 个月, Value: 0\n\t\t\t\t\t73 button More time ranges\n\t\t\t\t\t74 content list\n\t\t\t\t\t\t75 button 搜索类型：网络\n\t\t\t\t\t\t76 button 网页：https://www.dlss5nvidia.com/download\n\t\t\t\t\t\t\t77 text 网页：https://www.dlss5nvidia.com/download\n\t\t\t\t\t\t78 button 移除网页：https://www.dlss5nvidia.com/download\n\t\t\t\t\t\t79 pop up button (collapsed) 添加过滤条件, Secondary Actions: Expand\n\t\t\t\t\t\t80 button 使用 AI 自定义效果报告\n\t\t\t\t\t\t81 button 重置过滤条件\n\t\t\t\t\t\t\t82 text 重置过滤条件\n\t\t\t\t83 text 上次更新日期：3小时前\n\t\t\t\t84 container\n\t\t\t\t\t85 container\n\t\t\t\t\t\t86 button 总点击次数 543\n\t\t\t\t\t\t\t87 text 总点击次数\n\t\t\t\t\t\t\t88 text 543\n\t\t\t\t\t\t89 container\n\t\t\t\t\t\t\t90 button (collapsed) Description: null, Secondary Actions: Expand\n\t\t\t\t\t\t91 button 总曝光次数 5,982\n\t\t\t\t\t\t\t92 text 总曝光次数\n\t\t\t\t\t\t\t93 text 5,982\n\t\t\t\t\t\t94 container\n\t\t\t\t\t\t\t95 button (collapsed) Description: null, Secondary Actions: Expand\n\t\t\t\t\t\t96 button 平均点击率 9.1%\n\t\t\t\t\t\t\t97 text 平均点击率\n\t\t\t\t\t\t\t98 text 9.1%\n\t\t\t\t\t\t99 container\n\t\t\t\t\t\t\t100 button (collapsed) Description: null, Secondary Actions: Expand\n\t\t\t\t\t\t101 button 平均排名 7\n\t\t\t\t\t\t\t102 text 平均排名\n\t\t\t\t\t\t\t103 text 7\n\t\t\t\t\t\t104 container\n\t\t\t\t\t\t\t105 button (collapsed) Description: null, Secondary Actions: Expand\n\t\t\t\t\t\t106 pop up button (collapsed) Description: 所选时间粒度：每日, Secondary Actions: Expand\n\t\t\t\t\t\t\t107 image\n\t\t\t\t\t\t108 container chart\n\t\t\t\t\t\t\t109 text 图表，包含从 2026年10月15日到 2026年10月21日的总点击次数、总曝光次数、平均点击率和平均排名计数\n\t\t\t\t\t110 text 详细了解您的网站在 Google 搜索的生成式 AI 功能中的表现\n\t\t\t\t\t111 container\n\t\t\t\t\t\t112 link Description: 打开 Google 搜索生成式 AI 功能效果报告。, Value: search.google.com/search-console/performance/search-analytics/ai?resource_id=sc-domain%3Adlss5nvidia.com\n\t\t\t\t\t113 container dimension-tables\n\t\t\t\t\t\t114 tab group\n\t\t\t\t\t\t\t115 tab (selected, settable, boolean) 查询数, Value: 1\n查询数\n\t\t\t\t\t\t\t116 tab (selectable, settable, boolean) 网页, Value: 0\n网页\n\t\t\t\t\t\t\t117 tab (selectable, settable, boolean) 国家/地区, Value: 0\n国家/地区\n\t\t\t\t\t\t\t118 tab (selectable, settable, boolean) 设备, Value: 0\n设备\n\t\t\t\t\t\t\t119 tab (selectable, settable, boolean) 搜索结果呈现, Value: 0\n搜索结果呈现\n\t\t\t\t\t\t\t120 tab (selectable, settable, boolean) 天, Value: 0\n天\n\t\t\t\t\t\t122 container\n\t\t\t\t\t\t\t123 pop up button (collapsed) Description: 过滤表格行, Secondary Actions: Expand\n\t\t\t\t\t\t\t124 table\n\t\t\t\t\t\t\t\t125 row\n\t\t\t\t\t\t\t\t\t126 cell\n\t\t\t\t\t\t\t\t\t\t127 text 热门查询\n\t\t\t\t\t\t\t\t\t\t128 button 按“热门查询”排序\n\t\t\t\t\t\t\t\t\t129 cell\n\t\t\t\t\t\t\t\t\t\t130 button 按“点击次数”排序\n\t\t\t\t\t\t\t\t\t\t131 text 点击次数\n\t\t\t\t\t\t\t\t\t132 cell\n\t\t\t\t\t\t\t\t\t\t133 button 按“展示”排序\n\t\t\t\t\t\t\t\t\t\t134 text 展示\n\t\t\t\t\t\t\t\t\t135 cell\n\t\t\t\t\t\t\t\t\t\t136 button 按“点击率”排序\n\t\t\t\t\t\t\t\t\t\t137 text 点击率\n\t\t\t\t\t\t\t\t\t138 cell\n\t\t\t\t\t\t\t\t\t\t139 button 按“排名”排序\n\t\t\t\t\t\t\t\t\t\t140 text 排名\n\t\t\t\t\t\t\t\t141 row\n\t\t\t\t\t\t\t\t\t142 cell\n\t\t\t\t\t\t\t\t\t\t143 text dlss 5 download\n\t\t\t\t\t\t\t\t\t144 cell\n\t\t\t\t\t\t\t\t\t\t145 text 26\n\t\t\t\t\t\t\t\t\t146 cell\n\t\t\t\t\t\t\t\t\t\t147 text 572\n\t\t\t\t\t\t\t\t\t148 cell\n\t\t\t\t\t\t\t\t\t\t149 text 4.5%\n\t\t\t\t\t\t\t\t\t150 cell\n\t\t\t\t\t\t\t\t\t\t151 text 9.7\n\t\t\t\t\t\t\t\t260 row\n\t\t\t\t\t\t\t\t\t261 cell\n\t\t\t\t\t\t\t\t\t\t262 text nvngx_dlss.dll dlss 5 download\n\t\t\t\t\t\t\t\t\t263 cell\n\t\t\t\t\t\t\t\t\t\t264 text 8\n\t\t\t\t\t\t\t\t\t265 cell\n\t\t\t\t\t\t\t\t\t\t266 text 135\n\t\t\t\t\t\t\t\t\t267 cell\n\t\t\t\t\t\t\t\t\t\t268 text 5.9%\n\t\t\t\t\t\t\t\t\t269 cell\n\t\t\t\t\t\t\t\t\t\t270 text 6.8\n\t\t\t\t\t\t\t\t163 row\n\t\t\t\t\t\t\t\t\t164 cell\n\t\t\t\t\t\t\t\t\t\t165 text dlss 5 download android\n\t\t\t\t\t\t\t\t\t166 cell\n\t\t\t\t\t\t\t\t\t\t167 text 23\n\t\t\t\t\t\t\t\t\t168 cell\n\t\t\t\t\t\t\t\t\t\t169 text 101\n\t\t\t\t\t\t\t\t\t170 cell\n\t\t\t\t\t\t\t\t\t\t171 text 22.8%\n\t\t\t\t\t\t\t\t\t172 cell\n\t\t\t\t\t\t\t\t\t\t173 text 4.7\n\t\t\t\t\t\t\t\t196 row\n\t\t\t\t\t\t\t\t\t197 cell\n\t\t\t\t\t\t\t\t\t\t198 text dlss 5 android\n\t\t\t\t\t\t\t\t\t199 cell\n\t\t\t\t\t\t\t\t\t\t200 text 10\n\t\t\t\t\t\t\t\t\t201 cell\n\t\t\t\t\t\t\t\t\t\t202 text 86\n\t\t\t\t\t\t\t\t\t203 cell\n\t\t\t\t\t\t\t\t\t\t204 text 11.6%\n\t\t\t\t\t\t\t\t\t205 cell\n\t\t\t\t\t\t\t\t\t\t206 text 7.5\n\t\t\t\t\t\t\t\t240 row\n\t\t\t\t\t\t\t\t\t241 cell\n\t\t\t\t\t\t\t\t\t\t242 text dlss 5 mobile\n\t\t\t\t\t\t\t\t\t243 cell\n\t\t\t\t\t\t\t\t\t\t244 text 8\n\t\t\t\t\t\t\t\t\t245 cell\n\t\t\t\t\t\t\t\t\t\t246 text 71\n\t\t\t\t\t\t\t\t\t247 cell\n\t\t\t\t\t\t\t\t\t\t248 text 11.3%\n\t\t\t\t\t\t\t\t\t249 cell\n\t\t\t\t\t\t\t\t\t\t250 text 5.7\n\t\t\t\t\t\t\t\t271 row\n\t\t\t\t\t\t\t\t\t272 cell\n\t\t\t\t\t\t\t\t\t\t273 text dlss 5 studio\n\t\t\t\t\t\t\t\t\t274 cell\n\t\t\t\t\t\t\t\t\t\t275 text 4\n\t\t\t\t\t\t\t\t\t276 cell\n\t\t\t\t\t\t\t\t\t\t277 text 68\n\t\t\t\t\t\t\t\t\t278 cell\n\t\t\t\t\t\t\t\t\t\t279 text 5.9%\n\t\t\t\t\t\t\t\t\t280 cell\n\t\t\t\t\t\t\t\t\t\t281 text 4.9\n\t\t\t\t\t\t\t\t282 row\n\t\t\t\t\t\t\t\t\t283 cell\n\t\t\t\t\t\t\t\t\t\t284 text dlss 5 android download\n\t\t\t\t\t\t\t\t\t285 cell\n\t\t\t\t\t\t\t\t\t\t286 text 25\n\t\t\t\t\t\t\t\t\t287 cell\n\t\t\t\t\t\t\t\t\t\t288 text 66\n\t\t\t\t\t\t\t\t\t289 cell\n\t\t\t\t\t\t\t\t\t\t290 text 37.9%\n\t\t\t\t\t\t\t\t\t291 cell\n\t\t\t\t\t\t\t\t\t\t292 text 4.0\n\t\t\t\t\t\t\t\t293 row\n\t\t\t\t\t\t\t\t\t294 cell\n\t\t\t\t\t\t\t\t\t\t295 text dlss 5 descargar para android\n\t\t\t\t\t\t\t\t\t296 cell\n\t\t\t\t\t\t\t\t\t\t297 text 9\n\t\t\t\t\t\t\t\t\t298 cell\n\t\t\t\t\t\t\t\t\t\t299 text 57\n\t\t\t\t\t\t\t\t\t300 cell\n\t\t\t\t\t\t\t\t\t\t301 text 15.8%\n\t\t\t\t\t\t\t\t\t302 cell\n\t\t\t\t\t\t\t\t\t\t303 text 6.7\n\t\t\t\t\t\t\t\t304 row\n\t\t\t\t\t\t\t\t\t305 cell\n\t\t\t\t\t\t\t\t\t\t306 text dlss 5 for android\n\t\t\t\t\t\t\t\t\t307 cell\n\t\t\t\t\t\t\t\t\t\t308 text 15\n\t\t\t\t\t\t\t\t\t309 cell\n\t\t\t\t\t\t\t\t\t\t310 text 56\n\t\t\t\t\t\t\t\t\t311 cell\n\t\t\t\t\t\t\t\t\t\t312 text 26.8%\n\t\t\t\t\t\t\t\t\t313 cell\n\t\t\t\t\t\t\t\t\t\t314 text 6.8\n\t\t\t\t\t\t\t\t315 row\n\t\t\t\t\t\t\t\t\t316 cell\n\t\t\t\t\t\t\t\t\t\t317 text dlss 5 mobile download\n\t\t\t\t\t\t\t\t\t318 cell\n\t\t\t\t\t\t\t\t\t\t319 text 21\n\t\t\t\t\t\t\t\t\t320 cell\n\t\t\t\t\t\t\t\t\t\t321 text 54\n\t\t\t\t\t\t\t\t\t322 cell\n\t\t\t\t\t\t\t\t\t\t323 text 38.9%\n\t\t\t\t\t\t\t\t\t324 cell\n\t\t\t\t\t\t\t\t\t\t325 text 2.6\n\t\t\t\t\t\t\t\t326 row\n\t\t\t\t\t\t\t\t\t327 cell\n\t\t\t\t\t\t\t\t\t\t328 text dlss5 apk\n\t\t\t\t\t\t\t\t\t329 cell\n\t\t\t\t\t\t\t\t\t\t330 text 3\n\t\t\t\t\t\t\t\t\t331 cell\n\t\t\t\t\t\t\t\t\t\t332 text 53\n\t\t\t\t\t\t\t\t\t333 cell\n\t\t\t\t\t\t\t\t\t\t334 text 5.7%\n\t\t\t\t\t\t\t\t\t335 cell\n\t\t\t\t\t\t\t\t\t\t336 text 6.5\n\t\t\t\t\t\t\t\t337 row\n\t\t\t\t\t\t\t\t\t338 cell\n\t\t\t\t\t\t\t\t\t\t339 text dlss5 download\n\t\t\t\t\t\t\t\t\t340 cell\n\t\t\t\t\t\t\t\t\t\t341 text 4\n\t\t\t\t\t\t\t\t\t342 cell\n\t\t\t\t\t\t\t\t\t\t343 text 52\n\t\t\t\t\t\t\t\t\t344 cell\n\t\t\t\t\t\t\t\t\t\t345 text 7.7%\n\t\t\t\t\t\t\t\t\t346 cell\n\t\t\t\t\t\t\t\t\t\t347 text 9.7\n\t\t\t\t\t\t\t\t348 row\n\t\t\t\t\t\t\t\t\t349 cell\n\t\t\t\t\t\t\t\t\t\t350 text dlss 5 download for android\n\t\t\t\t\t\t\t\t\t351 cell\n\t\t\t\t\t\t\t\t\t\t352 text 10\n\t\t\t\t\t\t\t\t\t353 cell\n\t\t\t\t\t\t\t\t\t\t354 text 49\n\t\t\t\t\t\t\t\t\t355 cell\n\t\t\t\t\t\t\t\t\t\t356 text 20.4%\n\t\t\t\t\t\t\t\t\t357 cell\n\t\t\t\t\t\t\t\t\t\t358 text 4.7\n\t\t\t\t\t\t\t\t359 row\n\t\t\t\t\t\t\t\t\t360 cell\n\t\t\t\t\t\t\t\t\t\t361 text dlss 5 apk download\n\t\t\t\t\t\t\t\t\t362 cell\n\t\t\t\t\t\t\t\t\t\t363 text 8\n\t\t\t\t\t\t\t\t\t364 cell\n\t\t\t\t\t\t\t\t\t\t365 text 46\n\t\t\t\t\t\t\t\t\t366 cell\n\t\t\t\t\t\t\t\t\t\t367 text 17.4%\n\t\t\t\t\t\t\t\t\t368 cell\n\t\t\t\t\t\t\t\t\t\t369 text 6.0\n\t\t\t\t\t\t\t\t370 row\n\t\t\t\t\t\t\t\t\t371 cell\n\t\t\t\t\t\t\t\t\t\t372 text dlss 5 download apk\n\t\t\t\t\t\t\t\t\t373 cell\n\t\t\t\t\t\t\t\t\t\t374 text 5\n\t\t\t\t\t\t\t\t\t375 cell\n\t\t\t\t\t\t\t\t\t\t376 text 41\n\t\t\t\t\t\t\t\t\t377 cell\n\t\t\t\t\t\t\t\t\t\t378 text 12.2%\n\t\t\t\t\t\t\t\t\t379 cell\n\t\t\t\t\t\t\t\t\t\t380 text 6.5\n\t\t\t\t\t\t\t\t381 row\n\t\t\t\t\t\t\t\t\t382 cell\n\t\t\t\t\t\t\t\t\t\t383 text dlss 5 letöltés\n\t\t\t\t\t\t\t\t\t384 cell\n\t\t\t\t\t\t\t\t\t\t385 text 4\n\t\t\t\t\t\t\t\t\t386 cell\n\t\t\t\t\t\t\t\t\t\t387 text 41\n\t\t\t\t\t\t\t\t\t388 cell\n\t\t\t\t\t\t\t\t\t\t389 text 9.8%\n\t\t\t\t\t\t\t\t\t390 cell\n\t\t\t\t\t\t\t\t\t\t391 text 4.8\n\t\t\t\t\t\t\t\t392 row\n\t\t\t\t\t\t\t\t\t393 cell\n\t\t\t\t\t\t\t\t\t\t394 text dlss 5 indir\n\t\t\t\t\t\t\t\t\t395 cell\n\t\t\t\t\t\t\t\t\t\t396 text 3\n\t\t\t\t\t\t\t\t\t397 cell\n\t\t\t\t\t\t\t\t\t\t398 text 37\n\t\t\t\t\t\t\t\t\t399 cell\n\t\t\t\t\t\t\t\t\t\t400 text 8.1%\n\t\t\t\t\t\t\t\t\t401 cell\n\t\t\t\t\t\t\t\t\t\t402 text 9.2\n\t\t\t\t\t\t\t\t403 row\n\t\t\t\t\t\t\t\t\t404 cell\n\t\t\t\t\t\t\t\t\t\t405 text nvidia dlss 5 download\n\t\t\t\t\t\t\t\t\t406 cell\n\t\t\t\t\t\t\t\t\t\t407 text 3\n\t\t\t\t\t\t\t\t\t408 cell\n\t\t\t\t\t\t\t\t\t\t409 text 35\n\t\t\t\t\t\t\t\t\t410 cell\n\t\t\t\t\t\t\t\t\t\t411 text 8.6%\n\t\t\t\t\t\t\t\t\t412 cell\n\t\t\t\t\t\t\t\t\t\t413 text 9.3\n\t\t\t\t\t\t\t\t414 row\n\t\t\t\t\t\t\t\t\t415 cell\n\t\t\t\t\t\t\t\t\t\t416 text download dlss 5 android\n\t\t\t\t\t\t\t\t\t417 cell\n\t\t\t\t\t\t\t\t\t\t418 text 6\n\t\t\t\t\t\t\t\t\t419 cell\n\t\t\t\t\t\t\t\t\t\t420 text 31\n\t\t\t\t\t\t\t\t\t421 cell\n\t\t\t\t\t\t\t\t\t\t422 text 19.4%\n\t\t\t\t\t\t\t\t\t423 cell\n\t\t\t\t\t\t\t\t\t\t424 text 6.4\n\t\t\t\t\t\t\t\t425 row\n\t\t\t\t\t\t\t\t\t426 cell\n\t\t\t\t\t\t\t\t\t\t427 text dlss 5 download free\n\t\t\t\t\t\t\t\t\t428 cell\n\t\t\t\t\t\t\t\t\t\t429 text 3\n\t\t\t\t\t\t\t\t\t430 cell\n\t\t\t\t\t\t\t\t\t\t431 text 30\n\t\t\t\t\t\t\t\t\t432 cell\n\t\t\t\t\t\t\t\t\t\t433 text 10%\n\t\t\t\t\t\t\t\t\t434 cell\n\t\t\t\t\t\t\t\t\t\t435 text 8.7\n\t\t\t\t\t\t\t\t436 row\n\t\t\t\t\t\t\t\t\t437 cell\n\t\t\t\t\t\t\t\t\t\t438 text download dlss 5\n\t\t\t\t\t\t\t\t\t439 cell\n\t\t\t\t\t\t\t\t\t\t440 text 1\n\t\t\t\t\t\t\t\t\t441 cell\n\t\t\t\t\t\t\t\t\t\t442 text 29\n\t\t\t\t\t\t\t\t\t443 cell\n\t\t\t\t\t\t\t\t\t\t444 text 3.4%\n\t\t\t\t\t\t\t\t\t445 cell\n\t\t\t\t\t\t\t\t\t\t446 text 8.6\n\t\t\t\t\t\t\t\t447 row\n\t\t\t\t\t\t\t\t\t448 cell\n\t\t\t\t\t\t\t\t\t\t449 text dlss5 mobile\n\t\t\t\t\t\t\t\t\t450 cell\n\t\t\t\t\t\t\t\t\t\t451 text 8\n\t\t\t\t\t\t\t\t\t452 cell\n\t\t\t\t\t\t\t\t\t\t453 text 28\n\t\t\t\t\t\t\t\t\t454 cell\n\t\t\t\t\t\t\t\t\t\t455 text 28.6%\n\t\t\t\t\t\t\t\t\t456 cell\n\t\t\t\t\t\t\t\t\t\t457 text 5.3\n\t\t\t\t\t\t\t\t458 row\n\t\t\t\t\t\t\t\t\t459 cell\n\t\t\t\t\t\t\t\t\t\t460 text nvngx_dlss dll dlss 5 download\n\t\t\t\t\t\t\t\t\t461 cell\n\t\t\t\t\t\t\t\t\t\t462 text 2\n\t\t\t\t\t\t\t\t\t463 cell\n\t\t\t\t\t\t\t\t\t\t464 text 26\n\t\t\t\t\t\t\t\t\t465 cell\n\t\t\t\t\t\t\t\t\t\t466 text 7.7%\n\t\t\t\t\t\t\t\t\t467 cell\n\t\t\t\t\t\t\t\t\t\t468 text 5.5\n\t\t\t\t\t\t\t\t469 row\n\t\t\t\t\t\t\t\t\t470 cell\n\t\t\t\t\t\t\t\t\t\t471 text dlss 5 update download\n\t\t\t\t\t\t\t\t\t472 cell\n\t\t\t\t\t\t\t\t\t\t473 text 0\n\t\t\t\t\t\t\t\t\t474 cell\n\t\t\t\t\t\t\t\t\t\t475 text 26\n\t\t\t\t\t\t\t\t\t476 cell\n\t\t\t\t\t\t\t\t\t\t477 text 0%\n\t\t\t\t\t\t\t\t\t478 cell\n\t\t\t\t\t\t\t\t\t\t479 text 7.7\n\t\t\t\t\t\t\t\t480 row\n\t\t\t\t\t\t\t\t\t481 cell\n\t\t\t\t\t\t\t\t\t\t482 text dlss download\n\t\t\t\t\t\t\t\t\t483 cell\n\t\t\t\t\t\t\t\t\t\t484 text 2\n\t\t\t\t\t\t\t\t\t485 cell\n\t\t\t\t\t\t\t\t\t\t486 text 25\n\t\t\t\t\t\t\t\t\t487 cell\n\t\t\t\t\t\t\t\t\t\t488 text 8%\n\t\t\t\t\t\t\t\t\t489 cell\n\t\t\t\t\t\t\t\t\t\t490 text 12.0\n\t\t\t\t\t\t\t\t491 row\n\t\t\t\t\t\t\t\t\t492 cell\n\t\t\t\t\t\t\t\t\t\t493 text dlss5 dll download\n\t\t\t\t\t\t\t\t\t494 cell\n\t\t\t\t\t\t\t\t\t\t495 text 0\n\t\t\t\t\t\t\t\t\t496 cell\n\t\t\t\t\t\t\t\t\t\t497 text 24\n\t\t\t\t\t\t\t\t\t498 cell\n\t\t\t\t\t\t\t\t\t\t499 text 0%\n\t\t\t\t\t\t\t\t\t500 cell\n\t\t\t\t\t\t\t\t\t\t501 text 7.1\n\t\t\t\t\t\t\t\t502 row\n\t\t\t\t\t\t\t\t\t503 cell\n\t\t\t\t\t\t\t\t\t\t504 text dlss 5 free download\n\t\t\t\t\t\t\t\t\t505 cell\n\t\t\t\t\t\t\t\t\t\t506 text 3\n\t\t\t\t\t\t\t\t\t507 cell\n\t\t\t\t\t\t\t\t\t\t508 text 23\n\t\t\t\t\t\t\t\t\t509 cell\n\t\t\t\t\t\t\t\t\t\t510 text 13%\n\t\t\t\t\t\t\t\t\t511 cell\n\t\t\t\t\t\t\t\t\t\t512 text 5.8\n\t\t\t\t\t\t\t\t513 row\n\t\t\t\t\t\t\t\t\t514 cell\n\t\t\t\t\t\t\t\t\t\t515 text vlss 5 indir\n\t\t\t\t\t\t\t\t\t516 cell\n\t\t\t\t\t\t\t\t\t\t517 text 2\n\t\t\t\t\t\t\t\t\t518 cell\n\t\t\t\t\t\t\t\t\t\t519 text 23\n\t\t\t\t\t\t\t\t\t520 cell\n\t\t\t\t\t\t\t\t\t\t521 text 8.7%\n\t\t\t\t\t\t\t\t\t522 cell\n\t\t\t\t\t\t\t\t\t\t523 text 3.7\n\t\t\t\t\t\t\t\t524 row\n\t\t\t\t\t\t\t\t\t525 cell\n\t\t\t\t\t\t\t\t\t\t526 text dlss 5 for mobile\n\t\t\t\t\t\t\t\t\t527 cell\n\t\t\t\t\t\t\t\t\t\t528 text 1\n\t\t\t\t\t\t\t\t\t529 cell\n\t\t\t\t\t\t\t\t\t\t530 text 21\n\t\t\t\t\t\t\t\t\t531 cell\n\t\t\t\t\t\t\t\t\t\t532 text 4.8%\n\t\t\t\t\t\t\t\t\t533 cell\n\t\t\t\t\t\t\t\t\t\t534 text 7.1\n\t\t\t\t\t\t\t\t535 row\n\t\t\t\t\t\t\t\t\t536 cell\n\t\t\t\t\t\t\t\t\t\t537 text is dlss 5 free\n\t\t\t\t\t\t\t\t\t538 cell\n\t\t\t\t\t\t\t\t\t\t539 text 0\n\t\t\t\t\t\t\t\t\t540 cell\n\t\t\t\t\t\t\t\t\t\t541 text 21\n\t\t\t\t\t\t\t\t\t542 cell\n\t\t\t\t\t\t\t\t\t\t543 text 0%\n\t\t\t\t\t\t\t\t\t544 cell\n\t\t\t\t\t\t\t\t\t\t545 text 10.7\n\t\t\t\t\t\t\t\t546 row\n\t\t\t\t\t\t\t\t\t547 cell\n\t\t\t\t\t\t\t\t\t\t548 text dlss5 android\n\t\t\t\t\t\t\t\t\t549 cell\n\t\t\t\t\t\t\t\t\t\t550 text 1\n\t\t\t\t\t\t\t\t\t551 cell\n\t\t\t\t\t\t\t\t\t\t552 text 20\n\t\t\t\t\t\t\t\t\t553 cell\n\t\t\t\t\t\t\t\t\t\t554 text 5%\n\t\t\t\t\t\t\t\t\t555 cell\n\t\t\t\t\t\t\t\t\t\t556 text 4.6\n\t\t\t\t\t\t\t\t557 row\n\t\t\t\t\t\t\t\t\t558 cell\n\t\t\t\t\t\t\t\t\t\t559 text new dlss 5 download\n\t\t\t\t\t\t\t\t\t560 cell\n\t\t\t\t\t\t\t\t\t\t561 text 1\n\t\t\t\t\t\t\t\t\t562 cell\n\t\t\t\t\t\t\t\t\t\t563 text 20\n\t\t\t\t\t\t\t\t\t564 cell\n\t\t\t\t\t\t\t\t\t\t565 text 5%\n\t\t\t\t\t\t\t\t\t566 cell\n\t\t\t\t\t\t\t\t\t\t567 text 8.7\n\t\t\t\t\t\t\t\t568 row\n\t\t\t\t\t\t\t\t\t569 cell\n\t\t\t\t\t\t\t\t\t\t570 text dlss5 studio\n\t\t\t\t\t\t\t\t\t571 cell\n\t\t\t\t\t\t\t\t\t\t572 text 3\n\t\t\t\t\t\t\t\t\t573 cell\n\t\t\t\t\t\t\t\t\t\t574 text 19\n\t\t\t\t\t\t\t\t\t575 cell\n\t\t\t\t\t\t\t\t\t\t576 text 15.8%\n\t\t\t\t\t\t\t\t\t577 cell\n\t\t\t\t\t\t\t\t\t\t578 text 4.0\n\t\t\t\t\t\t\t\t579 row\n\t\t\t\t\t\t\t\t\t580 cell\n\t\t\t\t\t\t\t\t\t\t581 text dlss 5 on android\n\t\t\t\t\t\t\t\t\t582 cell\n\t\t\t\t\t\t\t\t\t\t583 text 3\n\t\t\t\t\t\t\t\t\t584 cell\n\t\t\t\t\t\t\t\t\t\t585 text 19\n\t\t\t\t\t\t\t\t\t586 cell\n\t\t\t\t\t\t\t\t\t\t587 text 15.8%\n\t\t\t\t\t\t\t\t\t588 cell\n\t\t\t\t\t\t\t\t\t\t589 text 6.0\n\t\t\t\t\t\t\t\t590 row\n\t\t\t\t\t\t\t\t\t591 cell\n\t\t\t\t\t\t\t\t\t\t592 text dlss 5 download mobile\n\t\t\t\t\t\t\t\t\t593 cell\n\t\t\t\t\t\t\t\t\t\t594 text 8\n\t\t\t\t\t\t\t\t\t595 cell\n\t\t\t\t\t\t\t\t\t\t596 text 17\n\t\t\t\t\t\t\t\t\t597 cell\n\t\t\t\t\t\t\t\t\t\t598 text 47.1%\n\t\t\t\t\t\t\t\t\t599 cell\n\t\t\t\t\t\t\t\t\t\t600 text 3.1\n\t\t\t\t\t\t\t\t601 row\n\t\t\t\t\t\t\t\t\t602 cell\n\t\t\t\t\t\t\t\t\t\t603 text dlss 5 new version download\n\t\t\t\t\t\t\t\t\t604 cell\n\t\t\t\t\t\t\t\t\t\t605 text 0\n\t\t\t\t\t\t\t\t\t606 cell\n\t\t\t\t\t\t\t\t\t\t607 text 17\n\t\t\t\t\t\t\t\t\t608 cell\n\t\t\t\t\t\t\t\t\t\t609 text 0%\n\t\t\t\t\t\t\t\t\t610 cell\n\t\t\t\t\t\t\t\t\t\t611 text 7.4\n\t\t\t\t\t\t\t\t612 row\n\t\t\t\t\t\t\t\t\t613 cell\n\t\t\t\t\t\t\t\t\t\t614 text is dlss5 free\n\t\t\t\t\t\t\t\t\t615 cell\n\t\t\t\t\t\t\t\t\t\t616 text 0\n\t\t\t\t\t\t\t\t\t617 cell\n\t\t\t\t\t\t\t\t\t\t618 text 14\n\t\t\t\t\t\t\t\t\t619 cell\n\t\t\t\t\t\t\t\t\t\t620 text 0%\n\t\t\t\t\t\t\t\t\t621 cell\n\t\t\t\t\t\t\t\t\t\t622 text 8.1\n\t\t\t\t\t\t\t\t623 row\n\t\t\t\t\t\t\t\t\t624 cell\n\t\t\t\t\t\t\t\t\t\t625 text dlss5 indir\n\t\t\t\t\t\t\t\t\t626 cell\n\t\t\t\t\t\t\t\t\t\t627 text 1\n\t\t\t\t\t\t\t\t\t628 cell\n\t\t\t\t\t\t\t\t\t\t629 text 13\n\t\t\t\t\t\t\t\t\t630 cell\n\t\t\t\t\t\t\t\t\t\t631 text 7.7%\n\t\t\t\t\t\t\t\t\t632 cell\n\t\t\t\t\t\t\t\t\t\t633 text 6.5\n\t\t\t\t\t\t\t\t634 row\n\t\t\t\t\t\t\t\t\t635 cell\n\t\t\t\t\t\t\t\t\t\t636 text dlss 5 app download\n\t\t\t\t\t\t\t\t\t637 cell\n\t\t\t\t\t\t\t\t\t\t638 text 1\n\t\t\t\t\t\t\t\t\t639 cell\n\t\t\t\t\t\t\t\t\t\t640 text 13\n\t\t\t\t\t\t\t\t\t641 cell\n\t\t\t\t\t\t\t\t\t\t642 text 7.7%\n\t\t\t\t\t\t\t\t\t643 cell\n\t\t\t\t\t\t\t\t\t\t644 text 9.2\n\t\t\t\t\t\t\t\t645 row\n\t\t\t\t\t\t\t\t\t646 cell\n\t\t\t\t\t\t\t\t\t\t647 text تحميل dlss5\n\t\t\t\t\t\t\t\t\t648 cell\n\t\t\t\t\t\t\t\t\t\t649 text 0\n\t\t\t\t\t\t\t\t\t650 cell\n\t\t\t\t\t\t\t\t\t\t651 text 13\n\t\t\t\t\t\t\t\t\t652 cell\n\t\t\t\t\t\t\t\t\t\t653 text 0%\n\t\t\t\t\t\t\t\t\t654 cell\n\t\t\t\t\t\t\t\t\t\t655 text 5.8\n\t\t\t\t\t\t\t\t656 row\n\t\t\t\t\t\t\t\t\t657 cell\n\t\t\t\t\t\t\t\t\t\t658 text dls5 download\n\t\t\t\t\t\t\t\t\t659 cell\n\t\t\t\t\t\t\t\t\t\t660 text 1\n\t\t\t\t\t\t\t\t\t661 cell\n\t\t\t\t\t\t\t\t\t\t662 text 12\n\t\t\t\t\t\t\t\t\t663 cell\n\t\t\t\t\t\t\t\t\t\t664 text 8.3%\n\t\t\t\t\t\t\t\t\t665 cell\n\t\t\t\t\t\t\t\t\t\t666 text 6.5\n\t\t\t\t\t\t\t\t667 row\n\t\t\t\t\t\t\t\t\t668 cell\n\t\t\t\t\t\t\t\t\t\t669 text nvngx_dlss.dll download dlss 5\n\t\t\t\t\t\t\t\t\t670 cell\n\t\t\t\t\t\t\t\t\t\t671 text 0\n\t\t\t\t\t\t\t\t\t672 cell\n\t\t\t\t\t\t\t\t\t\t673 text 12\n\t\t\t\t\t\t\t\t\t674 cell\n\t\t\t\t\t\t\t\t\t\t675 text 0%\n\t\t\t\t\t\t\t\t\t676 cell\n\t\t\t\t\t\t\t\t\t\t677 text 6.7\n\t\t\t\t\t\t\t\t678 row\n\t\t\t\t\t\t\t\t\t679 cell\n\t\t\t\t\t\t\t\t\t\t680 text dlss 5 new model download\n\t\t\t\t\t\t\t\t\t681 cell\n\t\t\t\t\t\t\t\t\t\t682 text 0\n\t\t\t\t\t\t\t\t\t683 cell\n\t\t\t\t\t\t\t\t\t\t684 text 12\n\t\t\t\t\t\t\t\t\t685 cell\n\t\t\t\t\t\t\t\t\t\t686 text 0%\n\t\t\t\t\t\t\t\t\t687 cell\n\t\t\t\t\t\t\t\t\t\t688 text 9.8\n\t\t\t\t\t\t\t\t689 row\n\t\t\t\t\t\t\t\t\t690 cell\n\t\t\t\t\t\t\t\t\t\t691 text dlss 5 android apk\n\t\t\t\t\t\t\t\t\t692 cell\n\t\t\t\t\t\t\t\t\t\t693 text 4\n\t\t\t\t\t\t\t\t\t694 cell\n\t\t\t\t\t\t\t\t\t\t695 text 11\n\t\t\t\t\t\t\t\t\t696 cell\n\t\t\t\t\t\t\t\t\t\t697 text 36.4%\n\t\t\t\t\t\t\t\t\t698 cell\n\t\t\t\t\t\t\t\t\t\t699 text 5.3\n\t\t\t\t\t\t\t\t700 row\n\t\t\t\t\t\t\t\t\t701 cell\n\t\t\t\t\t\t\t\t\t\t702 text dssl 5 download\n\t\t\t\t\t\t\t\t\t703 cell\n\t\t\t\t\t\t\t\t\t\t704 text 3\n\t\t\t\t\t\t\t\t\t705 cell\n\t\t\t\t\t\t\t\t\t\t706 text 11\n\t\t\t\t\t\t\t\t\t707 cell\n\t\t\t\t\t\t\t\t\t\t708 text 27.3%\n\t\t\t\t\t\t\t\t\t709 cell\n\t\t\t\t\t\t\t\t\t\t710 text 5.2\n\t\t\t\t\t\t\t\t711 row\n\t\t\t\t\t\t\t\t\t712 cell\n\t\t\t\t\t\t\t\t\t\t713 text dlss5 telecharger\n\t\t\t\t\t\t\t\t\t714 cell\n\t\t\t\t\t\t\t\t\t\t715 text 2\n\t\t\t\t\t\t\t\t\t716 cell\n\t\t\t\t\t\t\t\t\t\t717 text 11\n\t\t\t\t\t\t\t\t\t718 cell\n\t\t\t\t\t\t\t\t\t\t719 text 18.2%\n\t\t\t\t\t\t\t\t\t720 cell\n\t\t\t\t\t\t\t\t\t\t721 text 6.5\n\t\t\t\t\t\t\t\t722 row\n\t\t\t\t\t\t\t\t\t723 cell\n\t\t\t\t\t\t\t\t\t\t724 text dlss 5 on mobile\n\t\t\t\t\t\t\t\t\t725 cell\n\t\t\t\t\t\t\t\t\t\t726 text 1\n\t\t\t\t\t\t\t\t\t727 cell\n\t\t\t\t\t\t\t\t\t\t728 text 11\n\t\t\t\t\t\t\t\t\t729 cell\n\t\t\t\t\t\t\t\t\t\t730 text 9.1%\n\t\t\t\t\t\t\t\t\t731 cell\n\t\t\t\t\t\t\t\t\t\t732 text 6.3\n\t\t\t\t\t\t\t\t733 row\n\t\t\t\t\t\t\t\t\t734 cell\n\t\t\t\t\t\t\t\t\t\t735 text dlss 5 free\n\t\t\t\t\t\t\t\t\t736 cell\n\t\t\t\t\t\t\t\t\t\t737 text 1\n\t\t\t\t\t\t\t\t\t738 cell\n\t\t\t\t\t\t\t\t\t\t739 text 11\n\t\t\t\t\t\t\t\t\t740 cell\n\t\t\t\t\t\t\t\t\t\t741 text 9.1%\n\t\t\t\t\t\t\t\t\t742 cell\n\t\t\t\t\t\t\t\t\t\t743 text 8.1\n\t\t\t\t\t\t\t\t744 row\n\t\t\t\t\t\t\t\t\t745 cell\n\t\t\t\t\t\t\t\t\t\t746 text dlss 5 скачать\n\t\t\t\t\t\t\t\t\t747 cell\n\t\t\t\t\t\t\t\t\t\t748 text 1\n\t\t\t\t\t\t\t\t\t749 cell\n\t\t\t\t\t\t\t\t\t\t750 text 11\n\t\t\t\t\t\t\t\t\t751 cell\n\t\t\t\t\t\t\t\t\t\t752 text 9.1%\n\t\t\t\t\t\t\t\t\t753 cell\n\t\t\t\t\t\t\t\t\t\t754 text 11.7\n\t\t\t\t\t\t\t\t755 row\n\t\t\t\t\t\t\t\t\t756 cell\n\t\t\t\t\t\t\t\t\t\t757 text dlls5 скачать\n\t\t\t\t\t\t\t\t\t758 cell\n\t\t\t\t\t\t\t\t\t\t759 text 0\n\t\t\t\t\t\t\t\t\t760 cell\n\t\t\t\t\t\t\t\t\t\t761 text 11\n\t\t\t\t\t\t\t\t\t762 cell\n\t\t\t\t\t\t\t\t\t\t763 text 0%\n\t\t\t\t\t\t\t\t\t764 cell\n\t\t\t\t\t\t\t\t\t\t765 text 7.8\n\t\t\t\t\t\t\t251 text 每页行数：\n\t\t\t\t\t\t\t252 list 每页行数\n\t\t\t\t\t\t\t\t253 5\n\t\t\t\t\t\t\t\t254 10\n\t\t\t\t\t\t\t\t255 25\n\t\t\t\t\t\t\t\t256 (selected) 50\n\t\t\t\t\t\t\t\t257 100\n\t\t\t\t\t\t\t\t258 250\n\t\t\t\t\t\t\t\t259 500\n\t\t\t\t\t\t\t766 text 第 1-50 行，共 345 行\n\t\t\t\t\t\t\t767 button (disabled) 上一页\n\t\t\t\t\t\t\t768 button 下一页\n\nThe focused UI element is 256 (selected) 50",
+  "rows": [
+    [
+      "热门查询",
+      "点击次数",
+      "展示",
+      "点击率",
+      "排名"
+    ],
+    [
+      "dlss 5 download",
+      "26",
+      "572",
+      "4.5%",
+      "9.7"
+    ],
+    [
+      "nvngx_dlss.dll dlss 5 download",
+      "8",
+      "135",
+      "5.9%",
+      "6.8"
+    ],
+    [
+      "dlss 5 download android",
+      "23",
+      "101",
+      "22.8%",
+      "4.7"
+    ],
+    [
+      "dlss 5 android",
+      "10",
+      "86",
+      "11.6%",
+      "7.5"
+    ],
+    [
+      "dlss 5 mobile",
+      "8",
+      "71",
+      "11.3%",
+      "5.7"
+    ],
+    [
+      "dlss 5 studio",
+      "4",
+      "68",
+      "5.9%",
+      "4.9"
+    ],
+    [
+      "dlss 5 android download",
+      "25",
+      "66",
+      "37.9%",
+      "4.0"
+    ],
+    [
+      "dlss 5 descargar para android",
+      "9",
+      "57",
+      "15.8%",
+      "6.7"
+    ],
+    [
+      "dlss 5 for android",
+      "15",
+      "56",
+      "26.8%",
+      "6.8"
+    ],
+    [
+      "dlss 5 mobile download",
+      "21",
+      "54",
+      "38.9%",
+      "2.6"
+    ],
+    [
+      "dlss5 apk",
+      "3",
+      "53",
+      "5.7%",
+      "6.5"
+    ],
+    [
+      "dlss5 download",
+      "4",
+      "52",
+      "7.7%",
+      "9.7"
+    ],
+    [
+      "dlss 5 download for android",
+      "10",
+      "49",
+      "20.4%",
+      "4.7"
+    ],
+    [
+      "dlss 5 apk download",
+      "8",
+      "46",
+      "17.4%",
+      "6.0"
+    ],
+    [
+      "dlss 5 download apk",
+      "5",
+      "41",
+      "12.2%",
+      "6.5"
+    ],
+    [
+      "dlss 5 letöltés",
+      "4",
+      "41",
+      "9.8%",
+      "4.8"
+    ],
+    [
+      "dlss 5 indir",
+      "3",
+      "37",
+      "8.1%",
+      "9.2"
+    ],
+    [
+      "nvidia dlss 5 download",
+      "3",
+      "35",
+      "8.6%",
+      "9.3"
+    ],
+    [
+      "download dlss 5 android",
+      "6",
+      "31",
+      "19.4%",
+      "6.4"
+    ],
+    [
+      "dlss 5 download free",
+      "3",
+      "30",
+      "10%",
+      "8.7"
+    ],
+    [
+      "download dlss 5",
+      "1",
+      "29",
+      "3.4%",
+      "8.6"
+    ],
+    [
+      "dlss5 mobile",
+      "8",
+      "28",
+      "28.6%",
+      "5.3"
+    ],
+    [
+      "nvngx_dlss dll dlss 5 download",
+      "2",
+      "26",
+      "7.7%",
+      "5.5"
+    ],
+    [
+      "dlss 5 update download",
+      "0",
+      "26",
+      "0%",
+      "7.7"
+    ],
+    [
+      "dlss download",
+      "2",
+      "25",
+      "8%",
+      "12.0"
+    ],
+    [
+      "dlss5 dll download",
+      "0",
+      "24",
+      "0%",
+      "7.1"
+    ],
+    [
+      "dlss 5 free download",
+      "3",
+      "23",
+      "13%",
+      "5.8"
+    ],
+    [
+      "vlss 5 indir",
+      "2",
+      "23",
+      "8.7%",
+      "3.7"
+    ],
+    [
+      "dlss 5 for mobile",
+      "1",
+      "21",
+      "4.8%",
+      "7.1"
+    ],
+    [
+      "is dlss 5 free",
+      "0",
+      "21",
+      "0%",
+      "10.7"
+    ],
+    [
+      "dlss5 android",
+      "1",
+      "20",
+      "5%",
+      "4.6"
+    ],
+    [
+      "new dlss 5 download",
+      "1",
+      "20",
+      "5%",
+      "8.7"
+    ],
+    [
+      "dlss5 studio",
+      "3",
+      "19",
+      "15.8%",
+      "4.0"
+    ],
+    [
+      "dlss 5 on android",
+      "3",
+      "19",
+      "15.8%",
+      "6.0"
+    ],
+    [
+      "dlss 5 download mobile",
+      "8",
+      "17",
+      "47.1%",
+      "3.1"
+    ],
+    [
+      "dlss 5 new version download",
+      "0",
+      "17",
+      "0%",
+      "7.4"
+    ],
+    [
+      "is dlss5 free",
+      "0",
+      "14",
+      "0%",
+      "8.1"
+    ],
+    [
+      "dlss5 indir",
+      "1",
+      "13",
+      "7.7%",
+      "6.5"
+    ],
+    [
+      "dlss 5 app download",
+      "1",
+      "13",
+      "7.7%",
+      "9.2"
+    ],
+    [
+      "تحميل dlss5",
+      "0",
+      "13",
+      "0%",
+      "5.8"
+    ],
+    [
+      "dls5 download",
+      "1",
+      "12",
+      "8.3%",
+      "6.5"
+    ],
+    [
+      "nvngx_dlss.dll download dlss 5",
+      "0",
+      "12",
+      "0%",
+      "6.7"
+    ],
+    [
+      "dlss 5 new model download",
+      "0",
+      "12",
+      "0%",
+      "9.8"
+    ],
+    [
+      "dlss 5 android apk",
+      "4",
+      "11",
+      "36.4%",
+      "5.3"
+    ],
+    [
+      "dssl 5 download",
+      "3",
+      "11",
+      "27.3%",
+      "5.2"
+    ],
+    [
+      "dlss5 telecharger",
+      "2",
+      "11",
+      "18.2%",
+      "6.5"
+    ],
+    [
+      "dlss 5 on mobile",
+      "1",
+      "11",
+      "9.1%",
+      "6.3"
+    ],
+    [
+      "dlss 5 free",
+      "1",
+      "11",
+      "9.1%",
+      "8.1"
+    ],
+    [
+      "dlss 5 скачать",
+      "1",
+      "11",
+      "9.1%",
+      "11.7"
+    ],
+    [
+      "dlls5 скачать",
+      "0",
+      "11",
+      "0%",
+      "7.8"
+    ]
+  ]
+}
