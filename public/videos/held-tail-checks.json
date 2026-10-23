@@ -1,0 +1,280 @@
+[
+  {
+    "file": "public/videos/game-character-style-example-19s-1280x900-475f.mp4",
+    "duration": 19.0,
+    "bytes": 862180,
+    "width": 1280,
+    "height": 900,
+    "frames": 475,
+    "held_tail_seconds": 2.0,
+    "comparison": "1 fps, 320px grayscale; mean delta <=0.35 and fraction delta>4 <=0.002",
+    "limit_seconds": 3.8,
+    "verdict": "PASS",
+    "samples": [
+      {
+        "second": 0,
+        "sha256": "bc84892f7f3f11d2e63e1355931114280f0df6c1fde85c1ac56faae96489cac2"
+      },
+      {
+        "second": 1,
+        "sha256": "93951550769dda0dd99f218ba22d6832e9050412843a4cc8d89d271f7ad0ed94"
+      },
+      {
+        "second": 2,
+        "sha256": "93951550769dda0dd99f218ba22d6832e9050412843a4cc8d89d271f7ad0ed94"
+      },
+      {
+        "second": 3,
+        "sha256": "93951550769dda0dd99f218ba22d6832e9050412843a4cc8d89d271f7ad0ed94"
+      },
+      {
+        "second": 4,
+        "sha256": "e073b6c764678c6b76ad55d703abc65d6efa60856ee45603e58fcc83b243e3f2"
+      },
+      {
+        "second": 5,
+        "sha256": "95767f41f6d2477bd34d4b133f066924328b1e46c151cd80088bfec53b5f2a27"
+      },
+      {
+        "second": 6,
+        "sha256": "cd0f4759bf77cfabcc2778acab216741331405af4d802fddf8716a2f991ea294"
+      },
+      {
+        "second": 7,
+        "sha256": "1ea61a813a98a5d045ad84f46395e5b7b2bd932af43b385dfc7e843b9f1c7dfe"
+      },
+      {
+        "second": 8,
+        "sha256": "9d19cf98c88e38ea376a891b94f236bf8af86c68a9dcc93a2ac76afe53850603"
+      },
+      {
+        "second": 9,
+        "sha256": "2defe0131391b8953aad8e8568c306be9ad8b4c9fa5613bc2a7fe7c84d6c0d99"
+      },
+      {
+        "second": 10,
+        "sha256": "699076103202589131eeba06eca25557511634ad49e035b397be220546961b15"
+      },
+      {
+        "second": 11,
+        "sha256": "87764e46c06c2983c90bf58818b24bf76192112643ebc9b1a8302fc642a33b09"
+      },
+      {
+        "second": 12,
+        "sha256": "c4ccd2a40a264647b7f94375d6c534179148c30aa8e4ecedf1944203ca3ef29a"
+      },
+      {
+        "second": 13,
+        "sha256": "e95eece6043419163b39847684ccc3ecb6dabde50b461061213b3f945dda8a21"
+      },
+      {
+        "second": 14,
+        "sha256": "03f4b1ab8e036e601fc5a8a27a98c5a70977b28765f04536116d302da2a7a27d"
+      },
+      {
+        "second": 15,
+        "sha256": "4a54325d26a4df16d301c126981ca9d5adf3516438d8346ee0e49c9abec9f1fd"
+      },
+      {
+        "second": 16,
+        "sha256": "af99471114ae217914058b243ca17d7314c979efcfb0713e5b616033673c62dc"
+      },
+      {
+        "second": 17,
+        "sha256": "6ae47015cca6b8823a3c1736d8dc4a2b96d913ab6af929656d61028aa4757b80"
+      },
+      {
+        "second": 18,
+        "sha256": "37fa3bd4c2e4be9fd46015f21fed377903417fce28fbf74edfd30abe3dfa93c2"
+      }
+    ]
+  },
+  {
+    "file": "public/videos/interior-reference-example-18.32s-1440x1000-458f.mp4",
+    "duration": 18.32,
+    "bytes": 1868598,
+    "width": 1440,
+    "height": 1000,
+    "frames": 458,
+    "held_tail_seconds": 0.32,
+    "comparison": "1 fps, 320px grayscale; mean delta <=0.35 and fraction delta>4 <=0.002",
+    "limit_seconds": 3.664,
+    "verdict": "PASS",
+    "samples": [
+      {
+        "second": 0,
+        "sha256": "dd285cdf9bac43c1462f05a4e4cb9196c1c86761652f4f50aaebcacac4b89b70"
+      },
+      {
+        "second": 1,
+        "sha256": "8e6ad7a6ef38b0cda93c7ab9dbae4cecd7ea6b132e69b9c5cc8759a5cac795d2"
+      },
+      {
+        "second": 2,
+        "sha256": "1e7fce90265d4044b3cb7fe87c529b8ac8f4526389102a01ea18df5c7f38d7d3"
+      },
+      {
+        "second": 3,
+        "sha256": "560116146305eb2a11396c4f48ca12808d039c11f8ccbab95a21679d546fedbd"
+      },
+      {
+        "second": 4,
+        "sha256": "8908669c2f1c6134810167fbc4da5799fdd72376fb9ebd23ed0000f37a170170"
+      },
+      {
+        "second": 5,
+        "sha256": "6fffeb60d5e5aa68c07e6af59f9000656fcc49af91ccd9a135ef027e58c0c301"
+      },
+      {
+        "second": 6,
+        "sha256": "bca2bdd0d9545a1af16c65c3a89d07f3085da44cf9138ac88aab4fc6d371d632"
+      },
+      {
+        "second": 7,
+        "sha256": "c4b7384183c929c00982bea534aeb3860cd96a562016411fb713a89f0495cff7"
+      },
+      {
+        "second": 8,
+        "sha256": "f70d328d609ec2572d8c25e33d021f54d8bfacebed20bf751b161bda4717bbe7"
+      },
+      {
+        "second": 9,
+        "sha256": "6cfe1f3a7064981163f4bf29b7751d9f719f769fa94c59a16cb420d9f5cb5dbe"
+      },
+      {
+        "second": 10,
+        "sha256": "9b2404cabc2d1c2953dde6dff3aeeae7723a6427006bb607773326ad62612544"
+      },
+      {
+        "second": 11,
+        "sha256": "33d0d76372920505cb49ecdc98f4d66201886640d9605378545a7fb125d714de"
+      },
+      {
+        "second": 12,
+        "sha256": "ae54c57e7032793e5cba98dc797153cae97b27c104a3d788ec67aedd4fbc6d8e"
+      },
+      {
+        "second": 13,
+        "sha256": "26e6ff78841102ded1ec959060e18f32c7aca5ad634153f5a569cb212b062864"
+      },
+      {
+        "second": 14,
+        "sha256": "d4bb453d652f15108973f5093e0fc5ef238b130a5b106d3fffd39e12ef089fb1"
+      },
+      {
+        "second": 15,
+        "sha256": "7544fe4e4206af58690f31bfd1328356e5af9c23cb5e5e407e0368f6475ff5f9"
+      },
+      {
+        "second": 16,
+        "sha256": "4297cd286eb2cc7e387f36ea3b110be396c58e9a505c9880b3fef4cb0ee3cb2e"
+      },
+      {
+        "second": 17,
+        "sha256": "5f068e914b821f688696452ed05e5fda5c49e9dbfeeac76c8883162cfab072a9"
+      },
+      {
+        "second": 18,
+        "sha256": "4319e7322f207b9510fb9eeec3b0fdbe17ec5dc28fabbc1a9f3584a873ef5b35"
+      }
+    ]
+  },
+  {
+    "file": "public/videos/redraw-review-example-20.12s-1440x1000-503f.mp4",
+    "duration": 20.12,
+    "bytes": 1189784,
+    "width": 1440,
+    "height": 1000,
+    "frames": 503,
+    "held_tail_seconds": 0.12,
+    "comparison": "1 fps, 320px grayscale; mean delta <=0.35 and fraction delta>4 <=0.002",
+    "limit_seconds": 4.024,
+    "verdict": "PASS",
+    "samples": [
+      {
+        "second": 0,
+        "sha256": "d17ea17d6bad288a2befc559db329922ddbfe121ec51887342c8f8c38843f472"
+      },
+      {
+        "second": 1,
+        "sha256": "6ea4de61eebec98f9940362d13acc3b7410fd8a1fc4fbfe64dafd3c584f568a6"
+      },
+      {
+        "second": 2,
+        "sha256": "53d64596ca987b0e3033f44f3e9370282cbd0ed4109e80335c07ac7954bd2dbb"
+      },
+      {
+        "second": 3,
+        "sha256": "96ab06409b70ae3aba61cfd4d0036837879560d87024237497d549654807d2f9"
+      },
+      {
+        "second": 4,
+        "sha256": "98c803ebfbe830bb21d6d489fdd9f7080cc00fb4282c2a29a495ed35b93fb031"
+      },
+      {
+        "second": 5,
+        "sha256": "2a7b6ad1a40c9233a6f033940fbf4c50a31ea76e541f2ae2716cb09289889d98"
+      },
+      {
+        "second": 6,
+        "sha256": "b113af87f3502e9fe4e77121b65e0f185b8dad1c72775521c04bd65f2f138ee1"
+      },
+      {
+        "second": 7,
+        "sha256": "9f76797d2ee2f73d247234fc779e8fb4a7abcee88c96f23881ebcc7fe4eac61a"
+      },
+      {
+        "second": 8,
+        "sha256": "b48dc185c33fbf11e53f843622bd0127a38924ae78a8bf39e14622c7b7cc7030"
+      },
+      {
+        "second": 9,
+        "sha256": "7a562ceb4816ee15b219de9f03437b735b6303656687ea80c1e6909eb05dbd64"
+      },
+      {
+        "second": 10,
+        "sha256": "fe77069d28ebd3a426117d5ffd146cf1130f14bc88494a90e437e1e20bea1ed3"
+      },
+      {
+        "second": 11,
+        "sha256": "ff3ad71a123c13ed55ce38845ccbf4775f16daf134dc94d8aba0ca64bc95bc3d"
+      },
+      {
+        "second": 12,
+        "sha256": "0903672820407dc815c01028b5b00426e6fe683d6c22fd85e33edeafdbecc852"
+      },
+      {
+        "second": 13,
+        "sha256": "5904223a4b7fba92433f0f2544a467d53c4b74dd4cd6aa8121cf7851dc78cc01"
+      },
+      {
+        "second": 14,
+        "sha256": "ad5d10e61f51413c6976ae169a192a5e1da43f0f3b9fad749507ea14ec6175f0"
+      },
+      {
+        "second": 15,
+        "sha256": "c7eb7b0fa8d7595005102712a21bb23bad97ec89fbb96ed245d40a5a6f990a4a"
+      },
+      {
+        "second": 16,
+        "sha256": "fb85fee020e8bb1a1ee701ae95fcfdf1e463a93ff8ef62b633d4a681e38d2de4"
+      },
+      {
+        "second": 17,
+        "sha256": "59b8225a17f1dbc305590997775fb7a638236c558164d4f2140dd40c585217b6"
+      },
+      {
+        "second": 18,
+        "sha256": "8d2508c4ebba6ba1ee18b2e9d9877fee4f442e537e1c67800aadc885db1c42b4"
+      },
+      {
+        "second": 19,
+        "sha256": "4cf2aeb546fa5683cc6749789e8fcf5c75a0ca3b4bab0598a7213ef198843996"
+      },
+      {
+        "second": 20,
+        "sha256": "0d15c929df46dd29ea60fe3087274b03b7b05e343e260991a06f715f62dc9df7"
+      }
+    ]
+  }
+]

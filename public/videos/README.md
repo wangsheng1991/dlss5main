@@ -1,20 +1,51 @@
-# Game-character-style cached example recording
+# Real browser recordings
+
+R1/R4/R5: style conversion and honest inspection of existing examples.
 
 Origin: site-recording
-Page: https://www.dlss5nvidia.com/game-character-style
 Recorded: 2026-10-23
-Duration: 31.960000 seconds (ffprobe format.duration)
-File: game-character-style-example-31.96s.mp4
-Thumbnail: game-character-style-example-31.96s-first-frame.jpg (decoded first MP4 frame, not a separately selected image)
-Dimensions: 1280 × 900 (ffprobe)
-Size: 1073945 bytes (ffprobe)
-MP4 creation_time: 2026-10-23T09:18:13.000000Z
 
-An anonymous, fresh Playwright Chrome context clicked the actual “Run this example · free” button on the live page, waited for the result and dragged the comparison. The actual POST returned HTTP 200, SUCCEEDED and cached: true. No authentication, uploaded customer asset or new inference is represented.
+Original-speed Chrome/Playwright CDP recordings. No narration, compositing or acceleration. Chrome timestamps determine elapsed time. The character recording is explicitly trimmed with ffmpeg -t 19 to remove its frozen tail; the old 31.96-second public asset and metadata are removed. Room and review recordings stop after the actual interactions. First-frame thumbnails are decoded from each final MP4.
 
-Playwright CDP Page.startScreencast captured actual browser frames continuously from the loaded landing page until the end. The saved Chrome frame timestamps define elapsed time. Encoding holds each captured screen until the next captured timestamp, at 25 fps; the encoder end is bounded by the actual capture end so that a static final packet cannot extend the recording. No scene is cut, reordered, replaced or sped up. No narration, overlays or composited screenshots were added. This is a browser recording, not an image slideshow. Actual capture start/end and actions are in game-character-style-example-31.96s-recording.json; ffprobe output is in game-character-style-example-31.96s-ffprobe.json. Raw frames and ffconcat timestamps remain at /tmp/core-video-20261023/.
+These are stored historical examples, not new model inference. Room geometry may change; zooming does not prove text or edge fidelity. The room recording views the existing source/reference/result cards in the anonymous dashboard, then drags the historical reference/result comparison. The review recording uses actual browser viewport zoom and slider dragging on /before-after#game-cyber-1.
 
-The displayed character asset belongs to this site's recorded own-sample workflow. It is not commercial-game footage, NVIDIA runtime capture or proof of identity preservation. The page and article retain the cache and preservation boundaries.
+Run `python3 scripts/check-video-held-tail.py public/videos/*.mp4` before publishing each recording. It samples once per second and tolerates tiny codec noise when detecting held frames. The old asset fails with 12.96 seconds held; no replacement exceeds two seconds.
 
-SHA-256 MP4: 4e2cdd717c5129cac67b3f8bde3a22944918b25b4ad78ccf76c7f47d8162c4b9
-SHA-256 thumbnail: e887aa443ac8a61035d17378071ce01206692d47159bc6c591e1d3da9d27bec8
+
+## game-character-style-example
+
+Page: https://www.dlss5nvidia.com/game-character-style
+Duration: 19 seconds (ffprobe)
+File: game-character-style-example-19s-1280x900-475f.mp4
+Dimensions: 1280 × 900
+Frames: 475
+Size: 862180 bytes
+Held tail: 2.0 seconds; limit 3.8 seconds; PASS
+Thumbnail: game-character-style-example-19s-1280x900-475f-first-frame.jpg
+Probe and action log: matching -ffprobe.json and -recording.json files.
+
+
+## interior-reference-example
+
+Page: https://www.dlss5nvidia.com/dashboard?tool=interior → https://www.dlss5nvidia.com/before-after#interior-style
+Duration: 18.32 seconds (ffprobe)
+File: interior-reference-example-18.32s-1440x1000-458f.mp4
+Dimensions: 1440 × 1000
+Frames: 458
+Size: 1868598 bytes
+Held tail: 0.32 seconds; limit 3.664 seconds; PASS
+Thumbnail: interior-reference-example-18.32s-1440x1000-458f-first-frame.jpg
+Probe and action log: matching -ffprobe.json and -recording.json files.
+
+
+## redraw-review-example
+
+Page: https://www.dlss5nvidia.com/before-after#game-cyber-1
+Duration: 20.12 seconds (ffprobe)
+File: redraw-review-example-20.12s-1440x1000-503f.mp4
+Dimensions: 1440 × 1000
+Frames: 503
+Size: 1189784 bytes
+Held tail: 0.12 seconds; limit 4.024 seconds; PASS
+Thumbnail: redraw-review-example-20.12s-1440x1000-503f-first-frame.jpg
+Probe and action log: matching -ffprobe.json and -recording.json files.

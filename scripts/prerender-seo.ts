@@ -1,5 +1,5 @@
 import CoreArticleVideo from '../src/components/CoreArticleVideo';
-import { CORE_VIDEO, coreVideoCopy } from '../src/content/articles/coreVideo20261023';
+import { CORE_VIDEOS, coreVideoCopy } from '../src/content/articles/coreVideo20261023';
 import CoreArticleContent from '../src/components/CoreArticleContent';
 import { withArticleEvidence } from '../src/content/articles/coreSchema';
 import { CORE_ARTICLE_LINKS } from '../src/content/coreArticleLinks';
@@ -377,7 +377,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
         <img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="1600" height="700" fetchpriority="high" class="w-full object-cover" />
         <figcaption class="px-5 py-3 text-xs text-zinc-400">${escapeHtml((isChinese ? article.coverCaption_cn : article.coverCaption_en) || (isChinese ? '技术简报 · 来源驱动内容' : 'Technical briefing · source-led coverage'))}</figcaption>
       </figure>
-      <div class="prose prose-invert prose-zinc max-w-none">${article.slug === CORE_VIDEO.slug ? renderToStaticMarkup(createElement(CoreArticleVideo, { slug: article.slug, chinese: isChinese })) : ''}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonIntro)) : ''}${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : article.assetBase ? renderToStaticMarkup(createElement(CoreArticleContent, { content, assetBase: article.assetBase })) : renderMarkdown(content)}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonAnswers)) : ''}</div>
+      <div class="prose prose-invert prose-zinc max-w-none">${CORE_VIDEOS[article.slug] ? renderToStaticMarkup(createElement(CoreArticleVideo, { slug: article.slug, chinese: isChinese })) : ''}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonIntro)) : ''}${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : article.assetBase ? renderToStaticMarkup(createElement(CoreArticleContent, { content, assetBase: article.assetBase })) : renderMarkdown(content)}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonAnswers)) : ''}</div>
       ${article.sources?.length ? `<aside class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h2>${isChinese ? '资料与来源' : 'Sources and methodology'}</h2><ul>${article.sources.map(source => `<li><a href="${escapeHtml(source.url)}" rel="noreferrer">${escapeHtml(source.label)}</a></li>`).join('')}</ul></aside>` : ''}
       <aside class="mt-12" aria-labelledby="related-articles-heading"><h2 id="related-articles-heading">${isChinese ? '继续阅读' : 'Related reading'}</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">${relatedArticles.map(related => { const relatedCover = coverFor(related); return `<a href="${articlePath(related.slug, locale)}"><img src="${escapeHtml(relatedCover.src)}" alt="${escapeHtml(relatedCover.alt)}" width="1600" height="700" loading="lazy" /><span>${escapeHtml(isChinese ? related.title_cn : related.title_en)}</span></a>`; }).join('')}</div></aside>
       <p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a> · <a href="https://www.dlss5.app/en/supported-cards" class="text-primary">${isChinese ? '查看来源驱动的显卡证据' : 'Check the source-linked GPU evidence'}</a></p>
@@ -1400,11 +1400,11 @@ for (const file of ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']) {
       })).join('\n');
     original = original.replace('</urlset>', `${additions}\n</urlset>`);
     if (!original.includes('xmlns:video=')) original = original.replace('<urlset ', '<urlset xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" ');
-    for (const locale of [undefined, 'zh'] as const) {
-      const url = `${BASE_URL}${articlePath(CORE_VIDEO.slug, locale)}`;
-      const copy = coreVideoCopy(locale === 'zh');
+    for (const media of Object.values(CORE_VIDEOS)) for (const locale of [undefined, 'zh'] as const) {
+      const url = `${BASE_URL}${articlePath(media.slug, locale)}`;
+      const copy = coreVideoCopy(media.slug, locale === 'zh');
       const marker = `<loc>${url}</loc><lastmod>`;
-      original = original.replace(marker, `<loc>${url}</loc><video:video><video:thumbnail_loc>${BASE_URL}${CORE_VIDEO.thumbnailPath}</video:thumbnail_loc><video:title>${escapeHtml(copy.title)}</video:title><video:description>${escapeHtml(copy.description)}</video:description><video:content_loc>${BASE_URL}${CORE_VIDEO.contentPath}</video:content_loc><video:publication_date>${CORE_VIDEO.uploadDate}</video:publication_date></video:video><lastmod>`);
+      original = original.replace(marker, `<loc>${url}</loc><video:video><video:thumbnail_loc>${BASE_URL}${media.thumbnailPath}</video:thumbnail_loc><video:title>${escapeHtml(copy.title)}</video:title><video:description>${escapeHtml(copy.description)}</video:description><video:content_loc>${BASE_URL}${media.contentPath}</video:content_loc><video:publication_date>${media.uploadDate}</video:publication_date></video:video><lastmod>`);
     }
     writeFileSync(target, original);
   }
