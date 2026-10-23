@@ -2,7 +2,8 @@
 
 **Status:** binding as of 2026-10-23. Every task doc, content brief, SEO work order,
 Codex prompt and gate in this project defers to this file. If a dated doc disagrees,
-the dated doc is wrong and gets edited, not this file.
+the dated doc is wrong and gets edited, not this file. **The core itself was confirmed
+by Wangsheng on 2026-10-23 (answer: A).**
 
 **Why this file exists:** on 2026-10-23 Wangsheng corrected a drift in both directions —
 Penguin and Codex had been treating "make a blurry image sharp" as the project's center.
@@ -13,15 +14,22 @@ It is now written into the rules, for both agents.
 
 ## 1. The core
 
-**DLSS 5 风格转换 / 神经渲染重绘 —— 把一张游戏帧或人物图按目标风格重绘成 DLSS 5 风格的视觉参考，
-交付物是 Studio 桌面版。**
+**核心 = A：DLSS 5 风格转换 / 神经渲染重绘 —— 把一张游戏帧、人物、房间或人像按目标风格重绘成
+DLSS 5 风格的视觉参考。** 王胜 2026-10-23 亲口确认（我在对话里给出 A/B/C/D 四选，他回「a」）。
 
-Two halves, one product:
+Other candidates, settled so nobody reopens them:
 
-| Half | What it is | Where it lives |
+| | | 结论 |
 | --- | --- | --- |
-| Capability | style conversion / neural-render redraw of a game frame, character, room or portrait, guided by a prompt or a second reference image | the dashboard editor, `game-character-style`, `interior-design`, `virtual-try-on`, `virtual-makeup`, `portrait-retouch`, `ai-headshot` |
-| Product | DLSS 5 Studio, the desktop app the site exists to hand over | `/download`, `/studio-beta`, `/pricing`, `/enterprise` |
+| A | 风格转换 / 神经渲染重绘 | **核心（已确认）** |
+| B | Studio 桌面版这个产品 | 交付形态，不是核心本身：它是 A 的落地方式 | 
+| C | 视频 / 实时线 | 支线，跟着 A 走 |
+| D | 以上都不是 | 已排除 |
+
+| | What it is | Where it lives |
+| --- | --- | --- |
+| The core (A) | style conversion / neural-render redraw of a game frame, character, room or portrait, guided by a prompt or a second reference image | the dashboard editor, `game-character-style`, `interior-design`, `virtual-try-on`, `virtual-makeup`, `portrait-retouch`, `ai-headshot` |
+| Delivery (B) | DLSS 5 Studio, the desktop app that hands A over | `/download`, `/studio-beta`, `/pricing`, `/enterprise` |
 
 ### The evidence, so nobody has to re-derive it
 
