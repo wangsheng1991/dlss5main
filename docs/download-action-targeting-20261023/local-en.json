@@ -1,0 +1,151 @@
+{
+  "vh": 844,
+  "h1Count": 1,
+  "mainCount": 1,
+  "panel": {
+    "top": 529,
+    "bottom": 789,
+    "h": 260
+  },
+  "actionLinks": [
+    {
+      "action": "browser",
+      "top": 557,
+      "bottom": 605,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "action": "kit",
+      "top": 613,
+      "bottom": 661,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "action": "studio",
+      "top": 669,
+      "bottom": 717,
+      "h": 48,
+      "inFold": true
+    }
+  ],
+  "h1": {
+    "top": 176,
+    "bottom": 289,
+    "h": 113,
+    "text": "DLSS 5 Download Guide — DLSS5 Studio by request"
+  },
+  "heroSub": {
+    "top": 309,
+    "bottom": 513,
+    "h": 205
+  },
+  "answerGrid": {
+    "top": 817,
+    "bottom": 1222,
+    "h": 404,
+    "label": "At a glance",
+    "cards": 3
+  },
+  "heroLinks": [
+    {
+      "text": "Try it in the browser — Android & iPhone",
+      "href": "/dashboard?tool=game-character-style&sample=characterStyle",
+      "top": 557,
+      "bottom": 605,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "text": "Download the recipe kit (35 KB ZIP)",
+      "href": "/downloads/dlss5-style-recipe-kit-v2.zip",
+      "top": 613,
+      "bottom": 661,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "text": "Request DLSS5 Studio (Windows RTX)",
+      "href": "#request",
+      "top": 669,
+      "bottom": 717,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "text": "Why there is no APK →",
+      "href": "/dlss-5-apk",
+      "top": 757,
+      "bottom": 788,
+      "h": 31,
+      "inFold": true
+    },
+    {
+      "text": "Request the download",
+      "href": "#request",
+      "top": 1254,
+      "bottom": 1306,
+      "h": 52,
+      "inFold": false
+    },
+    {
+      "text": "See what it does",
+      "href": "#features",
+      "top": 1318,
+      "bottom": 1372,
+      "h": 54,
+      "inFold": false
+    }
+  ],
+  "heroFigure": {
+    "top": 1504,
+    "bottom": 1761,
+    "h": 258
+  },
+  "intent": {
+    "top": 1817,
+    "bottom": 6356,
+    "h": 4539
+  },
+  "kitDl": {
+    "text": "Download recipe and review kit v2 ZIP",
+    "top": 4243,
+    "bottom": 4315,
+    "h": 72,
+    "inFold": false
+  },
+  "anyLinkInFold": [
+    {
+      "text": "Try it in the browser — Android & iPhone",
+      "href": "/dashboard?tool=game-character-style&sample=characterStyle",
+      "top": 557,
+      "bottom": 605,
+      "h": 48
+    },
+    {
+      "text": "Download the recipe kit (35 KB ZIP)",
+      "href": "/downloads/dlss5-style-recipe-kit-v2.zip",
+      "top": 613,
+      "bottom": 661,
+      "h": 48
+    },
+    {
+      "text": "Request DLSS5 Studio (Windows RTX)",
+      "href": "#request",
+      "top": 669,
+      "bottom": 717,
+      "h": 48
+    },
+    {
+      "text": "Why there is no APK →",
+      "href": "/dlss-5-apk",
+      "top": 757,
+      "bottom": 788,
+      "h": 31
+    }
+  ],
+  "anyButtonInFold": [],
+  "horizontalOverflow": false,
+  "scrollWidth": 390
+}

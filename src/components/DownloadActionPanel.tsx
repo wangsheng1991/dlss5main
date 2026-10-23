@@ -21,6 +21,6 @@ export default function DownloadActionPanel({ chinese }: { chinese: boolean }) {
         <Monitor className="h-4 w-4 shrink-0" aria-hidden="true" /><span>{t('hero.action.studio')}</span>
       </a>
     </div>
-    <p className="mt-2 text-xs text-zinc-500">{t('hero.action.note')}</p>
+    <p className="mt-2 text-xs text-zinc-500">{t('hero.action.note')}{' '}<a className="text-primary underline" href={chinese ? '/zh/dlss-5-apk' : '/dlss-5-apk'}>{t('hero.action.apk')}</a></p>
   </div>;
 }
