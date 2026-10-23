@@ -18,5 +18,6 @@ import './history.test';
 import './podcast.test';
 import './seo-routes.test';
 import './dlss-checker.test';
+import './feature-picker.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

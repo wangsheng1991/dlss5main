@@ -1,3 +1,7 @@
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import FeaturePicker from '../src/components/FeaturePicker';
+import { FEATURE_PICKER_MARKER, FEATURE_PICKER_SLUG } from '../src/content/featurePicker';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { ARTICLE_COVERS } from '../src/content/articles/covers';
@@ -357,7 +361,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
         <img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="1600" height="700" fetchpriority="high" class="w-full object-cover" />
         <figcaption class="px-5 py-3 text-xs text-zinc-400">${isChinese ? '技术简报 · 来源驱动内容' : 'Technical briefing · source-led coverage'}</figcaption>
       </figure>
-      <div class="prose prose-invert prose-zinc max-w-none">${renderMarkdown(content)}</div>
+      <div class="prose prose-invert prose-zinc max-w-none">${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : renderMarkdown(content)}</div>
       ${article.sources?.length ? `<aside class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h2>${isChinese ? '资料与来源' : 'Sources and methodology'}</h2><ul>${article.sources.map(source => `<li><a href="${escapeHtml(source.url)}" rel="noreferrer">${escapeHtml(source.label)}</a></li>`).join('')}</ul></aside>` : ''}
       <aside class="mt-12" aria-labelledby="related-articles-heading"><h2 id="related-articles-heading">${isChinese ? '继续阅读' : 'Related reading'}</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">${relatedArticles.map(related => { const relatedCover = coverFor(related); return `<a href="${articlePath(related.slug, locale)}"><img src="${escapeHtml(relatedCover.src)}" alt="${escapeHtml(relatedCover.alt)}" width="1600" height="700" loading="lazy" /><span>${escapeHtml(isChinese ? related.title_cn : related.title_en)}</span></a>`; }).join('')}</div></aside>
       <p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a> · <a href="https://www.dlss5.app/en/supported-cards" class="text-primary">${isChinese ? '查看来源驱动的显卡证据' : 'Check the source-linked GPU evidence'}</a></p>

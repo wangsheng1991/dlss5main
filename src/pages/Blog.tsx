@@ -1,3 +1,5 @@
+import FeaturePicker from '../components/FeaturePicker';
+import { FEATURE_PICKER_MARKER, FEATURE_PICKER_SLUG } from '../content/featurePicker';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams, Navigate } from 'react-router-dom';
@@ -310,6 +312,11 @@ export default function Blog() {
 
     lines.forEach((line, i) => {
       const trimmed = line.trim();
+      if (trimmed === FEATURE_PICKER_MARKER && article.slug === FEATURE_PICKER_SLUG) {
+        flushList(); flushTable();
+        elements.push(<div key={`picker-${activeLang}`}><FeaturePicker locale={activeLang === 'cn' ? 'zh' : 'en'} canonicalPath={canonicalPath} /></div>);
+        return;
+      }
 
       // Table row (contains |)
       if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
@@ -495,7 +502,7 @@ export default function Blog() {
         </div>
 
         {/* Article Content */}
-        <div className="prose prose-invert prose-zinc max-w-none">
+        <div className="prose prose-invert prose-zinc max-w-none" style={article.slug === FEATURE_PICKER_SLUG ? { overflowWrap: 'anywhere' } : undefined}>
           {!isArticleLocaleSupported && <p className="not-prose rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-zinc-300" role="status">{copy.translationNotice}</p>}
           {renderContent(content)}
         </div>
