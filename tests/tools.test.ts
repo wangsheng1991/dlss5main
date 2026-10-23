@@ -16,7 +16,7 @@ import {
 } from '../src/config/tools';
 import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
-import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS } from '../src/config/samples';
+import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS, sampleCacheKey, sampleOutputSize, sampleResultUrl } from '../src/config/samples';
 import { TOOL_LANDINGS } from '../src/content/toolLandings';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { GAME_STYLE_LANDING } from '../src/content/gameStyleLanding';
@@ -530,4 +530,13 @@ test('the case book covers every tool, and every picture it shows is deployed', 
   const vector = casesForTool('vectorize')[0];
   assert.match(vector.output.file || '', /\.svg$/, 'the vectorizer case must link its real SVG output');
   assert.ok(!vector.output.file?.endsWith(vector.output.src), 'the card cannot show the deliverable it claims to show a copy of'); 
+});
+
+test('the reviewed kitchen pair keeps its landscape frame and cannot reuse the old square cache', () => {
+  assert.deepEqual(sampleOutputSize('sample1'), { width: 1200, height: 768 });
+  assert.equal(sampleCacheKey('sample1'), 'sample1-kitchen-aligned-v3');
+  assert.equal(sampleCacheKey('sample2'), 'sample2');
+  assert.equal(sampleResultUrl('sample2'), '/api/image-edit/samples?sample=sample2');
+  assert.equal(sampleResultUrl('sample1'), '/api/image-edit/samples?sample=sample1&v=sample1-kitchen-aligned-v3');
+  assert.ok(readFileSync(new URL(`../public${SAMPLES.sample1.src}`, import.meta.url)).length > 0);
 });

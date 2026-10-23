@@ -13,7 +13,7 @@ import type { ToolId, VectorizePreset } from './tools';
  * request may run, so its page shows a finished pair and the live run stays behind sign-in.
  */
 export const SAMPLES = {
-  sample1: { id: 'sample1', name: 'Kitchen render', nameZh: '厨房效果图', src: '/examples/sample1.jpg', fileName: 'sample1.jpg', contentType: 'image/jpeg', tool: null, prompt: 'Make it look like a real photo of this kitchen, keeping the layout identical.' },
+  sample1: { id: 'sample1', name: 'Kitchen render', nameZh: '厨房效果图', src: '/examples/sample1-kitchen-aligned-v3.jpg', fileName: 'sample1-kitchen-aligned-v3.jpg', contentType: 'image/jpeg', tool: null, outputSize: { width: 1200, height: 768 }, cacheVersion: 'kitchen-aligned-v3', prompt: "Convert this kitchen render into a photorealistic material and lighting reference. Keep the exact camera, perspective, framing and every object position unchanged. Preserve all cabinet boundaries, countertop edges, oven, window, faucet and appliances at the same pixel positions. Only improve realistic wood, stone, metal, glass, light and shadow. Do not zoom, crop, rearrange or add objects; do not add text or interface elements." },
   sample2: { id: 'sample2', name: 'Bedroom render', nameZh: '卧室效果图', src: '/examples/sample2.jpg', fileName: 'sample2.jpg', contentType: 'image/jpeg', tool: null, prompt: 'Turn this render into a photorealistic photo with soft morning light.' },
   characterStyle: { id: 'characterStyle', name: 'Cyberpunk character style', nameZh: '赛博朋克人物风格', src: '/examples/generated/game-cyber-1-before.jpg', fileName: 'game-cyber-1-before.jpg', contentType: 'image/jpeg', tool: null, prompt: 'Original game character, preserve silhouette and costume; cyberpunk cinematic lighting, wet pavement, neon reflections, no text.' },
   teapot: {
@@ -41,3 +41,16 @@ export const isSampleId = (value: unknown): value is SampleId => typeof value ==
 export const GUEST_SAMPLE_IDS = SAMPLE_IDS.filter(id => SAMPLES[id].tool !== 'erase');
 /** Bump when example output geometry or prompts change so Firestore does not serve stale comparisons. */
 export const SAMPLE_CACHE_VERSION = 'geometry-v2';
+
+/** Version only the replaced pair; other guest examples keep their existing cached results. */
+export function sampleCacheKey(id: SampleId) {
+  const sample = SAMPLES[id];
+  return 'cacheVersion' in sample ? `${id}-${sample.cacheVersion}` : id;
+}
+export function sampleOutputSize(id: SampleId) {
+  const sample = SAMPLES[id];
+  return 'outputSize' in sample ? sample.outputSize : { width: 1024, height: 1024 };
+}
+export function sampleResultUrl(id: SampleId) {
+  return `/api/image-edit/samples?sample=${id}` + ('cacheVersion' in SAMPLES[id] ? `&v=${sampleCacheKey(id)}` : '');
+}

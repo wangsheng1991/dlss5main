@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet, alphaNetTools } from '../_lib/alphanet.js';
 import { fail } from '../_lib/auth.js';
-import { SAMPLES, SAMPLE_CACHE_VERSION, GUEST_SAMPLE_IDS, isSampleId } from '../../src/config/samples.js';
+import { SAMPLES, SAMPLE_CACHE_VERSION, GUEST_SAMPLE_IDS, isSampleId, sampleCacheKey, sampleOutputSize, sampleResultUrl, type SampleId } from '../../src/config/samples.js';
 import { SERVICE_FAILURE_NOTE, buildToolTask, failureNote, modelForTool } from '../../src/config/tools.js';
 import { SampleStore } from '../../server/sample-store.js';
 import { database } from '../../server/admin.js';
@@ -25,8 +25,8 @@ const POLL_BUDGET_MS = 45000;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const clientIp = (req: VercelRequest) => String(req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || '').split(',')[0].trim();
 
-async function serve(req: VercelRequest, res: VercelResponse, sampleId: string, store: SampleStore) {
-  const cached = await store.read(sampleId);
+async function serve(req: VercelRequest, res: VercelResponse, sampleId: SampleId, store: SampleStore) {
+  const cached = await store.read(sampleCacheKey(sampleId), SAMPLE_CACHE_VERSION);
   if (!cached) return res.status(404).json({ error: 'This example is not ready yet.' });
   res.setHeader('Content-Type', cached.contentType);
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
@@ -67,7 +67,7 @@ async function readInput(req: VercelRequest, src: string) {
 }
 
 /** Generates the example with the fixed catalog prompt and stores the copy guests will receive. */
-async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
+async function warm(req: VercelRequest, sampleId: SampleId, store: SampleStore) {
   const sample = SAMPLES[sampleId];
   // An example may belong to a C-line tool, which answers under its own provider model and takes no
   // size or format field — so the client and the body are both chosen from the catalog entry.
@@ -79,7 +79,7 @@ async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
   const key = `sample-warm:${sampleId}:${Date.now()}`;
   const body = sample.tool
     ? buildToolTask(sample.tool, { imageIds: [ticket.file_id], prompt: sample.prompt, preset: 'preset' in sample ? sample.preset : undefined })
-    : { prompt: sample.prompt, image_ids: [ticket.file_id], width: 1024, height: 1024, seed: 42, num_inference_steps: 4, output_format: 'webp' };
+    : { prompt: sample.prompt, image_ids: [ticket.file_id], ...sampleOutputSize(sampleId), seed: 42, num_inference_steps: 4, output_format: 'webp' };
   const accepted = await client.submit(body, key);
   const deadline = Date.now() + POLL_BUDGET_MS;
   while (Date.now() < deadline) {
@@ -90,7 +90,7 @@ async function warm(req: VercelRequest, sampleId: string, store: SampleStore) {
     // read, and answers with the honest sentence when the reason is unusable.
     if (task.status === 'FAILURE') throw new Error(failureNote(task.fail_reason || task.error) || SERVICE_FAILURE_NOTE);
     const image = task.result?.images?.[0];
-    if (task.status === 'SUCCESS' && image?.url) return store.save(sampleId, sample.prompt, image, SAMPLE_CACHE_VERSION);
+    if (task.status === 'SUCCESS' && image?.url) return store.save(sampleCacheKey(sampleId), sample.prompt, image, SAMPLE_CACHE_VERSION);
   }
   throw new Error('Example generation is still running. Try again in a moment.');
 }
@@ -111,22 +111,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     await store.countGuest(clientIp(req));
     const sample = SAMPLES[sampleId];
-    const cached = await store.read(sampleId, SAMPLE_CACHE_VERSION);
+    const cached = await store.read(sampleCacheKey(sampleId), SAMPLE_CACHE_VERSION);
     const payload = {
       status: 'SUCCEEDED', sample: sampleId, prompt: sample.prompt, input: sample.src,
-      result: `/api/image-edit/samples?sample=${sampleId}`,
+      result: sampleResultUrl(sampleId),
       // The bytes come back as whatever the provider produced, so tell the client how to name them.
       contentType: cached?.contentType || '',
       extension: cached ? extensionOf(cached.contentType) : '',
     };
     if (cached) return res.status(200).json({ ...payload, cached: true });
 
-    if (!(await store.claimWarm(sampleId, SAMPLE_CACHE_VERSION))) return res.status(202).json({ status: 'WARMING', sample: sampleId });
+    if (!(await store.claimWarm(sampleCacheKey(sampleId), SAMPLE_CACHE_VERSION))) return res.status(202).json({ status: 'WARMING', sample: sampleId });
     try {
       const saved = await warm(req, sampleId, store);
       return res.status(200).json({ ...payload, cached: false, width: saved.width, height: saved.height, contentType: saved.contentType, extension: extensionOf(saved.contentType) });
     } catch (error) {
-      await store.releaseWarm(sampleId).catch(() => {});
+      await store.releaseWarm(sampleCacheKey(sampleId)).catch(() => {});
       throw error;
     }
   } catch (error) { return fail(res, error); }
