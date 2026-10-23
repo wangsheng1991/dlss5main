@@ -22,7 +22,10 @@
 
 - lint / build通过，测试110/110。
 - 旗舰页 `fails=0 verdict=PASS`；两站无来源声明检查PASS。
-- 保护页检查首先仅发现上一项已获授权且已记日志的 `/download` 加法正文变化；其旧基线已归档至下载页证据目录，补拍后复跑记录如下。
-- 线上真实按钮运行、图片尺寸、滑块及截图：部署后补录。
+- 保护页检查首先仅发现上一项已获授权且已记日志的 `/download` 加法正文变化；其旧基线已归档至下载页证据目录，补拍后复跑 `PROTECTION: changed=0 down=0 verdict=FROZEN-OK`。
+- 提交 `54592da` 已部署成功。内置浏览器在 `/visual-enhancer` 点击 `Run this example · free`，实际出现 `served from cache` 和对比滑块。
+- DOM实测两张原图均1200×768、两个显示盒均573×366.71875，比例一致，无上下黑边。浏览器画面中原工具栏已消失，台面和柜体不再发生旧版的大幅错位；截图 `online-slider.png`。
+- 键盘操作滑块50→52→50成功。线上结果下载字节SHA-256与人工审阅结果相同：`229b802a24474dd6c8df6ddac02afb454b7563fe3dfcada76c25dfceac89e708`。
+- 中英文页面共用同一示例catalog/API；本次真实按钮操作与截图在英文页面完成。
 
 证据：`/Users/wangsheng/code/shou/artifacts/sample-alignment-20261023/`，含原始生成记录、输出文件与验收日志。未改首页、下载页、SEO head、申请流程、价格或支持范围。
