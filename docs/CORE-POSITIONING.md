@@ -3,7 +3,7 @@
 **Status:** binding as of 2026-10-23. Every task doc, content brief, SEO work order,
 Codex prompt and gate in this project defers to this file. If a dated doc disagrees,
 the dated doc is wrong and gets edited, not this file. **The core itself was confirmed
-by Wangsheng on 2026-10-23 (answer: A).**
+by Wangsheng on 2026-10-23: A and B both count ("a 和 b 都可以").**
 
 **Why this file exists:** on 2026-10-23 Wangsheng corrected a drift in both directions —
 Penguin and Codex had been treating "make a blurry image sharp" as the project's center.
@@ -14,22 +14,22 @@ It is now written into the rules, for both agents.
 
 ## 1. The core
 
-**核心 = A：DLSS 5 风格转换 / 神经渲染重绘 —— 把一张游戏帧、人物、房间或人像按目标风格重绘成
-DLSS 5 风格的视觉参考。** 王胜 2026-10-23 亲口确认（我在对话里给出 A/B/C/D 四选，他回「a」）。
-
-Other candidates, settled so nobody reopens them:
+**核心 = A + B，两条都算主线：A 是能力线（DLSS 5 风格转换 / 神经渲染重绘 —— 把一张游戏帧、人物、
+房间或人像按目标风格重绘成 DLSS 5 风格的视觉参考），B 是交付线（Studio 桌面版这个产品的实际能力、
+工作流与交付方式）。** 王胜 2026-10-23 先回「a」，随后明确「a 和 b 都可以」—— 所以讲 A 或讲 B 都是
+在讲主线，两者都不许被"修糊"顶掉。
 
 | | | 结论 |
 | --- | --- | --- |
-| A | 风格转换 / 神经渲染重绘 | **核心（已确认）** |
-| B | Studio 桌面版这个产品 | 交付形态，不是核心本身：它是 A 的落地方式 | 
+| A | 风格转换 / 神经渲染重绘（能力） | **主线（已确认）** |
+| B | Studio 桌面版（交付、工作流、能力边界） | **主线（已确认）**：A 的落地方式，可以单独成篇 |
 | C | 视频 / 实时线 | 支线，跟着 A 走 |
 | D | 以上都不是 | 已排除 |
 
 | | What it is | Where it lives |
 | --- | --- | --- |
-| The core (A) | style conversion / neural-render redraw of a game frame, character, room or portrait, guided by a prompt or a second reference image | the dashboard editor, `game-character-style`, `interior-design`, `virtual-try-on`, `virtual-makeup`, `portrait-retouch`, `ai-headshot` |
-| Delivery (B) | DLSS 5 Studio, the desktop app that hands A over | `/download`, `/studio-beta`, `/pricing`, `/enterprise` |
+| Core, line A | style conversion / neural-render redraw of a game frame, character, room or portrait, guided by a prompt or a second reference image | the dashboard editor, `game-character-style`, `interior-design`, `virtual-try-on`, `virtual-makeup`, `portrait-retouch`, `ai-headshot` |
+| Core, line B | DLSS 5 Studio as the product: what the desktop app does, how a job moves through it, where its limits are | `/download`, `/studio-beta`, `/pricing`, `/enterprise` |
 
 ### The evidence, so nobody has to re-derive it
 
@@ -58,9 +58,10 @@ never the identity of the product and never the spine of the narrative.
 
 ## 3. The rules
 
-**R1 — the narrative spine.** Every page, article and post answers "what does DLSS 5 style
-conversion do for me" before it answers anything else. An entry-point piece must reach the
-core narrative within its opening section, not at the end as an afterthought.
+**R1 — the narrative spine.** Every page, article and post answers the core question first —
+either "what does DLSS 5 style conversion do for me" (line A) or "what does DLSS 5 Studio actually
+do, and how does a job move through it" (line B). An entry-point piece must reach one of those two
+lines within its opening section, not at the end as an afterthought.
 
 **R2 — entry points are labelled as entry points.** An 附带 page may be about sharpening, but
 it must say so as a limited capability ("只看已有图片清晰度的入口"), never present upscaling
