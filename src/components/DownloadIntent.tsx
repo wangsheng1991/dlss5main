@@ -1,3 +1,4 @@
+import { trackEvent } from '../lib/analytics';
 import kit from '../content/reviewKit.json';
 import { SITE_URL } from '../config/site';
 
@@ -56,7 +57,7 @@ export default function DownloadIntent({ chinese = false }: { chinese?: boolean 
       <ul className="mt-4 list-disc pl-5">{kit.files.map(file => <li key={file}><code>{file}</code></li>)}</ul>
       <p className="mt-4">{chinese ? '文件大小：' : 'File size: '}{kit.bytes} bytes</p>
       <p className="break-all">SHA-256: <code>{kit.sha256}</code></p>
-      <a className="mt-5 inline-block rounded-lg bg-primary px-5 py-3 font-bold text-black" href={kit.path} download="dlss5-style-recipe-kit-v2.zip">{chinese ? '下载配方与审阅材料 v2 ZIP' : 'Download recipe and review kit v2 ZIP'}</a>
+      <a className="mt-5 inline-block rounded-lg bg-primary px-5 py-3 font-bold text-black" href={kit.path} download="dlss5-style-recipe-kit-v2.zip" onClick={() => trackEvent('download_click', { file: 'recipe-kit-v2', surface: 'kit_section' })}>{chinese ? '下载配方与审阅材料 v2 ZIP' : 'Download recipe and review kit v2 ZIP'}</a>
       <p className="mt-3"><a className="text-primary underline" href={kit.previous.path} download="dlss5-review-kit.zip">{chinese ? '上一版：审阅材料 v1' : 'Previous version: review kit v1'}</a></p>
     </section>
     <section data-official-directory aria-labelledby="official-downloads-heading">

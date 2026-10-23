@@ -1,0 +1,136 @@
+{
+  "vh": 844,
+  "h1Count": 1,
+  "mainCount": 1,
+  "panel": {
+    "top": 417,
+    "bottom": 677,
+    "h": 260
+  },
+  "actionLinks": [
+    {
+      "action": "browser",
+      "top": 445,
+      "bottom": 493,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "action": "kit",
+      "top": 501,
+      "bottom": 549,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "action": "studio",
+      "top": 557,
+      "bottom": 605,
+      "h": 48,
+      "inFold": true
+    }
+  ],
+  "h1": {
+    "top": 160,
+    "bottom": 235,
+    "h": 75,
+    "text": "DLSS 5 下载指南 — DLSS5 Studio 申请"
+  },
+  "heroSub": {
+    "top": 255,
+    "bottom": 401,
+    "h": 146
+  },
+  "answerGrid": {
+    "top": 705,
+    "bottom": 1041,
+    "h": 336,
+    "label": "先看懂这三个点",
+    "cards": 3
+  },
+  "heroLinks": [
+    {
+      "text": "在浏览器里直接试 — 无需下载",
+      "href": "/dashboard?tool=game-character-style&sample=characterStyle",
+      "top": 445,
+      "bottom": 493,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "text": "下载配方包（35 KB ZIP）",
+      "href": "/downloads/dlss5-style-recipe-kit-v2.zip",
+      "top": 501,
+      "bottom": 549,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "text": "申请 DLSS5 Studio（Windows RTX）",
+      "href": "#request",
+      "top": 557,
+      "bottom": 605,
+      "h": 48,
+      "inFold": true
+    },
+    {
+      "text": "索取下载",
+      "href": "#request",
+      "top": 1074,
+      "bottom": 1126,
+      "h": 52,
+      "inFold": false
+    },
+    {
+      "text": "看看它能做什么",
+      "href": "#features",
+      "top": 1073,
+      "bottom": 1127,
+      "h": 54,
+      "inFold": false
+    }
+  ],
+  "heroFigure": {
+    "top": 1239,
+    "bottom": 1477,
+    "h": 238
+  },
+  "intent": {
+    "top": 1533,
+    "bottom": 5372,
+    "h": 3839
+  },
+  "kitDl": {
+    "text": "下载配方与审阅材料 v2 ZIP",
+    "top": 3667,
+    "bottom": 3715,
+    "h": 48,
+    "inFold": false
+  },
+  "anyLinkInFold": [
+    {
+      "text": "在浏览器里直接试 — 无需下载",
+      "href": "/dashboard?tool=game-character-style&sample=characterStyle",
+      "top": 445,
+      "bottom": 493,
+      "h": 48
+    },
+    {
+      "text": "下载配方包（35 KB ZIP）",
+      "href": "/downloads/dlss5-style-recipe-kit-v2.zip",
+      "top": 501,
+      "bottom": 549,
+      "h": 48
+    },
+    {
+      "text": "申请 DLSS5 Studio（Windows RTX）",
+      "href": "#request",
+      "top": 557,
+      "bottom": 605,
+      "h": 48
+    }
+  ],
+  "anyButtonInFold": [],
+  "horizontalOverflow": false,
+  "scrollWidth": 390
+}

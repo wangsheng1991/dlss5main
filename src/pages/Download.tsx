@@ -1,3 +1,4 @@
+import DownloadActionPanel from '../components/DownloadActionPanel';
 import DownloadIntent from '../components/DownloadIntent';
 import { DownloadEvidence } from '../components/RoiEvidence';
 import React from 'react';
@@ -114,6 +115,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
           {...rich('hero.h1')}
         />
         <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">{t('hero.sub')}</p>
+        <DownloadActionPanel chinese={isZh} />
 
         <section className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={t('hero.answer.title')}>
           {(['what', 'output', 'limit'] as const).map((key) => (

@@ -1,0 +1,5 @@
+commit b6ab3baba03137c390493a4893b188beca7456a6
+Author: Admin <wangsheng@colorreco.com>
+Date:   Fri Oct 23 22:26:31 2026 +0800
+
+    Ship our own recipe kit and a curated download directory on /download

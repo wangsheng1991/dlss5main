@@ -14,6 +14,12 @@
 
 export const STUDIO_COPY = {
   'en-US': {
+    'hero.action.title': "Three ways in — pick one",
+    'hero.action.browser': "Try it in the browser — no download",
+    'hero.action.kit': "Download the recipe kit (35 KB ZIP)",
+    'hero.action.studio': "Request DLSS5 Studio (Windows RTX)",
+    'hero.action.note': "No DLSS 5 APK on this site. A standalone DLSS 5 installer was unconfirmed in NVIDIA's official pages on 2026-10-23; Android and iPhone visitors get the browser path, and the Studio build is a Windows RTX desktop app sent on request.",
+
     'meta.title': 'DLSS 5 Download (2026) — Free Online Converter, Mobile & Windows Studio',
     'meta.desc': 'DLSS 5 download: request independent Windows RTX Studio access after signing in, or try a free browser example on Android. No Android APK or public installer.',
     'nav.which': 'Which DLSS?',
@@ -174,6 +180,12 @@ export const STUDIO_COPY = {
     'foot.year': 'DLSS5 Studio · 2026',
   },
   'zh-CN': {
+    'hero.action.title': "三条路，挑一条",
+    'hero.action.browser': "在浏览器里直接试 — 无需下载",
+    'hero.action.kit': "下载配方包（35 KB ZIP）",
+    'hero.action.studio': "申请 DLSS5 Studio（Windows RTX）",
+    'hero.action.note': "本站没有 DLSS 5 APK。截至 2026-10-23 核对的 NVIDIA 官方页面，未见面向普通用户的独立 DLSS 5 安装包；安卓与 iPhone 访客走浏览器路径，Studio 是需要申请的 Windows RTX 桌面版。",
+
     'meta.title': 'DLSS 5 下载（2026）— 免费在线转换器、手机与 Windows Studio',
     'meta.desc': 'DLSS 5 下载：登录后申请独立 Windows RTX Studio，通过邮件获取访问；安卓用户可先免费运行浏览器示例。本站不提供 Android APK 或公开安装包。',
     'nav.which': '哪个 DLSS',

@@ -1,3 +1,5 @@
+import DownloadActionPanel from '../src/components/DownloadActionPanel';
+import { MemoryRouter } from 'react-router-dom';
 import DownloadIntent from '../src/components/DownloadIntent';
 import { assertArticleMarkdownRendered } from './check-article-markdown';
 import CoreArticleVideo from '../src/components/CoreArticleVideo';
@@ -529,6 +531,7 @@ type PublicGuideOptions = {
   keywords: string[];
   links?: Array<{ label: string; path: string }>;
   extraHtml?: string;
+  heroExtraHtml?: string;
   noindex?: boolean;
   language?: 'en-US' | 'zh-CN';
   eyebrow?: string;
@@ -543,7 +546,7 @@ function renderPublicGuide(options: PublicGuideOptions): string {
   const links = options.links?.length
     ? `<nav class="mt-10 border-t border-outline-variant/20 pt-7" aria-label="${escapeHtml(options.relatedHeading || 'Related pages')}"><h2 class="text-xl font-bold text-white">${escapeHtml(options.relatedHeading || 'Continue exploring')}</h2><ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">${options.links.map(link => `<li><a class="text-primary" href="${escapeHtml(link.path)}">${escapeHtml(link.label)} →</a></li>`).join('')}</ul></nav>`
     : '';
-  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(options.eyebrow || 'DLSS5NVIDIA · independent guide')}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p></header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">${escapeHtml(options.coversHeading || 'What this page covers')}</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${options.extraHtml || ''}${links}</main>`;
+  const root = `<main class="pt-32 pb-24 px-6 max-w-[1000px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(options.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-widest text-xs">${escapeHtml(options.eyebrow || 'DLSS5NVIDIA · independent guide')}</p><h1 class="text-4xl md:text-5xl font-bold text-white mt-4">${escapeHtml(options.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-5">${escapeHtml(options.lead)}</p>${options.heroExtraHtml || ''}</header><section class="mt-12 rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-2xl font-bold text-white">${escapeHtml(options.coversHeading || 'What this page covers')}</h2><p class="mt-4 leading-relaxed text-zinc-300">${escapeHtml(options.description)}</p></section>${options.extraHtml || ''}${links}</main>`;
   // Additive schema only: these guide routes shipped without a page-level node, so crawlers saw the
   // shell's Organization graph alone. WebPage + BreadcrumbList describe the page that already
   // exists; nothing in the visible page changes.
@@ -1130,6 +1133,7 @@ const studioStaticVideo = '<section class="mt-12" aria-labelledby="studio-refere
 if (profileHas('download')) { writeRoute('/studio-beta', renderStudioBetaStatic('en')); writeRoute('/zh/studio-beta', renderStudioBetaStatic('zh')); }
 if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   path: '/download',
+  heroExtraHtml: renderToStaticMarkup(createElement(MemoryRouter, null, createElement(DownloadActionPanel, { chinese: false }))),
   title: studioStatic['meta.title'],
   description: studioStatic['meta.desc'],
   heading: 'DLSS 5 Download Guide — DLSS5 Studio by Request',
@@ -1155,6 +1159,7 @@ const studioStaticZhAndroid = '<section class="mt-12 max-w-4xl"><h2 class="text-
 const studioStaticZhVideo = '<section class="mt-12" aria-labelledby="studio-reference-video-heading-zh"><h2 id="studio-reference-video-heading-zh" class="text-2xl font-bold text-white">前后对比视频参考</h2><p class="mt-4 text-zinc-300 leading-relaxed">这些六秒静音循环片段来自同一站点管线的独立视觉参考，并非 NVIDIA 截图，也不是实时性能承诺。</p><div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5"><figure><video class="w-full rounded-xl bg-black" controls muted loop playsinline preload="metadata" poster="/examples/generated/architecture-1-after.jpg"><source src="/examples/dlss5-upscale-before-after-demo.mp4" type="video/mp4" /></video><figcaption class="mt-2 text-sm text-zinc-400">文字结论：片段展示从输入到输出的转换，不是速度或画质基准测试。</figcaption></figure><figure><video class="w-full rounded-xl bg-black" controls muted loop playsinline preload="metadata" poster="/examples/generated/game-cyber-1-after.jpg"><source src="/examples/dlss5-game-style-transition.mp4" type="video/mp4" /></video><figcaption class="mt-2 text-sm text-zinc-400">文字结论：独立风格参考保留身份、姿势和轮廓作为复核锚点。</figcaption></figure></div><p class="mt-5"><a href="/zh/before-after">查看完整前后对比证据页 →</a></p></section>';
 if (profileHas('download')) writeRoute('/zh/download', renderPublicGuide({
   path: '/zh/download',
+  heroExtraHtml: renderToStaticMarkup(createElement(MemoryRouter, null, createElement(DownloadActionPanel, { chinese: true }))),
   title: studioStaticZh['meta.title'],
   description: studioStaticZh['meta.desc'],
   heading: 'DLSS 5 下载指南 —— DLSS5 Studio 申请',
