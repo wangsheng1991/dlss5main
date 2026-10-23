@@ -1,3 +1,4 @@
+import DownloadUsageGuide from '../components/DownloadUsageGuide';
 import DownloadActionPanel from '../components/DownloadActionPanel';
 import DownloadIntent from '../components/DownloadIntent';
 import { DownloadEvidence } from '../components/RoiEvidence';
@@ -161,6 +162,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
       </section>
 
       <DownloadIntent chinese={isZh} />
+      <DownloadUsageGuide chinese={isZh} />
       {!isZh && <DownloadEvidence />}
 
       {/* ── 索取下载（注册后可见邮箱 + 一键发信） ─────────────────────── */}

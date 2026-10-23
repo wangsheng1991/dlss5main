@@ -1,3 +1,4 @@
+import DownloadUsageGuide from '../src/components/DownloadUsageGuide';
 import DownloadActionPanel from '../src/components/DownloadActionPanel';
 import { MemoryRouter } from 'react-router-dom';
 import DownloadIntent from '../src/components/DownloadIntent';
@@ -1145,7 +1146,7 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
     { hrefLang: 'x-default', href: `${BASE_URL}/download` },
   ],
   links: [{ label: 'Free DLSS 5 visual enhancer', path: '/image-quality-enhancer' }, { label: 'Free AI Image Upscaler', path: '/image-upscaler' }, { label: 'Before-and-after evidence', path: '/before-after' }, { label: 'Latest DLSS 5 news', path: '/blog/dlss-5-latest-news-september-2026' }, { label: 'Models and workflows', path: '/models' }, { label: 'GPU compatibility evidence', path: 'https://www.dlss5.app/en/supported-cards' }, { label: 'Studio readiness by GPU', path: 'https://www.dlss5.app/en/studio' }, { label: 'Request the limited Studio beta', path: '/studio-beta' }],
-  extraHtml: `${renderToStaticMarkup(createElement(DownloadIntent))}${renderToStaticMarkup(createElement(DownloadEvidence))}${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}${studioStaticVideo}`,
+  extraHtml: `${renderToStaticMarkup(createElement(DownloadIntent))}${renderToStaticMarkup(createElement(DownloadUsageGuide))}${renderToStaticMarkup(createElement(DownloadEvidence))}${studioStaticAtAGlance}${studioStaticAndroid}${studioStaticShowcase}${studioStaticVideo}`,
 }));
 const studioStaticZh = STUDIO_COPY['zh-CN'];
 const studioStaticZhCases = [
@@ -1175,7 +1176,7 @@ if (profileHas('download')) writeRoute('/zh/download', renderPublicGuide({
   coversHeading: '本页包含什么',
   relatedHeading: '继续探索',
   links: [{ label: '免费 DLSS 5 视觉增强器', path: '/image-quality-enhancer' }, { label: '免费 AI 图片放大器', path: '/image-upscaler' }, { label: '前后对比证据页', path: '/zh/before-after' }, { label: '最新 DLSS 5 新闻', path: '/zh/blog/dlss-5-latest-news-september-2026' }, { label: '模型与工作流', path: '/models' }, { label: 'GPU 兼容性证据', path: 'https://www.dlss5.app/zh-CN/supported-cards' }, { label: '按 GPU 查看 Studio 准备度', path: 'https://www.dlss5.app/zh-CN/studio' }, { label: '申请 Studio 有限名额内测', path: '/zh/studio-beta' }],
-  extraHtml: `${renderToStaticMarkup(createElement(DownloadIntent, { chinese: true }))}${studioStaticZhAtAGlance}${studioStaticZhAndroid}${studioStaticZhShowcase}${studioStaticZhVideo}`,
+  extraHtml: `${renderToStaticMarkup(createElement(DownloadIntent, { chinese: true }))}${renderToStaticMarkup(createElement(DownloadUsageGuide, { chinese: true }))}${studioStaticZhAtAGlance}${studioStaticZhAndroid}${studioStaticZhShowcase}${studioStaticZhVideo}`,
 }));
 if (profileHas('docs')) writeRoute('/docs', renderApiCatalog());
 if (profileHas('enterprise')) writeRoute('/enterprise', renderPublicGuide({
