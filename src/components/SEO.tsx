@@ -1,3 +1,4 @@
+import { reviewedPageSchema } from '../content/schemaReview';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SITE_URL } from '../config/site';
@@ -77,6 +78,7 @@ export default function SEO({
   const pageUrl = canonical?.startsWith('http') ? canonical : `${BASE_URL}${canonical || '/'}`;
   const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image}`;
   const pageLanguage = language || undefined;
+  const reviewedSchema = reviewedPageSchema(structuredData, pageUrl, pageTitle, pageDescription);
   const organization = canonical === '/' ? null : siteOrganizationSchema();
 
   // Some prerendered shells can be restored by React 19 as well as reconciled by Helmet. Both
@@ -176,9 +178,9 @@ export default function SEO({
         </script>
       )}
       {/* Structured Data (JSON-LD) for GEO and Rich Snippets */}
-      {structuredData && (
+      {reviewedSchema && (
         <script type="application/ld+json" data-rh="true">
-          {brandCopy(JSON.stringify(structuredData))}
+          {brandCopy(JSON.stringify(reviewedSchema))}
         </script>
       )}
     </Helmet>

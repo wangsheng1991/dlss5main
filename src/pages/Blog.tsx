@@ -1,3 +1,4 @@
+import { ARTICLE_CHECK_PATHS, SCHEMA_REVIEW_DATE } from '../content/schemaReview';
 import { ComparisonIntro, ComparisonAnswers } from '../components/RoiEvidence';
 import FeaturePicker from '../components/FeaturePicker';
 import { FEATURE_PICKER_MARKER, FEATURE_PICKER_SLUG } from '../content/featurePicker';
@@ -557,6 +558,7 @@ export default function Blog() {
           </p>
         </footer>
       </article>
+      {ARTICLE_CHECK_PATHS.includes(canonicalPath) && <p data-schema-check-date className="mt-8 text-sm text-zinc-500">Last checked: <time dateTime={SCHEMA_REVIEW_DATE}>{SCHEMA_REVIEW_DATE}</time></p>}
     </main>
   );
 }

@@ -1,0 +1,63 @@
+# DLSS 5 NVIDIA — DLSS 5-style Effect Conversion
+
+> Independent, non-official DLSS 5-style effect conversion and AI image generation showcase. NVIDIA and DLSS are trademarks of NVIDIA Corporation.
+
+## Identity and main workflow
+
+The product's core is style conversion and neural-render redraw: turn a game frame, character, room or portrait into a visual reference. DLSS5 Studio is the desktop handover. Image enlargement, unblur and quality enhancement are limited entry points, not the product's purpose.
+
+This site is independent. Its browser image workflow is not NVIDIA's in-game DLSS runtime and does not establish game or GPU compatibility.
+
+- Home: https://www.dlss5nvidia.com/
+- Chinese home: https://www.dlss5nvidia.com/zh
+- Game character style references: https://www.dlss5nvidia.com/game-character-style
+- Interior design: https://www.dlss5nvidia.com/interior-design
+- Portrait retouch: https://www.dlss5nvidia.com/portrait-retouch
+- Virtual try-on: https://www.dlss5nvidia.com/virtual-try-on
+- Studio request guide: https://www.dlss5nvidia.com/download
+
+## Browser workflow and limits
+
+Inspect a cached example before creating an account. Your own image requires sign-in and available credits. The visual enhancer supports upload, enhancement, side-by-side comparison and result download on the same page. Interrupted status checks can resume with the same task id; a terminal provider failure does not guarantee recovery.
+
+Generated detail is an estimate. Keep the source and inspect faces, text, edges and other information-sensitive areas. The workflow does not promise pixel-exact recovery or reconstruction of information absent from the source.
+
+- Visual enhancer: https://www.dlss5nvidia.com/visual-enhancer
+- Chinese visual enhancer: https://www.dlss5nvidia.com/zh/visual-enhancer
+- Image-quality entry point: https://www.dlss5nvidia.com/image-quality-enhancer
+- Image upscaler: https://www.dlss5nvidia.com/image-upscaler
+- Unblur entry point: https://www.dlss5nvidia.com/unblur-image
+- Signed-in workspace: https://www.dlss5nvidia.com/dashboard
+
+## Desktop availability
+
+DLSS5 Studio is an independent Windows RTX tool available by request after sign-in. Meeting the hardware requirements does not guarantee an invitation. The site does not provide an Android APK. Browser examples are separate from the desktop application and do not install Studio.
+
+- English download guide: https://www.dlss5nvidia.com/download
+- Chinese download guide: https://www.dlss5nvidia.com/zh/download
+
+## Evidence and feature comparisons
+
+Separate official game technology from independent image workflows. Check the specific feature, GPU and game together; a suite name alone is not a compatibility check. The comparison pages distinguish checked support from unverified combinations. Independent reference images are not proof of an NVIDIA runtime integration or a hardware benchmark.
+
+- Before-and-after evidence: https://www.dlss5nvidia.com/before-after
+- Workflow comparison: https://www.dlss5nvidia.com/comparisons
+- DLSS 5 vs DLSS 4.5: https://www.dlss5nvidia.com/vs/dlss-5-vs-dlss-4-5
+- DLSS 5 vs FSR 4: https://www.dlss5nvidia.com/vs/dlss-5-vs-fsr-4
+- Feature comparison and selector: https://www.dlss5nvidia.com/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026
+- Blog: https://www.dlss5nvidia.com/blog
+
+## API, models and account information
+
+The integration guide and machine-readable catalog describe the existing asynchronous image workflow: obtain an upload ticket, upload to its signed URL, submit with an Idempotency-Key, poll the task and fetch the result. Provider keys belong on the server. Consult the current catalog and account display for model details and allowances.
+
+- API documentation: https://www.dlss5nvidia.com/docs
+- API catalog: https://www.dlss5nvidia.com/api-catalog.json
+- Models: https://www.dlss5nvidia.com/models
+- Plans: https://www.dlss5nvidia.com/pricing
+- Enterprise: https://www.dlss5nvidia.com/enterprise
+- About: https://www.dlss5nvidia.com/about
+
+## Reading this file
+
+This is a text summary of the existing pages above. Capability boundaries remain those stated on each page. It does not add a downloadable product, an official NVIDIA relationship, a performance guarantee or an unverified hardware measurement.

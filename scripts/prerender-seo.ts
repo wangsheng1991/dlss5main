@@ -1,3 +1,4 @@
+import { reviewedPageSchema, ARTICLE_CHECK_PATHS, SCHEMA_REVIEW_DATE } from '../src/content/schemaReview';
 import { ChineseEnhancer, ToolEvidence } from '../src/components/LocalizedEvidence';
 import { CheckedComparison, isCheckedComparison, EnhancerChecks, DashboardEvidenceLinks } from '../src/components/SearchEvidence';
 import { ComparisonIntro, ComparisonAnswers, EnhancerEvidence, DownloadEvidence } from '../src/components/RoiEvidence';
@@ -237,8 +238,9 @@ function pageHead(options: {
       ].join('\n    ')
     : '';
   const localeAlternates = options.alternates?.map(alternate => `<link rel="alternate" hreflang="${escapeHtml(alternate.hrefLang)}" href="${escapeHtml(alternate.href)}" data-rh="true" />`).join('\n    ') || '';
-  const jsonLd = options.structuredData
-    ? `<script type="application/ld+json" data-rh="true">${JSON.stringify(options.structuredData).replaceAll('<', '\\u003c')}</script>`
+  const reviewedSchema = reviewedPageSchema(options.structuredData, canonical, options.title, options.description);
+  const jsonLd = reviewedSchema
+    ? `<script type="application/ld+json" data-rh="true">${JSON.stringify(reviewedSchema).replaceAll('<', '\\u003c')}</script>`
     : '';
   const headTags = [
     SITE_ORGANIZATION,
@@ -280,8 +282,8 @@ function withHead(template: string, options: Parameters<typeof pageHead>[0]): st
     .replace(/<meta property="og:[^"]+"[^>]*\/?>\s*/g, '')
     .replace(/<meta name="twitter:[^"]+"[^>]*\/?>\s*/g, '')
     .replace(/[ \t]*<script type="application\/ld\+json">[\s\S]*?<\/script>[ \t]*\n?/, '');
-  const marker = '    <!-- Paint the theme colour';
-  return html.replace(marker, `    ${pageHead(options)}\n${marker}`);
+  if (!html.includes('</head>')) throw new Error('Missing head boundary');
+  return html.replace('</head>', `    ${pageHead(options)}\n</head>`);
 }
 
 function withRoot(template: string, rootHtml: string): string {
@@ -368,7 +370,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
       ${article.sources?.length ? `<aside class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h2>${isChinese ? '资料与来源' : 'Sources and methodology'}</h2><ul>${article.sources.map(source => `<li><a href="${escapeHtml(source.url)}" rel="noreferrer">${escapeHtml(source.label)}</a></li>`).join('')}</ul></aside>` : ''}
       <aside class="mt-12" aria-labelledby="related-articles-heading"><h2 id="related-articles-heading">${isChinese ? '继续阅读' : 'Related reading'}</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">${relatedArticles.map(related => { const relatedCover = coverFor(related); return `<a href="${articlePath(related.slug, locale)}"><img src="${escapeHtml(relatedCover.src)}" alt="${escapeHtml(relatedCover.alt)}" width="1600" height="700" loading="lazy" /><span>${escapeHtml(isChinese ? related.title_cn : related.title_en)}</span></a>`; }).join('')}</div></aside>
       <p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a> · <a href="https://www.dlss5.app/en/supported-cards" class="text-primary">${isChinese ? '查看来源驱动的显卡证据' : 'Check the source-linked GPU evidence'}</a></p>
-    </article>
+    </article>${ARTICLE_CHECK_PATHS.includes(canonicalPath) ? `<p data-schema-check-date class="mt-8 text-sm text-zinc-500">Last checked: <time datetime="${SCHEMA_REVIEW_DATE}">${SCHEMA_REVIEW_DATE}</time></p>` : ''}
   </main>`;
   const html = withRoot(withHead(TEMPLATE, {
     title: `${title} — DLSS 5 Blog`,
@@ -1375,7 +1377,7 @@ writeFileSync(resolve(DIST, 'index.html'), forThisDeployment(TEMPLATE));
  * `public/` is copied verbatim, and these files state the origin as an absolute URL. Rewriting them
  * here keeps one set of files truthful for every deployment; the default project is a no-op.
  */
-for (const file of ['llms.txt', 'sitemap.xml', 'robots.txt']) {
+for (const file of ['llms.txt', 'llms-full.txt', 'sitemap.xml', 'robots.txt']) {
   const target = resolve(DIST, file);
   if (!existsSync(target)) continue;
   const original = readFileSync(target, 'utf8');
