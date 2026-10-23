@@ -78,7 +78,7 @@ const copy = {
     },
     'vs-dlss-45': {
       title: 'DLSS 5 vs DLSS 4.5: What Is Different? | DLSS5NVIDIA',
-      description: 'Compare DLSS 5 3D-guided neural rendering with DLSS 4.5 super resolution and dynamic multi frame generation using dated NVIDIA sources.',
+      description: 'Compare DLSS 5 vs DLSS 4.5: supported GPUs, RTX 50 series feature limits and what remains unverified, with dated NVIDIA sources.',
       heading: 'DLSS 5 vs DLSS 4.5',
       lead: 'These names describe different jobs in the rendering stack. DLSS 4.5 focuses on transformer-based super resolution and frame-generation modes; DLSS 5 adds a 3D-guided neural-rendering stage for lighting and materials.',
       keywords: ['dlss 5 vs dlss 4.5', 'dlss 4.5 vs dlss 5', 'dlss 5 performance comparison', 'dlss neural rendering comparison'],
@@ -106,7 +106,7 @@ const copy = {
     },
     'vs-fsr-4': {
       title: 'DLSS 5 vs FSR 4: Neural Rendering Compared | DLSS5NVIDIA',
-      description: 'A source-led comparison of NVIDIA DLSS 5 and AMD FSR 4, separating official in-game features from independent browser image conversion.',
+      description: 'Do I use FSR or DLSS? Compare DLSS 5 vs FSR 4 by supported GPUs and game features, with NVIDIA and AMD sources and unverified claims clearly marked.',
       heading: 'DLSS 5 vs FSR 4',
       lead: 'DLSS 5 and FSR 4 are vendor technologies in game-rendering pipelines. Compare the documented role, hardware scope and developer integration instead of promising a universal winner.',
       keywords: ['dlss 5 vs fsr 4', 'dlss 5 fsr 4 comparison', 'nvidia dlss 5 amd fsr 4', 'neural rendering comparison'],

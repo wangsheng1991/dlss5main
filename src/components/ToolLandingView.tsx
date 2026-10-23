@@ -1,3 +1,4 @@
+import { ToolEvidence } from './LocalizedEvidence';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, UploadCloud } from 'lucide-react';
@@ -78,6 +79,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <figcaption className="px-3 py-4 text-xs leading-relaxed text-zinc-400">{es ? 'Demostración ilustrativa: copia de baja resolución frente a la imagen de referencia. No es una medición del resultado del modelo. Tu resultado dependerá de la imagen original.' : 'Illustrative demo: a low-resolution copy compared with its reference image. This is not a measured model output. Your result depends on the source image.'}</figcaption>
         </figure>}
       </section>
+      <ToolEvidence tool={tool} />
 
       <section className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={es ? 'Resumen de la herramienta' : 'Tool at a glance'}>
         <div className="rounded-xl border border-outline-variant/20 bg-surface-low px-5 py-4">

@@ -6,7 +6,7 @@ export const VISUAL_ENHANCER_COPY = {
   en: {
     path: '/visual-enhancer',
     title: 'DLSS 5 Visual Enhancer Online — Free Example, No Login Required',
-    description: 'DLSS 5 visual enhancer: run a free example without login, compare lighting and material changes, then sign in for your own image. Independent; not NVIDIA DLSS.',
+    description: 'DLSS 5 visual enhancer: longest edge 1536 pixels, target factors 2/4. Try a free browser example; sign in for your image. Independent, not NVIDIA DLSS.',
     eyebrow: 'Free browser visual enhancer',
     heading: 'DLSS 5 Visual Enhancer Online',
     lead: 'Run a visual-enhancement example before you upload anything. The independent browser workflow re-renders edges, texture and noise while asking the scene, framing and identity to stay recognizable.',
@@ -107,7 +107,7 @@ export function visualEnhancerSchema(locale: VisualEnhancerLocale) {
     '@graph': [
       { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: copy.heading, description: copy.description, inLanguage: locale === 'zh' ? 'zh-CN' : 'en-US' },
       { '@type': 'BreadcrumbList', '@id': `${url}#breadcrumb`, itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${SITE_URL}/` }, { '@type': 'ListItem', position: 2, name: copy.heading, item: url }] },
-      ...(locale === 'zh' ? [{ '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: copy.faq.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }] : []),
+      // The visible evidence block owns the single FAQPage for each locale.
     ],
   };
 }

@@ -744,7 +744,7 @@ export function toolSchema(tool: ToolLanding) {
       { '@type': 'HowTo', name: tool.heading, description: tool.intro, inLanguage: tool.locale,
         step: toolSteps(tool).map(step => ({ '@type': 'HowToStep', ...step })),
       },
-      { '@type': 'FAQPage', mainEntity: tool.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) },
+      ...(!['/image-quality-enhancer', '/image-upscaler', '/unblur-image'].includes(tool.path) ? [{ '@type': 'FAQPage', mainEntity: tool.faqs.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) }] : []),
       { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${TOOL_BASE_URL}/` },
         { '@type': 'ListItem', position: 2, name: tool.heading, item: `${TOOL_BASE_URL}${tool.path}` },

@@ -1,3 +1,4 @@
+import { ChineseComparison } from './LocalizedEvidence';
 import React from 'react';
 import { CHECKED, COMPARISON_ANSWERS, EVIDENCE_SOURCES, ENHANCER_BOUNDARIES } from '../content/roiEvidence';
 import { VISUAL_ENHANCER_COPY } from '../content/visualEnhancer';
@@ -5,13 +6,14 @@ import { SITE_URL } from '../config/site';
 const panel = 'my-8 rounded-xl border border-zinc-700 bg-surface-low p-5 text-zinc-300 [overflow-wrap:anywhere]';
 const link = 'text-primary underline';
 const article = '/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026';
-export const isCheckedComparison = (path: string) => path === '/vs/dlss-5-vs-dlss-4-5' || path === '/vs/dlss-5-vs-fsr-4';
+export const isCheckedComparison = (path: string) => ['/vs/dlss-5-vs-dlss-4-5', '/vs/dlss-5-vs-fsr-4', '/zh/vs/dlss-5-vs-dlss-4-5', '/zh/vs/dlss-5-vs-fsr-4'].includes(path);
 type Answer = { question: string; answer: string };
 function FaqSchema({path, answers}: {path: string; answers: readonly Answer[]}) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({'@context':'https://schema.org','@type':'FAQPage','@id':`${SITE_URL}${path}#faq`, dateModified:CHECKED, mainEntity:answers.map(a=>({'@type':'Question', name:a.question, acceptedAnswer:{'@type':'Answer',text:a.answer}}))}).replace(/</g,'\\u003c')}} />;
 }
 export function CheckedComparison({path, existingFaq}: {path: string; existingFaq: readonly (readonly [string, string])[]}) {
   if (!isCheckedComparison(path)) return null;
+  if (path.startsWith('/zh/')) return <ChineseComparison path={path} existingFaq={existingFaq} />;
   const answers = path.endsWith('dlss-4-5') ? COMPARISON_ANSWERS.slice(3) : COMPARISON_ANSWERS.slice(0,3);
   return <section data-search-evidence="comparison" className={panel} aria-labelledby="checked-comparison-heading">
     <FaqSchema path={path} answers={[...existingFaq.map(([question,answer])=>({question,answer})),...answers.map(a=>({question:a.question,answer:`${a.answer} Last checked: ${CHECKED}. Sources: ${a.sources.map(key=>EVIDENCE_SOURCES[key]).join(' ')}`}))]} />
