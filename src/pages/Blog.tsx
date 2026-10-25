@@ -423,6 +423,8 @@ export default function Blog() {
   return (
     <main className="pt-32 pb-24 px-6 max-w-[900px] mx-auto">
       <SEO
+        snippetTitle={article.slug === FEATURE_PICKER_SLUG ? (pathname.startsWith('/zh/') ? 'DLSS 4 与 DLSS 5 到底差在哪（2026 对比）｜附 FSR 4.1' : 'DLSS 4 vs DLSS 5: What Actually Changed (2026) — and FSR 4.1') : undefined}
+        snippetDescription={article.slug === FEATURE_PICKER_SLUG ? (pathname.startsWith('/zh/') ? 'DLSS 4 与 DLSS 5 在光照与材质、超分、帧生成和显卡要求上的逐项对比，并说明 FSR 4.1 落在哪一档。带来源、不编帧率赢家。' : 'DLSS 4 vs DLSS 5 compared on lighting and materials, upscaling, frame generation and GPU requirements, plus where FSR 4.1 fits. Source-linked; no invented FPS winner.') : undefined}
         title={`${seoTitle} — DLSS 5 Blog`}
         description={seoDescription}
         keywords={seoActiveLang === 'cn' ? article.target_keywords_cn : article.target_keywords_en}

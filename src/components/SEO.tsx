@@ -6,6 +6,8 @@ import { SITE_PROFILE, brandCopy } from '../config/profile';
 import { siteOrganizationSchema } from '../content/seoDefinitions';
 
 interface SEOProps {
+  snippetTitle?: string;
+  snippetDescription?: string;
   title: string;
   description: string;
   canonical?: string;
@@ -59,6 +61,8 @@ const collapseDuplicates = (elements: Element[], keyOf: (element: Element) => st
 };
 
 export default function SEO({
+  snippetTitle,
+  snippetDescription,
   title,
   description,
   keywords = [],
@@ -146,8 +150,8 @@ export default function SEO({
     <Helmet>
       {pageLanguage && <html lang={pageLanguage} />}
       {/* Standard metadata tags */}
-      <title>{pageTitle}</title>
-      <meta name="description" content={pageDescription} data-rh="true" />
+      <title>{snippetTitle === undefined ? pageTitle : brandCopy(snippetTitle)}</title>
+      <meta name="description" content={snippetDescription === undefined ? pageDescription : brandCopy(snippetDescription)} data-rh="true" />
       {keywords.length > 0 && <meta name="keywords" content={brandCopy(keywords.join(', '))} data-rh="true" />}
       <meta name="robots" content={robots} data-rh="true" />
 

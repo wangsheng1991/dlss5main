@@ -1,0 +1,6 @@
+# Comparison snippet experiment — 2026-10-25
+
+Serves R3: align the existing comparison landing snippet with DLSS 4 vs DLSS 5 intent.
+Only title and meta description change for the requested EN/ZH pages. Three implementation files: Blog.tsx supplies snippet values, SEO.tsx isolates title/meta overrides from OG/Twitter/schema, prerender-seo.ts applies the same two-field override. Existing article fields remain untouched. Characters in strings.txt count Unicode characters including spaces/punctuation, one Chinese character per character.
+132 prerendered pages have identical main/H1/body/JSON-LD/canonical/hreflang; other pages title/description unchanged; sitemap byte-identical. External CHANGE-LOG precedes authorized baseline capture. Six gates pass. Browser test verifies one description and correct title after client render in both routes. Existing legacy ZH article client-language behavior remains unchanged; snippet locale is explicitly URL based.
+Single-variable experiment: after 2026-11-08 compare the same GSC page/query/date-window methodology with the 1.8% baseline. If CTR has not improved, stop title-level experiments on this page per user decision. AI Overview/video displacement is a hypothesis requiring SERP evidence, not a conclusion obtainable from CTR alone.

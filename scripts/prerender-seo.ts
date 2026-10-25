@@ -429,6 +429,13 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
     type: 'article',
     structuredData: withArticleEvidence(structuredData, article, isChinese),
   }), root);
+  // Isolate the SERP experiment from H1, visible copy, social metadata and JSON-LD.
+  if (article.slug === FEATURE_PICKER_SLUG && locale !== 'en') {
+    const snippetTitle = isChinese ? 'DLSS 4 与 DLSS 5 到底差在哪（2026 对比）｜附 FSR 4.1' : 'DLSS 4 vs DLSS 5: What Actually Changed (2026) — and FSR 4.1';
+    const snippetDescription = isChinese ? 'DLSS 4 与 DLSS 5 在光照与材质、超分、帧生成和显卡要求上的逐项对比，并说明 FSR 4.1 落在哪一档。带来源、不编帧率赢家。' : 'DLSS 4 vs DLSS 5 compared on lighting and materials, upscaling, frame generation and GPU requirements, plus where FSR 4.1 fits. Source-linked; no invented FPS winner.';
+    return { html: html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(snippetTitle)}</title>`)
+      .replace(/<meta name="description" content="[^"]*"([^>]*)>/, `<meta name="description" content="${escapeHtml(snippetDescription)}"$1>`), title };
+  }
   return { html, title };
 }
 
