@@ -1,0 +1,44 @@
+EN [["event","feature_picker_complete",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","goal":"speed","gpu":"50","game_in_list":"yes","verdict":"supported"}],["event","feature_picker_complete",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","goal":"speed","gpu":"50","game_in_list":"unsure","verdict":"unknown"}],["event","feature_picker_complete",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","goal":"speed","gpu":"50","game_in_list":"yes","verdict":"supported"}],["event","feature_picker_source_click",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","target":"nvidia-dlss5"}]]
+PASS: no initial/partial event; complete once; unchanged deduped; A→B→A reports; source click reports
+/zh [["event","feature_picker_complete",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/zh/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","goal":"speed","gpu":"50","game_in_list":"yes","verdict":"supported"}],["event","feature_picker_complete",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/zh/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","goal":"speed","gpu":"50","game_in_list":"unsure","verdict":"unknown"}],["event","feature_picker_complete",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/zh/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","goal":"speed","gpu":"50","game_in_list":"yes","verdict":"supported"}],["event","feature_picker_source_click",{"referrer_domain":"direct","visitor_state":"anonymous","locale":"en-US","page_path":"/zh/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026","target":"nvidia-dlss5"}]]
+PASS: no initial/partial event; complete once; unchanged deduped; A→B→A reports; source click reports
+NO-JS EN Which feature should I look at?
+
+Choose your goal, GPU and game scope. No login, upload or model call.
+
+Checked DLSS 5 game list for this picker: NBA 2K27 only. “Yes” means this game, not any announced title. Local PC use only; cloud play is outside this check. Source: NVIDIA DLSS 5 · Reviewed: 2026-10-23
+
+Static reference — readable without JavaScript
+Feature	Checked scope and limits
+DLSS 5 / Super Resolution / Frame Generation	Supported: NBA 2K27 + RTX 50 for neural rendering, Super Resolution and frame generation. Other combinations remain unknown here.
+
+Confirm in the game’s video settings, then check the required driver in NVIDIA App. An App override is not proof of game integration.
+
+Source: NVIDIA DLSS 5 · Reviewed: 2026-10-23
+DLSS Frame Generation / DLSS Multi Frame Generation	Multi Frame Generation requires RTX 50; Frame Generation requires RTX 40 or RTX 50. A compatible GPU alone does not confirm a game.Source: NVIDIA DLSS 4 · Reviewed: 2026-10-23
+DLSS Ray Reconstruction / DLAA	Unknown for this picker’s game/GPU combinations. Verify the feature separately; do not infer it from DLSS 5 support.Source: NVIDIA DLSS 4 · Reviewed: 2026-10-23
+FSR Upscaling	Unknown for this picker’s game/GPU combinations. Verify the feature separately; do not infer it from DLSS 5 support.
+
+Check the game’s FSR setting and AMD’s supported hardware/game information. This picker does not identify a Radeon model.
+
+Source: AMD FSR · Reviewed: 2026-10-23
+NO-JS /zh 该看哪个功能？
+
+选择目标、显卡与游戏范围。无需登录、不上传、不调用模型。
+
+本选择器已核对的 DLSS 5 游戏名单：仅 NBA 2K27。“是”只指这款游戏，不包括仅公布计划的游戏。本次只核对本地 PC，不判断云游戏。 来源: NVIDIA DLSS 5 · 核对日期: 2026-10-23
+
+静态对照表 — 关闭 JavaScript 仍可阅读
+功能	已核对范围与边界
+DLSS 5 / 超分 / 帧生成	支持：NBA 2K27 + RTX 50 的神经渲染、超分及帧生成。其他组合在这里仍为未知。
+
+到游戏视频设置确认开关，再在 NVIDIA App 核对所需驱动版本。App 覆盖设置不等于游戏已集成。
+
+来源: NVIDIA DLSS 5 · 核对日期: 2026-10-23
+DLSS 帧生成 / DLSS 多帧生成	多帧生成要求 RTX 50；帧生成要求 RTX 40 或 RTX 50。仅显卡符合要求，不能证明游戏支持。来源: NVIDIA DLSS 4 · 核对日期: 2026-10-23
+DLSS 光线重建 / DLAA 抗锯齿	本组件未核对这些游戏与显卡组合，状态未知。需单独核实该功能，不从 DLSS 5 支持推断。来源: NVIDIA DLSS 4 · 核对日期: 2026-10-23
+FSR Upscaling 超分	本组件未核对这些游戏与显卡组合，状态未知。需单独核实该功能，不从 DLSS 5 支持推断。
+
+核对游戏中的 FSR 开关，以及 AMD 的硬件与游戏支持资料。本组件没有识别 Radeon 具体型号。
+
+来源: AMD FSR · 核对日期: 2026-10-23
