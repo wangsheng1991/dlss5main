@@ -15,17 +15,18 @@ const communityDownloads = [
   {url: 'https://dlss-5-swapper.en.uptodown.com/windows', name: 'uptodown — DLSS 5 Swapper', en: 'A third-party distribution page on uptodown.', zh: 'uptodown 上的第三方分发页。'},
   {url: 'https://www.nexusmods.com/site/mods/2228', name: 'Nexus Modding Tools', en: 'A third-party modding-tool page on Nexus Mods.', zh: 'Nexus Mods 上的第三方模组工具页面。'},
 ];
+const dlss5Release = 'https://www.nvidia.com/en-us/geforce/news/nba-2k27-dlss-5-3d-guided-neural-rendering-geforce-game-ready-driver/';
 const questions = ['Can I download DLSS 5?', 'How do I install DLSS 5?', 'Is DLSS 5 available?'];
 const answers = {
   en: [
-    'You can download the independent review materials below; they do not install DLSS in a game. A standalone consumer DLSS 5 download path is unconfirmed in the official pages checked here. NVIDIA’s developer page describes integration resources, which are separate from this review kit.',
-    'This review kit needs no installation. For in-game DLSS, follow the game’s supported update path and NVIDIA’s instructions; NVIDIA documents DLSS 4.5 Super Resolution through the NVIDIA app. A general DLSS 5 installation procedure is unconfirmed here.',
-    'DLSS 5 availability for your particular game is unconfirmed here. Check NVIDIA’s official information and the game’s release notes for the supported version. The confirmed NVIDIA app release cited below concerns DLSS 4.5 Super Resolution, not proof that DLSS 5 is enabled in your game.',
+    'For supported in-game use, NVIDIA’s September 3, 2026 release documents DLSS 5 in NBA 2K27 on GeForce RTX 50 Series GPUs, with Game Ready Driver 616.64. Use NVIDIA’s app or driver website for its driver downloads; developer plugins are separate integration resources, not a universal consumer installer. Our downloadable recipe and review kit is independent reference material, not a driver, game runtime or Studio installer.',
+    'For the NBA 2K27 configuration documented by NVIDIA, obtain the appropriate Game Ready driver through the NVIDIA app or NVIDIA’s driver website, then open the game and enable “DLSS Neural Rendering” in Video Settings. Follow NVIDIA’s current requirements and the game’s updates; this is not a procedure for every game or GPU. Our review kit needs no installation. Third-party programs are separate, untested projects here; this page provides no DLL replacement or injection instructions.',
+    'Yes, NVIDIA’s September 3, 2026 announcement confirms DLSS 5 in NBA 2K27 on GeForce RTX 50 Series GPUs. That is a documented release, not proof of support for every title or older RTX card; check the specific game’s release notes. Our DLSS5 Studio is a separate, independent Windows RTX style-conversion and neural-render redraw tool: sign in and use the request form below to apply for access. A request does not guarantee access or a delivery date. We provide no public Studio installer or Android APK; the browser example is a separate workflow, not NVIDIA DLSS running in a phone game.',
   ],
   zh: [
-    '可以下载下方独立审阅材料，但它不会为游戏安装 DLSS。就本次核对的官方页面而言，面向普通用户的独立 DLSS 5 下载途径仍未确认。NVIDIA 开发者页面介绍的是集成资源，与本站审阅材料不同。',
-    '本站审阅材料无需安装。游戏内的 DLSS 请按游戏支持的更新途径和 NVIDIA 说明处理；NVIDIA 已说明可通过 NVIDIA App 使用 DLSS 4.5 Super Resolution。通用的 DLSS 5 安装步骤在此仍未确认。',
-    '你的具体游戏是否已可用 DLSS 5，在此未确认。请核对 NVIDIA 官方信息和该游戏的更新说明，确认支持的版本。下方已核对的 NVIDIA App 发布说明讲的是 DLSS 4.5 Super Resolution，不能据此认定游戏已启用 DLSS 5。',
+    '游戏内的已发布途径有明确实例：NVIDIA 2026 年 9 月 3 日的公告说明，NBA 2K27 在 GeForce RTX 50 系列上提供 DLSS 5，并发布了 Game Ready 616.64 驱动。驱动请从 NVIDIA App 或 NVIDIA 驱动网站获取；开发者插件是另一类集成资源，不是通用消费端安装程序。本站可下载的配方与审阅材料是独立参考资料，不是驱动、游戏运行时或 Studio 安装包。',
+    '对于 NVIDIA 文档所说明的 NBA 2K27 配置，请从 NVIDIA App 或 NVIDIA 驱动网站获取适用的 Game Ready 驱动，再进入游戏的视频设置，开启“DLSS Neural Rendering”。请同时核对 NVIDIA 当前要求与游戏更新；这不是适用于所有游戏或显卡的安装步骤。本站审阅材料无需安装。第三方程序是独立项目，本站未测试；本页不提供替换 DLL 或注入的操作说明。',
+    '已有明确发布的实例：NVIDIA 2026 年 9 月 3 日公告确认，NBA 2K27 在 GeForce RTX 50 系列上提供 DLSS 5。这不等于所有游戏或更早的 RTX 显卡都支持，具体仍需核对游戏更新说明。本站 DLSS5 Studio 是独立的 Windows RTX 风格转换与神经渲染重绘工具，请登录后使用下方表单申请；申请不保证获准，也不承诺交付日期。本站不提供公开的 Studio 安装包或安卓 APK；浏览器示例是另一条工作流，不是在手机游戏里运行 NVIDIA DLSS。',
   ],
 };
 export default function DownloadIntent({ chinese = false }: { chinese?: boolean }) {
@@ -44,7 +45,7 @@ export default function DownloadIntent({ chinese = false }: { chinese?: boolean 
       {questions.map((question, index) => <div key={question} className="mt-5" data-download-paa>
         <h3 className="text-lg font-semibold text-white">{question}{chinese ? `（${['可以下载 DLSS 5 吗？','怎样安装 DLSS 5？','DLSS 5 已经可用了吗？'][index]}）` : ''}</h3>
         <p className="mt-2">{answers[language][index]}</p>
-        <p className="mt-2 text-sm">{chinese ? '来源：' : 'Sources: '}<a className="text-primary underline" href={developer}>NVIDIA Developer — DLSS</a> · <a className="text-primary underline" href={app}>NVIDIA App — DLSS 4.5</a> · {chinese ? '核对日期：' : 'Checked: '}2026-10-23</p>
+        <p className="mt-2 text-sm">{chinese ? '来源：' : 'Sources: '}<a className="text-primary underline" href={dlss5Release}>NVIDIA — NBA 2K27 / DLSS 5 (2026-09-03)</a> · <a className="text-primary underline" href={developer}>NVIDIA Developer — DLSS</a> · {chinese ? '核对日期：' : 'Checked: '}<time dateTime="2026-10-25">2026-10-25</time></p>
       </div>)}
     </section>
     <section id="review-kit" aria-labelledby="review-kit-heading" className="rounded-xl border border-outline-variant/20 p-6">
