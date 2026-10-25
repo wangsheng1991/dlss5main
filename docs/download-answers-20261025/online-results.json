@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://www.dlss5nvidia.com/download",
+    "http_status": 200,
+    "questions": 3,
+    "production_matches_local": true,
+    "seo_unchanged": true,
+    "captured_at": "2026-10-25T11:52:23.308724+00:00"
+  },
+  {
+    "url": "https://www.dlss5nvidia.com/zh/download",
+    "http_status": 200,
+    "questions": 3,
+    "production_matches_local": true,
+    "seo_unchanged": true,
+    "captured_at": "2026-10-25T11:52:23.310138+00:00"
+  }
+]

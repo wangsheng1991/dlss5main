@@ -1,0 +1,33 @@
+{
+  "captured_at": "2026-10-25T11:51:59.147Z",
+  "questions": [
+    {
+      "answer": "For supported in-game use, NVIDIA’s September 3, 2026 release documents DLSS 5 in NBA 2K27 on GeForce RTX 50 Series GPUs, with Game Ready Driver 616.64. Use NVIDIA’s app or driver website for its driver downloads; developer plugins are separate integration resources, not a universal consumer installer. Our downloadable recipe and review kit is independent reference material, not a driver, game runtime or Studio installer.",
+      "links": [
+        "https://www.nvidia.com/en-us/geforce/news/nba-2k27-dlss-5-3d-guided-neural-rendering-geforce-game-ready-driver/",
+        "https://developer.nvidia.com/rtx/dlss"
+      ],
+      "question": "Can I download DLSS 5?",
+      "source": "Sources: NVIDIA — NBA 2K27 / DLSS 5 (2026-09-03) · NVIDIA Developer — DLSS · Checked: 2026-10-25"
+    },
+    {
+      "answer": "For the NBA 2K27 configuration documented by NVIDIA, obtain the appropriate Game Ready driver through the NVIDIA app or NVIDIA’s driver website, then open the game and enable “DLSS Neural Rendering” in Video Settings. Follow NVIDIA’s current requirements and the game’s updates; this is not a procedure for every game or GPU. Our review kit needs no installation. Third-party programs are separate, untested projects here; this page provides no DLL replacement or injection instructions.",
+      "links": [
+        "https://www.nvidia.com/en-us/geforce/news/nba-2k27-dlss-5-3d-guided-neural-rendering-geforce-game-ready-driver/",
+        "https://developer.nvidia.com/rtx/dlss"
+      ],
+      "question": "How do I install DLSS 5?",
+      "source": "Sources: NVIDIA — NBA 2K27 / DLSS 5 (2026-09-03) · NVIDIA Developer — DLSS · Checked: 2026-10-25"
+    },
+    {
+      "answer": "Yes, NVIDIA’s September 3, 2026 announcement confirms DLSS 5 in NBA 2K27 on GeForce RTX 50 Series GPUs. That is a documented release, not proof of support for every title or older RTX card; check the specific game’s release notes. Our DLSS5 Studio is a separate, independent Windows RTX style-conversion and neural-render redraw tool: sign in and use the request form below to apply for access. A request does not guarantee access or a delivery date. We provide no public Studio installer or Android APK; the browser example is a separate workflow, not NVIDIA DLSS running in a phone game.",
+      "links": [
+        "https://www.nvidia.com/en-us/geforce/news/nba-2k27-dlss-5-3d-guided-neural-rendering-geforce-game-ready-driver/",
+        "https://developer.nvidia.com/rtx/dlss"
+      ],
+      "question": "Is DLSS 5 available?",
+      "source": "Sources: NVIDIA — NBA 2K27 / DLSS 5 (2026-09-03) · NVIDIA Developer — DLSS · Checked: 2026-10-25"
+    }
+  ],
+  "title": "DLSS 5 Download (2026) — Free Online Converter, Mobile & Windows Studio"
+}

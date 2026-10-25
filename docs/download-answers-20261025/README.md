@@ -27,4 +27,12 @@
 
 ## 生产验收
 
-推送后填写；不提交 GSC 请求，不重新提交 sitemap。
+代码提交：`85939ef`，已 push 到 origin/main；Vercel dlss5-main 状态 success（Deployment has completed）。
+
+- `/download`、`/zh/download`：匿名抓取 HTTP 200，原始 HTML 三问逐字匹配本地产物；标题、meta、canonical、hreflang 与改前一致。见 [online-results.json](online-results.json)。
+- 浏览器客户端：三问均显示新答案与 Checked: 2026-10-25，一手来源链接正确；见 [browser-en.json](browser-en.json) 与 [截图](online-questions.png)。
+- `FLAGSHIP-PAGES: fails=0 verdict=PASS`（中英下载页）。
+- 更新前保护巡检：仅 `/download` 的 words / bodyHash 变化；`changed=1 down=0` 为本次已授权正文变更，SEO 字段无变化，其余保护页未变。变更已逐页写外部 CHANGE-LOG，旧基线已归档，再捕获新基线。
+- 不提交 GSC 请求，不重新提交 sitemap；本次不能声称 Google 已更新摘要或排名提升。
+
+最终保护巡检：`PROTECTION: changed=0 down=0 verdict=FROZEN-OK`。
