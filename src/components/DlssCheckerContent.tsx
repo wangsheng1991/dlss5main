@@ -28,6 +28,7 @@ export function DlssCheckerContent({page}: {page: CheckerPage}) {
     <h1 className="mt-4 text-4xl font-bold text-white">{page.heading}</h1>
     <p className="mt-4 text-zinc-300 max-w-3xl">{page.intro}</p>
     <p className="mt-3 text-sm text-zinc-400">Last checked: {GPU_CHECKED}. Desktop model rows; a laptop, Ti, SUPER or other unlisted variant is not silently matched to a base desktop card.</p>
+    <p className="mt-3 text-sm text-zinc-400">Machine-readable version of this table, one official source and checked date per row: <a className={link} href="https://github.com/wangsheng1991/dlss5-compatibility-data" rel="noopener noreferrer">DLSS 5 GPU compatibility dataset</a> (JSON/CSV, CC BY 4.0). Unknown stays unknown there too.</p>
     <nav aria-label="GPU evidence pages" className="mt-5 flex flex-wrap gap-4">{CHECKER_PAGES.filter(p=>p.path!==page.path).map(p=><a key={p.path} className={link} href={p.path}>{p.heading}</a>)}</nav>
     <section className="mt-10" aria-labelledby="gpu-table-heading">
       <h2 id="gpu-table-heading" className="text-2xl font-bold text-white">Model × feature: official game technology</h2>
