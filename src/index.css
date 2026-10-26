@@ -59,9 +59,16 @@
 @layer utilities {
   .glow-border {
     border: 1px solid transparent;
-    background: linear-gradient(#131313, #131313) padding-box,
-                linear-gradient(135deg, #76B900, transparent) border-box;
+    background: linear-gradient(var(--color-surface-low), var(--color-surface-low)) padding-box,
+                linear-gradient(135deg, var(--color-nvidia-green), transparent) border-box;
   }
+}
+
+html,
+body {
+  /* `clip` keeps a stray wide element from giving the page a horizontal scrollbar without turning
+     the document into a scroll container, which `hidden` would. */
+  overflow-x: clip;
 }
 
 body {
@@ -70,9 +77,29 @@ body {
   font-family: var(--font-body);
 }
 
+/* Keyboard focus must be visible and instant everywhere: every link, button, summary and control,
+   without a transition that would delay the ring. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 ::selection {
   background-color: var(--color-primary);
-  color: #000;
+  color: var(--color-background);
+}
+
+/* Anyone who asked the system for less motion gets none of it, on any page, without each component
+   having to remember. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 details > summary::-webkit-details-marker {
