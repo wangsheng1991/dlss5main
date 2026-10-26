@@ -1,0 +1,140 @@
+[
+  {
+    "slug": "02-portrait",
+    "category": "portrait",
+    "categoryZh": "人像",
+    "categoryEn": "portrait",
+    "license": "own",
+    "claim": "This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.",
+    "source": "Input: Site-owned source dlss5main/public/examples/case-portrait.jpg.\nLicense: own\nEngine: flux-klein via AlphaNet /v1/tasks/alphanet-flux — 2x re-render, prompt \"Enhance this photo to 960 × 1200 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.\", 960 × 1200, seed 202.\nRun: task_jrGGrDxRvhvfC7rG9BdHkk7YKxEFFCtt (11s, 2026-10-17 Asia/Shanghai); no retry.\nCategory: portrait\nClaim note: This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.\n",
+    "run": "task_jrGGrDxRvhvfC7rG9BdHkk7YKxEFFCtt (11s, 2026-10-17 Asia/Shanghai); no retry.",
+    "before": [
+      480,
+      600
+    ],
+    "after": [
+      960,
+      1200
+    ],
+    "width": 1924,
+    "height": 1200,
+    "src": "/examples/library/02-portrait/compare.jpg",
+    "sourceSha256": "38b29ac9e4788aa71fb7b43824035f222de23b1e3cf61e40efb584a3c8d09704",
+    "publicSha256": "38b29ac9e4788aa71fb7b43824035f222de23b1e3cf61e40efb584a3c8d09704"
+  },
+  {
+    "slug": "04-interior",
+    "category": "interior architecture",
+    "categoryZh": "室内建筑",
+    "categoryEn": "interior architecture",
+    "license": "own",
+    "claim": "This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.",
+    "source": "Input: Site-owned source dlss5main/public/examples/interior-ref-after.jpg.\nLicense: own\nEngine: flux-klein via AlphaNet /v1/tasks/alphanet-flux — 2x re-render, prompt \"Enhance this photo to 1200 × 800 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.\", 1200 × 800, seed 404.\nRun: task_UBXDv3ViNNmk2fAE0rPpO8z7ptFuLtBQ (9.2s, 2026-10-17 Asia/Shanghai); no retry.\nCategory: interior architecture\nClaim note: This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.\n",
+    "run": "task_UBXDv3ViNNmk2fAE0rPpO8z7ptFuLtBQ (9.2s, 2026-10-17 Asia/Shanghai); no retry.",
+    "before": [
+      600,
+      400
+    ],
+    "after": [
+      1200,
+      800
+    ],
+    "width": 2404,
+    "height": 800,
+    "src": "/examples/library/04-interior/compare.jpg",
+    "sourceSha256": "77a90a4dc3293a9c492f57dc9b588863ccccefef69aa11f4395fdb5838cff8e2",
+    "publicSha256": "77a90a4dc3293a9c492f57dc9b588863ccccefef69aa11f4395fdb5838cff8e2"
+  },
+  {
+    "slug": "05-object",
+    "category": "tabletop object detail",
+    "categoryZh": "桌面物件细节",
+    "categoryEn": "tabletop object detail",
+    "license": "own",
+    "claim": "This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.",
+    "source": "Input: Site-owned source dlss5main/public/examples/erase-spoon.jpg.\nLicense: own\nEngine: flux-klein via AlphaNet /v1/tasks/alphanet-flux — 2x re-render, prompt \"Enhance this photo to 1200 × 1200 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.\", 1200 × 1200, seed 405.\nRun: task_vmu22f7l1FP5wacCWVzdvxeHdwWKvkNF (9.4s, 2026-10-17 Asia/Shanghai); no retry.\nCategory: tabletop object detail\nClaim note: This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.\n",
+    "run": "task_vmu22f7l1FP5wacCWVzdvxeHdwWKvkNF (9.4s, 2026-10-17 Asia/Shanghai); no retry.",
+    "before": [
+      600,
+      600
+    ],
+    "after": [
+      1200,
+      1200
+    ],
+    "width": 2404,
+    "height": 1200,
+    "src": "/examples/library/05-object/compare.jpg",
+    "sourceSha256": "68a44a41a7e80284ae0c0340107ce9376b1a9b76bdf651ca93caefde61ed829a",
+    "publicSha256": "68a44a41a7e80284ae0c0340107ce9376b1a9b76bdf651ca93caefde61ed829a"
+  },
+  {
+    "slug": "07-food-teapot",
+    "category": "食物 / 静物",
+    "categoryZh": "食物 / 静物",
+    "categoryEn": "food / still life",
+    "license": "own.",
+    "claim": "This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.",
+    "source": "Input: /Users/wangsheng/code/shou/dlss5main/public/examples/cutout-teapot.jpg (site-owned example).\nLicense: own.\nEngine: flux-klein via AlphaNet /v1/tasks/alphanet-flux — 2x re-render, prompt \"Enhance this photo to 1200 × 1200 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.\", 1200 × 1200, seed 1801.\nRun: task_egwBwInarO0SGToIPdy6ag0POld69i7X (13.8s, 2026-10-17 Asia/Shanghai); no retry.\nCategory: 食物 / 静物\nClaim note: This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.\n",
+    "run": "task_egwBwInarO0SGToIPdy6ag0POld69i7X (13.8s, 2026-10-17 Asia/Shanghai); no retry.",
+    "before": [
+      600,
+      600
+    ],
+    "after": [
+      1200,
+      1200
+    ],
+    "width": 2400,
+    "height": 1200,
+    "src": "/examples/library/07-food-teapot/compare.jpg",
+    "sourceSha256": "f5d71a34f1d19da4a664155dc5d6a8be3652c1a6ccbcf65f4edc90249b0f0b56",
+    "publicSha256": "f5d71a34f1d19da4a664155dc5d6a8be3652c1a6ccbcf65f4edc90249b0f0b56"
+  },
+  {
+    "slug": "08-product-detail",
+    "category": "商品 / 电商图",
+    "categoryZh": "商品 / 电商图",
+    "categoryEn": "product / e-commerce image",
+    "license": "own.",
+    "claim": "This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.",
+    "source": "Input: /Users/wangsheng/code/shou/dlss5main/public/examples/case-product.jpg (site-owned example).\nLicense: own.\nEngine: flux-klein via AlphaNet /v1/tasks/alphanet-flux — 2x re-render, prompt \"Enhance this photo to 1200 × 800 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.\", 1200 × 800, seed 1800.\nRun: task_LRiZQrd3E9LEVfW6IN9FZ8IQ3VRfFUM8 (16s, 2026-10-17 Asia/Shanghai); no retry.\nCategory: 商品 / 电商图\nClaim note: This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.\n",
+    "run": "task_LRiZQrd3E9LEVfW6IN9FZ8IQ3VRfFUM8 (16s, 2026-10-17 Asia/Shanghai); no retry.",
+    "before": [
+      600,
+      400
+    ],
+    "after": [
+      1200,
+      800
+    ],
+    "width": 2400,
+    "height": 800,
+    "src": "/examples/library/08-product-detail/compare.jpg",
+    "sourceSha256": "ba6dd72f1d731f183c63c965f8034c6600e62b76b9f009307815cad833ce4be6",
+    "publicSha256": "ba6dd72f1d731f183c63c965f8034c6600e62b76b9f009307815cad833ce4be6"
+  },
+  {
+    "slug": "09-architecture-city",
+    "category": "建筑 / 城市",
+    "categoryZh": "建筑 / 城市",
+    "categoryEn": "architecture / city",
+    "license": "own.",
+    "claim": "This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.",
+    "source": "Input: /Users/wangsheng/code/shou/dlss5main/public/examples/case-architecture.jpg (site-owned example).\nLicense: own.\nEngine: flux-klein via AlphaNet /v1/tasks/alphanet-flux — 2x re-render, prompt \"Enhance this photo to 1200 × 800 pixels: restore realistic detail, texture and sharpness while keeping the composition, framing, lighting and colors identical.\", 1200 × 800, seed 1801.\nRun: task_CwRY0jm3Ruz1FDS43OrN1r98WCloKAZa (8.8s, 2026-10-17 Asia/Shanghai); no retry.\nCategory: 建筑 / 城市\nClaim note: This is model-regenerated detail at a larger pixel size, not pixel-exact reconstruction; composition and fine details may change and identity/text are not guaranteed 100% identical.\n",
+    "run": "task_CwRY0jm3Ruz1FDS43OrN1r98WCloKAZa (8.8s, 2026-10-17 Asia/Shanghai); no retry.",
+    "before": [
+      600,
+      400
+    ],
+    "after": [
+      1200,
+      800
+    ],
+    "width": 2400,
+    "height": 800,
+    "src": "/examples/library/09-architecture-city/compare.jpg",
+    "sourceSha256": "3b38d285f1b94674458c053d569d44bc56de82c9a9c05dab9924fcfdd1f0e4e5",
+    "publicSha256": "3b38d285f1b94674458c053d569d44bc56de82c9a9c05dab9924fcfdd1f0e4e5"
+  }
+]
