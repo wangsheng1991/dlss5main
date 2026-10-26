@@ -1,3 +1,4 @@
+import { GAME_COVERAGE_PAGES } from './content/gameCoverage';
 import { CHECKER_PAGES } from './content/dlssChecker';
 import React, { Suspense, lazy, useEffect, useLayoutEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
@@ -52,6 +53,7 @@ const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
 const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
+const GameCoverage = lazy(() => import('./pages/GameCoverage'));
 const DlssChecker = lazy(() => import('./pages/DlssChecker'));
 
 /**
@@ -159,6 +161,7 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />
                   {/* Scaffold only: a production build has no checker route and no checker chunk. */}
+                  {GAME_COVERAGE_PAGES.map(page => <React.Fragment key={page.path}><Route path={page.path} element={<GameCoverage slug={page.slug} />} /></React.Fragment>)}
                   {CHECKER_PAGES.map(page => <React.Fragment key={page.path}><Route path={page.path} element={<DlssChecker slug={page.slug} />} /></React.Fragment>)}
                 </Routes>
                 <RelatedAdditions />

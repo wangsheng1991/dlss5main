@@ -43,3 +43,23 @@ export const RELEASE_TIMELINE = [
     zh: 'NVIDIA 发布更新文章，确认 NBA 2K27 的功能已在九月上线，并宣布后续模型、Hogwarts Legacy、Where Winds Meet 与 RTX Remix 更新。本行记录文章发布，不把计划中的更新记为已完成。',
   } },
 ];
+
+/** Detail-only evidence: keep the existing tracker and timeline unchanged. */
+export const GAME_DETAIL_EVIDENCE: Record<string, EvidenceRow> = {
+  'hogwarts-legacy': GAME_EVIDENCE.find(row => row.game === 'Hogwarts Legacy')!,
+  'where-winds-meet': GAME_EVIDENCE.find(row => row.game === 'Where Winds Meet')!,
+  'cyberpunk-2077': {
+    game: 'Cyberpunk 2077', state: 'unconfirmed', evidenceDate: GAMES_CHECKED, sources: ['march', 'october'],
+    detail: {
+      en: 'No DLSS 5 support confirmation for Cyberpunk 2077 was found in the reviewed March announcement or October article. This is a bounded source check, not a claim that no future announcement can exist. No DLSS 5 release date, driver or GPU scope is established for this game here.',
+      zh: '核对的三月公告与十月正文均未确认 Cyberpunk 2077 支持 DLSS 5。这是限定来源范围的核对结果，不代表未来不会公告；此处不确认该游戏的 DLSS 5 上线日期、驱动或显卡范围。',
+    },
+  },
+  'rtx-remix-dlss-5': {
+    game: 'RTX Remix', state: 'announced', evidenceDate: '2026-10-13', sources: ['october'],
+    detail: {
+      en: 'NVIDIA announced an October 23 update adding DLSS 5 with the new 3D-Guided Neural Rendering model and Frame Generation Performance Mode to RTX Remix. The article publishes an enablement path. It is an announcement dated October 13; an elapsed date alone does not independently confirm rollout completion or support for every mod.',
+      zh: 'NVIDIA 于 10 月 13 日宣布 RTX Remix 将在 10 月 23 日加入带新版 3D-Guided Neural Rendering 模型的 DLSS 5，以及帧生成 Performance Mode，并公布启用路径。计划日期已过不能单独证明更新交付完成，更不代表所有模组都已支持。',
+    },
+  },
+};
