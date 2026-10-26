@@ -1,3 +1,4 @@
+import { ENHANCER_SHORT_ANSWERS } from '../content/enhancerShortAnswers';
 import React from 'react';
 import { CHECKED, COMPARISON_ANSWERS, EVIDENCE_SOURCES } from '../content/roiEvidence';
 import { VISUAL_ENHANCER_COPY } from '../content/visualEnhancer';
@@ -36,7 +37,7 @@ const enhancerAnswers = [
  {question:'安卓手机能试用示例吗？',answer:'可以在手机浏览器查看缓存示例。本页不会安装 NVIDIA 二进制文件，也不提供安卓 APK。处理自己的图片需要登录及可用额度。'},
 ];
 export function ChineseEnhancer() {
- return <section data-layer2="zh-enhancer" data-content-tier="entry-point" className={panel} aria-labelledby="zh-enhancer-checked"><Schema path="/zh/visual-enhancer" answers={[...VISUAL_ENHANCER_COPY.zh.faq.map(([question,answer])=>({question,answer})),...enhancerAnswers]} /><h2 id="zh-enhancer-checked" className="text-2xl font-bold text-white">已有图片质量的有限入口</h2><p className="mt-3">最后核对：<time dateTime={CHECKED}>{CHECKED}</time></p><p className="mt-3">本页只承接已有图片质量处理，不是产品主线。我们的主线是<a className={link} href="/game-character-style">风格转换与神经渲染重绘</a>，以及 <a className={link} href="/zh/download">DLSS5 Studio 桌面工作流</a>。</p>{enhancerAnswers.map(a=><article key={a.question} className="mt-6"><h3 className="font-bold text-white">{a.question}</h3><p className="mt-2">{a.answer}</p></article>)}</section>;
+ return <section data-layer2="zh-enhancer" data-content-tier="entry-point" className={panel} aria-labelledby="zh-enhancer-checked"><Schema path="/zh/visual-enhancer" answers={[...VISUAL_ENHANCER_COPY.zh.faq.map(([question,answer])=>({question,answer})),...enhancerAnswers,...ENHANCER_SHORT_ANSWERS.zh]} /><h2 id="zh-enhancer-checked" className="text-2xl font-bold text-white">已有图片质量的有限入口</h2><p className="mt-3">最后核对：<time dateTime={CHECKED}>{CHECKED}</time></p><p className="mt-3">本页只承接已有图片质量处理，不是产品主线。我们的主线是<a className={link} href="/game-character-style">风格转换与神经渲染重绘</a>，以及 <a className={link} href="/zh/download">DLSS5 Studio 桌面工作流</a>。</p>{enhancerAnswers.map(a=><article key={a.question} className="mt-6"><h3 className="font-bold text-white">{a.question}</h3><p className="mt-2">{a.answer}</p></article>)}</section>;
 }
 const toolPurpose:Record<string,string> = {
  '/image-quality-enhancer':'This image-quality workflow is a limited entry point for inspecting texture, edges and compression in an existing image.',

@@ -1,0 +1,8 @@
+== 与基线比对：protection-baseline-2026-10-25.json
+   CHANGED /download → words, bodyHash
+      words: 基线「2219」 → 现在「2388」
+      bodyHash: 基线「"c8b7bd996e79e93f"」 → 现在「"91811d456e41d27b"」
+   OK(301) /en/blog/dlss-5-online-image-upscaler-guide → /blog/dlss-5-online-image-upscaler-guide
+   OK(301) /en/blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026 → /blog/dlss5-vs-dlss4-vs-fsr4-comparison-2026
+
+PROTECTION: changed=1 down=0 verdict=REVIEW

@@ -1,0 +1,119 @@
+
+> react-example@0.0.0 test
+> tsx tests/run.ts
+
+✓ mmToPx agrees with the printed sizes a shop actually measures
+✓ mmToPx refuses a length or resolution that cannot be printed
+✓ specPixels is exactly the specification, at any resolution
+✓ every named sheet is a real paper size
+✓ a 30 × 40 tile fills the sheets a visitor can actually buy
+✓ no two photos overlap, and none is closer to the edge than the margin
+✓ cut marks stay on the paper and out of the neighbouring photo
+✓ the block is centred, so a cut sheet keeps its rows straight
+✓ a photo larger than the paper is refused rather than cropped silently
+✓ the head ends up the size and height the document asks for
+✓ the same input always produces the same plan
+✓ a source too small for the frame is flagged instead of upscaled quietly
+✓ framing at the edge of the source is allowed, but warns
+✓ framing an empty head box, or a spec with no head height, throws
+✓ spec ids are unique and URL-safe
+✓ every row carries a source, a quotation and a date it was read
+✓ every row states a printable size, a background and a floor for resolution
+✓ head and headroom are ordered, and both fit inside the frame
+✓ a head is a plausible share of the frame, which is what caught the rejected figure
+✓ a verified row has two hosts and has resolved every disagreement
+✓ only verified rows reach a page, and there is at least one
+✓ the table names at least one row per sheet, so every page has a printable deliverable
+✓ a quotation is found across the elements a page renders it in
+✓ a quotation is found whatever the case, but never with a number changed
+✓ text inside a script is not evidence
+✓ an empty quotation never counts as a match
+✓ each page is fetched once however many numbers came from it
+✓ a page that cannot be read is reported, not thrown
+✓ every provider model maps back to the mode it was uploaded for
+✓ the current search intents stay explicit in the download and visual enhancer metadata
+✓ the upload check refuses a 48 MP photo under every mode that has a ceiling
+✓ the check passes what the studio already accepts
+✓ the eraser has no pixel ceiling, and the file ceiling still applies to it
+✓ a caller that reports no size is not blocked, and a reported size over the edge is
+✓ the upstream 413 is translated, so a failure still reads like advice
+✓ a failure reason nobody can read is replaced instead of shown
+✓ the example warm-up reads the failure reason the gateway actually fills
+✓ every tool page has its own path, and its related links stay inside the set
+✓ every tool page is in the sitemap, so a crawler finds it without a link
+✓ high-intent tool pages show a matching free case and ship every referenced asset
+✓ the served homepage links every tool page, for the crawler and for the visitor who runs no scripts
+✓ the game character gallery contains 20 complete before-and-after pairs
+✓ the video workflow has crawlable demos, FAQ copy and a sitemap entry
+✓ the before-and-after page keeps measured cases, videos and both locale routes discoverable
+✓ the static homepage exposes the same search intent and crawlable structured data before JavaScript runs
+✓ related visual projects are crawlable from the static homepage and llms profile
+✓ the enhancer asks for the factor it can actually get, and never over the ceiling
+✓ a normal edit keeps the source shape and only shrinks what is over the ceiling
+✓ the tool parameters are clamped into the range the services accept
+✓ each tool sends the fields its own service accepts, and no size or format
+✓ the enhancement prompt names the size that was actually requested
+✓ the free examples are the catalog minus the eraser, and nothing else
+✓ the samples route refuses an example that is not on the guest list
+✓ every tool names the model it runs on, and the mode maps back to the same tool
+✓ each tool declares how many references it reads and what they are
+✓ the downloader accepts links from the sites it names and refuses the rest
+✓ the A-line tools send named options, never a prompt and never a size
+✓ the chosen option travels with the task, and the default travels when nothing was chosen
+✓ the option names and values are the frozen public contract of the A-line tools
+✓ a wrong option is refused with the values that exist, and an unknown key is refused too
+✓ the interior brief is capped before it can fight the instruction that holds the room in place
+✓ every case in the studio book is a run the tools could actually have made
+✓ the case book covers every tool, and every picture it shows is deployed
+✓ the reviewed kitchen pair keeps its landscape frame and cannot reuse the old square cache
+✓ the catalog names exactly the models the gateway serves, and none besides
+✓ every model id, label, summary and measurement is present and dated
+✓ a model never both accepts and refuses the same field
+✓ the example body is a request the model actually accepts
+✓ the studio and the catalog describe the same references
+✓ the named options on the four productised models are the studio vocabulary, verbatim
+✓ the vectorizer and eraser ranges match the studio clamps
+✓ a prompt is required exactly where the model reads one
+✓ the four productised models take the same aspect buckets
+✓ the published limits and endpoints are the ones every client shares
+✓ the JSON documents survive serialization with nothing lost
+✓ every page the catalog links to exists, and every case it cites is published
+✓ workflow guides are unique, substantive and point to real tools
+✓ workflow guides are discoverable from crawler files and the static homepage
+✓ passport photo routes expose only verified specifications
+✓ passport photo pages are discoverable from crawler files and the static homepage
+✓ a same-site path is honoured, which is how /download gets its reader back
+✓ a missing or empty next lands on the dashboard
+✓ an absolute URL is refused
+✓ a protocol-relative path is refused
+✓ a path that a browser would later rewrite into a redirect is refused
+✓ whitespace and control characters cannot smuggle the checks above
+✓ the caller can name its own fallback
+✓ a deployment holds no more than 12 serverless functions
+✓ every api path the client fetches resolves to a function
+✓ every account route is reachable through the one function, and refuses a stranger
+✓ a download request without a session is refused too
+✓ history refreshes only when this account finishes the same operation
+✓ the transcript-first podcast has stable episodes with crawlable evidence
+✓ podcast index and every episode are linked from the crawler files
+✓ duplicate English article URLs have one 301 hop to the selected article
+✓ the sitemap and SPA fallback do not advertise or serve the deprecated duplicate
+✓ evidence-led expansion pages are published in both current site locales
+✓ the home page is published in both locales and the pair declares itself from both sides
+✓ checker: normalizeGpuName strips vendor noise and API suffixes
+✓ checker: matchGpu finds the card from a real browser string
+✓ checker: cleanWebglRenderer keeps the model, drops the ANGLE wrapper
+✓ checker: a verdict needs a source and a date
+✓ checker: a rule without a source may not publish a verdict
+✓ checker: the local-build axis is independent and evidence-backed
+✓ checker: the local-build requirements match the published /download page
+✓ checker: every published entry in the table carries its evidence
+✓ checker: slugs are unique and the page copy points at the checker route
+✓ checker: near-name variants never inherit a desktop verdict
+✓ checker: every feature cell needs dated evidence and plans never become current support
+✓ checker: published model pages require their own evidence deliverable
+✓ feature picker: every out-of-scope GPU or game remains unknown for every feature
+✓ feature picker: known support is limited to the sourced local game/hardware combinations
+✓ feature picker: both editions keep a source-linked static table without interactive controls
+
+113/113 passed

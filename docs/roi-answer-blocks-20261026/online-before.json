@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/download",
+    "http": "200",
+    "title": "DLSS 5 Download (2026) — Free Online Converter, Mobile &amp; Windows Studio",
+    "newBlockPresent": false
+  },
+  {
+    "path": "/zh/download",
+    "http": "200",
+    "title": "DLSS 5 下载（2026）— 免费在线转换器、手机与 Windows Studio",
+    "newBlockPresent": false
+  },
+  {
+    "path": "/visual-enhancer",
+    "http": "200",
+    "title": "DLSS 5 Visual Enhancer Online — Free Example, No Login Required",
+    "newBlockPresent": false
+  },
+  {
+    "path": "/zh/visual-enhancer",
+    "http": "200",
+    "title": "DLSS 5 视觉增强器在线 — 免费示例，无需登录",
+    "newBlockPresent": false
+  }
+]

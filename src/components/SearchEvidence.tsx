@@ -1,3 +1,4 @@
+import { ENHANCER_SHORT_ANSWERS } from '../content/enhancerShortAnswers';
 import { ChineseComparison } from './LocalizedEvidence';
 import React from 'react';
 import { CHECKED, COMPARISON_ANSWERS, EVIDENCE_SOURCES, ENHANCER_BOUNDARIES } from '../content/roiEvidence';
@@ -33,7 +34,7 @@ const enhancerAnswers = [
 ];
 export function EnhancerChecks() {
   return <section data-search-evidence="enhancer" className={panel} aria-labelledby="enhancer-checks-heading">
-    <FaqSchema path="/visual-enhancer" answers={[...VISUAL_ENHANCER_COPY.en.faq.map(([question,answer])=>({question,answer})),...enhancerAnswers]} />
+    <FaqSchema path="/visual-enhancer" answers={[...VISUAL_ENHANCER_COPY.en.faq.map(([question,answer])=>({question,answer})),...enhancerAnswers,...ENHANCER_SHORT_ANSWERS.en]} />
     <h2 id="enhancer-checks-heading" className="text-2xl font-bold text-white">Measured workflow and practical questions</h2>
     <p className="mt-3">2026-10-23: three real tasks completed end to end in 15.869–16.357 seconds (owned images; longest output edge 1536 pixels).</p>
     <p className="mt-3">Sample size: 3 runs using sample1.jpg, sample2.jpg and sample1.jpg. Timing runs from clicking submit through signed upload, model processing, polling and saving the downloaded result. We used an isolated signed-in test build with simulated authentication and credits; the upload, model tasks and downloads were real. This is a small test sample, not a speed guarantee or a production billing test.</p>

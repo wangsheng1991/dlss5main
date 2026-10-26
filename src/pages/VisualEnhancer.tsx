@@ -1,3 +1,4 @@
+import EnhancerShortAnswers from '../components/EnhancerShortAnswers';
 import VisualEnhancerLibrary from '../components/VisualEnhancerLibrary';
 import { ChineseEnhancer } from '../components/LocalizedEvidence';
 import { EnhancerChecks } from '../components/SearchEvidence';
@@ -31,6 +32,7 @@ export default function VisualEnhancer({ locale = 'en' }: { locale?: VisualEnhan
         {state.status === 'ready' && <div className="mt-6 grid gap-5"><ImageSlider highRes={state.run.result} lowRes={state.run.input} alt={isZh ? '图片视觉增强前后对比' : 'Visual enhancement before and after'} inputLabel={copy.baseLabel} outputLabel={copy.resultLabel} compareLabel={copy.compareLabel} initialAspectRatio={1.5} /><div className="flex flex-wrap items-center gap-4 text-sm"><a href={state.run.result} download={`${SAMPLES.sample1.fileName.replace(/\.[^.]+$/, '')}-enhanced.${state.run.extension}`} className="inline-flex items-center gap-2 text-primary"><Download aria-hidden="true" className="h-4 w-4" />{copy.download}</a><a href="#own-image" className="inline-flex items-center gap-2 text-primary">{copy.own}<ArrowRight aria-hidden="true" className="h-4 w-4" /></a><span role="status" className="text-xs text-zinc-500">{state.run.cached ? (isZh ? '缓存结果' : 'served from cache') : (isZh ? '刚刚生成' : 'generated now')}</span></div></div>}
       </section>
       <OwnImageEnhancer locale={locale} />
+      <EnhancerShortAnswers locale={locale} />
       <VisualEnhancerLibrary locale={locale} />
       <section className="mt-14 max-w-4xl" aria-labelledby="what-heading"><h2 id="what-heading" className="text-2xl md:text-3xl font-headline font-bold text-white">{copy.explainHeading}</h2><p className="mt-4 text-zinc-300 leading-relaxed">{copy.explain}</p></section>
       <section className="mt-10 max-w-4xl rounded-xl border border-primary/20 bg-primary/[0.04] p-6" aria-labelledby="online-heading"><h2 id="online-heading" className="text-2xl md:text-3xl font-headline font-bold text-white">{copy.onlineHeading}</h2><p className="mt-4 text-zinc-300 leading-relaxed">{copy.onlineText}</p></section>

@@ -1,3 +1,4 @@
+import DownloadApkAnswer from '../components/DownloadApkAnswer';
 import DownloadUsageGuide from '../components/DownloadUsageGuide';
 import DownloadActionPanel from '../components/DownloadActionPanel';
 import DownloadIntent from '../components/DownloadIntent';
@@ -161,6 +162,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
         </figure>
       </section>
 
+      <DownloadApkAnswer chinese={isZh} />
       <DownloadIntent chinese={isZh} />
       <DownloadUsageGuide chinese={isZh} />
       {!isZh && <DownloadEvidence />}
