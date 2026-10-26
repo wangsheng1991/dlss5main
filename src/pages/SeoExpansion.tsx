@@ -1,3 +1,4 @@
+import GamesStatusEvidence from '../components/GamesStatusEvidence';
 import { CheckedComparison, isCheckedComparison } from '../components/SearchEvidence';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -33,7 +34,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         '@id': `https://www.dlss5nvidia.com${page.path}#article`,
         headline: page.heading,
         description: page.description,
-        dateModified: isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11',
+        dateModified: (kind === 'games' || kind === 'status') ? '2026-10-26' : isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11',
         inLanguage: isZh ? 'zh-CN' : 'en-US',
         mainEntityOfPage: `https://www.dlss5nvidia.com${page.path}`,
         author: { '@type': 'Organization', name: 'DLSS5NVIDIA' },
@@ -77,6 +78,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         <p className="text-sm leading-relaxed text-zinc-400 mt-4">{page.description}</p>
       </header>
       <CheckedComparison path={page.path} existingFaq={page.faq} />
+      <GamesStatusEvidence kind={kind} locale={locale} />
 
       <section className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4" aria-label={isZh ? '关键事实' : 'Key facts'}>
         {page.facts.map(([label, value]) => (
@@ -94,7 +96,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         </section>
       ))}
 
-      {page.table && (
+      {page.table && kind !== 'games' && (
         <section className="mt-12" aria-labelledby="comparison-table-heading">
           <h2 id="comparison-table-heading" className="text-2xl font-headline font-bold text-white">{isZh ? '对照表' : 'At-a-glance comparison'}</h2>
           <div className="overflow-x-auto rounded-xl border border-outline-variant/20 mt-5">
