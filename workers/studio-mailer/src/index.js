@@ -37,6 +37,22 @@ function buildBody(fields, receivedAt) {
   ].join('\n');
 }
 
+function buildRuntimeBody(fields, receivedAt) {
+  return [
+    'A request for the DLSS runtime files arrived through the site.',
+    '',
+    `Account: ${fields.email || '(no address on the account)'}`,
+    `User ID: ${fields.uid}`,
+    `Machine: ${fields.machine || '(not stated)'}`,
+    '',
+    'Purpose / target game or development scenario:',
+    fields.note || '(left blank)',
+    '',
+    `Received: ${receivedAt}`,
+    'Reply to this mail and it goes straight back to the account above.',
+  ].join('\n');
+}
+
 export default {
   async fetch(request, env) {
     if (request.method !== 'POST') {
@@ -58,10 +74,11 @@ export default {
       return new Response('bad json', { status: 400 });
     }
 
+    const runtime = payload?.kind === 'runtime';
     const fields = {
       email: clean(payload?.email, MAX.email),
       uid: clean(payload?.uid, MAX.uid),
-      note: clean(payload?.note, MAX.note),
+      note: clean(payload?.note, runtime ? 4030 : MAX.note),
       machine: clean(payload?.machine, MAX.machine),
     };
     if (!fields.uid) {
@@ -76,8 +93,8 @@ export default {
         // Cloudflare Email Service uses camelCase for the structured Reply-To field.
         // Using reply_to silently omits the header, so Gmail replies to STUDIO_FROM instead.
         replyTo: fields.email || env.STUDIO_NOTIFY_TO,
-        subject: `Studio request · ${fields.email || fields.uid}`,
-        text: buildBody(fields, receivedAt),
+        subject: runtime ? `DLSS runtime files request · ${fields.email || fields.uid}` : `Studio request · ${fields.email || fields.uid}`,
+        text: runtime ? buildRuntimeBody(fields, receivedAt) : buildBody(fields, receivedAt),
       });
     } catch (error) {
       // The caller records the failure and keeps the request, so a mail outage never loses one.

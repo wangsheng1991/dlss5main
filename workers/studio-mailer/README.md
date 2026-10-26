@@ -29,6 +29,20 @@ first; the account currently has one verified destination, the inbox that answer
 ## Contract
 
 `POST` with `x-studio-secret: <STUDIO_SHARED_SECRET>` and a JSON body of
-`{ email, uid, note, machine }`. `200 {"ok":true}` means Cloudflare accepted the mail for delivery;
+`{ email, uid, note, machine, kind? }`. `200 {"ok":true}` means Cloudflare accepted the mail for delivery;
 `403` means the secret is wrong, `400` a malformed body, `502` that Email Routing refused it — the
 caller stores the failure alongside the request so nothing is lost while mail is down.
+
+
+`kind: "runtime"` selects a DLSS runtime-files subject and body. `note` carries the
+purpose and target game/development scenario; the runtime route prefixes these as
+`Purpose:` and `Scenario:`. Runtime notes allow 4030 characters to preserve both
+2000-character fields and their labels. Missing or other `kind` values retain the
+existing Studio subject, body and limits unchanged. Account, uid, machine, fixed
+destination, shared-secret validation and reply-to behaviour are unchanged.
+
+`/api/dlss-runtime/request` commits to `dlssRuntimeRequests` before notification.
+It records `notified: true` only after a successful Worker response with `ok: true`;
+configuration, timeout or send failures leave `notified: false` with `notifyError`.
+HTTP acceptance is not proof of inbox arrival or delivery of any runtime files.
+No binaries are accepted or sent by this Worker.

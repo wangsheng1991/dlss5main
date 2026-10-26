@@ -53,6 +53,7 @@ const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
 const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
+const Dlss5Dll = lazy(() => import('./pages/Dlss5Dll'));
 const Dlss45 = lazy(() => import('./pages/Dlss45'));
 const GpuUnlock = lazy(() => import('./pages/GpuUnlock'));
 const GameCoverage = lazy(() => import('./pages/GameCoverage'));
@@ -163,6 +164,8 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />
                   {/* Scaffold only: a production build has no checker route and no checker chunk. */}
+                  <Route path="/dlss-5-dll" element={<Dlss5Dll />} />
+                  <Route path="/zh/dlss-5-dll" element={<Dlss5Dll locale="zh" />} />
                   <Route path="/dlss-4-5" element={<Dlss45 />} />
                   <Route path="/zh/dlss-4-5" element={<Dlss45 locale="zh" />} />
                   <Route path="/guides/gpu-unlock-rtx-30-4090" element={<GpuUnlock />} />

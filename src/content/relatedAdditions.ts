@@ -70,12 +70,14 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
     { path: '/zh/guides', en: 'Read more practical guides', zh: '阅读更多实用指南' },
   ],
   '/guides': [
+    { path: '/dlss-5-dll', en: 'DLSS runtime DLL facts and email requests', zh: 'DLSS 运行时 DLL 事实与邮件申请' },
     { path: "/dlss-checker", en: "DLSS GPU compatibility checker", zh: "DLSS 显卡兼容性检测" },
     { path: "/benchmark", en: "DLSS benchmark measurements and limits", zh: "DLSS 基准实测与边界" },
     { path: "/dlss-4-5", en: "DLSS 4.5 parts and release status", zh: "DLSS 4.5 功能组成与发布状态" },
     { path: "/guides/gpu-unlock-rtx-30-4090", en: "RTX 30 and 4090 FP/BF16 unlock reports — not a DLSS 5 unlock", zh: "RTX 30 与 4090 FP/BF16 解锁报告——不是 DLSS 5 解锁" },
   ],
   '/system-requirements': [
+    { path: '/dlss-5-dll', en: 'DLSS runtime DLL facts and email requests', zh: 'DLSS 运行时 DLL 事实与邮件申请' },
     { path: "/dlss-checker", en: "DLSS GPU compatibility checker", zh: "DLSS 显卡兼容性检测" },
     { path: "/benchmark", en: "DLSS benchmark measurements and limits", zh: "DLSS 基准实测与边界" },
     { path: "/dlss-4-5", en: "DLSS 4.5 parts and release status", zh: "DLSS 4.5 功能组成与发布状态" },
@@ -86,18 +88,22 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
     { path: "/guides/gpu-unlock-rtx-30-4090", en: "RTX 30 and 4090 FP/BF16 unlock reports — not a DLSS 5 unlock", zh: "RTX 30 与 4090 FP/BF16 解锁报告——不是 DLSS 5 解锁" },
   ],
   '/status': [
+    { path: '/dlss-5-dll', en: 'DLSS runtime DLL facts and email requests', zh: 'DLSS 运行时 DLL 事实与邮件申请' },
     { path: "/dlss-checker", en: "DLSS GPU compatibility checker", zh: "DLSS 显卡兼容性检测" },
     { path: "/benchmark", en: "DLSS benchmark measurements and limits", zh: "DLSS 基准实测与边界" },
   ],
   '/studio-beta': [
+    { path: 'https://github.com/wangsheng1991/dlss-5-studio', en: 'Product-documentation and compatibility-record repository', zh: '产品文档与兼容性记录仓库' },
     { path: "/games", en: "DLSS 5 games launch tracker", zh: "DLSS 5 游戏上线追踪" },
   ],
   '/zh/guides': [
+    { path: '/zh/dlss-5-dll', en: 'DLSS runtime DLL facts and email requests', zh: 'DLSS 运行时 DLL 事实与邮件申请' },
     { path: "/zh/benchmark", en: "DLSS benchmark measurements and limits", zh: "DLSS 基准实测与边界" },
     { path: "/zh/dlss-4-5", en: "DLSS 4.5 parts and release status", zh: "DLSS 4.5 功能组成与发布状态" },
     { path: "/zh/guides/gpu-unlock-rtx-30-4090", en: "RTX 30 and 4090 FP/BF16 unlock reports — not a DLSS 5 unlock", zh: "RTX 30 与 4090 FP/BF16 解锁报告——不是 DLSS 5 解锁" },
   ],
   '/zh/system-requirements': [
+    { path: '/zh/dlss-5-dll', en: 'DLSS runtime DLL facts and email requests', zh: 'DLSS 运行时 DLL 事实与邮件申请' },
     { path: "/zh/benchmark", en: "DLSS benchmark measurements and limits", zh: "DLSS 基准实测与边界" },
     { path: "/zh/dlss-4-5", en: "DLSS 4.5 parts and release status", zh: "DLSS 4.5 功能组成与发布状态" },
     { path: "/zh/guides/gpu-unlock-rtx-30-4090", en: "RTX 30 and 4090 FP/BF16 unlock reports — not a DLSS 5 unlock", zh: "RTX 30 与 4090 FP/BF16 解锁报告——不是 DLSS 5 解锁" },
@@ -107,9 +113,11 @@ export const RELATED_ADDITIONS: Record<string, Array<{ path: string; en: string;
     { path: "/zh/guides/gpu-unlock-rtx-30-4090", en: "RTX 30 and 4090 FP/BF16 unlock reports — not a DLSS 5 unlock", zh: "RTX 30 与 4090 FP/BF16 解锁报告——不是 DLSS 5 解锁" },
   ],
   '/zh/status': [
+    { path: '/zh/dlss-5-dll', en: 'DLSS runtime DLL facts and email requests', zh: 'DLSS 运行时 DLL 事实与邮件申请' },
     { path: "/zh/benchmark", en: "DLSS benchmark measurements and limits", zh: "DLSS 基准实测与边界" },
   ],
   '/zh/studio-beta': [
+    { path: 'https://github.com/wangsheng1991/dlss-5-studio', en: 'Product-documentation and compatibility-record repository', zh: '产品文档与兼容性记录仓库' },
     { path: "/zh/games", en: "DLSS 5 games launch tracker", zh: "DLSS 5 游戏上线追踪" },
   ],
 };

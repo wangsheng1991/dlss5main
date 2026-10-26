@@ -1,3 +1,5 @@
+import Dlss5DllContent from '../src/components/Dlss5DllContent';
+import { DLL_COPY, DLL_ALTERNATES, dllPath, dllSchema } from '../src/content/dlss5Dll';
 import { dlss45Copy, DLSS45_ALTERNATES, dlss45Schema } from '../src/content/dlss45';
 import Dlss45Content from '../src/components/Dlss45Content';
 import { gpuUnlockCopy, GPU_UNLOCK_ALTERNATES, gpuUnlockSchema } from '../src/content/gpuUnlock';
@@ -1213,6 +1215,12 @@ if (profileHas('comparisons')) {
 if (profileHas('seoExpansion')) for (const page of EXPANSION_PAGES) writeRoute(page.path, renderExpansionPage(page));
 const checkerSitemap = readFileSync(resolve('public/sitemap.xml'), 'utf8');
 for (const locale of ['en', 'zh'] as const) {
+  const dllRoute=dllPath(locale), dll=DLL_COPY[locale];
+  if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${dllRoute}</loc>`).length !== 2) throw new Error(`DLL sitemap entry missing or duplicated: ${dllRoute}`);
+  writeRoute(dllRoute, withRoot(withHead(TEMPLATE, {
+    title:dll.title, description:dll.assertions[0], canonicalPath:dllRoute,
+    language:locale==='zh'?'zh-CN':'en-US', alternates:DLL_ALTERNATES, structuredData:dllSchema(locale),
+  }), renderToStaticMarkup(createElement(Dlss5DllContent,{locale}))));
   const dlss = dlss45Copy(locale).page;
   const unlock = gpuUnlockCopy(locale).page;
   for (const page of [dlss, unlock]) {
