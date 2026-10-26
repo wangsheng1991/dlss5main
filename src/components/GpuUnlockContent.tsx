@@ -1,0 +1,32 @@
+import React, { useEffect, useState } from 'react';
+import { GPU_UNLOCK as p, GPU_UNLOCK_REPORTS, GPU_UNLOCK_4090, GPU_UNLOCK_FAQ } from '../content/gpuUnlock';
+const linkClass='text-primary underline';
+export default function GpuUnlockContent() {
+  const [ready,setReady]=useState(false);
+  useEffect(()=>setReady(true),[]);
+  return <main data-gpu-unlock data-ready={ready} className="pt-32 pb-24 px-6 max-w-6xl mx-auto text-zinc-300">
+    <header><h1 className="text-4xl font-bold text-white">{p.title}</h1>
+      <p className="mt-5"><strong>它不是 DLSS 5 解锁。</strong>这里讨论的是 FP/BF16 指令发射速率及矩阵运算（GEMM）吞吐，面向本地 AI 推理／训练这类负载；对 RTX 30 能不能在游戏里开 DLSS 5 没有任何改变，不是游戏帧率提升结论。</p>
+      <p className="mt-4">本页未在本站机器上复现该解锁流程。本站的游戏人物风格转换与 Studio 图像管线是另一件事，不能作为这个解锁流程的实测证据。</p>
+      <p className="mt-4">资料核对：<time dateTime={p.checked}>{p.checked}</time>。本页是资料整理，不是教程交付。</p>
+      <ul className="mt-4 list-disc pl-6"><li><a className={linkClass} href={p.sources.linux}>Zagitta/gpu-unlock</a>：Linux RTX 30 系内核模块。</li><li><a className={linkClass} href={p.sources.fork}>elias-gaeros/gpu-unlock 的 rtx4090 分支</a>：Linux RTX 4090 分支。</li><li><a className={linkClass} href={p.sources.windows}>impacifist/Windows-GPU-UNLOCK</a>：Windows / UEFI 精确机器配置方案。</li></ul>
+    </header>
+    <section className="mt-10"><h2 className="text-2xl font-bold text-white">改的是什么</h2><p className="mt-4">按 <a className={linkClass} href={p.sources.linux}>Linux 主仓库 README</a>，模块在 NVIDIA 驱动绑定卡之前写入速度选择器：SS0 <code>0x88888888</code>、4 位 SS1 <code>0x8</code>，并做 FLR。README 将其描述为 FP/BF16 FMA 发射到 FP32 的速率翻倍；这不是本站测量。模块方式不需要每次驱动更新重新打补丁。</p>
+      <figure className="mt-6"><svg data-unlock-diagram role="img" aria-labelledby="unlock-diagram-title" viewBox="0 0 760 230" className="w-full max-w-3xl text-zinc-100"><title id="unlock-diagram-title">驱动绑定前写入速度选择器 → FLR → 未修改的 NVIDIA 驱动接管</title><defs><marker id="unlock-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#76b900"/></marker></defs><g fill="#151b20" stroke="#76b900"><rect x="10" y="70" width="300" height="80" rx="8"/><rect x="350" y="70" width="70" height="80" rx="8"/><rect x="460" y="70" width="290" height="80" rx="8"/></g><g fill="currentColor" textAnchor="middle" fontSize="17"><text x="160" y="116">驱动绑定前写入速度选择器</text><text x="385" y="116">FLR</text><text x="605" y="116">未修改的 NVIDIA 驱动接管</text></g><g stroke="#76b900" strokeWidth="2" markerEnd="url(#unlock-arrow)"><path d="M315 110 H343"/><path d="M425 110 H453"/></g></svg><figcaption className="text-sm text-zinc-400">本站绘制的三步时序示意，依据主仓库 README；不是本站执行记录。</figcaption></figure>
+    </section>
+    <section className="mt-10"><h2 className="text-2xl font-bold text-white">RTX 30 系：哪些卡有社区报告</h2><p className="mt-4">以下为 <a className={linkClass} href={p.sources.linux}>Zagitta README</a> 的 dense GEMM 社区报告表。{p.attribution}；未报告的项目不补数字。</p>
+      <div className="mt-5 overflow-x-auto"><table data-unlock-30 className="w-full min-w-[850px] text-left"><thead><tr>{['卡','芯片','结果','BF16 GEMM 提升','报告编号与归属'].map(h=><th key={h} className="p-3">{h}</th>)}</tr></thead><tbody>{GPU_UNLOCK_REPORTS.map(r=><tr key={r.card} className="border-t border-outline-variant/30"><th className="p-3" scope="row">{r.card}</th><td className="p-3">{r.chip}</td><td className="p-3">{r.result}</td><td className="p-3">{r.gain}</td><td className="p-3"><a className={linkClass} href={p.sources.linux}>Zagitta README · {r.reports}</a><p>{p.attribution}</p></td></tr>)}</tbody></table></div>
+      <p className="mt-5">{p.attribution}：Zagitta README 引用报告 #1 的 RTX 3090 Ti 单卡基线，五样本中位数、FP32 累加：FP16 87.46 → 118.39 TFLOPS；BF16 87.50 → 157.41 TFLOPS；TF32 42.58 → 82.61 TFLOPS。<a className={linkClass} href={p.sources.linux}>来源：主仓库 README，报告 #1</a>。</p>
+    </section>
+    <section className="mt-10"><h2 className="text-2xl font-bold text-white">RTX 4090：fork README 对照</h2><p className="mt-4">{p.attribution}。来源为 <a className={linkClass} href={p.sources.fork}>rtx4090 分支 README</a>；该对照未列 issue 报告编号，不另行编排编号。</p>
+      <div className="mt-5 overflow-x-auto"><table data-unlock-4090 className="w-full min-w-[620px] text-left"><thead><tr>{['模式','之前','之后','报告来源与归属'].map(h=><th key={h} className="p-3">{h}</th>)}</tr></thead><tbody>{GPU_UNLOCK_4090.map(r=><tr key={r.mode} className="border-t border-outline-variant/30"><th scope="row" className="p-3">{r.mode}</th><td className="p-3">{r.before}</td><td className="p-3">{r.after}</td><td className="p-3"><a className={linkClass} href={p.sources.fork}>rtx4090 分支 README；未列报告编号</a><p>{p.attribution}</p></td></tr>)}</tbody></table></div>
+      <p className="mt-5">该分支报告称 INT8、<code>dp4a</code>、标量 FP32 基本维持基线。限制是单卡、单次冷启动成功；独立冷启动复现与应用层数值验证仍待完成。以上不是本站实测，也不构成应用负载收益承诺。</p>
+    </section>
+    <section className="mt-10"><h2 className="text-2xl font-bold text-white">三条路径与前置条件</h2><p className="mt-4">仓库路径涉及关闭 Secure Boot 与修改启动参数。这里只记录条件，不提供执行命令；应分别核对相应仓库文档，不能用一条路径的条件替代另一条。</p>
+      <ul className="mt-4 list-disc pl-6 space-y-4"><li><a className={linkClass} href={p.sources.linux}>Linux 30 系主仓库</a>：只覆盖 GA102/103/104/106；架构被覆盖不等于每个型号都有成功报告，GA103 尚无报告。</li><li><a className={linkClass} href={p.sources.fork}>4090 分支</a>：集成已发布的 AD102 payload，仅针对 RTX 4090（<code>10de:2684</code>，AD102）；不接受其他型号、专业卡或数据中心卡。</li><li><a className={linkClass} href={p.sources.windows}>Windows / UEFI</a>：仓库列三个精确机器配置，含无头与 USB 路径；型号名不等于兼容。v0.3.1 是源码预发布，不打包固件与私有 EFI。不要把 Linux 报告直接当成 Windows 配置验证。</li></ul>
+    </section>
+    <section className="mt-10"><h2 className="text-2xl font-bold text-white">风险与回滚</h2><blockquote data-unlock-warning className="mt-4 border-l-4 border-primary pl-4">{p.risk}</blockquote></section>
+    <section className="mt-10"><h2 className="text-2xl font-bold text-white">我们的立场</h2><p className="mt-4">我们不提供固件、payload 或 EFI，不托管、不镜像、不代打包，也不承诺结果。本页未在本站机器上复现该解锁流程。</p><p className="mt-4"><a className={linkClass} href="/dlss-checker">核对 DLSS 5 官方硬件范围</a>；<a className={linkClass} href="/before-after">查看本站独立图像风格转换的真实示例</a>。两条路径都不把本页的计算吞吐报告变成 DLSS 5 游戏兼容结论。</p></section>
+    <section className="mt-10" data-unlock-faq><h2 className="text-2xl font-bold text-white">FAQ</h2>{GPU_UNLOCK_FAQ.map(f=><article key={f.q} className="mt-5"><h3 className="text-lg font-bold text-white">{f.q}</h3><p className="mt-2">{f.a}</p></article>)}</section>
+  </main>;
+}

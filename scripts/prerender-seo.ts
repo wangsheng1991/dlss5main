@@ -1,3 +1,5 @@
+import { GPU_UNLOCK, gpuUnlockSchema } from '../src/content/gpuUnlock';
+import GpuUnlockContent from '../src/components/GpuUnlockContent';
 import { GAME_COVERAGE_PAGES, gameCoverageSchema } from '../src/content/gameCoverage';
 import { GAME_DETAIL_EVIDENCE } from '../src/content/gamesStatusEvidence';
 import GameCoverageContent from '../src/components/GameCoverageContent';
@@ -1208,6 +1210,12 @@ if (profileHas('comparisons')) {
 }
 if (profileHas('seoExpansion')) for (const page of EXPANSION_PAGES) writeRoute(page.path, renderExpansionPage(page));
 const checkerSitemap = readFileSync(resolve('public/sitemap.xml'), 'utf8');
+if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${GPU_UNLOCK.path}</loc>`).length !== 2) throw new Error('GPU unlock sitemap entry missing or duplicated');
+writeRoute(GPU_UNLOCK.path, withRoot(withHead(TEMPLATE, {
+  title: GPU_UNLOCK.title, description: GPU_UNLOCK.description, canonicalPath: GPU_UNLOCK.path,
+  language: 'zh-CN', keywords: ['gpu unlock rtx 30', 'unlock bf16 rtx 3090'], structuredData: gpuUnlockSchema(),
+}), renderToStaticMarkup(createElement(GpuUnlockContent))));
+
 for (const page of GAME_COVERAGE_PAGES) {
   if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${page.path}</loc>`).length !== 2) throw new Error(`Game coverage sitemap entry missing or duplicated: ${page.path}`);
   writeRoute(page.path, withRoot(withHead(TEMPLATE, {
