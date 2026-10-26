@@ -1,0 +1,1273 @@
+{
+  "captured_at": "2026-10-26T02:22:39.520Z",
+  "engine": "bing",
+  "source": "bing-rss",
+  "results": [
+    {
+      "query": "dlss 5 download",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS 5 Launcher - GitHub",
+          "url": "https://github.com/xdzleo/dlss5-launcher",
+          "domain": "github.com",
+          "snippet": "DLSS 5 Neural Rendering is NVIDIA's neural post-process. It reconstructs detail the renderer never drew — skin, hair, faces, fabric, the things that make a 2010 game look like 2010.",
+          "pubDate": "Sun, 12 Jul 2026 22:08:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Here’s How You Can Install and Enable DLSS 5 in Every DX9 ... - DSOGaming",
+          "url": "https://www.dsogaming.com/articles/heres-how-you-can-install-dlss-5-to-all-dx9-dx10-dx11-dx12-and-vulkan-games/",
+          "domain": "dsogaming.com",
+          "snippet": "You can download the mod here. And that’s it. That’s how you can install and enable DLSS 5 in every game. Before we wrap up, I should note that this DLSS 5 version is based on a leaked...",
+          "pubDate": "Mon, 31 Aug 2026 00:45:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "DLSS 5 Swapper - GitHub",
+          "url": "https://github.com/Hex4np/dlss5-swapper/tree/main/",
+          "domain": "github.com",
+          "snippet": "DLSS 5 Swapper is a powerful, easy-to-use tool for installing, managing, and restoring DLSS 5 across games and supported emulators. It features automatic game detection, optional drive scanning, DLSS5-Feeder for compatible titles without native DLSS, emulator support, and compatibility with DirectX ",
+          "pubDate": "Sat, 17 Oct 2026 07:27:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered image quality and performance features working in...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5 one-click at Modding Tools - Nexus Mods",
+          "url": "https://www.nexusmods.com/site/mods/2241",
+          "domain": "nexusmods.com",
+          "snippet": "The tool detects the game exe (Unity / Unreal helpers skipped), works out whether the game already ships DLSS and whether it renders with D3D11 or D3D12, then installs exactly what that case needs — every file downloaded fresh from its upstream, nothing third-party bundled.",
+          "pubDate": "Fri, 23 Oct 2026 06:23:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to install Nvidia DLSS 5 on almost any RTX GPU in minutes - MUO",
+          "url": "https://www.makeuseof.com/how-to-install-nvidia-dlss-5-on-almost-any-rtx-gpu-in-minutes/",
+          "domain": "makeuseof.com",
+          "snippet": "Head to the DLSS5-Swapper GitHub releases page and download either the Windows installer or the portable exe. Run it, and click through the Windows SmartScreen warning that appears — this shows up because the app isn't code-signed.",
+          "pubDate": "Sat, 05 Sep 2026 23:55:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "How to Install DLSS 5 in Any RTX GPU (DLSS 5 Manager Setup & Gameplay ...",
+          "url": "https://www.youtube.com/watch?v=DFTunATHS1o",
+          "domain": "youtube.com",
+          "snippet": "It features a simple 1-click installation to deploy DLSS 5 across supported titles.",
+          "pubDate": "Sat, 24 Oct 2026 19:36:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "DLSS 5 Swapper Download | TechSpot",
+          "url": "https://www.techspot.com/downloads/7902-dlss-5-swapper.html",
+          "domain": "techspot.com",
+          "snippet": "Download DLSS 5 Swapper - Finds your games and installs DLSS 5 Neural Rendering in one click.",
+          "pubDate": "Sat, 24 Oct 2026 03:16:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5: Generative Neural Rendering - NVIDIA ADLR",
+          "url": "https://research.nvidia.com/labs/adlr/DLSS5/",
+          "domain": "research.nvidia.com",
+          "snippet": "We present DLSS 5, a real-time generative rendering stage for interactive graphics that complements conventional rendering with appearance priors learned from real-world visual data.",
+          "pubDate": "Sun, 25 Oct 2026 08:01:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Applying RR and DLSS 5 RenoDX for the games(Support for RTX 20-50 ...",
+          "url": "https://www.nexusmods.com/site/mods/2224",
+          "domain": "nexusmods.com",
+          "snippet": "First, locate your game's root folder and download the correct files. I recommend using \"Renodx Dlss5 for 20-30-40-50\". Then, download \"Dlss5\" (this contains the DLSS 5 files and the DLSS library itself).",
+          "pubDate": "Thu, 22 Oct 2026 19:46:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200
+    },
+    {
+      "query": "dlss 5 apk",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200
+    },
+    {
+      "query": "dlss 5 mobile",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 android",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 studio",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 visual enhancer",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 style transfer",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 vs fsr 4",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS 5 vs FSR 4: Which is Better in 2026? - mosaicnexus.com",
+          "url": "https://mosaicnexus.com/dlss-5-vs-fsr-4/",
+          "domain": "mosaicnexus.com",
+          "snippet": "DLSS 5 vs FSR 4 comparison 2026: Image quality, performance, GPU compatibility, and which one you should use. Honest breakdown for NVIDIA and AMD users.",
+          "pubDate": "Sun, 25 Oct 2026 14:20:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "DLSS 5 vs FSR 4.1: Which Upscaler Wins in 2026? - futuretweets.com",
+          "url": "https://futuretweets.com/dlss-5-vs-fsr-4-1-upscaling-2026/",
+          "domain": "futuretweets.com",
+          "snippet": "Nvidia DLSS 5 Neural Rendering vs AMD FSR 4.1 upscaling compared: benchmarks, supported GPUs, pricing, and real-world picks for gamers in 2026.",
+          "pubDate": "Sun, 25 Oct 2026 14:20:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "DLSS vs FSR 2026: Nvidia Wins 48% Blind Test - shattered.io",
+          "url": "https://shattered.io/dlss-vs-fsr/",
+          "domain": "shattered.io",
+          "snippet": "DLSS vs FSR compared for 2026: benchmarks, pricing, and a 6,747-vote blind test reveal which AI upscaler wins for your GPU or handheld.",
+          "pubDate": "Tue, 04 Aug 2026 12:15:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "How Far Behind is AMD? DLSS 4.5 vs FSR 4 Tested - TechSpot",
+          "url": "https://www.techspot.com/article/3084-nvidia-dlss-45-vs-amd-fsr-4/",
+          "domain": "techspot.com",
+          "snippet": "In general, FSR 4 isn't as sharp as DLSS 4, producing a softer image, so naturally it also falls behind DLSS 4.5 in this regard. The FSR 4 image is certainly usable, but in many games...",
+          "pubDate": "Tue, 03 Feb 2026 23:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS vs FSR (2025) | Best Upscaling Tech & Bottleneck Guide",
+          "url": "https://pc-bottleneck.com/dlss-vs-fsr/",
+          "domain": "pc-bottleneck.com",
+          "snippet": "Compare DLSS vs FSR for gaming in 2025. Learn which upscaling technology boosts FPS, reduces GPU bottlenecks, and works best for your system with our bottleneck calculator.",
+          "pubDate": "Sun, 25 Oct 2026 14:06:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "Comparing Ray Reconstruction Latency: DLSS 5.0 vs FSR 4.5 (2026)",
+          "url": "https://digitalgamerhub.com/dlss-5-vs-fsr-4-5-ray-reconstruction-latency/",
+          "domain": "digitalgamerhub.com",
+          "snippet": "Compare DLSS 5.0 and FSR 4.5 ray reconstruction latency, image quality, responsiveness, and gaming performance in this complete analysis.",
+          "pubDate": "Fri, 23 Oct 2026 20:06:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "DLSS vs FSR Guide: Ultimate Comparison (2026 Guide)",
+          "url": "https://systemrequirements.net/guides/fps-calculator/dlss-vs-fsr-guide",
+          "domain": "systemrequirements.net",
+          "snippet": "DLSS vs FSR guide: Compare NVIDIA and AMD upscaling techs for better gaming performance. Discover which is best for your hardware and games.",
+          "pubDate": "Sun, 25 Oct 2026 16:00:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "DLSS vs FSR Calculator 2026 - Compare FPS Boost",
+          "url": "https://pcgamecheck.com/dlss-fsr",
+          "domain": "pcgamecheck.com",
+          "snippet": "Calculate how much FPS boost you'll get from DLSS 4.5, FSR 4, and XeSS 2. Compare upscaling quality at different modes. Free DLSS/FSR performance calculator.",
+          "pubDate": "Sat, 24 Oct 2026 20:26:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 4.5 vs FSR 4.1 vs PSSR 2.0: 115% FPS Gap [2026]",
+          "url": "https://tech-insider.org/dlss-4-5-vs-fsr-4-vs-pssr-2-2026/",
+          "domain": "tech-insider.org",
+          "snippet": "DLSS 4.5’s second‑gen transformer and 6x dynamic frame generation are now widely available, PSSR 2.0 Enhanced became the default PS5 Pro upscaler via the September 2026 firmware, and AMD’s FSR 4.x stack has replaced earlier FSR 4.0-era implementations—making the DLSS vs FSR vs PSSR performance and i",
+          "pubDate": "Sun, 25 Oct 2026 18:38:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "DLSS vs FSR 2026: DLSS 4.5 vs FSR 4.1 + the 5 GPUs to Buy",
+          "url": "https://www.pcbuildhelper.com/article/dlss-vs-fsr-for-gaming-2026",
+          "domain": "pcbuildhelper.com",
+          "snippet": "DLSS vs FSR in 2026: DLSS 4.5 still holds the steadier image and FSR 4.1 is close at Quality. Pick the right GPU for each at 1080p, 1440p and 4K, verdict first.",
+          "pubDate": "Sun, 25 Oct 2026 18:45:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200
+    },
+    {
+      "query": "dlss 4 vs dlss 5",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 games",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 release date",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "rtx remix dlss 5",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "Home | RTX",
+          "url": "https://www.rtx.com/",
+          "domain": "rtx.com",
+          "snippet": "RTX connects our world through the power of flight and protects it with industry-leading defense technologies. This is where the world’s greatest minds take on the toughest challenges in aerospace and defense.",
+          "pubDate": "Sun, 25 Oct 2026 22:13:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Home | Raytheon - RTX",
+          "url": "https://www.rtx.com/raytheon",
+          "domain": "rtx.com",
+          "snippet": "Raytheon brings together the best minds, systems and capabilities to create next-generation solutions that are smarter, faster and better than previously thought possible.",
+          "pubDate": "Sat, 24 Oct 2026 23:11:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "GeForce RTX | Ultimate Ray Tracing & AI | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/rtx/",
+          "domain": "nvidia.com",
+          "snippet": "Over 1,000 games and applications use RTX to deliver realistic graphics and incredibly fast performance with cutting-edge AI features like DLSS 3D-Guided Neural Rendering and Dynamic Multi Frame Generation. The NVIDIA Blackwell architecture unlocks the game-changing realism of path tracing.",
+          "pubDate": "Thu, 22 Oct 2026 13:26:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "RTX Corporation - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/RTX_Corporation",
+          "domain": "en.wikipedia.org",
+          "snippet": "RTX manufactures aircraft engines, avionics, aerostructures, cybersecurity solutions, guided missiles, air defense systems, satellites, and drones. The company is a large military contractor, getting much of its revenue from the U.S. government.",
+          "pubDate": "Sat, 24 Oct 2026 02:33:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "RTX Corporation (RTX) Stock Price, News, Quote & History - Yahoo Finance",
+          "url": "https://finance.yahoo.com/quote/RTX/",
+          "domain": "finance.yahoo.com",
+          "snippet": "Find the latest RTX Corporation (RTX) stock quote, history, news and other vital information to help you with your stock trading and investing.",
+          "pubDate": "Fri, 23 Oct 2026 22:22:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "RTX Careers - Raytheon",
+          "url": "https://careers.rtx.com/global/en/",
+          "domain": "careers.rtx.com",
+          "snippet": "RTX is focused on accelerating ideas to solve some of the world’s toughest challenges. We do this by bringing together the world’s brightest, most innovative minds across aviation and defense within RTX Corporate, Collins Aerospace, Pratt & Whitney and Raytheon.",
+          "pubDate": "Sun, 25 Oct 2026 21:08:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "Nvidia RTX - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Nvidia_RTX",
+          "domain": "en.wikipedia.org",
+          "snippet": "Nvidia RTX achieves this through a combination of hardware and software acceleration. On a hardware level, RTX cards feature fixed-function \"RT cores\" that are designed to accelerate mathematical operations needed to simulate rays, such as bounding volume hierarchy traversal.",
+          "pubDate": "Sun, 25 Oct 2026 06:35:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "We Are RTX",
+          "url": "https://www.rtx.com/who-we-are/we-are-rtx",
+          "domain": "rtx.com",
+          "snippet": "Now more than ever, RTX is ready to tackle tomorrow’s challenges and drive aerospace and defense forward. We are ensuring the United States and allies have the most advanced air-to-air missile capabilities to counter peer threats at extended range in an increasingly complex world.",
+          "pubDate": "Thu, 19 Sep 2024 12:25:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "Home | Pratt & Whitney - rtx.com",
+          "url": "https://www.rtx.com/en/prattwhitney",
+          "domain": "rtx.com",
+          "snippet": "Join one of our campus programs and get a backstage pass to take flight even further. Prioritize your engine’s maintenance by utilizing our extensive supply of parts and unparalleled knowledge. Discover our variety of service solutions tailored to your needs.",
+          "pubDate": "Sun, 25 Oct 2026 18:09:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "News | RTX",
+          "url": "https://www.rtx.com/news",
+          "domain": "rtx.com",
+          "snippet": "Where new developments and bold ideas come to life. Access financial reports, stock information, and investor presentations. Make a difference with a career at RTX.",
+          "pubDate": "Mon, 10 Jul 2023 20:49:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200
+    },
+    {
+      "query": "dlss 5 benchmark",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    },
+    {
+      "query": "dlss 5 image converter",
+      "ok": true,
+      "count": 10,
+      "rows": [
+        {
+          "rank": 1,
+          "title": "DLSS Technology | NVIDIA",
+          "url": "https://www.nvidia.com/en-us/geforce/technologies/dlss/",
+          "domain": "nvidia.com",
+          "snippet": "DLSS is a revolutionary suite of neural rendering technologies that uses AI to boost FPS, reduce latency, and improve image quality. DLSS 4.5 introduced Dynamic Multi Frame Generation and a second-gen transformer model for Super Resolution and Ray Reconstruction. DLSS 5 adds lifelike lighting and ma",
+          "pubDate": "Sun, 25 Oct 2026 11:14:00 GMT"
+        },
+        {
+          "rank": 2,
+          "title": "Deep Learning Super Sampling - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deep_learning_super_sampling",
+          "domain": "en.wikipedia.org",
+          "snippet": "Deep Learning Super Sampling (DLSS) is a suite of real-time deep learning image enhancement and upscaling technologies developed by Nvidia that are available in a number of video games. The goal of these technologies is to allow the majority of the graphics pipeline to run at a lower resolution for ",
+          "pubDate": "Sun, 25 Oct 2026 05:23:00 GMT"
+        },
+        {
+          "rank": 3,
+          "title": "NVIDIA DLSS | NVIDIA Developer",
+          "url": "https://developer.nvidia.com/rtx/dlss",
+          "domain": "developer.nvidia.com",
+          "snippet": "NVIDIA DLSS NVIDIA DLSS is a suite of neural rendering technologies powered by NVIDIA RTX™ Tensor Cores that boosts frame rates while delivering crisp, high-quality images that rival native resolution. DLSS 4 introduced Multi Frame Generation (MFG) and a transformer model for high quality super reso",
+          "pubDate": "Sun, 25 Oct 2026 07:11:00 GMT"
+        },
+        {
+          "rank": 4,
+          "title": "NVIDIA DLSS 5 Delivers AI-Powered Breakthrough In Visual Fidelity For Games",
+          "url": "https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/",
+          "domain": "nvidia.com",
+          "snippet": "NVIDIA DLSS 5 infuses pixels with photorealistic lighting and materials to bridge the gap between rendering and reality.",
+          "pubDate": "Sun, 25 Oct 2026 21:58:00 GMT"
+        },
+        {
+          "rank": 5,
+          "title": "DLSS 5---How To Enable It On Any Nvidia RTX Graphics Card",
+          "url": "https://insider-gaming.com/dlss-5-how-to-enable-it-on-any-nvidia-rtx-graphics-card/",
+          "domain": "insider-gaming.com",
+          "snippet": "DLSS 5 is a hot button topic in gaming, but did you know there's a way to add to any game if you have an Nvidia RTX graphics card?",
+          "pubDate": "Fri, 11 Sep 2026 18:33:00 GMT"
+        },
+        {
+          "rank": 6,
+          "title": "How to Install DLSS 5 in ANY Game! (Easy Step-by-Step Guide)",
+          "url": "https://www.youtube.com/watch?v=ThIAp_tqbSQ",
+          "domain": "youtube.com",
+          "snippet": "Want to enable DLSS 5 in literally any PC game? In this step-by-step guide, I’ll show you how to install and set up DLSS 5, replace older DLSS versions, and get the latest NVIDIA AI-powered ...",
+          "pubDate": "Sat, 24 Oct 2026 20:05:00 GMT"
+        },
+        {
+          "rank": 7,
+          "title": "GitHub - NVIDIA/DLSS: NVIDIA DLSS is a new and improved deep learning ...",
+          "url": "https://github.com/NVIDIA/DLSS",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 10:38:00 GMT"
+        },
+        {
+          "rank": 8,
+          "title": "Releases · NVIDIA/DLSS - GitHub",
+          "url": "https://github.com/NVIDIA/DLSS/releases",
+          "domain": "github.com",
+          "snippet": "NVIDIA DLSS is a new and improved deep learning neural network that boosts frame rates and generates beautiful, sharp images for your games - NVIDIA/DLSS",
+          "pubDate": "Sun, 25 Oct 2026 03:29:00 GMT"
+        },
+        {
+          "rank": 9,
+          "title": "DLSS 5 explained: Supported games, GPUs and why it is controversial",
+          "url": "https://www.gamingbible.com/news/platform/pc/dlss-5-explained-supported-games-gpu-871066-20260930",
+          "domain": "gamingbible.com",
+          "snippet": "DLSS 5 is the latest AI-powered graphics technology from Nvidia that has become a huge talking point of the industry at the moment. While DLSS has been a boon in game optimisation for players who are on lower-end hardware, the technology has seen its fair share of controversies as users decry it as ",
+          "pubDate": "Wed, 30 Sep 2026 20:55:00 GMT"
+        },
+        {
+          "rank": 10,
+          "title": "Nvidia DLSS DLL Download - 310.9.1 | TechSpot",
+          "url": "https://www.techspot.com/downloads/7544-nvidia-dlss-files.html",
+          "domain": "techspot.com",
+          "snippet": "Nvidia DLSS redefines real-time rendering through AI super resolution – rendering fewer pixels and then using AI to construct sharp, higher resolution images.",
+          "pubDate": "Sun, 25 Oct 2026 13:44:00 GMT"
+        }
+      ],
+      "note": "",
+      "status": 200,
+      "same_as": "dlss 5 apk",
+      "broad_fallback_suspected": true
+    }
+  ]
+}
