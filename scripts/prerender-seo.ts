@@ -1,3 +1,5 @@
+import { CHECKER_PAGES, checkerSchema } from '../src/content/dlssChecker';
+import { DlssCheckerContent } from '../src/components/DlssCheckerContent';
 import GamesStatusEvidence from '../src/components/GamesStatusEvidence';
 import DownloadUsageGuide from '../src/components/DownloadUsageGuide';
 import DownloadActionPanel from '../src/components/DownloadActionPanel';
@@ -1202,6 +1204,15 @@ if (profileHas('comparisons')) {
   writeRoute('/zh/before-after', renderBeforeAfter('zh'));
 }
 if (profileHas('seoExpansion')) for (const page of EXPANSION_PAGES) writeRoute(page.path, renderExpansionPage(page));
+const checkerSitemap = readFileSync(resolve('public/sitemap.xml'), 'utf8');
+for (const page of CHECKER_PAGES) {
+  if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${page.path}</loc>`).length !== 2) throw new Error(`Checker sitemap entry missing or duplicated: ${page.path}`);
+  writeRoute(page.path, withRoot(withHead(TEMPLATE, {
+    title: `${page.heading} | DLSS5NVIDIA`, description: page.intro, canonicalPath: page.path,
+    language: 'en-US', keywords: [page.keyword], structuredData: checkerSchema(page),
+  }), renderToStaticMarkup(createElement(DlssCheckerContent, {page}))));
+}
+
 writeRoute('/pricing', renderPublicGuide({
   path: '/pricing',
   title: 'AI Image Upscaling Plans | DLSS 5 Credits',

@@ -14,7 +14,7 @@
  * 两条轴分开写，因为答案常常不一样：一张 RTX 2060 游戏里可能还没有 DLSS 5，但我们的
  * 本地软件是支持的。
  *
- * 数据核对日期：2026-10-10。当前只发布 NVIDIA 官方明确支持或计划支持的结论；
+ * GPU 功能表核对日期：2026-10-26。当前只发布 NVIDIA 官方明确支持或计划支持的结论；
  * 没有针对型号或架构的官方原文仍然保持 `'unknown'`。
  * 取证顺序：
  *   - NVIDIA 新闻室 DLSS 5 发布稿（支持哪些卡、哪些游戏）
@@ -64,11 +64,25 @@ export type GpuEntry = {
   ourWorkflows?: { upscale?: WorkflowFit; restore?: WorkflowFit };
   /** 第二根轴：我们的本地软件。 */
   localSoftware?: LocalSoftwareState;
+  workflowTier?: WorkflowFit;
+  features?: Record<GpuFeature, FeatureEvidence>;
   sources: SourceRef[];
   /** YYYY-MM-DD。 */
   lastVerified?: string;
   conflicts?: string[];
 };
+
+export type GpuFeature = 'neural' | 'superResolution' | 'frameGeneration' | 'multiFrameGeneration';
+export type FeatureEvidence = { status: GpuStatus; note: string; sources: SourceRef[]; lastVerified: string };
+export const GPU_CHECKED = '2026-10-26';
+export const GPU_FEATURE_LABELS: Record<GpuFeature, string> = { neural: 'DLSS 5 neural rendering', superResolution: 'Super Resolution', frameGeneration: 'Frame Generation', multiFrameGeneration: 'Multi Frame Generation' };
+export const GPU_SOURCES = {
+  hardware: {label: 'NVIDIA supported hardware table', url: 'https://www.nvidia.com/en-us/geforce/technologies/dlss/', checkedAt: GPU_CHECKED},
+  faq: {label: 'NVIDIA staff FAQ: RTX 40 future plan', url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/', checkedAt: GPU_CHECKED},
+  october: {label: 'NVIDIA October announcement: RTX Spark laptop scope', url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-faster-ai-model-hogwarts-legacy-rtx-spark-laptops/', checkedAt: GPU_CHECKED},
+  launch: {label: 'NVIDIA launch scope: NBA 2K27', url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/', checkedAt: GPU_CHECKED},
+  cloud: {label: 'NVIDIA GeForce NOW system requirements', url: 'https://www.nvidia.com/en-us/geforce-now/system-reqs/', checkedAt: GPU_CHECKED},
+} satisfies Record<string, SourceRef>;
 
 export type GameEntry = {
   slug: string;
@@ -129,129 +143,53 @@ const OURS_BELOW_MINIMUM: LocalSoftwareState = {
   reason: 'Below our published minimum (an NVIDIA RTX GPU, RTX 20 series or newer) — use the online converter instead.',
 };
 
-/**
- * 首批要覆盖的卡。`status` 一律先留 `'unknown'`：有官方依据再改成 confirmed/planned/unsupported。
- * `aliases` 已按浏览器会吐出的字符串写好，检测时直接用，不需要你改。
+/** Series scope is explicitly named by NVIDIA, not inferred from model price or position.
+ * Unknown means the reviewed table does not establish a conclusion for that vendor/model.
  */
+function feature(status: GpuStatus, note: string, sources: SourceRef[] = [GPU_SOURCES.hardware]): FeatureEvidence {
+  return { status, note, sources, lastVerified: GPU_CHECKED };
+}
+const outside = 'Not in the current published hardware range. This is not a claim about all future releases.';
+const unknownFeature = () => feature('unknown', 'The reviewed NVIDIA table does not establish model-level support here; no unsupported verdict is inferred from omission.');
+function nvidiaCard(model: string, series: '50' | '40' | '30' | '20'): GpuEntry {
+  const neural = series === '50'
+    ? feature('confirmed', 'NVIDIA names all RTX 50 Series GPUs; the checked launch game is NBA 2K27. A compatible GPU alone does not enable every game.', [GPU_SOURCES.hardware, GPU_SOURCES.launch])
+    : series === '40'
+      ? feature('planned', 'NVIDIA staff plan to work on RTX 40 support after RTX 50 tuning. No release date is promised; the current hardware table still shows a dash.', [GPU_SOURCES.faq, GPU_SOURCES.hardware])
+      : feature('unsupported', outside);
+  return {
+    slug: `rtx-${model.toLowerCase().replaceAll(' ', '-')}`, vendor: 'nvidia', name: `GeForce RTX ${model}`,
+    aliases: [`NVIDIA GeForce RTX ${model}`, `RTX ${model}`], generation: `GeForce RTX ${series} Series`,
+    status: neural.status, note: neural.note, sources: neural.sources, lastVerified: GPU_CHECKED,
+    localSoftware: model === '4090' ? OURS_MEASURED : { ...OURS_SUPPORTED, reason: 'Inference from our published RTX 20-series-or-newer minimum, not a test of this model. Other OS, memory, driver and engine requirements still apply.' },
+    workflowTier: model === '4090' ? 'good' : 'ok',
+    features: {
+      neural,
+      superResolution: feature('confirmed', 'Supported hardware family; the game must integrate this feature.'),
+      frameGeneration: feature(series === '50' || series === '40' ? 'confirmed' : 'unsupported', series === '50' || series === '40' ? 'Supported hardware family; game integration is still required.' : outside),
+      multiFrameGeneration: feature(series === '50' ? 'confirmed' : 'unsupported', series === '50' ? 'The official table lists Dynamic Multi Frame Generation for RTX 50. This does not assert every game or mode is available.' : outside),
+    },
+  };
+}
+export const GPU_ENTRIES_PLANNED_SLUGS = ['rx-9070-xt', 'rx-7900-xtx', 'rx-7800-xt', 'arc-b580', 'arc-a770'] as const;
 export const GPU_ENTRIES: GpuEntry[] = [
-  {
-    slug: 'rtx-5090',
-    vendor: 'nvidia',
-    name: 'GeForce RTX 5090',
-    aliases: ['NVIDIA GeForce RTX 5090', 'RTX 5090', 'GB202'],
-    generation: 'Blackwell',
-    vramGb: 32,
-    status: 'confirmed',
-    note: 'NVIDIA lists DLSS 5 for all GeForce RTX 50 Series GPUs and laptops.',
-    localSoftware: OURS_SUPPORTED,
-    sources: [
-      {
-        label: 'NVIDIA DLSS 5 launch article',
-        url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
-        checkedAt: '2026-10-10',
-      },
-    ],
-    lastVerified: '2026-10-10',
-  },
-  {
-    slug: 'rtx-5080',
-    vendor: 'nvidia',
-    name: 'GeForce RTX 5080',
-    aliases: ['NVIDIA GeForce RTX 5080', 'RTX 5080', 'GB203'],
-    generation: 'Blackwell',
-    vramGb: 16,
-    status: 'confirmed',
-    note: 'NVIDIA lists DLSS 5 for all GeForce RTX 50 Series GPUs and laptops.',
-    localSoftware: OURS_SUPPORTED,
-    sources: [
-      {
-        label: 'NVIDIA DLSS 5 launch article',
-        url: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
-        checkedAt: '2026-10-10',
-      },
-    ],
-    lastVerified: '2026-10-10',
-  },
-  {
-    slug: 'rtx-4090',
-    vendor: 'nvidia',
-    name: 'GeForce RTX 4090',
-    aliases: ['NVIDIA GeForce RTX 4090', 'RTX 4090', 'AD102'],
-    generation: 'Ada Lovelace',
-    vramGb: 24,
-    status: 'unknown',
-    note: 'NVIDIA’s September 2026 FAQ says it plans to work on expanding official support to GeForce RTX 40 Series after RTX 50 performance is more fully tuned. The current support table still marks DLSS 5 as unavailable on RTX 40, so this entry remains unconfirmed.',
-    localSoftware: OURS_MEASURED,
-    sources: [
-      {
-        label: 'NVIDIA DLSS 5 FAQ (NVIDIA staff)',
-        url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/',
-        checkedAt: '2026-10-11',
-      },
-    ],
-    lastVerified: '2026-10-11',
-    conflicts: [
-      'NVIDIA\'s current DLSS technology support table marks DLSS 3D-Guided Neural Rendering with a dash for RTX 40 Series; the FAQ describes future expansion as planned. This entry therefore remains planned, not confirmed.',
-    ],
-  },
-  {
-    slug: 'rtx-4070',
-    vendor: 'nvidia',
-    name: 'GeForce RTX 4070',
-    aliases: ['NVIDIA GeForce RTX 4070', 'RTX 4070', 'AD104'],
-    generation: 'Ada Lovelace',
-    vramGb: 12,
-    status: 'unknown',
-    note: 'NVIDIA’s September 2026 FAQ says it plans to work on expanding official support to GeForce RTX 40 Series after RTX 50 performance is more fully tuned. The current support table still marks DLSS 5 as unavailable on RTX 40, so this entry remains unconfirmed.',
-    localSoftware: OURS_SUPPORTED,
-    sources: [
-      {
-        label: 'NVIDIA DLSS 5 FAQ (NVIDIA staff)',
-        url: 'https://www.nvidia.com/en-us/geforce/forums/nvidia-app/129/583738/dlss-5-faq-932026/',
-        checkedAt: '2026-10-11',
-      },
-    ],
-    lastVerified: '2026-10-11',
-    conflicts: [
-      'NVIDIA\'s current DLSS technology support table marks DLSS 3D-Guided Neural Rendering with a dash for RTX 40 Series; the FAQ describes future expansion as planned. This entry therefore remains planned, not confirmed.',
-    ],
-  },
-  {
-    slug: 'rtx-3060',
-    vendor: 'nvidia',
-    name: 'GeForce RTX 3060',
-    aliases: ['NVIDIA GeForce RTX 3060', 'RTX 3060', 'GA106'],
-    generation: 'Ampere',
-    vramGb: 12,
-    status: 'unsupported',
-    note: 'NVIDIA\'s current DLSS technology table marks DLSS 5 3D-Guided Neural Rendering as unavailable on GeForce RTX 30 Series.',
-    localSoftware: OURS_SUPPORTED,
-    sources: [
-      {
-        label: 'NVIDIA DLSS technology supported hardware table',
-        url: 'https://www.nvidia.com/en-us/geforce/technologies/dlss/',
-        checkedAt: '2026-10-10',
-      },
-    ],
-    lastVerified: '2026-10-10',
-  },
-  {
-    slug: 'gtx-1060',
-    vendor: 'nvidia',
-    name: 'GeForce GTX 1060',
-    aliases: ['NVIDIA GeForce GTX 1060', 'GTX 1060', 'GP106'],
-    generation: 'Pascal',
-    vramGb: 6,
-    status: 'unknown',
-    localSoftware: OURS_BELOW_MINIMUM,
-    sources: [],
-  },
+  ...['5090', '5080', '5070 Ti', '5070', '5060'].map(model => nvidiaCard(model, '50')),
+  ...['4090', '4080', '4070', '4060'].map(model => nvidiaCard(model, '40')),
+  ...['3090', '3080', '3070', '3060'].map(model => nvidiaCard(model, '30')),
+  ...['2080', '2060'].map(model => nvidiaCard(model, '20')),
+  ...GPU_ENTRIES_PLANNED_SLUGS.map((slug): GpuEntry => ({
+    slug, vendor: slug.startsWith('rx-') ? 'amd' : 'intel',
+    name: slug.startsWith('rx-') ? `Radeon ${slug.toUpperCase().replaceAll('-', ' ')}` : `Intel Arc ${slug.slice(4).toUpperCase()}`,
+    aliases: [slug.replaceAll('-', ' ')], generation: slug.startsWith('rx-') ? 'AMD Radeon' : 'Intel Arc', status: 'unknown',
+    note: 'No model-level NVIDIA DLSS conclusion in the reviewed sources. A remote cloud session is a separate path.',
+    sources: [GPU_SOURCES.hardware], lastVerified: GPU_CHECKED,
+    localSoftware: {...OURS_BELOW_MINIMUM, reason: 'Inference: this is not an NVIDIA RTX GPU, so it does not meet our published local-build GPU requirement. The independent browser workflow is a separate option.'}, workflowTier: 'cloud-only',
+    features: { neural: unknownFeature(), superResolution: unknownFeature(), frameGeneration: unknownFeature(), multiFrameGeneration: unknownFeature() },
+  })),
+  {slug: 'gtx-1060', vendor: 'nvidia', name: 'GeForce GTX 1060', aliases: ['GTX 1060'], generation: 'GeForce GTX 10 Series', status: 'unknown', sources: [GPU_SOURCES.hardware], lastVerified: GPU_CHECKED,
+    localSoftware: {...OURS_BELOW_MINIMUM, reason: 'Inference from the published RTX minimum; this GTX card is outside that requirement, not a measured speed result.'}, workflowTier: 'cloud-only',
+    features: {neural: unknownFeature(), superResolution: unknownFeature(), frameGeneration: unknownFeature(), multiFrameGeneration: unknownFeature()}},
 ];
-
-/** 竞品有卡表而我们没有的雷区：AMD / Intel 是他们的空白，先占位，数据同样要有来源。 */
-export const GPU_ENTRIES_PLANNED_SLUGS = [
-  'rx-9070-xt', 'rx-7900-xtx', 'rx-7800-xt', 'arc-b580', 'arc-a770',
-] as const;
 
 /** 游戏页：只在官方明确给出支持时生成，别为凑页面数填。 */
 export const GAME_ENTRIES: GameEntry[] = [
@@ -310,4 +248,42 @@ export const CHECKER_COPY = {
 
 export function gpuEntryBySlug(slug: string): GpuEntry | undefined {
   return GPU_ENTRIES.find((entry) => entry.slug === slug);
+}
+
+export type CheckerPage = { slug: string; path: string; keyword: string; heading: string; intro: string; cards: GpuEntry[]; faqs: {question: string; answer: string}[] };
+const familySpecs = [
+  ['rtx-50', 'dlss 5 rtx 50 series', 'DLSS 5 on RTX 50 Series', 'RTX 50 is in NVIDIA’s published neural-rendering range. Check the game separately; Studio eligibility below is an independent product question.'],
+  ['rtx-40', 'dlss 5 rtx 40 series', 'DLSS 5 on RTX 40 Series', 'RTX 40 neural rendering is a future plan, not current support. Super Resolution and Frame Generation have their own published hardware scope.'],
+  ['rtx-30', 'will DLSS 5 work on older GPUs RTX 30', 'Will DLSS 5 work on older GPUs? RTX 30', 'RTX 30 is outside the current neural-rendering hardware table, while Super Resolution is listed. Our Studio minimum is a separate requirement.'],
+  ['rtx-20', 'will DLSS 5 work on older GPUs RTX 20', 'Will DLSS 5 work on older GPUs? RTX 20', 'RTX 20 is outside the current neural-rendering hardware table. Super Resolution support does not imply neural rendering, Frame Generation or MFG support.'],
+  ['amd', 'dlss 5 on AMD', 'DLSS 5 on AMD: local, cloud and demos', 'The reviewed NVIDIA sources do not confirm native DLSS 5 on these AMD models. Cloud streaming and third-party demonstrations do not establish local GPU support.'],
+] as const;
+export const AMD_PATHS = [
+  {name: 'Native game runtime', detail: 'Unconfirmed for the listed AMD models in our reviewed NVIDIA sources.', source: GPU_SOURCES.hardware},
+  {name: 'Cloud streaming', detail: 'Separate service path: server-side rendering does not prove native AMD support. Check provider, plan, client and game requirements.', source: GPU_SOURCES.cloud},
+  {name: 'Third-party demonstrations', detail: 'A demonstration is not official model-level support evidence; no third-party binary is supplied or validated here.', source: GPU_SOURCES.hardware},
+];
+const commonFaqs = [
+  ...CHECKER_COPY.faqs,
+  {question: 'Does a hardware check prove support in every game?', answer: 'No. The hardware table describes feature eligibility. A game must integrate the relevant feature; the checked DLSS 5 launch source names NBA 2K27.'},
+  {question: 'What does the Studio tier mean?', answer: 'The local axis concerns our independent game-character style conversion / neural-render redraw workflow. Except for the labelled historical RTX 4090 record, tiers are inferences from our published minimum, not speed measurements or NVIDIA feature claims.'},
+];
+function checkerPage(slug: string, keyword: string, heading: string, intro: string, cards: GpuEntry[]): CheckerPage {
+  return {slug, path: `/dlss-checker${slug ? `/${slug}` : ''}`, keyword, heading, intro, cards, faqs: [
+    ...(slug === 'rtx-40' || slug === 'rtx-4090' ? [{question: 'Will the RTX 40 series get DLSS 5?', answer: 'NVIDIA staff say they plan to work on RTX 40 support after RTX 50 performance tuning. That is a plan without a promised date; the current supported-hardware table still marks neural rendering unavailable for RTX 40.'}] : []),
+    ...(slug === 'rtx-50' ? [{question: 'Does this table cover laptops and RTX Spark?', answer: 'NVIDIA’s launch source includes RTX 50 Series GPUs and laptops. Our rows and Studio measurements are desktop-specific. The October article separately announced an RTX Spark laptop rollout; it does not make Spark a desktop model or prove laptop performance from a desktop test. Check the dated NVIDIA sources below for the exact scope.'}] : []),
+    ...commonFaqs,
+  ]};
+}
+export const CHECKER_PAGES: CheckerPage[] = [
+  checkerPage('', 'dlss 5 supported cards', 'DLSS 5 supported cards', 'RTX 50 neural rendering is confirmed for the checked launch scope; RTX 40 has a future plan. Read each feature separately, then check whether our independent Studio workflow fits your card.', GPU_ENTRIES),
+  ...familySpecs.map(([slug, keyword, heading, intro]) => checkerPage(slug, keyword, heading, intro, GPU_ENTRIES.filter(card => slug === 'amd' ? card.vendor === 'amd' : card.slug.startsWith(slug)))),
+  // A model page requires a distinct deliverable, not a copy of its family row.
+  ...GPU_ENTRIES.filter(card => card.status !== 'unknown' && card.localSoftware?.fit === 'measured' && card.localSoftware.evidence).map(card => checkerPage(card.slug, `will DLSS 5 run on a ${card.slug.slice(4)}`, `Will DLSS 5 run on a ${card.slug.slice(4)}?`, 'RTX 4090 game-side neural rendering remains planned, not currently supported. Our separate local Studio workflow has a historical run record on this card; it is not a game FPS benchmark.', [card])),
+];
+export function checkerSchema(page: CheckerPage) {
+  return {'@context': 'https://schema.org', '@graph': [
+    {'@type': 'WebPage', '@id': `${SITE_URL}${page.path}#webpage`, url: `${SITE_URL}${page.path}`, name: page.heading, description: page.intro, dateModified: GPU_CHECKED, inLanguage: 'en-US'},
+    {'@type': 'FAQPage', '@id': `${SITE_URL}${page.path}#faq`, mainEntity: page.faqs.map(faq => ({'@type': 'Question', name: faq.question, acceptedAnswer: {'@type': 'Answer', text: faq.answer}}))},
+  ]};
 }

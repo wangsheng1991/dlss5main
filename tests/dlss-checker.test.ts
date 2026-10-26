@@ -10,7 +10,7 @@
  */
 
 import { test } from './harness';
-import { GPU_ENTRIES, GAME_ENTRIES, CHECKER_COPY, LOCAL_SOFTWARE, gpuEntryBySlug } from '../src/content/dlssChecker';
+import { GPU_ENTRIES, GAME_ENTRIES, CHECKER_COPY, LOCAL_SOFTWARE, CHECKER_PAGES, GPU_ENTRIES_PLANNED_SLUGS, gpuEntryBySlug } from '../src/content/dlssChecker';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { canConclude, localSoftwareVerdict, matchGpu, normalizeGpuName, reconcile, verdictFor } from '../src/features/dlssChecker/verdict';
 import { cleanWebglRenderer } from '../src/features/dlssChecker/detect';
@@ -90,8 +90,8 @@ test('checker: the local-build axis is independent and evidence-backed', () => {
   if (localSoftwareVerdict(rtx4070).state.fit !== 'supported') throw new Error('an RTX 20-series-or-newer card should support the local build');
   if (localSoftwareVerdict(gtx1060).state.fit !== 'below-minimum') throw new Error('a GTX 10-series card should be below the local build minimum');
 
-  // 轴一仍是 unknown，轴二已支持 —— 两根轴必须能给出不同答案。
-  if (verdictFor(rtx4070).status !== 'unknown') throw new Error('the in-game axis should still be unknown here');
+  // 轴一是官方未来计划，轴二是按最低要求推断 —— 两根轴必须能给出不同答案。
+  if (verdictFor(rtx4070).status !== 'planned') throw new Error('the in-game axis must remain a future plan, not current support');
   if (localSoftwareVerdict(rtx4070).label === verdictFor(rtx4070).label) throw new Error('the two axes collapsed into one');
 
   const missingReason = GPU_ENTRIES.filter((entry) => entry.localSoftware && !entry.localSoftware.reason.trim()).map((entry) => entry.slug);
@@ -134,4 +134,33 @@ test('checker: slugs are unique and the page copy points at the checker route', 
   if (gpuEntryBySlug('rtx-4070')?.name !== 'GeForce RTX 4070') throw new Error('gpuEntryBySlug is not reading the table');
   if (!SUPPORT_RULES.every((rule) => rule.rationale.trim())) throw new Error('a support rule has no rationale');
   if (!EVIDENCE_TIERS.some((tier) => tier.id === 'official')) throw new Error('the evidence tiers lost their official tier');
+});
+
+
+test('checker: near-name variants never inherit a desktop verdict', () => {
+  for (const raw of ['RTX 4060 Ti', 'RTX 4070 SUPER', 'RTX 4090 Laptop GPU', 'Radeon RX 7900 XT', 'Intel Arc A750', 'RTX']) {
+    if (matchGpu(raw, GPU_ENTRIES)) throw new Error(`unsafe partial match: ${raw}`);
+  }
+  for (const [raw, slug] of [['ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti, D3D11)', 'rtx-5070-ti'], ['AMD Radeon RX 7900 XTX', 'rx-7900-xtx'], ['Intel Arc B580 Graphics', 'arc-b580']]) {
+    if (matchGpu(raw, GPU_ENTRIES)?.slug !== slug) throw new Error(`missing exact model: ${raw}`);
+  }
+});
+
+test('checker: every feature cell needs dated evidence and plans never become current support', () => {
+  for (const card of GPU_ENTRIES) {
+    if (!card.features || Object.keys(card.features).length !== 4) throw new Error(`missing feature matrix: ${card.slug}`);
+    for (const evidence of Object.values(card.features)) {
+      if (evidence.status !== 'unknown' && !canConclude(evidence)) throw new Error(`unsourced cell: ${card.slug}`);
+    }
+    if (card.slug.startsWith('rtx-40') && card.features.neural.status !== 'planned') throw new Error('RTX 40 lost its future-only boundary');
+  }
+  for (const slug of GPU_ENTRIES_PLANNED_SLUGS) if (!gpuEntryBySlug(slug)) throw new Error(`missing placeholder coverage: ${slug}`);
+  if (GPU_ENTRIES.filter(card => card.localSoftware?.fit === 'measured').map(card => card.slug).join() !== 'rtx-4090') throw new Error('invented new measured hardware');
+});
+
+test('checker: published model pages require their own evidence deliverable', () => {
+  for (const page of CHECKER_PAGES) {
+    if (!page.cards.length) throw new Error(`empty indexable page: ${page.path}`);
+    if (page.cards.length === 1 && (!canConclude(page.cards[0]) || !page.cards[0].localSoftware?.evidence)) throw new Error(`thin or unknown model page: ${page.path}`);
+  }
 });

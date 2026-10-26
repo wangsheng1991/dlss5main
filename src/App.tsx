@@ -1,3 +1,4 @@
+import { CHECKER_PAGES } from './content/dlssChecker';
 import React, { Suspense, lazy, useEffect, useLayoutEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -51,14 +52,7 @@ const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
 const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
-/**
- * DLSS 5 checker — the scaffold for the compatibility tool (see
- * `docs/DLSS5-CHECKER-REQUIREMENTS-20261010.md`). It exists only in local development: `DEV` is
- * folded to `false` in a production build, so the import, the chunk and the route all disappear
- * from what is deployed. To ship it, register the route in `scripts/prerender-seo.ts` too (and in
- * the sitemap that step generates).
- */
-const DlssChecker = import.meta.env.DEV ? lazy(() => import('./pages/DlssChecker')) : null;
+const DlssChecker = lazy(() => import('./pages/DlssChecker'));
 
 /**
  * Renders a page, or sends the visitor home when this deployment does not publish that section. A
@@ -165,7 +159,7 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />
                   {/* Scaffold only: a production build has no checker route and no checker chunk. */}
-                  {DlssChecker && <Route path="/dlss-checker" element={<DlssChecker />} />}
+                  {CHECKER_PAGES.map(page => <React.Fragment key={page.path}><Route path={page.path} element={<DlssChecker slug={page.slug} />} /></React.Fragment>)}
                 </Routes>
                 <RelatedAdditions />
                 {initialPage && <InitialRouteReady release={releaseInitialPage} />}

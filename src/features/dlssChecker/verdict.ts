@@ -28,13 +28,13 @@ export type Verdict = {
 const LABELS: Record<GpuStatus, { label: string; tone: Verdict['tone'] }> = {
   confirmed: { label: 'Runs DLSS 5', tone: 'positive' },
   planned: { label: 'Support announced, not shipped', tone: 'neutral' },
-  unsupported: { label: 'Not supported', tone: 'negative' },
+  unsupported: { label: 'Not in current published range', tone: 'negative' },
   unknown: { label: 'No verified conclusion yet', tone: 'muted' },
 };
 
 const LOCAL_LABELS: Record<LocalSoftwareState['fit'], { label: string; tone: Verdict['tone'] }> = {
   measured: { label: 'Runs our local build — measured here', tone: 'positive' },
-  supported: { label: 'Runs our local build', tone: 'positive' },
+  supported: { label: 'Meets published GPU minimum — inference', tone: 'positive' },
   'below-minimum': { label: 'Below our local build’s minimum', tone: 'neutral' },
   unknown: { label: 'Local build: not determined yet', tone: 'muted' },
 };
@@ -62,7 +62,20 @@ function compact(value: string): string {
  */
 export function matchGpu(raw: string, entries: GpuEntry[]): GpuEntry | undefined {
   if (!raw.trim()) return undefined;
+  // Do not turn untracked SUPER/Ti/mobile variants into a known base desktop model.
+  if (/\b(laptop|mobile|notebook)\b/i.test(raw)) return undefined;
+  const model = normalizeGpuName(raw).match(/\b(rtx|gtx)\s*(\d{4})(?:\s*(ti|super))?(?:\s*(super))?\b/);
+  if (model) {
+    const slug = [model[1], model[2], model[3], model[4]].filter(Boolean).join('-');
+    return entries.find(entry => entry.slug === slug);
+  }
+  const otherModel = normalizeGpuName(raw).match(/\b(rx)\s*(\d{4})(?:\s*(xtx|xt|gre))?\b|\b(arc)\s*([ab]\d{3})\b/);
+  if (otherModel) {
+    const slug = otherModel[1] ? [otherModel[1], otherModel[2], otherModel[3]].filter(Boolean).join('-') : `${otherModel[4]}-${otherModel[5]}`;
+    return entries.find(entry => entry.slug === slug);
+  }
   const target = compact(raw);
+  if (!target) return undefined;
 
   for (const entry of entries) {
     if (compact(entry.slug) === target) return entry;
@@ -73,11 +86,7 @@ export function matchGpu(raw: string, entries: GpuEntry[]): GpuEntry | undefined
   }
   for (const entry of entries) {
     const candidates = [entry.name, ...entry.aliases].map(compact);
-    if (candidates.some((candidate) => candidate && (target.includes(candidate) || candidate.includes(target)))) return entry;
-  }
-  for (const entry of entries) {
-    const words = normalizeGpuName(entry.name).split(' ').filter((word) => word.length > 2);
-    if (words.length && words.every((word) => target.includes(word))) return entry;
+    if (candidates.some((candidate) => candidate && target === candidate)) return entry;
   }
   return undefined;
 }

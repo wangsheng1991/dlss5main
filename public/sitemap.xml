@@ -541,4 +541,11 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker/rtx-50</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker/rtx-40</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker/rtx-30</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker/rtx-20</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker/amd</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://www.dlss5nvidia.com/dlss-checker/rtx-4090</loc><lastmod>2026-10-26</lastmod></url>
 </urlset>
