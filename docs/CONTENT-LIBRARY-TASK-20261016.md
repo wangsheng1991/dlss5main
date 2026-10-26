@@ -109,3 +109,11 @@ video/landscape-24s.mp4 video/vertical-24s.mp4
 ### 7.4 验收
 
 王胜侧跑 `node ~/code/shou/artifacts/content-library/check-articles.mjs`（必须 **4 articles, 0 failing**），并人工看每张 contact sheet 判「视频与主题相关」。**当前 4 篇全 FAIL，其中 3 篇是视频问题。**
+
+**`check-articles.mjs` 是王胜侧的验收闸门，只读，不许修改。**需要调试就在 `/tmp` 复制一份改副本，原文件一个字节都不要写。（2026-10-17 00:07 已发现过一次读取后尝试替换的行为。）
+
+### 7.5 录音本身要能过这三关（2026-10-17 00:10 追加）
+
+1. **别录到加载中**：失败过一次——video 里前 8 秒是纯黑，第 9 秒只有「Loading...」和页脚。录之前等页面主体出现（等 h1 或 Run 按钮可见），录完自己抽 3 帧看一眼。
+2. **语言要和稿件一致**：`article.en.md` 配英文页 `/visual-enhancer`，中文稿配 `/zh/visual-enhancer`。已经出现过英文稿配中文界面的录屏。
+3. **全站只有一处能录真流程**：`/visual-enhancer`（和它的 `/zh` 版）。`/video-upscaler`、`/image-upscaler`、`/game-character-style` 实测 `runButtonVisible=false`。所以主题与该页不一致的篇，一律不配视频（见 7.3）。

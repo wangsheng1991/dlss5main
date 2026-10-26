@@ -413,6 +413,15 @@ export function expansionPage(kind: ExpansionKind, locale: ExpansionLocale): Exp
     locale,
     path,
     ...c,
+    faq: [...c.faq, ...(kind === 'what-is' ? (locale === 'zh' ? [
+      ['DLSS 5 真的是 DLSS 吗？', '是，NVIDIA 将 DLSS 5 列为 DLSS 技术的新阶段，但它不只是原有超分功能换名。官方发布页说明，它在游戏渲染流程中增加光照与材质的神经渲染，可与超分等功能配合；本站的游戏人物风格转换与神经渲染重绘是独立图像工作流，不是该官方运行时。来源：下方 NVIDIA DLSS 5 launch article，“DLSS 5 introduces 3D-Guided Neural Rendering”小节；核对日期：2026-10-26。'],
+    ] : [
+      ['Is DLSS 5 actually DLSS?', 'Yes. NVIDIA presents DLSS 5 as a new stage of its DLSS technology, rather than merely renaming Super Resolution. Its launch article describes neural rendering for lighting and materials that can work alongside Super Resolution; our game-character style conversion and neural-render redraw are independent image workflows, not that official runtime. Source: NVIDIA DLSS 5 launch article below, “DLSS 5 introduces 3D-Guided Neural Rendering”; checked 2026-10-26.'],
+    ]) : kind === 'vs-fsr-4' ? (locale === 'zh' ? [
+      ['DLSS 5 的画面真的很难看吗？', '不能把“很难看”当作所有游戏画面的统一结论，这属于观感判断。NVIDIA 官方发布页说明，开发者可以选择模型并调整结构、色调和局部应用范围，玩家可以开关该功能；这些说明不能证明你一定喜欢结果。请比较具体场景开关前后的角色与画面；本站的风格转换样例不是官方运行时的画质证据。来源：下方 NVIDIA DLSS 5 launch article，“DLSS 5’s Artistic Controls For Game Developers”小节；核对日期：2026-10-26。'],
+    ] : [
+      ['Is it true that DLSS 5 looks horrible?', 'There is no universal verdict: “looks horrible” is a visual judgment about a particular result. NVIDIA documents developer choices of model, structure, tone and where the effect is applied, plus an on/off toggle for players; those controls do not prove you will like the result. Compare the character and scene with the feature on and off; our independent style-conversion samples are not evidence of official runtime image quality. Source: NVIDIA DLSS 5 launch article below, “DLSS 5’s Artistic Controls For Game Developers”; checked 2026-10-26.'],
+    ]) : [])],
     links: expansionLinks(kind, locale),
     sourceLinks: sourceLinks(kind),
   } as ExpansionPage;
