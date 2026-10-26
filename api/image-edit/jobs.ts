@@ -31,6 +31,27 @@ function toolOptionsFromBody(mode: ToolId, body: Body): Record<string, string> {
  * The media downloader (`fetch`) is the exception in the other direction: it sends no references at
  * all, only the links to fetch and the quality to fetch them at.
  */
+/**
+ * What to do when the provider refuses a task we already reserved a credit for.
+ *
+ * A 4xx (other than a timeout) is the provider saying it did not create the task — the credit and the
+ * account's single concurrent slot must come back immediately, or a user is left with no job, no
+ * credit and "Another job is still active" until something else settles it. A timeout or a 5xx stays
+ * `SUBMISSION_UNCERTAIN` on purpose: that task may exist, is still keyed on the same idempotency
+ * value, and must be reconciled rather than refunded and forgotten.
+ */
+async function releaseAfterSubmitError(
+  store: JobStore,
+  uid: string,
+  claim: { id: string; job: { leaseOwner: string } },
+  error: unknown,
+) {
+  const status = (error as { status?: number } | null)?.status;
+  const refused = typeof status === 'number' && status >= 400 && status < 500 && status !== 408;
+  if (!refused) return store.accepted(claim.id, claim.job.leaseOwner);
+  await store.settle(uid, claim.id, 'FAILED', `provider_${status}`).catch(() => null);
+}
+
 async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey: string, store: JobStore) {
   const references = TOOL_REFERENCES[mode];
   let imageIds: string[] = [];
@@ -89,7 +110,7 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
     await store.accepted(claim.id, claim.job.leaseOwner, accepted.task_id);
     return { jobId: claim.id, status: 'QUEUED', tool: mode, model: task.model };
   } catch (error) {
-    await store.accepted(claim.id, claim.job.leaseOwner);
+    await releaseAfterSubmitError(store, uid, claim, error);
     throw error;
   }
 }
@@ -164,7 +185,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await store.accepted(claim.id, claim.job.leaseOwner, accepted.task_id);
       return res.status(202).json({ jobId: claim.id, status: 'QUEUED', width: targetWidth, height: targetHeight });
     } catch (error) {
-      await store.accepted(claim.id, claim.job.leaseOwner);
+      await releaseAfterSubmitError(store, uid, claim, error);
       throw error;
     }
   } catch (error) { return fail(res, error); }
