@@ -1,4 +1,6 @@
-import { GPU_UNLOCK, gpuUnlockSchema } from '../src/content/gpuUnlock';
+import { dlss45Copy, DLSS45_ALTERNATES, dlss45Schema } from '../src/content/dlss45';
+import Dlss45Content from '../src/components/Dlss45Content';
+import { gpuUnlockCopy, GPU_UNLOCK_ALTERNATES, gpuUnlockSchema } from '../src/content/gpuUnlock';
 import GpuUnlockContent from '../src/components/GpuUnlockContent';
 import { GAME_COVERAGE_PAGES, gameCoverageSchema } from '../src/content/gameCoverage';
 import { GAME_DETAIL_EVIDENCE } from '../src/content/gamesStatusEvidence';
@@ -1210,11 +1212,21 @@ if (profileHas('comparisons')) {
 }
 if (profileHas('seoExpansion')) for (const page of EXPANSION_PAGES) writeRoute(page.path, renderExpansionPage(page));
 const checkerSitemap = readFileSync(resolve('public/sitemap.xml'), 'utf8');
-if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${GPU_UNLOCK.path}</loc>`).length !== 2) throw new Error('GPU unlock sitemap entry missing or duplicated');
-writeRoute(GPU_UNLOCK.path, withRoot(withHead(TEMPLATE, {
-  title: GPU_UNLOCK.title, description: GPU_UNLOCK.description, canonicalPath: GPU_UNLOCK.path,
-  language: 'zh-CN', keywords: ['gpu unlock rtx 30', 'unlock bf16 rtx 3090'], structuredData: gpuUnlockSchema(),
-}), renderToStaticMarkup(createElement(GpuUnlockContent))));
+for (const locale of ['en', 'zh'] as const) {
+  const dlss = dlss45Copy(locale).page;
+  const unlock = gpuUnlockCopy(locale).page;
+  for (const page of [dlss, unlock]) {
+    if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${page.path}</loc>`).length !== 2) throw new Error(`Locale sitemap entry missing or duplicated: ${page.path}`);
+  }
+  writeRoute(dlss.path, withRoot(withHead(TEMPLATE, {
+    title: dlss.title, description: dlss.intro, canonicalPath: dlss.path,
+    language: locale === 'zh' ? 'zh-CN' : 'en-US', keywords: ['dlss 4.5'], alternates: DLSS45_ALTERNATES, structuredData: dlss45Schema(locale),
+  }), renderToStaticMarkup(createElement(Dlss45Content, {locale}))));
+  writeRoute(unlock.path, withRoot(withHead(TEMPLATE, {
+    title: unlock.title, description: unlock.description, canonicalPath: unlock.path,
+    language: locale === 'zh' ? 'zh-CN' : 'en-US', keywords: ['gpu unlock rtx 30', 'unlock bf16 rtx 3090'], alternates: GPU_UNLOCK_ALTERNATES, structuredData: gpuUnlockSchema(locale),
+  }), renderToStaticMarkup(createElement(GpuUnlockContent, {locale}))));
+}
 
 for (const page of GAME_COVERAGE_PAGES) {
   if (checkerSitemap.split(`<loc>${DEFAULT_SITE_URL}${page.path}</loc>`).length !== 2) throw new Error(`Game coverage sitemap entry missing or duplicated: ${page.path}`);

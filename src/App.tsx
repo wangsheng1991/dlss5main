@@ -53,6 +53,7 @@ const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
 const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
+const Dlss45 = lazy(() => import('./pages/Dlss45'));
 const GpuUnlock = lazy(() => import('./pages/GpuUnlock'));
 const GameCoverage = lazy(() => import('./pages/GameCoverage'));
 const DlssChecker = lazy(() => import('./pages/DlssChecker'));
@@ -162,7 +163,10 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/refund" element={<Refund />} />
                   {/* Scaffold only: a production build has no checker route and no checker chunk. */}
+                  <Route path="/dlss-4-5" element={<Dlss45 />} />
+                  <Route path="/zh/dlss-4-5" element={<Dlss45 locale="zh" />} />
                   <Route path="/guides/gpu-unlock-rtx-30-4090" element={<GpuUnlock />} />
+                  <Route path="/zh/guides/gpu-unlock-rtx-30-4090" element={<GpuUnlock locale="zh" />} />
                   {GAME_COVERAGE_PAGES.map(page => <React.Fragment key={page.path}><Route path={page.path} element={<GameCoverage slug={page.slug} />} /></React.Fragment>)}
                   {CHECKER_PAGES.map(page => <React.Fragment key={page.path}><Route path={page.path} element={<DlssChecker slug={page.slug} />} /></React.Fragment>)}
                 </Routes>
