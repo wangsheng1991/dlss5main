@@ -95,6 +95,16 @@ Tailwind 产物，规则会在生成代码上全线误报。
 3. **默认调色板（13 处）**：把 `zinc-*` 换进 `@theme` 的自有 token，属于设计系统级整理。
 4. **纯黑/纯白（3 处）**：会改变整站底色观感，不建议为过闸门而动。
 
+## 没扫到的角落：`scripts/prerender-seo.ts`
+
+sloplint 跑的是 `src`，但爬虫真正拿到的那份 HTML 由 `scripts/prerender-seo.ts` 生成，它自己写了一套版式，也有一个眉标：
+
+```
+<p class="text-primary uppercase tracking-widest text-xs">{eyebrow}</p>
+```
+
+`/download`、`/models`、`/about`、`/pricing`、`/enterprise`、`/login`、`/register` 等公开指南页都是这个模板。中文在这个 `tracking-widest` 下一样会被撑开，只是它出现在首屏渲染到 React 接管之间那几百毫秒，以及爬虫读到的那份文本里。改它等于同时改 8 个保护名单页的首屏版式，所以本轮不动，记在这里等下一批。
+
 ## 不适用
 
 - 规则 20（Hallmark 自己的 CSS 戳注释）：只在用 Hallmark 生成页面时才有意义。
