@@ -163,14 +163,14 @@ export default function Home({ locale }: { locale?: HomeLocale } = {}) {
           <button
             type="button"
             onClick={() => navigate('/dashboard?tool=game-character-style&sample=characterStyle')}
-            className="w-full sm:w-auto bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
+            className="w-full sm:w-auto bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-colors duration-300"
           >
             {t('home.tryExample')}
           </button>
           <button
             type="button"
             onClick={() => navigate('/dashboard?tool=game-character-style')}
-            className="w-full sm:w-auto rounded-lg border border-primary/50 px-8 py-3 font-semibold text-primary hover:bg-primary/10 transition-all duration-300"
+            className="w-full sm:w-auto rounded-lg border border-primary/50 px-8 py-3 font-semibold text-primary hover:bg-primary/10 transition-colors duration-300"
           >
             {t('home.uploadOwnImage')}
           </button>
@@ -211,7 +211,7 @@ export default function Home({ locale }: { locale?: HomeLocale } = {}) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left">
           <div className="lg:col-span-7 bg-surface-low rounded-xl border border-outline-variant/20 overflow-hidden relative group h-full">
             <div className="p-8 h-full flex flex-col">
-              <div className="flex-1 rounded-xl border border-primary/20 bg-primary/5 p-10 flex flex-col items-center justify-center text-center transition-all duration-500 group-hover:border-primary/50">
+              <div className="flex-1 rounded-xl border border-primary/20 bg-primary/5 p-10 flex flex-col items-center justify-center text-center transition-colors duration-500 group-hover:border-primary/50">
                 <div className="w-16 h-16 bg-surface-high rounded-full flex items-center justify-center mb-6">
                   <UploadCloud className="w-8 h-8 text-primary" />
                 </div>
@@ -393,7 +393,7 @@ export default function Home({ locale }: { locale?: HomeLocale } = {}) {
         <div className="mt-12 text-center">
           <button 
             onClick={() => navigate('/dashboard')}
-            className="bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-all duration-300"
+            className="bg-primary text-black px-8 py-3 rounded-lg font-bold hover:bg-primary-container transition-colors duration-300"
           >
             {isZh ? '用自己的图片试试' : 'Try your own image'}
           </button>

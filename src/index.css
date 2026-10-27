@@ -71,6 +71,13 @@ body {
   overflow-x: clip;
 }
 
+/* A two-line headline should not leave one word on the second line. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-on-surface);

@@ -10,15 +10,15 @@ import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
 
 const LANGUAGES = [
-  { code: 'en-US', label: 'English', flag: '🇺🇸' },
-  { code: 'zh-CN', label: '中文', flag: '🇨🇳' },
-  { code: 'es-ES', label: 'Español', flag: '🇪🇸' },
-  { code: 'ja', label: '日本語', flag: '🇯🇵' },
-  { code: 'ko', label: '한국어', flag: '🇰🇷' },
-  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
-  { code: 'uk', label: 'Українська', flag: '🇺🇦' },
-  { code: 'id', label: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { code: 'et', label: 'Eesti', flag: '🇪🇪' },
+  { code: 'en-US', label: 'English' },
+  { code: 'zh-CN', label: '中文' },
+  { code: 'es-ES', label: 'Español' },
+  { code: 'ja', label: '日本語' },
+  { code: 'ko', label: '한국어' },
+  { code: 'ru', label: 'Русский' },
+  { code: 'uk', label: 'Українська' },
+  { code: 'id', label: 'Bahasa Indonesia' },
+  { code: 'et', label: 'Eesti' },
 ];
 
 export default function Navbar() {
@@ -83,10 +83,10 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-[#0e0e0e]/90 backdrop-blur-xl border-b border-outline-variant/10">
       <div className="flex justify-between items-center px-4 md:px-8 h-16 max-w-[1440px] mx-auto">
         <div className="flex items-center gap-8">
-          <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline" to={homePath}>{SITE_PROFILE.brand}</Link>
+          <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline whitespace-nowrap" to={homePath}>{SITE_PROFILE.brand}</Link>
           {!isAuthPage && (
-            <div className="hidden md:flex gap-6 items-center">
-              {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/models">{t('navbar.models')}</Link>}
+            <div className="hidden md:flex gap-4 xl:gap-6 items-center">
+              {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/models">{t('navbar.models')}</Link>}
               {profileHas('tools') && (
                 // The tool pages are the site's own links: without an entry here they are reachable
                 // only from a search result. Each one is a single-purpose page, so the menu lists
@@ -96,7 +96,7 @@ export default function Navbar() {
                     type="button"
                     onClick={() => setIsToolsOpen(!isToolsOpen)}
                     aria-expanded={isToolsOpen}
-                    className="flex items-center gap-1 text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300"
+                    className="flex items-center gap-1 text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap"
                   >
                     {t('navbar.tools')}
                     <ChevronDown className={`w-3 h-3 transition-transform ${isToolsOpen ? 'rotate-180' : ''}`} />
@@ -112,15 +112,15 @@ export default function Navbar() {
                   )}
                 </div>
               )}
-              {profileHas('useCases') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={USE_CASES[0].path}>{t('navbar.useCases')}</Link>}
-              {profileHas('microTools') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={MICRO_TOOLS[0].path}>{t('navbar.smallTools')}</Link>}
-              {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/about">{t('navbar.about')}</Link>}
-              {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to={blogPath}>{t('navbar.blog')}</Link>}
-              {profileHas('podcast') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/podcast">{t('navbar.podcast')}</Link>}
-              {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/docs">{t('navbar.docs')}</Link>}
-              {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/download">{t('navbar.download')}</Link>}
-              {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/enterprise">{t('navbar.enterprise')}</Link>}
-              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300" to="/pricing">Pricing</Link>
+              {profileHas('useCases') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to={USE_CASES[0].path}>{t('navbar.useCases')}</Link>}
+              {profileHas('microTools') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to={MICRO_TOOLS[0].path}>{t('navbar.smallTools')}</Link>}
+              {profileHas('about') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/about">{t('navbar.about')}</Link>}
+              {profileHas('blog') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to={blogPath}>{t('navbar.blog')}</Link>}
+              {profileHas('podcast') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/podcast">{t('navbar.podcast')}</Link>}
+              {profileHas('docs') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/docs">{t('navbar.docs')}</Link>}
+              {profileHas('download') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/download">{t('navbar.download')}</Link>}
+              {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/enterprise">{t('navbar.enterprise')}</Link>}
+              <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/pricing">Pricing</Link>
             </div>
           )}
         </div>
@@ -129,11 +129,11 @@ export default function Navbar() {
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-surface rounded-lg">
               <Database className="w-4 h-4 text-nvidia-green" />
               {user ? (
-                <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
+                <span className="text-xs font-label text-on-surface-variant">
                   {t('navbar.credits', { count: profile?.credits || 0 })}
                 </span>
               ) : (
-                <Link to="/login" className="text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">
+                <Link to="/login" className="text-xs font-label text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">
                   {t('navbar.login')}
                 </Link>
               )}
@@ -143,10 +143,10 @@ export default function Navbar() {
           <div className="relative">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-surface rounded-lg text-zinc-400 hover:text-white transition-colors text-sm"
+              className="flex items-center gap-2 px-3 py-1.5 bg-surface rounded-lg text-zinc-400 hover:text-white transition-colors text-sm whitespace-nowrap"
             >
               <Globe className="w-4 h-4" />
-              <span className="hidden sm:inline">{currentLang.flag} {currentLang.label}</span>
+              <span className="hidden sm:inline">{currentLang.label}</span>
               <ChevronDown className={`w-3 h-3 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
             </button>
             {isLangOpen && (
@@ -157,7 +157,6 @@ export default function Navbar() {
                     onClick={() => handleLanguageChange(lang.code)}
                     className={`w-full px-4 py-2.5 text-left text-sm flex items-center gap-3 hover:bg-surface transition-colors ${lang.code === currentLang.code ? 'text-primary' : 'text-zinc-300'}`}
                   >
-                    <span>{lang.flag}</span>
                     <span>{lang.label}</span>
                     {lang.code === currentLang.code && <span className="ml-auto">✓</span>}
                   </button>
@@ -168,7 +167,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-2 rounded-lg text-sm">{t('navbar.dashboard')}</Link>
+                <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors duration-300 px-4 py-2 rounded-lg text-sm whitespace-nowrap">{t('navbar.dashboard')}</Link>
                 <div className="flex items-center gap-3 pl-4 border-l border-outline-variant/20">
                   {profile?.image ? (
                     <img src={profile.image} alt="Avatar" className="w-8 h-8 rounded-full border border-outline-variant/20" referrerPolicy="no-referrer" />
@@ -184,8 +183,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-2 rounded-lg text-sm">{t('navbar.login')}</Link>
-                <Link to="/register" className="bg-primary-container text-white font-bold px-5 py-2 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black">{t('navbar.register')}</Link>
+                <Link to="/login" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors duration-300 px-4 py-2 rounded-lg text-sm whitespace-nowrap">{t('navbar.login')}</Link>
+                <Link to="/register" className="bg-primary-container text-white font-bold px-5 py-2 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black whitespace-nowrap">{t('navbar.register')}</Link>
               </>
             )}
           </div>
@@ -214,7 +213,7 @@ export default function Navbar() {
               {profileHas('enterprise') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/enterprise">{t('navbar.enterprise')}</Link>}
               {profileHas('tools') && (
                 <div className="flex flex-col gap-3">
-                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.tools')}</span>
+                  <span className="text-xs font-label text-on-surface-variant">{t('navbar.tools')}</span>
                   <div className="flex flex-wrap gap-2">
                     {TOOL_LANDINGS.map(tool => (
                       <Link key={tool.path} to={tool.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{tool.heading}</Link>
@@ -224,7 +223,7 @@ export default function Navbar() {
               )}
               {profileHas('useCases') && (
                 <div className="flex flex-col gap-3">
-                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.useCases')}</span>
+                  <span className="text-xs font-label text-on-surface-variant">{t('navbar.useCases')}</span>
                   <div className="flex flex-wrap gap-2">
                     {USE_CASES.map(item => <Link key={item.path} to={item.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{item.heading}</Link>)}
                   </div>
@@ -232,7 +231,7 @@ export default function Navbar() {
               )}
               {profileHas('microTools') && (
                 <div className="flex flex-col gap-3">
-                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('navbar.smallTools')}</span>
+                  <span className="text-xs font-label text-on-surface-variant">{t('navbar.smallTools')}</span>
                   <div className="flex flex-wrap gap-2">
                     {MICRO_TOOLS.map(item => <Link key={item.path} to={item.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{item.heading}</Link>)}
                   </div>
@@ -246,11 +245,11 @@ export default function Navbar() {
               <div className="flex items-center gap-2 px-3 py-2 bg-surface rounded-lg w-fit">
                 <Database className="w-4 h-4 text-nvidia-green" />
                 {user ? (
-                  <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">
+                  <span className="text-xs font-label text-on-surface-variant">
                     {t('navbar.credits', { count: profile?.credits || 0 })}
                   </span>
                 ) : (
-                  <Link to="/login" className="text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">
+                  <Link to="/login" className="text-xs font-label text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">
                     {t('navbar.login')}
                   </Link>
                 )}
@@ -260,7 +259,7 @@ export default function Navbar() {
             {/* Language Switcher Mobile */}
             <div className="flex items-center gap-2 px-3 py-2 bg-surface rounded-lg">
               <Globe className="w-4 h-4 text-zinc-400" />
-              <span className="text-xs font-label uppercase tracking-widest text-on-surface-variant">{t('language.switch')}</span>
+              <span className="text-xs font-label text-on-surface-variant">{t('language.switch')}</span>
             </div>
             <div className="flex gap-2 pl-2">
               {LANGUAGES.map(lang => (
@@ -269,7 +268,6 @@ export default function Navbar() {
                   onClick={() => handleLanguageChange(lang.code)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${lang.code === currentLang.code ? 'bg-primary/20 text-primary border border-primary' : 'bg-surface text-zinc-400 border border-outline-variant/20 hover:border-primary/50'}`}
                 >
-                  <span>{lang.flag}</span>
                   <span>{lang.label}</span>
                 </button>
               ))}
@@ -296,7 +294,7 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex flex-col gap-3">
-                <Link to="/login" className="text-center text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-all duration-300 px-4 py-3 rounded-lg text-sm border border-outline-variant/20">{t('navbar.login')}</Link>
+                <Link to="/login" className="text-center text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors duration-300 px-4 py-3 rounded-lg text-sm border border-outline-variant/20">{t('navbar.login')}</Link>
                 <Link to="/register" className="text-center bg-primary-container text-white font-bold px-5 py-3 rounded-lg text-sm active:scale-95 transition-transform hover:bg-primary hover:text-black">{t('navbar.register')}</Link>
               </div>
             )}

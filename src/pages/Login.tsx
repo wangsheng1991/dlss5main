@@ -96,7 +96,7 @@ export default function Login() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-primary-container text-white font-bold py-3 rounded-lg mt-4 hover:bg-primary hover:text-black transition-all duration-300 disabled:opacity-50"
+            className="w-full bg-primary-container text-white font-bold py-3 rounded-lg mt-4 hover:bg-primary hover:text-black transition-colors duration-300 disabled:opacity-50"
           >
             {loading ? t('login.initializing') : t('login.initSession')}
           </button>

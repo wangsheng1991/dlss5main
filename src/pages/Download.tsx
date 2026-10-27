@@ -111,7 +111,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="mb-14">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-4">{t('hero.eyebrow')}</p>
+        <p className="text-nvidia-green text-xs font-label mb-4">{t('hero.eyebrow')}</p>
         <h1
           className="text-3xl md:text-5xl font-headline font-bold text-white leading-tight mb-5 [&_em]:not-italic [&_em]:text-nvidia-green"
           {...rich('hero.h1')}
@@ -122,7 +122,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
         <section className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={t('hero.answer.title')}>
           {(['what', 'output', 'limit'] as const).map((key) => (
             <div key={key} className="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4">
-              <p className="text-[11px] uppercase tracking-widest text-zinc-500">{t(`hero.answer.${key}.label`)}</p>
+              <p className="text-[11px] text-zinc-500">{t(`hero.answer.${key}.label`)}</p>
               <p className="mt-2 text-sm leading-relaxed text-zinc-200">{t(`hero.answer.${key}.body`)}</p>
             </div>
           ))}
@@ -175,13 +175,12 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── 你要找的是哪个 DLSS ──────────────────────────────────────── */}
       <section id="which" className="mb-16 scroll-mt-28">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-3">{t('which.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('which.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('which.sub')}</p>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="p-6 bg-surface-low rounded-2xl border border-outline-variant/20">
-            <span className="inline-block text-[11px] font-label uppercase tracking-widest text-zinc-500 mb-3">
+            <span className="inline-block text-[11px] font-label text-zinc-500 mb-3">
               {t('which.official.tag')}
             </span>
             <h3 className="text-white font-bold text-lg mb-3">{t('which.official.title')}</h3>
@@ -198,7 +197,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
           </div>
 
           <div className="p-6 rounded-2xl border border-nvidia-green/25 bg-nvidia-green/[0.06]">
-            <span className="inline-block text-[11px] font-label uppercase tracking-widest text-nvidia-green mb-3">
+            <span className="inline-block text-[11px] font-label text-nvidia-green mb-3">
               {t('which.mine.tag')}
             </span>
             <h3 className="text-white font-bold text-lg mb-3">{t('which.mine.title')}</h3>
@@ -212,7 +211,6 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── 功能 ─────────────────────────────────────────────────────── */}
       <section id="features" className="mb-16 scroll-mt-28">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-3">{t('feat.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('feat.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('feat.sub')}</p>
 
@@ -231,7 +229,6 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── Live 实测 ────────────────────────────────────────────────── */}
       <section id="live" className="mb-16 scroll-mt-28">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-3">{t('live.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('live.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl [&_strong]:text-zinc-200" {...rich('live.sub')} />
 
@@ -245,7 +242,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
                 <thead>
                   <tr className="bg-surface-high border-b border-outline-variant/20">
                     {['live.th.cap', 'live.th.frame', 'live.th.fps', 'live.th.buffer'].map((key) => (
-                      <th key={key} scope="col" className="px-4 py-3 text-xs font-label uppercase tracking-widest text-primary">
+                      <th key={key} scope="col" className="px-4 py-3 text-xs font-label text-primary">
                         {t(key)}
                       </th>
                     ))}
@@ -300,7 +297,6 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── 界面截图 ─────────────────────────────────────────────────── */}
       <section id="shots" className="mb-16 scroll-mt-28">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-3">{t('shots.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('shots.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('shots.sub')}</p>
 
@@ -343,7 +339,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
                 src={shot.src}
                 width={shot.width}
                 height={shot.height}
-                loading="lazy"
+                loading={id === 'night' ? 'eager' : 'lazy'}
                 decoding="async"
                 alt={t(`showcase.${id}.alt`)}
                 className="w-full"
@@ -370,7 +366,6 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── 系统要求 ─────────────────────────────────────────────────── */}
       <section id="requirements" className="mb-16 scroll-mt-28">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-3">{t('req.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-3">{t('req.title')}</h2>
         <p className="text-zinc-400 leading-relaxed max-w-3xl">{t('req.sub')}</p>
 
@@ -409,7 +404,6 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
 
       {/* ── FAQ ──────────────────────────────────────────────────────── */}
       <section id="faq" className="mb-16 scroll-mt-28">
-        <p className="text-nvidia-green text-xs font-label uppercase tracking-widest mb-3">{t('faq.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-6">{t('faq.title')}</h2>
         <div className="space-y-4">
           {faqIndexes.map((n) => (
