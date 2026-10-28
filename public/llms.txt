@@ -6,6 +6,14 @@
 
 DLSS 5 NVIDIA is an independent browser-based DLSS 5-style effect converter. Users can upload a game frame or character image, generate style, lighting and material directions, compare a before/after reference, and optionally upscale or restore the result without installing a GPU tool. It is not an official NVIDIA DLSS runtime.
 
+## Developer tools (our own repositories)
+
+- Command-line client, same account and same model, batch a folder: https://github.com/wangsheng1991/dlss5-enhancer-cli (MIT, Node 18+; installs and replaces no NVIDIA file)
+- Desktop window for that client (macOS x64, unsigned; Windows build not published): https://github.com/wangsheng1991/dlss5-enhancer-cli/releases
+- Run one documented example locally — input, output, both SHA-256 hashes and a compare page, no account and no credits: https://github.com/wangsheng1991/dlss5-visual-enhancer (MIT, Node 18+)
+- GPU compatibility data (21 GPUs x 4 features, every non-unknown status carries an official source): https://github.com/wangsheng1991/dlss5-compatibility-data
+- Studio documentation and compatibility reports: https://github.com/wangsheng1991/dlss-5-studio
+
 ## Key pages
 
 - Home: https://www.dlss5nvidia.com/
