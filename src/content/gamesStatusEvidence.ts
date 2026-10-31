@@ -1,4 +1,4 @@
-export const GAMES_CHECKED = '2026-10-26';
+export const GAMES_CHECKED = '2026-10-31';
 export const GAME_SOURCES = {
   october: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-faster-ai-model-hogwarts-legacy-rtx-spark-laptops/',
   march: 'https://www.nvidia.com/en-gb/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/',
@@ -48,6 +48,14 @@ export const RELEASE_TIMELINE = [
 export const GAME_DETAIL_EVIDENCE: Record<string, EvidenceRow> = {
   'hogwarts-legacy': GAME_EVIDENCE.find(row => row.game === 'Hogwarts Legacy')!,
   'where-winds-meet': GAME_EVIDENCE.find(row => row.game === 'Where Winds Meet')!,
+  'phantom-blade-zero': GAME_EVIDENCE.find(row => row.game === 'Phantom Blade Zero')!,
+  'the-witcher-3': {
+    game: 'The Witcher 3', state: 'unconfirmed', evidenceDate: GAMES_CHECKED, sources: ['march', 'october'],
+    detail: {
+      en: 'Neither reviewed NVIDIA article names The Witcher 3 for DLSS 5: the game is absent from the March 16 game list and from the October update. This is a bounded check of those two sources on the date shown, not a claim that no future announcement can exist. No release date, driver version, GPU scope or in-game setting is established for this title here.',
+      zh: '本次核对的两篇 NVIDIA 文章都没有点名 The Witcher 3：既不在 3 月 16 日的游戏名单里，也不在 10 月更新中出现。这是对这两份来源的限定核对，不代表未来不会有公告；此处不确认该游戏的发布时间、驱动版本、显卡范围或游戏内设置。',
+    },
+  },
   'cyberpunk-2077': {
     game: 'Cyberpunk 2077', state: 'unconfirmed', evidenceDate: GAMES_CHECKED, sources: ['march', 'october'],
     detail: {

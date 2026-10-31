@@ -27,6 +27,26 @@ export const GAME_COVERAGE_PAGES: GameCoveragePage[] = [
     ],
   },
   {
+    slug: 'phantom-blade-zero', path: '/games/phantom-blade-zero', keyword: 'dlss 5 phantom blade zero',
+    title: 'DLSS 5 Phantom Blade Zero: announced, not confirmed live',
+    official: 'NVIDIA\'s March 16, 2026 announcement lists Phantom Blade Zero among the titles planned to receive DLSS 5. That is an announcement of intent: the reviewed October update does not mention the title, so it gives no release date for this game and no driver version, GPU scope or in-game setting. Nothing on this page is a recipe for enabling DLSS 5 inside Phantom Blade Zero.',
+    outside: 'As of the check date, Phantom Blade Zero is announced rather than confirmed live. Mods that appear within days of a release are not vendor confirmation, and swapping a DLSS library is not proof that neural rendering is running. This page records the official status and an independent alternative; it does not vouch for any mod.',
+    faq: [
+      { question: 'Is DLSS 5 available in Phantom Blade Zero?', answer: 'Not confirmed live in the reviewed evidence. NVIDIA names the game in its March 16, 2026 planned list; the October update does not mention it, so no release date is established here.' },
+      { question: 'Do the community mods prove it works?', answer: 'No. A community modification, a replaced library or a captured frame is not vendor confirmation, and we have not validated any such method for this title.' },
+    ],
+  },
+  {
+    slug: 'the-witcher-3', path: '/games/the-witcher-3', keyword: 'dlss 5 the witcher 3',
+    title: 'DLSS 5 The Witcher 3: what the vendor announcements actually say',
+    official: 'Neither reviewed NVIDIA article names The Witcher 3: it is absent from the March 16, 2026 planned-game list and from the October update. Those sources therefore provide no official enablement path, driver requirement, GPU scope or release date for this title, and none is supplied here.',
+    outside: 'As of the check date, DLSS 5 support for The Witcher 3 is unconfirmed in the reviewed sources. Benchmarks and community builds circulating for older titles are not vendor confirmation: a renamed library, an injected mod or an impressive capture does not establish an official integration, and updating the game or driver can overwrite it.',
+    faq: [
+      { question: 'Does The Witcher 3 support DLSS 5?', answer: 'Unconfirmed in the reviewed NVIDIA sources: the game is named in neither the March 16 list nor the October update. This is a bounded check, not a claim that no future announcement can exist.' },
+      { question: 'Can I get a DLSS 5 look on Witcher 3 screenshots?', answer: 'You can run a screenshot you are entitled to process through our independent Studio style-conversion workflow. That produces a visual reference outside the game; it does not enable NVIDIA DLSS 5 inside The Witcher 3.' },
+    ],
+  },
+  {
     slug: 'cyberpunk-2077', path: '/games/cyberpunk-2077', keyword: 'dlss 5 cyberpunk 2077',
     title: 'DLSS 5 Cyberpunk 2077: unconfirmed support and an independent workflow',
     official: 'No official DLSS 5 enablement steps for Cyberpunk 2077 are established by the two reviewed NVIDIA articles. We therefore provide no runtime installation recipe, driver requirement or promised compatibility for this title.',
