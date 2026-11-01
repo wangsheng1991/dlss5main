@@ -18,6 +18,7 @@ import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
 import { GUEST_SAMPLE_IDS, SAMPLES, SAMPLE_IDS, sampleCacheKey, sampleOutputSize, sampleResultUrl } from '../src/config/samples';
 import { TOOL_LANDINGS } from '../src/content/toolLandings';
+import { VISUAL_ENHANCER_COPY } from '../src/content/visualEnhancer';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { GAME_STYLE_LANDING } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING } from '../src/content/videoLanding';
@@ -41,11 +42,15 @@ test('every provider model maps back to the mode it was uploaded for', () => {
   assert.equal(maxPixelsForMode(modeForModel('something-else')), STUDIO_MAX_PIXELS);
 });
 
-test('the current search intents stay explicit in the download and visual enhancer metadata', () => {
-  const enhancer = TOOL_LANDINGS.find((landing) => landing.path === '/image-quality-enhancer');
-  assert.ok(enhancer);
-  assert.match(enhancer.title.toLowerCase(), /dlss 5 visual enhancer/);
-  assert.ok(enhancer.keywords.includes('dlss 5 visual enhancer online'));
+test('the two enhancer pages claim different queries instead of sharing one title', () => {
+  const quality = TOOL_LANDINGS.find((landing) => landing.path === '/image-quality-enhancer');
+  const visual = VISUAL_ENHANCER_COPY.en;
+  assert.ok(quality);
+  // Two indexable pages with the same <title> compete for one query and Google shows only one of them.
+  assert.notEqual(quality.title, visual.title, 'the enhancer pages must not ship the same title');
+  assert.match(quality.title.toLowerCase(), /image quality enhancer/);
+  assert.ok(quality.keywords.includes('image quality enhancer'));
+  assert.doesNotMatch(quality.keywords.join(' '), /dlss 5/, 'the DLSS 5 visual enhancer wording belongs to /visual-enhancer');
   assert.match(STUDIO_COPY['en-US']['meta.title'].toLowerCase(), /dlss 5 download/);
   assert.match(STUDIO_COPY['en-US']['meta.desc'].toLowerCase(), /mobile|android/);
 });
