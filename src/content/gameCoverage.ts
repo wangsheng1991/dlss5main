@@ -213,8 +213,14 @@ export const GAME_COVERAGE_PAGES: GameCoveragePage[] = [
 export const GAME_STATE_LABELS = { launched: 'Launched', announced: 'Announced; release unconfirmed', unconfirmed: 'Unconfirmed' };
 export function gameCoverageSchema(page: GameCoveragePage) {
   const checked = page.checked ?? GAMES_CHECKED;
+  const isGuide = page.path.startsWith('/guides/');
   return [
     {'@context':'https://schema.org','@type':'WebPage',name:page.title,url:`${SITE_URL}${page.path}`,dateModified:checked,description:GAME_DETAIL_EVIDENCE[page.slug].detail.en,citation:GAME_DETAIL_EVIDENCE[page.slug].sources.map(k=>GAME_SOURCES[k])},
+    {'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[
+      {'@type':'ListItem',position:1,name:'Home',item:SITE_URL},
+      {'@type':'ListItem',position:2,name:isGuide ? 'DLSS 5 guides' : 'DLSS 5 game support tracker',item:`${SITE_URL}${isGuide ? '/guides' : '/games'}`},
+      {'@type':'ListItem',position:3,name:page.title,item:`${SITE_URL}${page.path}`},
+    ]},
     {'@context':'https://schema.org','@type':'FAQPage',mainEntity:page.faq.map(q=>({'@type':'Question',name:q.question,acceptedAnswer:{'@type':'Answer',text:q.answer}}))},
   ];
 }
