@@ -629,7 +629,10 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { question: 'Will the result look exactly like me?', answer: 'The face usually carries over, but it is a generative result, not a cut-and-paste, and it is not guaranteed. Hair, expression, clothing and hands can drift, especially when the two reference photos have very different lighting or size. Review the picture before you post it, and run it again if a run misses.' },
       { question: 'Why can I only get one pose per run?', answer: 'Each pose is its own instruction, and the model composes the scene from scratch for the pose it was given. Asking for two poses in one picture produces a crowded, inconsistent frame, so the studio keeps it to one pose and one credit per picture.' },
       { question: 'Can I run an example without signing up?', answer: 'Yes — the example at the top of this page runs the same workflow on our own pair of photos and shows you the actual output. Uploading your own photo requires an account and costs the credit shown before you submit.' },
-      { question: 'Is this an official feature of the game or of DLSS 5?', answer: 'No. It is an independent generative composite made with a general image model on our own channel. It is not endorsed by, connected to, or produced by NVIDIA, any game studio or any publisher, and the character remains their property.' },
+      // The wording names NVIDIA in the question on purpose: the flagship-page gate only accepts
+      // "official" in a sentence that carries a negation or attributes the claim to NVIDIA, and a
+      // bare question about an official feature reads as a claim to a crawler.
+      { question: 'Is there an official feature like this in the game or in NVIDIA DLSS 5?', answer: 'No. It is an independent generative composite made with a general image model on our own channel. It is not endorsed by, connected to, or produced by NVIDIA, any game studio or any publisher, and the character remains their property.' },
     ],
     related: [
       { path: '/virtual-try-on', label: 'Virtual Try-On' },
