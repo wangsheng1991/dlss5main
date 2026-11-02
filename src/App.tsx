@@ -108,7 +108,7 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/zh/blog" element={orHome('blog', <Blog />)} />
                   <Route path="/zh/blog/:slug" element={orHome('blog', <Blog />)} />
                   <Route path="/about" element={orHome('about', <About />)} />
-                  <Route path="/download" element={orHome('download', <Download />)} />
+                  <Route path="/download" element={orHome('download', <Download forceLocale="en-US" />)} />
                   <Route path="/zh/download" element={orHome('download', <Download forceLocale="zh-CN" />)} />
                   <Route path="/studio-beta" element={orHome('download', <StudioBeta forceLocale="en" />)} />
                   <Route path="/zh/studio-beta" element={orHome('download', <StudioBeta forceLocale="zh" />)} />

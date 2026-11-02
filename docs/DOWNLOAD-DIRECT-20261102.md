@@ -9,3 +9,5 @@ The macOS Intel v0.1.0 preview is an existing public GitHub asset. Windows x64 v
 Both locale routes share the hero component and copy with prerendering. The Chinese client canonical now matches its prerendered /zh/download route.
 
 Validation: typecheck passed; existing metadata test exposed the need to retain mobile-browser guidance, which is preserved. All 116 website tests, typecheck and build passed. Prerendered and hydrated hero links point directly to published installers. External acceptance scripts named in AGENTS.md are absent from this workspace; their execution is not claimed. Production verification follows deployment.
+
+Production follow-up: both locale routes return their self-canonical and direct installers in HTML. The free character-style sample completed from cache and exposed its result download. The separate beta form opened correctly. GSC confirmed sitemap submission on 2026-11-02; individual URL request failed because reCAPTCHA was unreachable. English /download now explicitly uses en-US so browser language cannot switch its copy/canonical to the Chinese route after hydration.
