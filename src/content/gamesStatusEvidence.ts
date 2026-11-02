@@ -3,6 +3,10 @@ export const GAME_SOURCES = {
   october: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-faster-ai-model-hogwarts-legacy-rtx-spark-laptops/',
   march: 'https://www.nvidia.com/en-gb/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/',
   launch: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
+  /** NVIDIA's own launch post for Phantom Blade Zero: DLSS 4.5, ray tracing and path tracing, not DLSS 5. */
+  october28: 'https://www.nvidia.com/en-us/geforce/news/phantom-blade-zero-path-tracing-dlss-4-5-ray-reconstruction/',
+  /** NVIDIA's Game Ready driver post published 2026-10-20 ahead of that launch. */
+  driver1020: 'https://www.nvidia.com/en-us/geforce/news/phantom-blade-zero-nvidia-geforce-game-ready-driver/',
 } as const;
 type LocalText = { en: string; zh: string };
 type EvidenceRow = { game: string; state: 'launched' | 'announced' | 'unconfirmed'; evidenceDate: string; detail: LocalText; sources: (keyof typeof GAME_SOURCES)[]; path?: string };
@@ -48,7 +52,13 @@ export const RELEASE_TIMELINE = [
 export const GAME_DETAIL_EVIDENCE: Record<string, EvidenceRow> = {
   'hogwarts-legacy': GAME_EVIDENCE.find(row => row.game === 'Hogwarts Legacy')!,
   'where-winds-meet': GAME_EVIDENCE.find(row => row.game === 'Where Winds Meet')!,
-  'phantom-blade-zero': GAME_EVIDENCE.find(row => row.game === 'Phantom Blade Zero')!,
+  'phantom-blade-zero': {
+    game: 'Phantom Blade Zero', state: 'announced', evidenceDate: '2026-11-02', sources: ['march', 'october28', 'driver1020'],
+    detail: {
+      en: 'The game shipped on 2026-10-28 at 7pm PT with a documented DLSS 4.5 suite — Super Resolution, Ray Reconstruction and Dynamic Multi Frame Generation — plus ray tracing and PC path tracing (NVIDIA launch post, 2026-10-28; driver post, 2026-10-20). That launch post never presents the title as a DLSS 5 game, and VideoCardz reported on 2026-10-31 that the game does not include DLSS 5 Neural Rendering. The March 16 planned list still names it, so the state recorded here is "announced" for DLSS 5 specifically, not for DLSS 4.5, which is live. No DLSS 5 release date, driver requirement or in-game setting exists for this title.',
+      zh: '本作已于 2026-10-28 19:00 PT 上线，官方文档写明它带 DLSS 4.5 全套（超分、光线重建、动态多帧生成）与光追、PC 路径追踪（NVIDIA 2026-10-28 发布文与 2026-10-20 驱动文）。该发布文从未把本作称作 DLSS 5 游戏；VideoCardz 在 2026-10-31 报道本作不含 DLSS 5 神经渲染。3 月 16 日的计划名单仍点名本作，因此这里记录的状态是「DLSS 5 已宣布、未上线」——已上线的是 DLSS 4.5。本作不存在 DLSS 5 的发布时间、驱动要求或游戏内设置。',
+    },
+  },
   'the-witcher-3': {
     game: 'The Witcher 3', state: 'unconfirmed', evidenceDate: GAMES_CHECKED, sources: ['march', 'october'],
     detail: {
