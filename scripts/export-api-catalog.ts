@@ -14,6 +14,7 @@
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { CHARACTER_STYLE_CATALOG_PATH, characterStyleCatalog } from '../src/config/characterStyle';
 import {
   API_CATALOG_JSON, CATALOG, apiCatalogDocument, apiModelDocument, apiModelJson,
 } from '../src/config/apiCatalog';
@@ -29,5 +30,6 @@ function writeJson(route: string, value: unknown): void {
 
 writeJson(API_CATALOG_JSON, apiCatalogDocument());
 for (const model of CATALOG) writeJson(apiModelJson(model.id), apiModelDocument(model));
+writeJson(CHARACTER_STYLE_CATALOG_PATH, characterStyleCatalog());
 
 console.log(`Exported ${API_CATALOG_JSON} and ${CATALOG.length} per-model files (${CATALOG.map(model => model.id).join(', ')}).`);

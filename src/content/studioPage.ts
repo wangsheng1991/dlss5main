@@ -16,9 +16,9 @@ export const STUDIO_COPY = {
   'en-US': {
     'hero.action.apk': "Why there is no APK →",
     'hero.action.title': "Choose your download or trial",
-    'hero.action.desktop.status': 'Windows & macOS · Published previews',
+    'hero.action.desktop.status': 'Published enhancement previews',
     'hero.action.desktop': 'Download .dmg — macOS Intel',
-    'hero.action.desktop.note': 'Windows x64 / macOS Intel · unsigned previews. Download without signing in. Running cloud jobs requires an account and credits.',
+    'hero.action.desktop.note': 'Cloud batch enhancement with an account and credits. Character styling is available online; Windows support is planned. No local RTX needed.',
     'hero.action.browser.status': 'Online · No installation',
     'hero.action.browser.title': 'Game-character style conversion',
     'hero.action.browser.note': 'Run a supplied example on phone or desktop without signing in. Your own uploads require an account.',
@@ -192,9 +192,9 @@ export const STUDIO_COPY = {
   'zh-CN': {
     'hero.action.apk': "为什么没有 APK →",
     'hero.action.title': "选择下载或试用方式",
-    'hero.action.desktop.status': 'Windows / macOS · 已发布预览版',
+    'hero.action.desktop.status': '图片增强 · 已发布预览版',
     'hero.action.desktop': '下载 .dmg — macOS Intel',
-    'hero.action.desktop.note': 'Windows x64 / macOS Intel 未签名预览版。下载安装包无需登录，运行云端任务需要账号和额度。',
+    'hero.action.desktop.note': '云端批量增强，运行任务需账号和额度。人物风格转换目前可在线体验，Windows 功能尚在规划。无需本地 RTX。',
     'hero.action.browser.status': '在线体验 · 无需安装',
     'hero.action.browser.title': '游戏人物风格转换',
     'hero.action.browser.note': '手机或电脑均可免登录运行预设示例；上传自己的图片需要账号。',

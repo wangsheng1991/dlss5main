@@ -20,5 +20,6 @@ import './podcast.test';
 import './seo-routes.test';
 import './dlss-checker.test';
 import './feature-picker.test';
+import './character-style-catalog.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

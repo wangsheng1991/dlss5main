@@ -26,6 +26,7 @@ import { SHARE_REWARD } from '../config/promos';
 import SEO from '../components/SEO';
 import { fileSizeBucket, pixelBucket, trackEvent } from '../lib/analytics';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
+import { CHARACTER_STYLE_PRESETS, type CharacterStylePreset } from '../config/characterStyle';
 
 /** Query values the SEO tool pages use to open the studio with a preset already selected. */
 const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
@@ -48,14 +49,6 @@ const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
  * user chooses a direction before uploading. Keeping these presets here makes the landing-page CTA
  * open the same focused workflow every time instead of dropping the reader into all nine tools.
  */
-const CHARACTER_STYLE_PRESETS = [
-  { id: 'cyberpunk', label: 'Cyberpunk neon', labelZh: '赛博朋克霓虹', prompt: GAME_STYLE_CASES[0].prompt },
-  { id: 'fantasy', label: 'Grounded fantasy', labelZh: '写实奇幻', prompt: GAME_STYLE_CASES[1].prompt },
-  { id: 'sci-fi', label: 'Hard-surface sci-fi', labelZh: '硬表面科幻', prompt: GAME_STYLE_CASES[2].prompt },
-  { id: 'anime', label: 'Anime cel shading', labelZh: '动漫赛璐璐', prompt: GAME_STYLE_CASES[9].prompt },
-  { id: 'realistic', label: 'Realistic cinematic', labelZh: '电影写实', prompt: GAME_STYLE_CASES[14].prompt },
-] as const;
-type CharacterStylePreset = (typeof CHARACTER_STYLE_PRESETS)[number]['id'];
 const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
 /** The default workflow must show character evidence, not examples from unrelated tools. */
 const CHARACTER_STYLE_CASE_PREVIEW = GAME_STYLE_CASES.slice(0, 5);
