@@ -348,6 +348,19 @@ export default function Blog() {
         return;
       }
 
+      // Figure: ![alt](/path) — the same rule the pre-rendered article applies
+      const figure = trimmed.match(/^!\[([^\]]*)\]\((\/?[^)]+)\)$/);
+      if (figure) {
+        flushList();
+        elements.push(
+          <figure key={i} className="my-8">
+            <img src={figure[2]} alt={figure[1]} loading="lazy" decoding="async" className="w-full rounded-xl border border-outline-variant/20" />
+            {figure[1] ? <figcaption className="mt-2 text-sm text-zinc-400">{figure[1]}</figcaption> : null}
+          </figure>
+        );
+        return;
+      }
+
       // H2
       if (trimmed.startsWith('## ')) {
         flushList();

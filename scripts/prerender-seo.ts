@@ -190,6 +190,13 @@ function renderMarkdown(source: string): string {
       continue;
     }
     flushList();
+    const figure = line.match(/^!\[([^\]]*)\]\((\/?[^)]+)\)$/);
+    if (figure) {
+      const alt = figure[1];
+      const src = figure[2].startsWith('http') ? figure[2] : `${BASE_URL}${figure[2]}`;
+      output.push(`<figure class="my-8"><img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" class="w-full rounded-xl border border-outline-variant/20" />${alt ? `<figcaption class="mt-2 text-sm text-zinc-400">${escapeHtml(alt)}</figcaption>` : ''}</figure>`);
+      continue;
+    }
     if (/^\*[^*].*\*$/.test(line)) {
       output.push(`<p><em>${inlineMarkdown(line.slice(1, -1))}</em></p>`);
     } else {
