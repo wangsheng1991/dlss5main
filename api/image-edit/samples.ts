@@ -19,6 +19,8 @@ import { resolveSiteUrl } from '../../src/config/site-url.js';
  * Uploading a visitor's own image keeps requiring an account.
  */
 
+/** The seed every example is generated with, so the free first click is the picture the page shows. */
+const SAMPLE_SEED = 42;
 const POLL_INTERVAL_MS = 1500;
 const POLL_BUDGET_MS = 45000;
 
@@ -90,8 +92,12 @@ async function warm(req: VercelRequest, sampleId: SampleId, store: SampleStore) 
       prompt: sample.prompt,
       preset: 'preset' in sample ? sample.preset : undefined,
       options: 'options' in sample ? sample.options : undefined,
+      // Tool examples get the same fixed seed as the plain ones: a guest's first click is not the
+      // place for the provider's randomness, and an example that comes back different every time it
+      // is re-warmed makes the case card beside it a different picture than the one a visitor sees.
+      seed: SAMPLE_SEED,
     })
-    : { prompt: sample.prompt, image_ids: imageIds, ...sampleOutputSize(sampleId), seed: 42, num_inference_steps: 4, output_format: 'webp' };
+    : { prompt: sample.prompt, image_ids: imageIds, ...sampleOutputSize(sampleId), seed: SAMPLE_SEED, num_inference_steps: 4, output_format: 'webp' };
   const accepted = await client.submit(body, key);
   const deadline = Date.now() + POLL_BUDGET_MS;
   while (Date.now() < deadline) {
