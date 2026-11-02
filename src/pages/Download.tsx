@@ -3,6 +3,7 @@ import DownloadClientEntry from '../components/DownloadClientEntry';
 import DownloadUsageGuide from '../components/DownloadUsageGuide';
 import DownloadActionPanel from '../components/DownloadActionPanel';
 import DownloadIntent from '../components/DownloadIntent';
+import DownloadReferenceVideos from '../components/DownloadReferenceVideos';
 import { DownloadEvidence } from '../components/RoiEvidence';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -365,6 +366,9 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
           ))}
         </div>
       </section>
+
+      {/* ── 前后对比视频（预渲染版里一直有，用户却看不到） ─────────────── */}
+      <DownloadReferenceVideos chinese={isZh} />
 
       {/* ── 系统要求 ─────────────────────────────────────────────────── */}
       <section id="requirements" className="mb-16 scroll-mt-28">
