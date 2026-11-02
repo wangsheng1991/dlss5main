@@ -85,7 +85,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
         applicationCategory: 'MultimediaApplication',
         operatingSystem: 'Windows 10, Windows 11',
         softwareVersion: '12.0',
-        description: t('meta.desc'),
+        description: t('hero.action.studio.note'),
         url: `${SITE_URL}/download`,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       },
@@ -105,7 +105,7 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
       <SEO
         title={t('meta.title')}
         description={t('meta.desc')}
-        canonical="/download"
+        canonical={isZh ? "/zh/download" : "/download"}
         language={locale}
         keywords={['dlss 5 download', 'dlss 5 download mobile', 'dlss 5 download android', 'dlss 5 online', 'free dlss 5 converter', 'dlss 5 studio download', 'dlss 5 studio', 'dlss 5 neural rendering tool', 'local dlss pipeline']}
         structuredData={structuredData}
@@ -121,7 +121,8 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
         <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">{t('hero.sub')}</p>
         <DownloadActionPanel chinese={isZh} />
 
-        <section className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={t('hero.answer.title')}>
+        <h2 className="mt-12 text-2xl font-bold text-white">{t('hero.studio.title')}</h2>
+        <section className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={t('hero.answer.title')}>
           {(['what', 'output', 'limit'] as const).map((key) => (
             <div key={key} className="rounded-xl border border-outline-variant/20 bg-surface-low px-4 py-4">
               <p className="text-[11px] text-zinc-500">{t(`hero.answer.${key}.label`)}</p>
@@ -131,13 +132,6 @@ export default function Download({ forceLocale }: { forceLocale?: 'en-US' | 'zh-
         </section>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <a
-            href="#request"
-            className="inline-flex items-center gap-2 px-7 py-3.5 bg-nvidia-green text-black font-bold rounded-xl hover:bg-nvidia-green/90 transition-colors"
-          >
-            <Mail className="w-5 h-5" aria-hidden="true" />
-            {t('request.ctaHero')}
-          </a>
           <a
             href="#features"
             className="inline-flex items-center gap-2 px-6 py-3.5 border border-outline-variant/30 text-white font-semibold rounded-xl hover:bg-surface-high transition-colors"

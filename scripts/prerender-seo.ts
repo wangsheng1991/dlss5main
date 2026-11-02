@@ -1167,8 +1167,8 @@ if (profileHas('download')) writeRoute('/download', renderPublicGuide({
   heroExtraHtml: renderToStaticMarkup(createElement(MemoryRouter, null, createElement(DownloadActionPanel, { chinese: false }))),
   title: studioStatic['meta.title'],
   description: studioStatic['meta.desc'],
-  heading: 'DLSS 5 Download Guide — DLSS5 Studio by Request',
-  lead: 'Choose the right DLSS 5 path: use the free online converter on mobile or desktop, or understand why DLSS5 Studio is a separate Windows RTX build requested by email. There is no official Android APK or standalone NVIDIA DLSS installer.',
+  heading: studioStatic['hero.h1'],
+  lead: studioStatic['hero.sub'],
   keywords: ['DLSS 5 download', 'DLSS 5 download mobile', 'DLSS 5 download android', 'DLSS 5 online', 'free DLSS 5 converter', 'DLSS 5 Studio download', 'NVIDIA DLSS installer', 'RTX DLSS compatibility', 'local neural rendering tool'],
   alternates: [
     { hrefLang: 'en', href: `${BASE_URL}/download` },
@@ -1193,8 +1193,8 @@ if (profileHas('download')) writeRoute('/zh/download', renderPublicGuide({
   heroExtraHtml: renderToStaticMarkup(createElement(MemoryRouter, null, createElement(DownloadActionPanel, { chinese: true }))),
   title: studioStaticZh['meta.title'],
   description: studioStaticZh['meta.desc'],
-  heading: 'DLSS 5 下载指南 —— DLSS5 Studio 申请',
-  lead: '先选对 DLSS 5 路径：手机或桌面端可使用免费在线转换器，也可以了解独立 Windows RTX Studio 的申请方式。目前没有 Android APK 或独立 NVIDIA 安装包。',
+  heading: studioStaticZh['hero.h1'],
+  lead: studioStaticZh['hero.sub'],
   keywords: ['DLSS 5 下载', 'DLSS 5 手机下载', 'DLSS 5 Android 下载', 'DLSS 5 在线转换器', 'DLSS5 Studio 下载', '免费图片转换器'],
   language: 'zh-CN',
   alternates: [
