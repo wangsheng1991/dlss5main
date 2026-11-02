@@ -1,6 +1,6 @@
 export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEEDED' | 'FAILED';
 /** The studio's modes: two editing presets, the tool lines, and the one tool that takes a link. */
-export type GenerationMode = 'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch';
+export type GenerationMode = 'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'together' | 'fetch';
 export interface GenerationBody {
   /** One or two uploaded file ids: the order is the contract of the tool they belong to. Absent for
    *  the media downloader, which has no upload at all and sends `urls` instead. */

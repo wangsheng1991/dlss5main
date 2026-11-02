@@ -72,14 +72,26 @@ async function warm(req: VercelRequest, sampleId: SampleId, store: SampleStore) 
   // An example may belong to a C-line tool, which answers under its own provider model and takes no
   // size or format field — so the client and the body are both chosen from the catalog entry.
   const client = sample.tool ? alphaNetTools : alphaNet;
-  const bytes = await readInput(req, sample.src);
-  const ticket = await client.createUpload({ fileName: sample.fileName, contentType: sample.contentType, size: bytes.length, model: sample.tool ? modelForTool(sample.tool) : undefined });
-  const upload = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: bytes, signal: AbortSignal.timeout(120000) });
-  if (!upload.ok) throw new Error(`Example upload failed (${upload.status})`);
+  // One ticket per file, in the order the tool documents: the duo portrait asks for the person and
+  // then the character, and swapping them would ask the model for the opposite picture.
+  const upload = async (src: string, fileName: string) => {
+    const bytes = await readInput(req, src);
+    const ticket = await client.createUpload({ fileName, contentType: sample.contentType, size: bytes.length, model: sample.tool ? modelForTool(sample.tool) : undefined });
+    const put = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: bytes, signal: AbortSignal.timeout(120000) });
+    if (!put.ok) throw new Error(`Example upload failed (${put.status})`);
+    return ticket.file_id;
+  };
+  const imageIds = [await upload(sample.src, sample.fileName)];
+  if ('src2' in sample && 'fileName2' in sample) imageIds.push(await upload(sample.src2, sample.fileName2));
   const key = `sample-warm:${sampleId}:${Date.now()}`;
   const body = sample.tool
-    ? buildToolTask(sample.tool, { imageIds: [ticket.file_id], prompt: sample.prompt, preset: 'preset' in sample ? sample.preset : undefined })
-    : { prompt: sample.prompt, image_ids: [ticket.file_id], ...sampleOutputSize(sampleId), seed: 42, num_inference_steps: 4, output_format: 'webp' };
+    ? buildToolTask(sample.tool, {
+      imageIds,
+      prompt: sample.prompt,
+      preset: 'preset' in sample ? sample.preset : undefined,
+      options: 'options' in sample ? sample.options : undefined,
+    })
+    : { prompt: sample.prompt, image_ids: imageIds, ...sampleOutputSize(sampleId), seed: 42, num_inference_steps: 4, output_format: 'webp' };
   const accepted = await client.submit(body, key);
   const deadline = Date.now() + POLL_BUDGET_MS;
   while (Date.now() < deadline) {

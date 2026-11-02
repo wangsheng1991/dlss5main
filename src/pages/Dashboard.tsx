@@ -39,6 +39,9 @@ const MODE_BY_TOOL_QUERY: Record<string, GenerationMode> = {
   'interior-design': 'interior', 'room-render': 'interior', 'interior-render': 'interior', interior: 'interior',
   'portrait-retouch': 'retouch', retouch: 'retouch',
   'virtual-makeup': 'makeup', makeup: 'makeup',
+  // The duo portrait is the one workflow whose landing page path is a sentence, so both the readable
+  // path and a short alias resolve to it.
+  'game-character-together': 'together', together: 'together',
   // The downloader is the one tool the studio opens without an upload slot.
   'video-downloader': 'fetch', 'media-downloader': 'fetch', fetch: 'fetch',
 };
@@ -54,7 +57,7 @@ const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
 const CHARACTER_STYLE_CASE_PREVIEW = GAME_STYLE_CASES.slice(0, 5);
 
 /** The presets offered in the studio, in display order. */
-const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'fetch'];
+const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'together', 'fetch'];
 
 /** Each secondary mode has a crawlable guide with its own case before it enters the studio. */
 const TOOL_PAGE_BY_MODE: Partial<Record<GenerationMode, string>> = {
@@ -76,7 +79,7 @@ const TOOL_PAGE_BY_MODE: Partial<Record<GenerationMode, string>> = {
  */
 const MODE_LABEL_KEY: Record<GenerationMode, string> = {
   enhance: 'modeEnhance', edit: 'modeEdit', cutout: 'modeCutout', vectorize: 'modeVectorize', erase: 'modeErase',
-  tryon: 'modeTryon', interior: 'modeInterior', retouch: 'modeRetouch', makeup: 'modeMakeup', fetch: 'modeFetch',
+  tryon: 'modeTryon', interior: 'modeInterior', retouch: 'modeRetouch', makeup: 'modeMakeup', together: 'modeTogether', fetch: 'modeFetch',
 };
 
 /** The catalog carries both names of an example; the studio prints the reader's own. */
@@ -357,12 +360,25 @@ export default function Dashboard() {
     trackEvent('experience_click', { tool: tool || 'edit', sample, intent: 'sample', auth_required: !!user });
     setMode(tool ?? 'edit');
     if (tool === 'vectorize' && 'preset' in SAMPLES[sample]) setPreset(SAMPLES[sample].preset as VectorizePreset);
+    // A sample that names its own options — the duo portrait's pose and frame — sets them too, so the
+    // studio shows the same controls the example was generated with instead of whatever was there.
+    const picked = SAMPLES[sample];
+    setToolChoices('options' in picked ? { ...picked.options } : {});
     if (!user) return;
     try {
-      const response = await fetch(SAMPLES[sample].src);
-      if (!response.ok) throw new Error('unavailable');
-      const blob = await response.blob();
-      choose(new File([blob], SAMPLES[sample].fileName, { type: blob.type || SAMPLES[sample].contentType }));
+      const load = async (src: string, name: string) => {
+        const response = await fetch(src);
+        if (!response.ok) throw new Error('unavailable');
+        const blob = await response.blob();
+        return new File([blob], name, { type: blob.type || SAMPLES[sample].contentType });
+      };
+      const entry = SAMPLES[sample];
+      const first = await load(entry.src, entry.fileName);
+      // The duo portrait is the one example that reads a second reference, and its slot order is the
+      // meaning (you, then the character), so the pair is loaded before either slot is filled.
+      const second = 'src2' in entry && 'fileName2' in entry ? await load(entry.src2, entry.fileName2) : null;
+      choose(first, tool ?? 'edit');
+      if (second) chooseSecond(second, tool ?? 'edit');
     } catch {
       setFileError('That example could not be loaded. Choose your own image instead.');
     }
@@ -633,7 +649,13 @@ export default function Dashboard() {
             {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
           </div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><button onClick={() => { trackEvent('experience_click', { tool: SAMPLES[selectedSample].tool || 'edit', sample: selectedSample, intent: 'free_sample', auth_required: false }); void sampleRun.run(selectedSample); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
-          {!user && selectedSample && <img src={SAMPLES[selectedSample].src} alt={`${sampleName(selectedSample, isZh)} preview`} className="w-full max-h-[480px] object-contain rounded-lg"/>}
+          {!user && selectedSample && (() => {
+            // A tool that reads two references shows both before the run, or the reader would be
+            // promised a duo portrait and shown one photo.
+            const entry = SAMPLES[selectedSample];
+            const sources = 'src2' in entry ? [entry.src, entry.src2] : [entry.src];
+            return <div className={`grid gap-2 ${sources.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>{sources.map((src, index) => <img key={src} src={src} alt={`${sampleName(selectedSample, isZh)} ${sources.length > 1 ? `${isZh ? '参考' : 'reference'} ${index + 1}` : 'preview'}`} className="w-full max-h-[480px] object-contain rounded-lg"/>)}</div>;
+          })()}
           {characterStyleWorkflow && !file && !selectedSample && sampleRun.state.status === 'idle' && <section aria-labelledby="style-cases-heading" className="pt-1 space-y-4">
             {/* Keep the first action above proof: a visitor can run the free conversion without
                 opening a gallery or choosing a direction that already has a sensible default. */}

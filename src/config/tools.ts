@@ -63,7 +63,7 @@ export const MAX_UPLOAD_MIB = MAX_UPLOAD_BYTES / (1024 * 1024);
 export const STUDIO_MAX_PIXELS = 16_777_216;
 /** What the copy calls that ceiling. Kept beside the number so the two can never drift apart. */
 export const STUDIO_MAX_PIXELS_LABEL = '16 MP';
-export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch', number | null> = {
+export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'together' | 'fetch', number | null> = {
   edit: STUDIO_MAX_PIXELS,        // flux-klein / editing
   enhance: STUDIO_MAX_PIXELS,     // flux-klein / HD enhance
   cutout: STUDIO_MAX_PIXELS,      // background removal (rembg)
@@ -76,6 +76,10 @@ export const MODE_MAX_PIXELS: Record<'edit' | 'enhance' | 'cutout' | 'vectorize'
   interior: null,
   retouch: null,
   makeup: null,
+  // The duo portrait shares the editing model, and its references are uploaded under that model's
+  // name, so the ceiling the upload API applies to them is the editing one. Stated here rather than
+  // left to the fallback, so a page can print the same number the API enforces.
+  together: STUDIO_MAX_PIXELS,
   // The downloader reads a link and produces a file, so no image of ours is ever measured against a
   // ceiling. It is `null` rather than the edit ceiling so a failure message for it cannot claim one.
   fetch: null,
@@ -143,8 +147,8 @@ export function failureNote(reason: unknown, mode = 'edit'): string {
 
 export const STEPS_RANGE = { min: 4, max: 20, default: 8 } as const;
 
-export type ToolId = 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch';
-export const TOOL_IDS: readonly ToolId[] = ['cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'fetch'];
+export type ToolId = 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'together' | 'fetch';
+export const TOOL_IDS: readonly ToolId[] = ['cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'together', 'fetch'];
 export const isToolId = (value: unknown): value is ToolId =>
   typeof value === 'string' && (TOOL_IDS as readonly string[]).includes(value);
 
@@ -166,6 +170,10 @@ export const TOOL_REFERENCES: Record<ToolId, { min: number; max: number; slots: 
   interior: { min: 1, max: 2, slots: ['room', 'style reference (optional)'] },
   retouch: { min: 1, max: 1, slots: ['portrait'] },
   makeup: { min: 1, max: 2, slots: ['portrait', 'makeup reference (optional)'] },
+  // Two required, and the order is the product: you first, then the character you want beside you.
+  // Bare nouns, like every other slot: the studio prints "Select the ${slot}", so a slot that carried
+  // its own article would read "Select the the game character".
+  together: { min: 2, max: 2, slots: ['you', 'game character'] },
   // The downloader reads no image at all: its input is a list of links, checked by `fetchUrlError`.
   // Zero on both sides is what makes the shared reference check pass a body that carries no ids.
   fetch: { min: 0, max: 0, slots: [] },
@@ -184,6 +192,9 @@ export const modelForTool = (tool: ToolId): ProviderModel => {
   if (tool === 'interior') return INTERIOR_MODEL;
   if (tool === 'retouch') return RETOUCH_MODEL;
   if (tool === 'fetch') return FETCH_MODEL;
+  // The duo portrait is not a productised tool line: it is the general editor with two references
+  // and a prompt the server writes, so it runs on the same model the free-form editor uses.
+  if (tool === 'together') return 'flux-klein';
   return MAKEUP_MODEL;
 };
 
@@ -249,7 +260,7 @@ export const VECTORIZE_PRESET_NOTE: Record<VectorizePreset, string> = {
  * breaking change for every caller, so the list is frozen with the model names.
  */
 export type ToolOptionChoice = { value: string; label: string; note?: string };
-export type ToolOption = { key: 'garment_type' | 'style' | 'room_type' | 'level' | 'look' | 'intensity' | 'quality'; label: string; help: string; default: string; choices: ToolOptionChoice[] };
+export type ToolOption = { key: 'garment_type' | 'style' | 'room_type' | 'level' | 'look' | 'intensity' | 'quality' | 'pose' | 'frame'; label: string; help: string; default: string; choices: ToolOptionChoice[] };
 
 export const GARMENT_TYPE_OPTION: ToolOption = {
   key: 'garment_type', label: 'What the garment covers', default: 'outfit',
@@ -405,12 +416,60 @@ export function fetchUrlError(urls: unknown): string {
 export const parseFetchUrls = (value: string): string[] =>
   value.split(/[\s,]+/).map(entry => entry.trim()).filter(Boolean);
 
+/**
+ * The duo portrait: one real person and one game character in a single frame.
+ *
+ * The prompt is a server-side asset like every other tool's, for two reasons that showed up in the
+ * 2026-11-02 test runs: the model only keeps a face when the brief names each reference and says
+ * which one is which, and a browser-authored prompt could quietly turn the product into a
+ * different one. Four poses, each written as the sentence that replaces the pose slot.
+ */
+export const TOGETHER_POSES = ['side_by_side', 'handshake', 'hug', 'back_to_back'] as const;
+export type TogetherPose = (typeof TOGETHER_POSES)[number];
+const TOGETHER_POSE_LINES: Record<TogetherPose, string> = {
+  side_by_side: 'They stand side by side with their shoulders level and an arm around each other, both facing the camera.',
+  handshake: 'They face each other and shake hands, right hands meeting at chest height, framed from the waist up.',
+  hug: 'They share a friendly hug, both visible from the waist up, one arm resting over the other shoulders.',
+  back_to_back: 'They stand back to back with their arms crossed and look toward the camera, in a game-poster stance.',
+};
+/**
+ * Why the wording is this blunt: in the first run, a prompt that only asked for a handshake produced
+ * two handsome strangers. Naming the references as people ("exactly the woman in the first image")
+ * is what made the real face survive the trip, which is the whole product.
+ */
+export function togetherPrompt(pose: TogetherPose): string {
+  const line = TOGETHER_POSE_LINES[pose] || TOGETHER_POSE_LINES.side_by_side;
+  return `A single photorealistic photograph of two people together. The first reference image is the real person; the second reference image is the game character. Keep each face exactly as it appears in its own reference — same facial features, same hair, same skin tone, same clothing — and do not invent a new face for either of them. The person stands on the left and the character on the right. ${line} One natural light source, consistent shadows and scale between the two people, sharp focus, no text, no logos, no watermark.`;
+}
+/** Output frames the duo portrait offers; the editor takes an explicit size instead of a model default. */
+export const TOGETHER_FRAMES: Record<string, { width: number; height: number; label: string }> = {
+  square: { width: 1024, height: 1024, label: 'Square (1024 × 1024)' },
+  portrait: { width: 768, height: 1024, label: 'Portrait (768 × 1024)' },
+  landscape: { width: 1152, height: 768, label: 'Landscape (1152 × 768)' },
+};
+export const TOGETHER_POSE_OPTION: ToolOption = {
+  key: 'pose', label: 'How they meet', default: 'handshake',
+  help: 'One pose per run. Each pose is a fixed recipe, so the wording is not something you have to write.',
+  choices: [
+    { value: 'handshake', label: 'Shaking hands' },
+    { value: 'side_by_side', label: 'Standing side by side', note: 'Arm around each other, both facing the camera.' },
+    { value: 'hug', label: 'Hugging' },
+    { value: 'back_to_back', label: 'Back to back', note: 'Game-poster stance, arms crossed.' },
+  ],
+};
+export const TOGETHER_FRAME_OPTION: ToolOption = {
+  key: 'frame', label: 'Output frame', default: 'square',
+  help: 'The long edge stays at 1024 px either way; pick the shape you will actually post or print.',
+  choices: Object.entries(TOGETHER_FRAMES).map(([value, frame]) => ({ value, label: frame.label })),
+};
+
 /** The options a tool offers, in the order the panel shows them. Tools without options get none. */
 export const TOOL_OPTIONS: Partial<Record<ToolId, ToolOption[]>> = {
   tryon: [GARMENT_TYPE_OPTION],
   interior: [INTERIOR_STYLE_OPTION, ROOM_TYPE_OPTION],
   retouch: [RETOUCH_LEVEL_OPTION],
   makeup: [MAKEUP_LOOK_OPTION, MAKEUP_INTENSITY_OPTION],
+  together: [TOGETHER_POSE_OPTION, TOGETHER_FRAME_OPTION],
   fetch: [FETCH_QUALITY_OPTION],
 };
 
@@ -498,6 +557,8 @@ export type ToolTask = {
   prompt?: string; num_inference_steps?: number; seed?: number;
   preset?: VectorizePreset; max_edge?: number;
   garment_type?: string; style?: string; room_type?: string; level?: string; look?: string; intensity?: string;
+  /** Duo portrait only: the editor needs an explicit size, since no productised model owns it. */
+  width?: number; height?: number; output_format?: 'png' | 'webp';
   extra?: string;
 };
 
@@ -536,6 +597,17 @@ export function buildToolTask(tool: ToolId, input: ToolTaskInput): ToolTask {
   if (tool === 'makeup') {
     task.look = optionValue(tool, 'look', input);
     task.intensity = optionValue(tool, 'intensity', input);
+  }
+  if (tool === 'together') {
+    // The browser sends a pose and a frame name; the words and the pixel size are written here.
+    const pose = optionValue(tool, 'pose', input) as TogetherPose;
+    const frame = TOGETHER_FRAMES[optionValue(tool, 'frame', input)] || TOGETHER_FRAMES.square;
+    task.prompt = togetherPrompt(TOGETHER_POSES.includes(pose) ? pose : 'handshake');
+    task.width = frame.width;
+    task.height = frame.height;
+    task.num_inference_steps = 4;
+    task.output_format = 'webp';
+    if (Number.isSafeInteger(input.seed)) task.seed = input.seed;
   }
   return task;
 }
@@ -587,6 +659,16 @@ export const TOOL_SUMMARY: Record<ToolId, { label: string; short: string; output
     output: 'Output: shaped like your portrait · PNG',
     seconds: GENERATIVE_SECONDS_NOTE,
     audience: '1–2 images — the portrait, then an optional makeup reference',
+  },
+  together: {
+    label: 'You + the game character',
+    short: 'Duo portrait',
+    output: 'Output: square, portrait or landscape at a 1024 px long edge · WebP',
+    // Measured on the live channel on 2026-11-02: five two-reference runs at four steps, timed from
+    // the first upload to a finished image, landed between 15.7 s and 23.7 s (the two uploads are
+    // about half of that). Printed as a range because it is one.
+    seconds: '15–30 seconds, including both uploads',
+    audience: '2 images — you first, then the character',
   },
   fetch: {
     label: 'Video & audio downloader',

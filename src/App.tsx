@@ -152,6 +152,7 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/portrait-retouch" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/virtual-makeup" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/video-downloader" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/game-character-together" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/game-character-style" element={orHome('tools', <GameCharacterStyle />)} />
                   <Route path="/video-upscaler" element={orHome('tools', <VideoUpscaler />)} />
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />

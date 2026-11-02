@@ -173,6 +173,27 @@ export const SHOWCASE: ShowcaseCase[] = [
     measured: '2026-09-25',
   },
   {
+    id: 'together-handshake',
+    mode: 'together',
+    title: 'A real person and a game character in one frame',
+    choices: ['Pose: shaking hands', 'Frame: square (1024 × 1024)', 'References: you, then the character'],
+    options: { pose: 'handshake', frame: 'square' },
+    inputs: [
+      { src: '/examples/together/you.jpg', label: 'You — the real person' },
+      { src: '/examples/together/character.jpg', label: 'The game character' },
+    ],
+    output: { src: '/examples/together/handshake.webp', label: 'The two of them, shaking hands', width: 1024, height: 1024 },
+    seconds: '16 s',
+    look: [
+      'The face on the left is the face in the first reference: same features, same hair, same dark top — the run that only asked for a handshake produced two strangers instead.',
+      'The figure on the right keeps the character’s build, red hair and tactical gear, and the neon street from the second reference is the setting.',
+      'Two separate light sources are reconciled into one, and the hands meet where a handshake would.',
+    ],
+    limit:
+      'The character still is a full-body shot with the face turned away, so the model carried the hair, build and gear and designed a face for her. A still where the character’s own face is visible carries more of it. Neither identity is guaranteed, hands and small props can drift, and the same prompt at another seed gives another picture — review before posting.',
+    measured: '2026-11-02',
+  },
+  {
     id: 'cutout-teapot',
     mode: 'cutout',
     title: 'Background removed, pixel size kept',

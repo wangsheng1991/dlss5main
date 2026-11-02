@@ -5,7 +5,7 @@ export type ToolLanding = {
   path: string;
   locale: 'en' | 'es';
   slug: string;
-  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'fetch';
+  dashboardTool: 'upscale' | 'enhance' | 'unblur' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'together' | 'fetch';
   language: 'en-US' | 'es-ES';
   title: string;
   description: string;
@@ -595,6 +595,56 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     },
   },
   {
+    path: '/game-character-together',
+    locale: 'en',
+    slug: 'game-character-together',
+    dashboardTool: 'together',
+    language: 'en-US',
+    title: 'Photo With Your Game Character — Duo Portrait From Two Photos',
+    description: 'Upload one photo of yourself and one of a game character, pick a pose, and get a single picture of the two of you — handshake, side by side, hug or back to back. Free example first.',
+    eyebrow: 'AI duo portrait',
+    heading: 'A Photo With Your Game Character',
+    intro: 'Two photos in, one picture out: you and the character, standing in the same place, in the pose you pick. It is the picture you would take if the game let you two meet — and it starts from the two stills you already have, not from a prompt you have to write.',
+    cta: 'Upload your two photos',
+    ctaNote: 'Two images required · you first, the character second · 15–30 seconds · square, portrait or landscape · 1 credit per run',
+    resultLabel: 'The two of you',
+    originalLabel: 'Your two references',
+    prompt: '',
+    useCases: ['A keepsake with a character you have played for years', 'A pairing for a fan post or a profile picture', 'A surprise picture for a friend who mains that character', 'A concept frame for a cosplay, mod or fan project'],
+    keywords: ['photo with game character', 'game character photo with me', 'ai photo with game character', 'game character and me picture', 'two photo composite ai', 'meet your game character'],
+    whenToUse: 'Use a photo of yourself where your face is clear and evenly lit, and a character still where the character is as large and as unobstructed as you can find. The run copies what each reference shows: a full-body, back-turned game still gives the model the outfit and the hair but almost nothing about the face, and it will design the rest.',
+    sharedNote: 'Your photo is uploaded first and the character second, and the order is the meaning: the left figure is you, the right one is the character. Choose the character image from a source you have the right to use, and treat the result as fan material rather than an official picture.',
+    disclaimer: 'This is a generative composite, not a screenshot from a game: it is not an official feature of any title, of NVIDIA DLSS 5, or of the studios that made the character. Faces, hands, small props and scale can differ from both references, and only one pose is generated per run.',
+    stepsHeading: 'How to make the picture',
+    steps: [
+      { name: 'Pick your two photos', text: 'Upload a photo of yourself, then a still of the character. Both are read as references rather than as the frame to edit, so a clean, face-forward pair works best.' },
+      { name: 'Choose how you meet', text: 'Shaking hands, standing side by side, hugging, or back to back. Each pose is a fixed server-side recipe — there is no prompt to write and no wording to get wrong.' },
+      { name: 'Choose the frame', text: 'Square for a post, portrait for a phone wallpaper or a print, landscape for a banner. The long edge stays at 1024 px.' },
+      { name: 'Check it before you share it', text: 'Compare both faces, the hands and the join between the two people with the references at full size. Run another pose or frame instead of posting one you are unsure about.' },
+    ],
+    checks: ['Compare your own face with your photo: features, hairline and the clothing you were wearing.', 'Compare the character with the still you uploaded: hair colour, outfit, gear and any signature prop.', 'Look at the hands and the point where the two bodies meet — that is where a composite shows.', 'Check the light: one source, one direction of shadow, both figures lit the same way.'],
+    featureList: ['Two references in one run', 'Four fixed poses — handshake, side by side, hug, back to back', 'Square, portrait or landscape output at a 1024 px long edge', 'Free example you can run without an account'],
+    faqs: [
+      { question: 'How does a photo with a game character actually work?', answer: 'You upload two images: a photo of yourself and a still of the character. The studio sends both to the model with a fixed instruction that names which reference is which, so the face on the left comes from your photo and the design on the right comes from the character still. The pose is chosen from four presets rather than written by you.' },
+      { question: 'Will the result look exactly like me?', answer: 'The face usually carries over, but it is a generative result, not a cut-and-paste, and it is not guaranteed. Hair, expression, clothing and hands can drift, especially when the two reference photos have very different lighting or size. Review the picture before you post it, and run it again if a run misses.' },
+      { question: 'Why can I only get one pose per run?', answer: 'Each pose is its own instruction, and the model composes the scene from scratch for the pose it was given. Asking for two poses in one picture produces a crowded, inconsistent frame, so the studio keeps it to one pose and one credit per picture.' },
+      { question: 'Can I run an example without signing up?', answer: 'Yes — the example at the top of this page runs the same workflow on our own pair of photos and shows you the actual output. Uploading your own photo requires an account and costs the credit shown before you submit.' },
+      { question: 'Is this an official feature of the game or of DLSS 5?', answer: 'No. It is an independent generative composite made with a general image model on our own channel. It is not endorsed by, connected to, or produced by NVIDIA, any game studio or any publisher, and the character remains their property.' },
+    ],
+    related: [
+      { path: '/virtual-try-on', label: 'Virtual Try-On' },
+      { path: '/portrait-retouch', label: 'Portrait Retouch' },
+      { path: '/virtual-makeup', label: 'Virtual Makeup' },
+    ],
+    freeSample: 'together',
+    demo: {
+      before: '/examples/together/references.jpg', after: '/examples/together/handshake.webp',
+      beforeLabel: 'The two photos that were uploaded', afterLabel: 'What one run produced',
+      caption: 'One real run of this workflow: the two references as they were uploaded (side by side here), and the single picture that came back at pose “shaking hands”, square, 1024 × 1024. The character still has her face turned away, so the model kept her hair, build and gear and designed the rest — a still with her face visible carries more of it.',
+      aspectRatio: 1,
+    },
+  },
+  {
     path: '/video-downloader',
     locale: 'en',
     slug: 'video-downloader',
@@ -715,6 +765,7 @@ export function toolLongForm(tool: ToolLanding): ToolLongForm {
     interior: { verb: 'visualize an interior from', noun: 'interior render generation', risk: 'walls, windows, perspective and furniture scale' },
     retouch: { verb: 'refine', noun: 'portrait retouching', risk: 'skin texture, face shape and expression' },
     makeup: { verb: 'preview makeup on', noun: 'virtual makeup', risk: 'face shape, expression and colour spill' },
+    together: { verb: 'put a face into', noun: 'two-reference portrait composition', risk: 'both faces, hands, scale and the join between the two people' },
     fetch: { verb: 'download from', noun: 'media downloading', risk: 'the site’s own container, the resolution that was really served, and the rights in the file' },
   };
   const copy = modeCopy[mode];

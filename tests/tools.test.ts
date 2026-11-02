@@ -13,6 +13,7 @@ import {
   failureNote, fetchUrlError, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, parseFetchUrls, pixelCheckNote,
   VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, isToolId, modelForTool,
   toolNeedsSecondImage, toolOptionError, toolTakesSecondImage, FETCH_MAX_URLS,
+  TOGETHER_POSES, togetherPrompt,
 } from '../src/config/tools';
 import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
@@ -355,13 +356,67 @@ test('every tool names the model it runs on, and the mode maps back to the same 
   const models: Record<string, string> = {
     cutout: 'cutout-fast', vectorize: 'vectorize-fast', erase: 'erase-quality',
     tryon: 'tryon-quality', interior: 'interior-quality', retouch: 'retouch-quality', makeup: 'makeup-quality',
+    together: 'flux-klein',
     fetch: 'media-fetch',
   };
   for (const tool of TOOL_IDS) {
     assert.equal(modelForTool(tool), models[tool], `${tool} runs the wrong model`);
+    // The duo portrait is the one tool that shares its provider model with plain editing, so the
+    // round trip answers `edit`. That is intended: the model is generic and the two-reference brief
+    // is what makes it this tool, which is exactly why the brief cannot come from the browser.
+    if (tool === 'together') {
+      assert.equal(modeForModel(modelForTool(tool)), 'edit', 'the duo portrait runs the editing model');
+      continue;
+    }
     assert.equal(modeForModel(modelForTool(tool)), tool, `${tool} does not survive the round trip through its model`);
   }
 });
+
+test('the duo portrait reads two references, and its brief is written on the server', () => {
+  // The person first, the character second: swapping them asks the model for the opposite picture.
+  assert.deepEqual(TOOL_REFERENCES.together, { min: 2, max: 2, slots: ['you', 'game character'] });
+  assert.ok(TOOL_REFERENCES.together.min === 2, 'one reference cannot make a duo');
+  // Four poses, and each one is a different sentence — the pose is the only thing the browser chooses.
+  assert.deepEqual([...TOOL_POSES_COPY()].sort(), [...TOGETHER_POSES].sort(), 'the panel and the recipe list the same poses');
+  // The panel opens on the pose the server falls back to, so an untouched form and a missing value agree.
+  assert.equal(TOOL_OPTIONS.together?.find(option => option.key === 'pose')?.default, 'handshake');
+  const lines = new Set(TOGETHER_POSES.map(pose => togetherPrompt(pose)));
+  assert.equal(lines.size, TOGETHER_POSES.length, 'two poses share one prompt');
+  // Every pose keeps the sentences that made the 2026-11-02 runs work: name each reference, say which
+  // one is which, refuse a new face. Dropping one of them is what produced two strangers.
+  for (const pose of TOGETHER_POSES) {
+    const prompt = togetherPrompt(pose);
+    assert.match(prompt, /first reference image is the real person/, `${pose}: the first reference is not named`);
+    assert.match(prompt, /second reference image is the game character/, `${pose}: the second reference is not named`);
+    assert.match(prompt, /do not invent a new face/, `${pose}: the no-new-face rule is missing`);
+    assert.match(prompt, /no text, no logos, no watermark/, `${pose}: the artefact rule is missing`);
+  }
+  // A pose the channel does not know is refused before a task is built, and a missing pose takes the
+  // documented default rather than an empty brief.
+  assert.match(toolOptionError('together', { pose: 'dance' }), /pose must be handshake, side_by_side, hug, back_to_back/);
+  assert.match(toolOptionError('together', { frame: 'tall' }), /frame must be square, portrait, landscape/);
+  assert.equal(toolOptionError('together', { pose: 'hug', frame: 'portrait' }), '');
+  // The prompt the caller sends is never used — that is the contract this tool exists on.
+  const task = buildToolTask('together', { imageIds: ['me', 'link'], prompt: 'make it a cartoon', options: { pose: 'hug', frame: 'portrait' } });
+  assert.equal(task.model, 'flux-klein');
+  assert.deepEqual(task.image_ids, ['me', 'link']);
+  assert.equal(task.prompt, togetherPrompt('hug'));
+  assert.notEqual(task.prompt, 'make it a cartoon');
+  // The frame chooses the size, so the output is not the provider's default.
+  assert.equal(task.width, 768);
+  assert.equal(task.height, 1024);
+  assert.equal(task.output_format, 'webp');
+  const fallback = buildToolTask('together', { imageIds: ['me', 'link'], options: {} });
+  assert.equal(fallback.prompt, togetherPrompt('handshake'), 'no pose means the default pose, not no brief');
+  assert.equal(fallback.width, 1024);
+  assert.equal(fallback.height, 1024);
+});
+
+/** The pose values the option panel actually offers, in order, so the union and the UI cannot drift. */
+function TOOL_POSES_COPY() {
+  const pose = TOOL_OPTIONS.together?.find(option => option.key === 'pose');
+  return (pose?.choices || []).map(choice => choice.value);
+}
 
 test('each tool declares how many references it reads and what they are', () => {
   // Two images, in order: the person, then the garment. A try-on cannot be asked for with one.

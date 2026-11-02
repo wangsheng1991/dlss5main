@@ -13,6 +13,29 @@ import type { ToolId, VectorizePreset } from './tools';
  * request may run, so its page shows a finished pair and the live run stays behind sign-in.
  */
 export const SAMPLES = {
+  /**
+   * The duo portrait is the one example that reads two references: the real person and the game
+   * character. Both files are ours — the person photo already ships with the studio, and the
+   * character is a frame cut from our own style-transition clip — so the page can show the exact
+   * pair the model was given. `src2` is what the server uploads second and what the studio puts in
+   * the second slot; the order is the meaning (`TOOL_REFERENCES.together.slots`).
+   *
+   * It is a guest example too: a full run was measured at 15.7–21.4 s on the live channel, and the
+   * free path polls for 45 s, so the first visitor to ask for it still gets an answer.
+   */
+  together: {
+    id: 'together', name: 'You and a game character', nameZh: '我和游戏角色合影',
+    src: '/examples/together/you.jpg', fileName: 'you.jpg',
+    src2: '/examples/together/character.jpg', fileName2: 'character.jpg',
+    contentType: 'image/jpeg',
+    tool: 'together' as ToolId,
+    options: { pose: 'handshake', frame: 'square' },
+    outputSize: { width: 1024, height: 1024 },
+    // This line is never sent as the model brief: the server writes the duo prompt from the pose
+    // (`buildToolTask` → `togetherPrompt`). It is only what the studio calls the run, and a usable
+    // fallback if the reader switches this workflow back to plain editing.
+    prompt: 'Put me and the game character in one photo, shaking hands.',
+  },
   sample1: { id: 'sample1', name: 'Kitchen render', nameZh: '厨房效果图', src: '/examples/sample1-kitchen-aligned-v3.jpg', fileName: 'sample1-kitchen-aligned-v3.jpg', contentType: 'image/jpeg', tool: null, outputSize: { width: 1200, height: 768 }, cacheVersion: 'kitchen-aligned-v3', prompt: "Convert this kitchen render into a photorealistic material and lighting reference. Keep the exact camera, perspective, framing and every object position unchanged. Preserve all cabinet boundaries, countertop edges, oven, window, faucet and appliances at the same pixel positions. Only improve realistic wood, stone, metal, glass, light and shadow. Do not zoom, crop, rearrange or add objects; do not add text or interface elements." },
   sample2: { id: 'sample2', name: 'Bedroom render', nameZh: '卧室效果图', src: '/examples/sample2.jpg', fileName: 'sample2.jpg', contentType: 'image/jpeg', tool: null, prompt: 'Turn this render into a photorealistic photo with soft morning light.' },
   characterStyle: { id: 'characterStyle', name: 'Cyberpunk character style', nameZh: '赛博朋克人物风格', src: '/examples/generated/game-cyber-1-before.jpg', fileName: 'game-cyber-1-before.jpg', contentType: 'image/jpeg', tool: null, prompt: 'Original game character, preserve silhouette and costume; cyberpunk cinematic lighting, wet pavement, neon reflections, no text.' },
