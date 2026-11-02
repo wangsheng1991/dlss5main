@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { GAME_DETAIL_EVIDENCE, GAME_SOURCES, GAMES_CHECKED } from '../content/gamesStatusEvidence';
-import { GAME_STATE_LABELS, type GameCoveragePage } from '../content/gameCoverage';
+import { GAME_STATE_LABELS, type GameCoveragePage, type GameResource } from '../content/gameCoverage';
+
+const RESOURCE_KIND_LABELS: Record<GameResource['kind'], string> = {
+  official: 'Official',
+  press: 'Press report',
+  ours: 'Our own check',
+  tool: 'Tool',
+};
 
 export default function GameCoverageContent({page}: {page:GameCoveragePage}) {
   const evidence=GAME_DETAIL_EVIDENCE[page.slug];
@@ -22,6 +29,18 @@ export default function GameCoverageContent({page}: {page:GameCoveragePage}) {
       <p className="mt-4">We have no verified, title-specific before-and-after material for this page. No image here is presented as a result from this game or RTX Remix project. <a className="text-primary underline" href="/before-after">Inspect real independent style-conversion examples</a> to understand the workflow and its limits.</p>
       <nav className="mt-5 flex flex-wrap gap-4" aria-label="Game support and independent workflow"><a className="text-primary underline" href="/games">DLSS 5 supported games tracker</a><a className="text-primary underline" href="/dlss-checker">DLSS 5 supported cards checker</a><a className="text-primary underline" href="/download">DLSS 5 download paths and our recipe kit</a><a className="text-primary underline" href="/studio-beta">Request the independent DLSS5 Studio workflow</a><a className="text-primary underline" href="/vs/dlss-5-vs-dlss-4-5">Compare DLSS 5 and DLSS 4.5 features</a></nav>
     </section>
+    {page.resources?.length ? <section className="mt-10" data-game-section="resources" aria-labelledby="game-resources-heading">
+      <h2 id="game-resources-heading" className="text-2xl font-bold text-white">{page.resourcesHeading ?? 'Everything we have on this title'}</h2>
+      {page.resourcesIntro ? <p className="mt-4">{page.resourcesIntro}</p> : null}
+      <ul className="mt-5 space-y-5">{page.resources.map(resource=>{
+        const external=resource.href.startsWith('http');
+        return <li key={resource.href} data-resource-kind={resource.kind}>
+          <p className="text-xs uppercase tracking-widest text-primary">{RESOURCE_KIND_LABELS[resource.kind]}{resource.date ? <span className="ml-3 normal-case tracking-normal text-zinc-500"><time dateTime={resource.date}>{resource.date}</time></span> : null}</p>
+          <p className="mt-1"><a className="text-primary underline" href={resource.href} {...(external ? {rel:'noreferrer'} : {})}>{resource.label}</a></p>
+          <p className="mt-1 text-sm text-zinc-400">{resource.note}</p>
+        </li>;
+      })}</ul>
+    </section> : null}
     <section className="mt-10" data-game-section="faq"><h2 className="text-2xl font-bold text-white">Frequently asked questions</h2>{page.faq.map(q=><article key={q.question} className="mt-5"><h3 className="text-lg font-bold text-white">{q.question}</h3><p className="mt-2">{q.answer}</p></article>)}</section>
   </main>;
 }

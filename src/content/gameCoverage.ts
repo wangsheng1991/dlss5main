@@ -1,9 +1,18 @@
 import { GAME_DETAIL_EVIDENCE, GAME_SOURCES, GAMES_CHECKED } from './gamesStatusEvidence';
 import { SITE_URL } from '../config/site';
 
+/**
+ * One entry in a title's resource list. `kind` keeps the three registers apart on the page:
+ * vendor documentation, third-party reporting we did not reproduce, and work we ran ourselves.
+ */
+export type GameResource = {
+  kind: 'official' | 'press' | 'ours' | 'tool';
+  label: string; href: string; note: string; date?: string;
+};
 export type GameCoveragePage = {
   slug: string; path: string; keyword: string; title: string;
   official: string; steps?: string[]; outside: string; faq: { question: string; answer: string }[];
+  resourcesHeading?: string; resourcesIntro?: string; resources?: GameResource[];
 };
 export const GAME_COVERAGE_PAGES: GameCoveragePage[] = [
   {
@@ -34,6 +43,18 @@ export const GAME_COVERAGE_PAGES: GameCoveragePage[] = [
     faq: [
       { question: 'Is DLSS 5 available in Phantom Blade Zero?', answer: 'Not confirmed live in the reviewed evidence. NVIDIA names the game in its March 16, 2026 planned list; the October update does not mention it, so no release date is established here.' },
       { question: 'Do the community mods prove it works?', answer: 'No. A community modification, a replaced library or a captured frame is not vendor confirmation, and we have not validated any such method for this title.' },
+    ],
+    resourcesHeading: 'Everything we have on Phantom Blade Zero in one list',
+    resourcesIntro: 'The game arrived at the end of October 2026, and community mods followed within a day of launch — press-reported, not reproduced by us. Below is the whole record: what NVIDIA actually documents, what the press reported, what we measured ourselves, and the tools you can use today. Nothing here is a download of NVIDIA files or a build of somebody else’s mod.',
+    resources: [
+      { kind: 'official', date: '2026-03-16', label: 'NVIDIA DLSS 5 announcement and planned-game list', href: GAME_SOURCES.march, note: 'The only official statement naming this title: Phantom Blade Zero is listed as planned. The reviewed October update does not mention it, so no release date, driver version or in-game setting is established.' },
+      { kind: 'press', date: '2026-10-31', label: 'What the weekend mod reports claimed — and where the boundary is', href: '/blog/dlss-5-on-non-nvidia-cards-mod-boundary-2026', note: 'Written 2026-11-02 from dated reports by VideoCardz, GameGPU (10-31) and eTeknix (10-30, 11-01): an unofficial DLSS 5 mod inside this title less than 24 hours after launch, and DLSS features on a Radeon card. We reproduced none of them, so the post quotes no frame rate; it separates "it runs" from "it is supported".' },
+      { kind: 'ours', date: '2026-11-02', label: '影之刃零 mod 这波的真实边界（中文版）', href: '/zh/blog/dlss-5-on-non-nvidia-cards-mod-boundary-2026', note: 'Same check in Chinese, for readers who searched the game by its Chinese name.' },
+      { kind: 'ours', date: '2026-11-02', label: 'One 320×213 image through two pipelines, measured', href: '/blog/one-low-res-image-two-pipelines-ours-vs-flux-klein-2026-11', note: 'Our own run rather than a borrowed number: input 320×213 / 12,287 bytes, our flux-klein path returned 1024×1024 in four steps, and the second pipeline did not follow the input image at all. This is what our route can and cannot do with a game screenshot.' },
+      { kind: 'tool', label: 'DLSS 5 supported cards checker', href: '/dlss-checker', note: 'Row-by-row status with the source and check date for each card. It answers what NVIDIA documents for your GPU — not whether some mod build will run on it.' },
+      { kind: 'tool', label: 'DLSS 5 game support tracker', href: '/games', note: 'Launched and announced are kept in separate columns, so a planned-list entry never reads as current support.' },
+      { kind: 'tool', label: 'Independent style-conversion examples', href: '/before-after', note: 'Real before-and-after pairs from our own image workflow, with the settings used. A visual reference outside the game; it does not change a game renderer.' },
+      { kind: 'tool', label: 'Download paths and the local Studio guide', href: '/download', note: 'Where our desktop window comes from and what it does. It is not an NVIDIA runtime and it installs nothing into Phantom Blade Zero.' },
     ],
   },
   {

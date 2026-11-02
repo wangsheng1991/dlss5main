@@ -377,7 +377,11 @@ const sharedLinks = (locale: ExpansionLocale): LinkItem[] => locale === 'zh'
 
 const expansionLinks = (kind: ExpansionKind, locale: ExpansionLocale): LinkItem[] => {
   const links = [...sharedLinks(locale)];
-  if (kind === 'games') links.push({ label: locale === 'zh' ? 'NBA 2K27 首发证据页' : 'NBA 2K27 launch evidence', href: locale === 'zh' ? '/zh/games/nba-2k27' : '/games/nba-2k27' });
+  if (kind === 'games') {
+    links.push({ label: locale === 'zh' ? 'NBA 2K27 首发证据页' : 'NBA 2K27 launch evidence', href: locale === 'zh' ? '/zh/games/nba-2k27' : '/games/nba-2k27' });
+    links.push({ label: locale === 'zh' ? '影之刃零（Phantom Blade Zero）：DLSS 5 状态、mod 说法与全部相关资料' : 'Phantom Blade Zero: DLSS 5 status, the mod claims and every resource in one list', href: '/games/phantom-blade-zero' });
+    links.push({ label: locale === 'zh' ? '没有 N 卡也能跑 DLSS 5？mod 的真实边界' : 'DLSS 5 on a non-NVIDIA card: what the mods claim', href: locale === 'zh' ? '/zh/blog/dlss-5-on-non-nvidia-cards-mod-boundary-2026' : '/blog/dlss-5-on-non-nvidia-cards-mod-boundary-2026' });
+  }
   if (kind === 'benchmark') links.push({ label: locale === 'zh' ? '游戏支持追踪' : 'Game support tracker', href: locale === 'zh' ? '/zh/games' : '/games' });
   if (kind === 'nba-2k27') {
     links.push({ label: locale === 'zh' ? '返回游戏支持追踪' : 'Back to the game tracker', href: locale === 'zh' ? '/zh/games' : '/games' });
