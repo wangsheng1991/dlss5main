@@ -37,6 +37,13 @@ export class ResultStore {
     if (!response.ok) throw new Error(`Result download failed (${response.status})`);
     const buffer = Buffer.from(await response.arrayBuffer());
     const contentType = image.content_type || response.headers.get('content-type') || 'image/webp';
+    return this.saveDownloaded(uid, jobId, image, { buffer, contentType });
+  }
+
+  /** Reuses bytes already fetched for a response rather than downloading a large result twice. */
+  async saveDownloaded(uid: string, jobId: string, image: { content_type?: string; width?: number; height?: number; sha256?: string }, downloaded: Pick<StoredResult, 'buffer' | 'contentType'>): Promise<ResultMeta> {
+    const { buffer } = downloaded;
+    const contentType = image.content_type || downloaded.contentType;
     const meta: ResultMeta = {
       contentType,
       size: buffer.length,

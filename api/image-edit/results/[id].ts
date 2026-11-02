@@ -8,17 +8,16 @@ import { database } from '../../../server/admin.js';
 type ProviderImage = { url: string; content_type?: string; width?: number; height?: number; sha256?: string };
 
 /** Asks the provider for a fresh signature and stores the copy on the way through. */
-async function refresh(uid: string, jobId: string, job: Job, store: JobStore, results: ResultStore): Promise<StoredResult | null> {
+export async function refresh(uid: string, jobId: string, job: Job, store: JobStore, results: ResultStore): Promise<StoredResult | null> {
   if (!job.providerTaskId || job.status !== 'SUCCEEDED') return null;
   const task = await alphaNet.result(job.providerTaskId).catch(() => null) as { result?: { images?: ProviderImage[] }; images?: ProviderImage[] } | null;
   const source = task?.result?.images?.[0] || task?.images?.[0];
   if (!source?.url) return null;
-  const meta = await results.save(uid, jobId, source).catch(() => null);
-  if (meta) await store.attachResult(jobId, meta);
-  const stored = await results.read(uid, jobId);
-  if (stored) return stored;
   const downloaded = await results.download(source.url);
-  return downloaded ? { ...downloaded, width: 0, height: 0, sha256: '' } : null;
+  if (!downloaded) return null;
+  const meta = await results.saveDownloaded(uid, jobId, source, downloaded).catch(() => null);
+  if (meta) await store.attachResult(jobId, meta);
+  return { ...downloaded, contentType: source.content_type || downloaded.contentType, width: Number(source.width) || 0, height: Number(source.height) || 0, sha256: meta?.sha256 || '' };
 }
 
 /**
