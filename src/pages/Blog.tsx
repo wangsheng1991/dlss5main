@@ -131,7 +131,9 @@ export default function Blog() {
   const { slug, locale: paramLocale } = useParams<{ slug?: string; locale?: 'en' | 'zh' }>();
   const { pathname } = useLocation();
   const isLibraryArticle = ARTICLES.some(article => article.slug === slug && Boolean(article.assetBase));
-  const routeLocale = paramLocale || (isLibraryArticle && pathname.startsWith('/zh/') ? 'zh' : undefined);
+  // The explicit locale routes apply to legacy articles and the index as well as library posts.
+  // Otherwise /zh/blog renders a Chinese shell but appends the English canonical after mounting.
+  const routeLocale = paramLocale || (pathname.startsWith('/zh/') ? 'zh' : pathname.startsWith('/en/') ? 'en' : undefined);
   const routeLanguage = routeLocale === 'zh' ? 'zh-CN' : routeLocale === 'en' || isLibraryArticle ? 'en-US' : undefined;
   const locale = (routeLanguage || i18n.resolvedLanguage || i18n.language || 'en-US') as BlogLocale;
   const copy = BLOG_COPY[locale] || BLOG_COPY['en-US'];

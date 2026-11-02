@@ -93,6 +93,10 @@ export default function SEO({
   // only when the complete HTML happens to be identical.
   useEffect(() => {
     const collapseManagedMeta = () => {
+      // Helmet updates document.title (the first title). React 19 can also hoist a title
+      // from the initial static fallback; keep the active first copy, without removing
+      // React-owned nodes. Keeping the last copy could restore a previous route's title.
+      collapseDuplicates([...document.querySelectorAll('title')].reverse(), () => 'title');
       const elements = [...document.querySelectorAll(
         'meta[name="description"], meta[name="keywords"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]',
       )];
