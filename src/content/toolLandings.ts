@@ -638,9 +638,9 @@ export const TOOL_LANDINGS: ToolLanding[] = [
     ],
     freeSample: 'together',
     demo: {
-      before: '/examples/together/references.jpg', after: '/examples/together/handshake.webp',
-      beforeLabel: 'The two photos that were uploaded', afterLabel: 'What one run produced',
-      caption: 'One real run of this workflow: the two references as they were uploaded (side by side here), and the single picture that came back at pose “shaking hands”, square, 1024 × 1024. The character still has her face turned away, so the model kept her hair, build and gear and designed the rest — a still with her face visible carries more of it.',
+      before: '/examples/together/references.jpg', after: '/examples/together/handshake-guest.webp',
+      beforeLabel: 'The two photos that were uploaded', afterLabel: 'What the free run produced',
+      caption: 'One real run of this workflow — the free example’s own stored result, byte for byte: the two references as they were uploaded (side by side here), and the single picture that came back at pose “shaking hands”, square, 1024 × 1024. The character still has her face turned away, so the model kept the build and the dark gear and designed the face, the armour and the street: her red hair came back brown. A still with her face visible carries more of it.',
       aspectRatio: 1,
     },
   },

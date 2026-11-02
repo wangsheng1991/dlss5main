@@ -19,7 +19,13 @@ import { resolveSiteUrl } from '../../src/config/site-url.js';
  * Uploading a visitor's own image keeps requiring an account.
  */
 
-/** The seed every example is generated with, so the free first click is the picture the page shows. */
+/**
+ * The seed every example is generated with. It is a request, not a contract: on 2026-11-02 the same
+ * two references, pose and seed came back as two different pictures minutes apart (one red-haired
+ * character on a neon street, one dark-haired one in plate armour on a daylight street), so the
+ * value is passed for consistency with the examples that already carried one — not because it makes
+ * an example reproducible. Anything a page says about an example has to be said about that run.
+ */
 const SAMPLE_SEED = 42;
 const POLL_INTERVAL_MS = 1500;
 const POLL_BUDGET_MS = 45000;
@@ -92,9 +98,9 @@ async function warm(req: VercelRequest, sampleId: SampleId, store: SampleStore) 
       prompt: sample.prompt,
       preset: 'preset' in sample ? sample.preset : undefined,
       options: 'options' in sample ? sample.options : undefined,
-      // Tool examples get the same fixed seed as the plain ones: a guest's first click is not the
-      // place for the provider's randomness, and an example that comes back different every time it
-      // is re-warmed makes the case card beside it a different picture than the one a visitor sees.
+      // Tool examples get the same seed as the plain ones, for the same reason and with the same
+      // caveat: the channel did not reproduce a run from it, so this narrows the draw rather than
+      // fixing it, and the case card is described as one run because that is all it is.
       seed: SAMPLE_SEED,
     })
     : { prompt: sample.prompt, image_ids: imageIds, ...sampleOutputSize(sampleId), seed: SAMPLE_SEED, num_inference_steps: 4, output_format: 'webp' };

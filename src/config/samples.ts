@@ -31,9 +31,9 @@ export const SAMPLES = {
     tool: 'together' as ToolId,
     options: { pose: 'handshake', frame: 'square' },
     outputSize: { width: 1024, height: 1024 },
-    // The first stored result of this example came back as a different (weaker) run than the case
-    // card: same inputs, another draw. Bumping the version re-warms it under the fixed sample seed,
-    // so what a guest is shown and what the card describes are the same picture.
+    // The version names which draw of this example is stored. The channel answered the same inputs
+    // with a different picture on the re-warm, so "the" stored result is not stable — the case card
+    // publishes these exact bytes as its own case, and says so.
     cacheVersion: 'duo-seed42-v1',
     // This line is never sent as the model brief: the server writes the duo prompt from the pose
     // (`buildToolTask` → `togetherPrompt`). It is only what the studio calls the run, and a usable
