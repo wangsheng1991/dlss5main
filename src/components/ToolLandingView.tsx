@@ -79,6 +79,22 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
           <figcaption className="px-3 py-4 text-xs leading-relaxed text-zinc-400">{es ? 'Demostración ilustrativa: copia de baja resolución frente a la imagen de referencia. No es una medición del resultado del modelo. Tu resultado dependerá de la imagen original.' : 'Illustrative demo: a low-resolution copy compared with its reference image. This is not a measured model output. Your result depends on the source image.'}</figcaption>
         </figure>}
       </section>
+      {/* Real runs under the hero: a pose gallery is the honest version of "here is what it makes",
+          because one before-and-after slider can only ever show the run that happened to work. */}
+      {tool.gallery && <section className="mt-14" aria-labelledby="gallery-heading">
+        <h2 id="gallery-heading" className="text-2xl md:text-3xl font-headline font-bold text-white">{tool.gallery.heading}</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400">{tool.gallery.intro}</p>
+        <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {tool.gallery.cards.map(card => <figure key={card.src} className="rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-low">
+            <img src={card.src} alt={`${tool.heading} — ${card.label}`} width={card.width} height={card.height} loading="lazy" className="w-full" />
+            <figcaption className="p-4">
+              <p className="text-xs uppercase tracking-widest text-primary">{card.pose}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{card.label}</p>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-400">{card.note}</p>
+            </figcaption>
+          </figure>)}
+        </div>
+      </section>}
       <ToolEvidence tool={tool} />
 
       <section className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label={es ? 'Resumen de la herramienta' : 'Tool at a glance'}>

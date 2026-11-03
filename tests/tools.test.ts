@@ -152,6 +152,24 @@ test('every tool page has its own path, and its related links stay inside the se
   }
 });
 
+test('a pose gallery shows real runs, and every picture in it is deployed', () => {
+  const gallery = TOOL_LANDINGS.find(landing => landing.path === '/game-character-together')?.gallery;
+  assert.ok(gallery, 'the duo page needs its pose gallery');
+  assert.ok(gallery.cards.length >= 3, 'three poses is the point of a gallery');
+  assert.ok(gallery.heading.trim() && gallery.intro.trim(), 'the section needs a heading and an intro');
+  for (const card of gallery.cards) {
+    assert.ok(card.label.trim() && card.note.trim() && card.pose.trim(), `${card.src} is missing its label, pose or note`);
+    // The size on the card is the size the run produced, so it cannot claim a frame it does not have.
+    assert.ok(card.width === 1024 && card.height === 1024, `${card.src}: ${card.width}×${card.height} is not the frame the run produced`);
+    assert.doesNotThrow(() => readFileSync(new URL(`../public${card.src}`, import.meta.url)), `${card.src} is not deployed`);
+    // A real run of the pose recipe, not a studio illustration: the studio never writes a caption that
+    // promises a face, and neither may the page.
+    assert.doesNotMatch(card.note, /guarantee|exactly like|100%/i, `${card.src}: do not promise identity`);
+  }
+  // Every other page keeps the plain layout: a gallery with nothing truthful to put in it is decoration.
+  assert.deepEqual(TOOL_LANDINGS.filter(landing => landing.gallery).map(landing => landing.path), ['/game-character-together']);
+});
+
 test('every tool page is in the sitemap, so a crawler finds it without a link', () => {
   const sitemap = publicFile('sitemap.xml');
   for (const tool of TOOL_LANDINGS) {

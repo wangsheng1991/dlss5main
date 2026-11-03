@@ -31,6 +31,12 @@ export type ToolLanding = {
   featureList?: string[];
   /** A cached example that a visitor can run without an account. */
   freeSample?: string;
+  /**
+   * Real runs of this workflow, shown side by side under the hero. Every picture is one completed run
+   * at the settings its label names — a pose of ours, not a commissioned illustration — and the note
+   * says what to look at. Only pages that have more than one honest run get a gallery.
+   */
+  gallery?: { heading: string; intro: string; cards: Array<{ src: string; label: string; pose: string; note: string; width: number; height: number }> };
   /** A worked example… or two real frames of one, for the result slider. */
   demo?: { kind?: 'compare' | 'poster'; before: string; after: string; beforeLabel: string; afterLabel: string; caption: string; aspectRatio: number; /** A transparent result needs an opaque surface under it, or the input shows through. */
     backdrop?: string; /** Social cards cannot render an SVG, so a vector demo names a raster twin for og:image. */
@@ -640,6 +646,27 @@ export const TOOL_LANDINGS: ToolLanding[] = [
       { path: '/virtual-makeup', label: 'Virtual Makeup' },
     ],
     freeSample: 'together',
+    gallery: {
+      heading: 'Three poses, three real runs',
+      intro: 'The same person and the same character still, one pose each, nothing retouched afterwards. A run that misses is a run that misses — the one thing this page will not promise is any character’s exact face, so the picture that comes back is the picture you check before you post it.',
+      cards: [
+        {
+          src: '/examples/together/promo-hug.webp', label: 'The two of them, hugging', pose: 'Pose: hugging · 1024 × 1024',
+          note: 'Both faces came from their own reference, and the rain of the character’s still became the light of the scene.',
+          width: 1024, height: 1024,
+        },
+        {
+          src: '/examples/together/promo-side.webp', label: 'Standing side by side', pose: 'Pose: side by side · 1024 × 1024',
+          note: 'One arm over the shoulder, both facing the camera — the pose to use for a profile picture.',
+          width: 1024, height: 1024,
+        },
+        {
+          src: '/examples/together/promo-back.webp', label: 'Back to back, arms crossed', pose: 'Pose: back to back · 1024 × 1024',
+          note: 'The game-poster stance: both look into the lens and the armour and the sweater sit in the same light.',
+          width: 1024, height: 1024,
+        },
+      ],
+    },
     demo: {
       before: '/examples/together/references.jpg', after: '/examples/together/handshake-guest.webp',
       beforeLabel: 'The two photos that were uploaded', afterLabel: 'What the free run produced',
