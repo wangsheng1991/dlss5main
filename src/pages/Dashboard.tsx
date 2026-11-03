@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ImageSlider from '../components/ImageSlider';
 import ShowcasePanel from '../components/ShowcasePanel';
+import ToolBadge from '../components/ToolBadge';
 import { type ShowcaseCase } from '../config/showcase';
 import { useAuth } from '../contexts/AuthContext';
 import { SAMPLES, SAMPLE_IDS, GUEST_SAMPLE_IDS, isSampleId, type SampleId } from '../config/samples';
@@ -500,7 +501,7 @@ export default function Dashboard() {
             ? <button type="button" disabled={locked} className="w-full bg-primary/15 border border-primary/40 rounded-lg p-4 text-primary font-semibold text-left">
                 <span className="block text-sm">{t('dashboard.modeCharacterStyle')}</span>
               </button>
-            : MODES.map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${MODE_LABEL_KEY[value]}`)}</button>)}
+            : MODES.map(value => <button key={value} type="button" onClick={() => { setMode(value); trackEvent('studio_mode_select', { mode: value }); }} disabled={locked} className={mode === value ? 'bg-primary/15 border border-primary/40 rounded-lg p-3 text-primary font-semibold' : 'bg-surface-highest border border-outline-variant/20 rounded-lg p-3 text-zinc-300 disabled:opacity-60'}>{t(`dashboard.${MODE_LABEL_KEY[value]}`)}<ToolBadge tool={value} className="ml-1.5"/></button>)}
         </div>
           {characterStyleWorkflow ? <details className="mt-3 rounded-lg border border-outline-variant/20 bg-surface-highest/40 group">
             <summary className="cursor-pointer list-none px-3 py-3 flex items-center justify-between gap-3 text-sm text-white">

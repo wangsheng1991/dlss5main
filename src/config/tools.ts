@@ -683,3 +683,17 @@ export const TOOL_SUMMARY: Record<ToolId, { label: string; short: string; output
     audience: `No upload — paste up to ${FETCH_MAX_URLS} links`,
   },
 };
+
+/**
+ * The one-word flag a tool can wear in the picker, the case book and its own page.
+ *
+ * It is a promotion marker and nothing else: it says "this is the newest thing we shipped", not
+ * "this is supported" or "this is better". Keep it to one entry — the label works by contrast with
+ * everything beside it, and a row of HOTS reads as decoration. `together` went live on 2026-11-02,
+ * which is why it carries it now; move the flag when the next tool ships.
+ */
+export const TOOL_BADGES: Partial<Record<ToolId, 'hot' | 'new'>> = { together: 'hot' };
+
+/** Lookup for callers that hold a loose mode string (`upscale` and `unblur` are pages, not tools). */
+export const toolBadge = (id: string): 'hot' | 'new' | undefined => TOOL_BADGES[id as ToolId];
+

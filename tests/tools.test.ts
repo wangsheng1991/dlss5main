@@ -12,6 +12,7 @@ import {
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, SERVICE_FAILURE_NOTE, STUDIO_MAX_PIXELS, buildToolTask, clampSteps, clampVectorizeEdge,
   failureNote, fetchUrlError, inputLimitNote, maxPixelsForMode, modeForModel, oversizeNote, parseFetchUrls, pixelCheckNote,
   VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, isToolId, modelForTool,
+  TOOL_BADGES, toolBadge,
   toolNeedsSecondImage, toolOptionError, toolTakesSecondImage, FETCH_MAX_URLS,
   TOGETHER_POSES, togetherPrompt,
 } from '../src/config/tools';
@@ -617,4 +618,16 @@ test('the reviewed kitchen pair keeps its landscape frame and cannot reuse the o
   assert.equal(sampleResultUrl('sample2'), '/api/image-edit/samples?sample=sample2');
   assert.equal(sampleResultUrl('sample1'), '/api/image-edit/samples?sample=sample1&v=sample1-kitchen-aligned-v3');
   assert.ok(readFileSync(new URL(`../public${SAMPLES.sample1.src}`, import.meta.url)).length > 0);
+});
+
+test('the HOT flag marks one tool, and it is the one that just shipped', () => {
+  const flagged = Object.keys(TOOL_BADGES);
+  assert.equal(flagged.length, 1, 'a row of badges stops being a signal — keep one');
+  for (const id of flagged) assert.ok(isToolId(id), `${id} is not a tool the studio can start`);
+  // Pinned on purpose: when the next tool ships, this line changes, which is the reminder to move
+  // the flag rather than to add a second one.
+  assert.equal(toolBadge('together'), 'hot');
+  assert.equal(toolBadge('cutout'), undefined, 'every other tool stays unmarked');
+  assert.equal(toolBadge('upscale'), undefined, 'a landing-page name is not a tool id');
+  assert.equal(TOOL_BADGES.together, 'hot', 'the badge is read from config, never hard-coded in a component');
 });

@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight, ExternalLink, Loader2, MousePointerClick } from 'lucide-react';
 import { SHOWCASE_NOTE, casesForTool, showcaseTools, type ShowcaseCase } from '../config/showcase';
 import { TOOL_SUMMARY, isToolId, type ToolId } from '../config/tools';
+import ToolBadge from './ToolBadge';
 import type { GenerationMode } from '../features/generation/operation';
 
 type Props = {
@@ -91,7 +92,7 @@ export default function ShowcasePanel({ mode, signedIn, locked, onUse }: Props) 
       <h2 id="showcase-heading" className="text-xs font-label uppercase tracking-widest text-zinc-400">{t('dashboard.showcaseHeading')}</h2>
       <p className="text-xs text-zinc-400 mt-2">{SHOWCASE_NOTE}</p>
       <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label={t('dashboard.showcaseTabs')}>
-        {tools.map(tool => <button key={tool.id} type="button" role="tab" aria-selected={active === tool.id} onClick={() => setBrowsing(tool.id)} className={active === tool.id ? 'px-3 py-2 rounded-lg text-xs bg-primary/15 border border-primary/40 text-primary font-semibold' : 'px-3 py-2 rounded-lg text-xs bg-surface-highest border border-outline-variant/20 text-zinc-300'}>{tool.label} · {tool.count}</button>)}
+        {tools.map(tool => <button key={tool.id} type="button" role="tab" aria-selected={active === tool.id} onClick={() => setBrowsing(tool.id)} className={active === tool.id ? 'px-3 py-2 rounded-lg text-xs bg-primary/15 border border-primary/40 text-primary font-semibold' : 'px-3 py-2 rounded-lg text-xs bg-surface-highest border border-outline-variant/20 text-zinc-300'}>{tool.label} · {tool.count}<ToolBadge tool={tool.id} className="ml-1.5"/></button>)}
       </div>
       <p className="mt-3 text-xs text-zinc-500">{TOOL_SUMMARY[active].label} — {TOOL_SUMMARY[active].output} · {TOOL_SUMMARY[active].seconds}</p>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-1">

@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, UploadCloud } from 'lucide-react';
 import ImageSlider from './ImageSlider';
+import ToolBadge from './ToolBadge';
 import { toolAlternates, toolLongForm, toolSteps, type ToolLanding } from '../content/toolLandings';
 import { ENHANCE_MAX_EDGE } from '../config/enhance';
 import { profileHas } from '../config/profile';
@@ -59,7 +60,7 @@ export default function ToolLandingView({ tool, workspace }: { tool: ToolLanding
     <main lang={tool.locale} className="pt-28 sm:pt-32 pb-20 px-5 max-w-[1200px] mx-auto w-full">
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start" id="tool">
         <div className="lg:col-span-6">
-          <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">{tool.eyebrow}</p>
+          <p className="text-primary font-label text-xs uppercase tracking-[0.2em] mb-4">{tool.eyebrow}<ToolBadge tool={tool.dashboardTool} className="ml-2"/></p>
           <h1 className="text-4xl md:text-5xl font-headline font-bold tracking-tight text-white leading-[1.08]">{tool.heading}</h1>
           <p className="mt-5 text-lg leading-relaxed text-zinc-300">{tool.intro}</p>
           <p className="mt-4 text-sm leading-relaxed text-zinc-400">{AI_OVERVIEW_DEFINITION}</p>
