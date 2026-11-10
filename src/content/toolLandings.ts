@@ -729,8 +729,13 @@ export const TOOL_LANDING_BY_PATH = Object.fromEntries(TOOL_LANDINGS.map(tool =>
 
 export const TOOL_BASE_URL = SITE_URL;
 
-/** Only the enhancer has a translated equivalent. Distinct tools are not language alternates. */
+/** Only the pages that have a translated equivalent name one. Distinct tools are not language alternates. */
 export function toolAlternates(tool: ToolLanding) {
+  if (['/game-character-together', '/zh/game-character-together'].includes(tool.path)) return [
+    { hrefLang: 'en', href: `${TOOL_BASE_URL}/game-character-together` },
+    { hrefLang: 'zh-CN', href: `${TOOL_BASE_URL}/zh/game-character-together` },
+    { hrefLang: 'x-default', href: `${TOOL_BASE_URL}/game-character-together` },
+  ];
   if (!['/image-quality-enhancer', '/es/mejorar-calidad-imagen'].includes(tool.path)) return [];
   return [
     { hrefLang: 'en', href: `${TOOL_BASE_URL}/image-quality-enhancer` },
