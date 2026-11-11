@@ -54,17 +54,17 @@ The second reason is hardware. 68.65 GB of BF16 weights over a 33.1B transformer
 
 The pictures below are not an illustration. They are two files this site paid for and produced on 2026-11-11, from a single small input taken out of our own case folder — a city street, because a skyline shows detail loss more honestly than a portrait does.
 
-![The 320 × 213 source file, before anything touched it](assets/input-low.jpg)
+![The 320 × 213 source file, before anything touched it](assets/city-input-320.jpg)
 *The input, exactly as it sits in our case folder: 320 × 213, 7,677 bytes. Nothing was degraded further to make the point.*
 
 The first pass is the detail restore lane at its own size — the job of making an existing file clearer without pretending to know more about it.
 
-![The same image after a one-step detail restore, still 320 × 213](assets/ours-pixrestore.jpg)
+![The same image after a one-step detail restore, still 320 × 213](assets/city-restore-320.jpg)
 *A one-step detail-restore run: 320 × 213 in, 320 × 213 out, 14.2 seconds, 110,813 bytes. Sharper, not bigger.*
 
 The second pass is the recipe our upscaler actually submits: a 1152 × 1536 target, eight steps, composition held, no new objects.
 
-![The same input through the production upscale recipe at 1280 × 848](assets/ours-upscale.jpg)
+![The same input through the production upscale recipe at 1280 × 848](assets/city-upscale-1100.jpg)
 *The upscale lane: 320 × 213 in, 1280 × 848 out, 21.5 seconds, eight steps, 474 KB. This is the same request body \`/image-upscaler\` sends, so what you see is what the product does.*
 
 Run both of these on a generator instead and you would get something sharper and larger, from a model that re-composes the scene — which is exactly the trade this article is about. The fourth column of that comparison is deliberately empty: we have not run MiniMax-H3-Image's edit path ourselves, and a borrowed screenshot is not a measurement.
@@ -112,17 +112,17 @@ This is an independent article. MiniMax and MiniMax-H3 are trademarks of their o
 
 下面这些不是示意图。它们是我们自己的一条小图，在 2026-11-11 真跑出来的两个文件。
 
-![320 × 213 的原始输入，没有任何额外处理](assets/input-low.jpg)
+![320 × 213 的原始输入，没有任何额外处理](assets/city-input-320.jpg)
 *输入本来就是这样：320 × 213、7,677 字节，出自我们自己的案例文件夹。没有为了对比故意再压糊一次。*
 
 第一次是同尺寸的细节还原——把已有的文件变清楚，而不是假装知道更多。
 
-![同尺寸还原之后，仍然是 320 × 213](assets/ours-pixrestore.jpg)
+![同尺寸还原之后，仍然是 320 × 213](assets/city-restore-320.jpg)
 *一步的细节还原：进 320 × 213、出 320 × 213，14.2 秒，110,813 字节。更清楚，不是更大。*
 
 第二次是放大通道实际提交的那条配方：目标 1152 × 1536、8 步、保持构图、不新增物体。
 
-![同一张输入走生产放大配方，输出 1280 × 848](assets/ours-upscale.jpg)
+![同一张输入走生产放大配方，输出 1280 × 848](assets/city-upscale-1100.jpg)
 *放大通道：进 320 × 213、出 1280 × 848，21.5 秒，8 步，474 KB。这就是 \`/image-upscaler\` 发出的同一条请求体，你看到的就是产品实际做的。*
 
 同样这两步交给生成模型，你会得到一张更清晰、更大、但由模型重新构图的画面——这正是本文要说的取舍。这个对比的第四格是刻意留空的：我们还没亲手跑过 MiniMax-H3-Image 的编辑通道，借来的截图不算测量。
