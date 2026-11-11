@@ -17,8 +17,8 @@ export const ARTICLE_COVERS: Record<string, ArticleCover> = {
     // Our own production run on the input the article starts from — not the model's showreel, which
     // the community licence does not let us display where this site is read.
     src: '/minimax-h3-photo-check/assets/ours-upscale.jpg',
-    width: 1280,
-    height: 848,
+    width: 1200,
+    height: 794,
     alt: 'The same 320 × 213 city input after our production upscale recipe, at 1280 × 848',
   },
   'seedance-2-5-video-super-resolution-cost-guide-2026': {
