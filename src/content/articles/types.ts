@@ -4,6 +4,7 @@ import { CORE_ARTICLES } from './core20261023';
 import { NEWS_20261102 } from './news20261102';
 import { NEWS_20261103 } from './news20261103';
 import { MINIMAX_20261111 } from './minimaxH3Image20261111';
+import { TOPAZ_LINEUP_20261112 } from './topazLineup20261112';
 export interface Article {
   tier?: 'core' | 'entry-point';
   assetBase?: string;
@@ -692,4 +693,5 @@ DLSS 5 不是从定义上威胁艺术灵魂。它是在默认配置、当前实�
   ...NEWS_20261102,
   ...NEWS_20261103,
   MINIMAX_20261111,
+  TOPAZ_LINEUP_20261112,
 ];
