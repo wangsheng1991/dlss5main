@@ -19,6 +19,8 @@ export const TOPAZ_LINEUP_20261112: Article = {
   type: 'Product announcement with a status line per lane',
   lastUpdated: 'November 2026',
   readTime: '5 min read',
+  coverCaption_en: 'Lane status on 12 November 2026 — each lane links to the page you can check it on. Drawn here; no third-party screenshot.',
+  coverCaption_cn: '2026 年 11 月 12 日的功能线状态——每一条都链到自己那个可以当场验证的页面。图由本站绘制，没有第三方截图。',
   datePublished: '2026-11-12',
   description_en: 'We are closing the gap to the Topaz lineup lane by lane. Five of those lanes already run in the browser today, two are still being built, and this page says which is which — with the acceptance rule every one of them has to pass before it ships.',
   description_cn: '我们按功能线一条条补齐 Topaz 那一套：其中五条今天已经能在浏览器里跑，两条还在做。这篇把哪条是哪种、以及每条上线前必须过的验收标准写清楚。',

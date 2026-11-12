@@ -21,6 +21,14 @@ export const ARTICLE_COVERS: Record<string, ArticleCover> = {
     height: 794,
     alt: 'The same 320 × 213 city input after our production upscale recipe, at 1280 × 848',
   },
+  'topaz-lineup-coming-what-runs-today-2026': {
+    // Drawn here, not borrowed: the lanes and their status are the ones the site can be checked
+    // against today, so the card cannot drift ahead of the pages it points at.
+    src: '/blog/topaz-lineup-cover.jpg',
+    width: 1200,
+    height: 630,
+    alt: 'Status board: five of the seven Topaz-shaped lanes already run in a browser, video super-resolution and frame interpolation are still in the build queue',
+  },
   'seedance-2-5-video-super-resolution-cost-guide-2026': {
     src: '/blog/seedance25-video-superres.png',
     alt: 'Low-resolution AI video passing through a neural super-resolution pipeline into a crisp 4K frame',
