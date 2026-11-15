@@ -48,6 +48,7 @@ import { BEFORE_AFTER_CASES, BEFORE_AFTER_COPY, BEFORE_AFTER_FAQ, beforeAfterSch
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { VISUAL_ENHANCER_COPY, visualEnhancerSchema, type VisualEnhancerLocale } from '../src/content/visualEnhancer';
 import { TOGETHER_ZH, togetherZhSchema } from '../src/content/togetherZh';
+import { TOPAZ_FREE, topazFreeMailto, topazFreeSchema } from '../src/content/topazFree';
 import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
 import { PODCAST_EPISODES, PODCAST_INDEX_DESCRIPTION, type PodcastEpisode } from '../src/content/podcast';
 import { EXPANSION_PAGES, type ExpansionPage } from '../src/content/seoExpansion';
@@ -1315,6 +1316,8 @@ if (profileHas('tools')) {
   writeRoute('/visual-enhancer', renderVisualEnhancerStatic('en'));
   writeRoute('/zh/visual-enhancer', renderVisualEnhancerStatic('zh'));
   writeRoute(TOGETHER_ZH.path, renderTogetherZh());
+  writeRoute(TOPAZ_FREE.path, renderTopazFree('en'));
+  writeRoute(TOPAZ_FREE.zhPath, renderTopazFree('zh'));
 }
 if (profileHas('useCases')) for (const item of USE_CASES) writeRoute(item.path, renderUseCaseLanding(item));
 if (profileHas('microTools')) {
@@ -1524,12 +1527,50 @@ function renderTogetherZh(): string {
     canonicalPath: copy.path,
     language: copy.language,
     image: copy.demo.after,
-    keywords: copy.keywords,
+    keywords: [...copy.keywords],
     structuredData: togetherZhSchema(),
     alternates: [
       { hrefLang: 'en', href: `${BASE_URL}/game-character-together` },
       { hrefLang: 'zh-CN', href: `${BASE_URL}${copy.path}` },
       { hrefLang: 'x-default', href: `${BASE_URL}/game-character-together` },
+    ],
+  }), root);
+}
+
+/**
+ * The free-window pre-announcement (`/topaz-free`, `/zh/topaz-free`).
+ *
+ * Static rather than hydrated on purpose: the page's whole job is to be read and to hand over one
+ * address, so the copy, the seven lane statuses and the mailto link all have to exist without
+ * JavaScript.
+ */
+function renderTopazFree(locale: 'en' | 'zh'): string {
+  const copy = locale === 'zh' ? TOPAZ_FREE.zh : TOPAZ_FREE.en;
+  const path = locale === 'zh' ? TOPAZ_FREE.zhPath : TOPAZ_FREE.path;
+  const breadcrumbHome = locale === 'zh' ? '/zh' : '/';
+  const lanes = TOPAZ_FREE.lanes.map(lane => {
+    const live = lane.status === 'live';
+    return `<article class="rounded-xl border p-5 ${live ? 'border-emerald-500/30 bg-emerald-500/[0.06]' : 'border-amber-500/30 bg-amber-500/[0.06]'}"><p class="text-sm font-semibold text-white">${escapeHtml(locale === 'zh' ? lane.name_cn : lane.name_en)} <span class="text-xs uppercase tracking-widest ${live ? 'text-emerald-400' : 'text-amber-400'}">${live ? (locale === 'zh' ? '已上线' : 'Live') : (locale === 'zh' ? '建设中' : 'Building')}</span></p><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(locale === 'zh' ? lane.detail_cn : lane.detail_en)}</p><p class="mt-3"><a href="${escapeHtml(lane.href)}" class="text-primary text-sm">${locale === 'zh' ? '打开这一页' : 'Open the page'} →</a></p></article>`;
+  }).join('');
+  const offer = copy.offer.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const steps = copy.joinSteps.map((step, index) => `<li>${index + 1}. ${escapeHtml(step)}</li>`).join('');
+  const promise = copy.promise.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const notPromise = copy.notPromise.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const faq = TOPAZ_FREE.faqs[locale].map(([question, answer]) => `<article class="rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h3 class="font-semibold text-white">${escapeHtml(question)}</h3><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(answer)}</p></article>`).join('');
+  const related = copy.related.map(item => `<a href="${escapeHtml(item.path)}" class="text-primary">${escapeHtml(item.label)} →</a>`).join(' · ');
+  const root = `<main class="pt-28 sm:pt-32 pb-20 px-5 max-w-[1100px] mx-auto w-full"><nav class="mb-8 text-sm text-zinc-500"><a href="${breadcrumbHome}">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(copy.heading)}</span></nav><header><p class="text-primary uppercase tracking-[0.2em] text-xs">${escapeHtml(copy.eyebrow)}</p><h1 class="mt-4 text-4xl md:text-5xl font-bold text-white leading-tight">${escapeHtml(copy.heading)}</h1><p class="mt-5 text-lg leading-relaxed text-zinc-300">${escapeHtml(copy.lead)}</p></header><figure class="mt-8 rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low"><img src="${TOPAZ_FREE.image}" alt="${escapeHtml(locale === 'zh' ? TOPAZ_FREE.imageAlt_cn : TOPAZ_FREE.imageAlt_en)}" width="1200" height="630" fetchpriority="high" class="w-full object-cover" /><figcaption class="px-5 py-3 text-xs text-zinc-400">${locale === 'zh' ? '七条功能线的状态板：图由本站绘制，没有第三方截图。' : 'Lane status board — drawn here; no third-party screenshot.'}</figcaption></figure><section class="mt-12"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.statusLead)}</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">${escapeHtml(copy.statusNote)}</p><div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">${lanes}</div></section><section class="mt-14 rounded-2xl border border-primary/30 bg-primary/[0.06] p-6 sm:p-8"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.offerHeading)}</h2><ul class="mt-5 space-y-3 text-sm leading-relaxed text-zinc-200">${offer}</ul><p class="mt-5 text-xs leading-relaxed text-zinc-400">${escapeHtml(copy.offerNote)}</p></section><section class="mt-10 rounded-2xl border border-dashed border-primary/40 bg-surface-low p-6 sm:p-8" id="join"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.joinHeading)}</h2><ol class="mt-5 space-y-2 text-sm leading-relaxed text-zinc-300">${steps}</ol><p class="mt-6 rounded-lg border border-outline-variant/30 bg-black/30 px-4 py-3 font-mono text-sm text-white break-all">${escapeHtml(TOPAZ_FREE.email)}</p><p class="mt-2 text-xs text-zinc-400">${locale === 'zh' ? '主题：' : 'Subject: '}<span class="font-mono text-zinc-200">${escapeHtml(copy.subject)}</span></p><p class="mt-5"><a href="${escapeHtml(topazFreeMailto(locale))}" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(copy.mailLabel)}</a></p><p class="mt-3 text-xs leading-relaxed text-zinc-400">${escapeHtml(copy.mailNote)}</p><p class="mt-2 text-xs leading-relaxed text-zinc-500">${escapeHtml(copy.legalNote)}</p></section><section class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-xl font-bold text-white">${escapeHtml(copy.promiseHeading)}</h2><ul class="mt-4 space-y-3 text-sm leading-relaxed text-zinc-300">${promise}</ul></article><article class="rounded-xl border border-amber-500/25 bg-amber-500/[0.05] p-6"><h2 class="text-xl font-bold text-white">${locale === 'zh' ? '不承诺的部分' : 'What we do not promise'}</h2><ul class="mt-4 space-y-3 text-sm leading-relaxed text-zinc-300">${notPromise}</ul></article></section><section class="mt-16" id="faq"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.faqHeading)}</h2><div class="mt-5 grid gap-4">${faq}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">${escapeHtml(copy.relatedHeading)}</h2><p class="mt-4">${related}</p><p class="mt-6 text-xs leading-relaxed text-zinc-500">${escapeHtml(copy.trademarkNote)}</p></section></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: copy.title,
+    description: copy.description,
+    canonicalPath: path,
+    language: copy.language,
+    image: TOPAZ_FREE.image,
+    keywords: [...copy.keywords],
+    structuredData: topazFreeSchema(locale, BASE_URL),
+    alternates: [
+      { hrefLang: 'en', href: `${BASE_URL}${TOPAZ_FREE.path}` },
+      { hrefLang: 'zh-CN', href: `${BASE_URL}${TOPAZ_FREE.zhPath}` },
+      { hrefLang: 'x-default', href: `${BASE_URL}${TOPAZ_FREE.path}` },
     ],
   }), root);
 }

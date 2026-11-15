@@ -57,7 +57,7 @@ One rule, applied without exception: **every comparison we publish is our own ru
 
 Not a date. Not a price. Not that any lane beats Topaz on any particular frame — that claim belongs to a test with the same input on both, and that test will be published when it is run, not before. And not a model name we have not licensed: the weights list is published alongside the code, and a model whose licence forbids commercial or server-side use does not enter the queue, no matter how good its demo reel looks.
 
-If you want to see where the line already is, the free examples cost nothing and need no account. If you want the rest, the next lanes are closer than they were last month.
+If you want to see where the line already is, the free examples cost nothing and need no account. And if you want to be told first when the free window for these lanes opens, [the pre-announcement is here](/topaz-free) — one email, no form. If you want the rest, the next lanes are closer than they were last month.
 
 Topaz is a trademark of Topaz Labs. This site is independent and not affiliated with, endorsed by, or sponsored by Topaz Labs or NVIDIA.`,
   content_cn: `直说：我们要把 Topaz 那一整条产品线逐条补上，而这句的前半段今天已经成立。这一页是预告——但本站不发不是自己拍的图、不发不是自己测的数，所以预告也是「一条功能一行状态」，而不是一段剪好的拼贴。
@@ -88,7 +88,7 @@ Topaz is a trademark of Topaz Labs. This site is independent and not affiliated 
 
 不给日期，不给价格，不承诺任何一条在某一帧上赢过 Topaz——那种结论属于「同一输入两边各跑一次」的测试，测试跑完才发布，不是反过来。也不承诺还没谈妥许可证的模型：权重清单随代码一起公开，凡是许可证不允许商用或不允许服务端调用的模型，演示再好看也不进队列。
 
-想先看看这条线今天到哪了：那几个免费示例不花钱、也不用账号。想要剩下的部分——它比上个月更近了。
+想先看看这条线今天到哪了：那几个免费示例不花钱、也不用账号。这轮免费窗口开放时想第一时间知道，[预告在这里](/zh/topaz-free)——一封邮件，没有表单。想要剩下的部分——它比上个月更近了。
 
 Topaz 是 Topaz Labs 的商标。本站独立运营，与 Topaz Labs、NVIDIA 均无隶属、背书或赞助关系。`,
 };
