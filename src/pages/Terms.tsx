@@ -46,8 +46,20 @@ export default function Terms() {
         </Section>
 
         <Section title="4. Acceptable use">
+          <p>These AI content rules apply to prompts, uploads and reference files, generated or edited outputs, and content you share using the service, including through the API. You may not use the service to create, edit, upload, or distribute:</p>
           <Bullets items={[
-            <>Do not upload content you have no right to process, and do not use the service to create or distribute anything unlawful, sexually explicit involving minors, hateful, or designed to harass or deceive.</>,
+            <>Pornography, sexually explicit or other NSFW sexual content, including non-consensual intimate images.</>,
+            <>Graphic violence, gore, or content that promotes or incites real-world violence.</>,
+            <>Hate speech or content that attacks, dehumanises, or threatens people based on protected characteristics.</>,
+            <>Child sexual abuse material (CSAM), sexualised depictions of minors, or other content that exploits or endangers children, including synthetic depictions.</>,
+            <>Deepfakes of real people, impersonation, or synthetic media presented as authentic to deceive, harass, or defraud others.</>,
+            <>Content that infringes copyright, trademarks, or other intellectual property rights, including material you do not have permission to upload or process.</>,
+          ]} />
+          <p>Outputs are AI-generated or AI-edited. Identify them as such when sharing them where viewers could reasonably mistake them for authentic material.</p>
+          <p>To report prohibited content or an intellectual property violation, email <a className="text-primary underline" href={`mailto:${LEGAL.contactEmail}`}>{LEGAL.contactEmail}</a>. Include the job ID or URL, the reason for the report, and a way to contact you. For suspected CSAM, report the identifier and context without downloading or attaching the material.</p>
+          <p>We review reports and may check the relevant request, output, and account activity to assess whether this policy was violated. Model providers may block requests under their own safety rules. If we find a violation, we may block requests, restrict access, remove content we host, or suspend or terminate the account under Section 8. We may escalate reports where required by law.</p>
+          <Bullets items={[
+            <>Do not use the service for unlawful activity or to harass or deceive others.</>,
             <>Do not attempt to bypass credit accounting, daily limits, rate limits or authentication, and do not resell API access without a written agreement with us.</>,
             <>Do not use automated means to bulk-scrape the service, or to overload it in a way that degrades it for other customers.</>,
             <>We may suspend an account that endangers the service, our providers or other customers, and we will tell you why.</>,
