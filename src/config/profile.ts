@@ -94,6 +94,13 @@ const SECTION_PATHS: Record<SiteSection, readonly string[]> = {
     '/virtual-makeup',
     '/game-character-style',
     '/video-upscaler',
+    '/zh/video-upscaler',
+    '/video-studio',
+    '/zh/video-studio',
+    '/image-to-video',
+    '/zh/image-to-video',
+    '/frame-interpolation',
+    '/zh/frame-interpolation',
     '/es/mejorar-calidad-imagen',
   ],
   useCases: [

@@ -137,6 +137,34 @@
     {
       "source": "/zh/status",
       "destination": "/zh/status/index.html"
+    },
+    {
+      "source": "/video-studio",
+      "destination": "/video-studio/index.html"
+    },
+    {
+      "source": "/zh/video-studio",
+      "destination": "/zh/video-studio/index.html"
+    },
+    {
+      "source": "/image-to-video",
+      "destination": "/image-to-video/index.html"
+    },
+    {
+      "source": "/zh/image-to-video",
+      "destination": "/zh/image-to-video/index.html"
+    },
+    {
+      "source": "/zh/video-upscaler",
+      "destination": "/zh/video-upscaler/index.html"
+    },
+    {
+      "source": "/frame-interpolation",
+      "destination": "/frame-interpolation/index.html"
+    },
+    {
+      "source": "/zh/frame-interpolation",
+      "destination": "/zh/frame-interpolation/index.html"
     }
   ],
   "headers": [

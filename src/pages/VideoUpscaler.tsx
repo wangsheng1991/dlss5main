@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { VideoStudioNotice } from '../components/VideoPreviewContent';
 import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../content/videoLanding';
 
 export default function VideoUpscaler() {
@@ -16,6 +17,7 @@ export default function VideoUpscaler() {
           <p className="mt-6 text-lg leading-relaxed text-zinc-300">{VIDEO_LANDING.intro}</p>
           <div className="mt-7 flex flex-wrap gap-3"><Link to="/dashboard?tool=enhance" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-bold text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-primary">Try a representative frame <ArrowRight aria-hidden="true" className="w-4 h-4" /></Link><Link to="/blog/seedance-2-5-video-super-resolution-cost-guide-2026" className="inline-flex items-center gap-2 rounded-lg border border-outline-variant/40 px-6 py-3 font-semibold text-zinc-200 hover:border-primary hover:text-primary">Read the Seedance 2.5 cost guide <ArrowRight aria-hidden="true" className="w-4 h-4" /></Link></div>
           <p className="mt-4 text-xs leading-relaxed text-zinc-500">The current public workspace processes still image frames. The clips below are original silent reference demos for the planned video provider workflow.</p>
+          <VideoStudioNotice locale="en" />
         </header>
 
         <section className="mt-16 max-w-4xl space-y-7" aria-labelledby="video-definition-heading">

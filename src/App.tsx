@@ -54,6 +54,7 @@ const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const GameCharacterTogetherZh = lazy(() => import('./pages/GameCharacterTogetherZh'));
 const TopazFree = lazy(() => import('./pages/TopazFree'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
+const VideoStudioPreview = lazy(() => import('./pages/VideoStudioPreview'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
 const Dlss5Dll = lazy(() => import('./pages/Dlss5Dll'));
 const Dlss45 = lazy(() => import('./pages/Dlss45'));
@@ -160,6 +161,13 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/zh/topaz-free" element={orHome('tools', <TopazFree locale="zh" />)} />
                   <Route path="/game-character-style" element={orHome('tools', <GameCharacterStyle />)} />
                   <Route path="/video-upscaler" element={orHome('tools', <VideoUpscaler />)} />
+                  <Route path="/video-studio" element={orHome('tools', <VideoStudioPreview page="/video-studio" locale="en" />)} />
+                  <Route path="/zh/video-studio" element={orHome('tools', <VideoStudioPreview page="/video-studio" locale="zh" />)} />
+                  <Route path="/image-to-video" element={orHome('tools', <VideoStudioPreview page="/image-to-video" locale="en" />)} />
+                  <Route path="/zh/image-to-video" element={orHome('tools', <VideoStudioPreview page="/image-to-video" locale="zh" />)} />
+                  <Route path="/zh/video-upscaler" element={orHome('tools', <VideoStudioPreview page="/video-upscaler" locale="zh" />)} />
+                  <Route path="/frame-interpolation" element={orHome('tools', <VideoStudioPreview page="/frame-interpolation" locale="en" />)} />
+                  <Route path="/zh/frame-interpolation" element={orHome('tools', <VideoStudioPreview page="/frame-interpolation" locale="zh" />)} />
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />

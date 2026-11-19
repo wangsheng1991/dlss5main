@@ -8,6 +8,7 @@ import { SITE_PROFILE, profileHas } from '../config/profile';
 import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
+import { VIDEO_PREVIEW_PATHS, videoPreviewPath } from '../content/videoStudio';
 
 const LANGUAGES = [
   { code: 'en-US', label: 'English' },
@@ -31,6 +32,13 @@ export default function Navbar() {
   // The home page has an English and a Chinese edition; a visitor reading the Chinese one stays
   // there when they click the brand instead of being dropped into the English home.
   const homePath = location.pathname === '/zh' || location.pathname.startsWith('/zh/') ? '/zh' : '/';
+  const videoPage = VIDEO_PREVIEW_PATHS.find(path => path === location.pathname.replace(/^\/zh(?=\/)/, ''));
+  const videoLanguage = videoPage ? (homePath === '/zh' ? 'zh-CN' : 'en-US') : undefined;
+  const zh = videoLanguage ? videoLanguage === 'zh-CN' : homePath === '/zh' || i18n.language.startsWith('zh');
+  const videoPreviewLink = videoPreviewPath('/video-studio', zh ? 'zh' : 'en');
+  const wideMenu = videoPage ? '2xl:flex' : 'md:flex';
+  const narrowMenu = videoPage ? '2xl:hidden' : 'md:hidden';
+  const videoPreviewLabel = zh ? '视频工具 · 即将上线' : 'Video tools · Coming soon';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -54,6 +62,12 @@ export default function Navbar() {
     // Blog editions have stable SEO URLs. Preserve the article slug while moving between the
     // English x-default route and the Chinese edition; the other UI locales use the English
     // source edition until translated article URLs exist.
+    if (videoPage) {
+      void i18n.changeLanguage(code);
+      navigate(videoPreviewPath(videoPage, code === 'zh-CN' ? 'zh' : 'en'));
+      setIsLangOpen(false);
+      return;
+    }
     const blogMatch = location.pathname.match(/^\/(en|zh)?\/?blog(?:\/([^/?#]+))?\/?$/);
     if (blogMatch) {
       const slug = blogMatch[2] ? `/${blogMatch[2]}` : '';
@@ -74,6 +88,10 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    if (videoLanguage && i18n.language !== videoLanguage) void i18n.changeLanguage(videoLanguage);
+  }, [videoLanguage]);
+
+  useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsLangOpen(false);
     setIsToolsOpen(false);
@@ -85,7 +103,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
           <Link className="text-2xl font-bold tracking-tighter text-nvidia-green font-headline whitespace-nowrap" to={homePath}>{SITE_PROFILE.brand}</Link>
           {!isAuthPage && (
-            <div className="hidden md:flex gap-4 xl:gap-6 items-center">
+            <div className={`hidden ${wideMenu} gap-4 xl:gap-6 items-center`}>
               {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100 transition-colors duration-300 whitespace-nowrap" to="/models">{t('navbar.models')}</Link>}
               {profileHas('tools') && (
                 // The tool pages are the site's own links: without an entry here they are reachable
@@ -102,12 +120,13 @@ export default function Navbar() {
                     <ChevronDown className={`w-3 h-3 transition-transform ${isToolsOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isToolsOpen && (
-                    <div className="absolute left-0 top-full mt-3 w-60 bg-surface-low border border-outline-variant/20 rounded-xl shadow-2xl overflow-hidden z-50">
+                    <div className="absolute left-0 top-full z-50 mt-3 max-h-[calc(100dvh-5rem)] w-60 overflow-y-auto rounded-xl border border-outline-variant/20 bg-surface-low shadow-2xl">
                       {TOOL_LANDINGS.map(tool => (
                         <Link key={tool.path} to={tool.path} className="block px-4 py-2.5 text-sm text-zinc-300 hover:bg-surface hover:text-primary transition-colors">
                           {tool.heading}
                         </Link>
                       ))}
+                      <Link to={videoPreviewLink} className="block border-t border-outline-variant/20 px-4 py-2.5 text-sm text-primary hover:bg-surface">{videoPreviewLabel}</Link>
                     </div>
                   )}
                 </div>
@@ -164,7 +183,7 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          <div className="hidden md:flex items-center gap-4">
+          <div className={`hidden ${wideMenu} items-center gap-4`}>
             {user ? (
               <>
                 <Link to="/dashboard" className="text-zinc-400 font-medium hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors duration-300 px-4 py-2 rounded-lg text-sm whitespace-nowrap">{t('navbar.dashboard')}</Link>
@@ -191,7 +210,9 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 text-zinc-400 hover:text-white"
+            aria-label={zh ? '菜单' : 'Menu'}
+            aria-expanded={isMobileMenuOpen}
+            className={`${narrowMenu} p-2 text-zinc-400 hover:text-white`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -201,7 +222,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-[#0e0e0e] border-b border-outline-variant/10 flex flex-col p-4 gap-4 shadow-2xl">
+        <div className={`${narrowMenu} absolute top-16 left-0 max-h-[calc(100dvh-4rem)] w-full overflow-y-auto bg-[#0e0e0e] border-b border-outline-variant/10 flex flex-col p-4 gap-4 shadow-2xl`}>
           {!isAuthPage && (
             <div className="flex flex-col gap-4 pb-4 border-b border-outline-variant/10">
               {profileHas('models') && <Link className="text-zinc-400 font-medium hover:text-zinc-100" to="/models">{t('navbar.models')}</Link>}
@@ -218,6 +239,7 @@ export default function Navbar() {
                     {TOOL_LANDINGS.map(tool => (
                       <Link key={tool.path} to={tool.path} className="px-3 py-2 rounded-lg bg-surface border border-outline-variant/20 text-zinc-300 text-sm">{tool.heading}</Link>
                     ))}
+                    <Link to={videoPreviewLink} className="rounded-lg border border-outline-variant/20 bg-surface px-3 py-2 text-sm text-primary">{videoPreviewLabel}</Link>
                   </div>
                 </div>
               )}
