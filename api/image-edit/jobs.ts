@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet, alphaNetSuperRes, alphaNetTools } from '../_lib/alphanet.js';
 import { fail, requireUser } from '../_lib/auth.js';
+import { screenGenerationText } from '../_lib/waffo-screening.js';
 import { JobStore } from '../../server/job-store.js';
 import { database } from '../../server/admin.js';
 import { enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput } from '../../src/config/enhance.js';
@@ -52,6 +53,21 @@ async function releaseAfterSubmitError(
   await store.settle(uid, claim.id, 'FAILED', `provider_${status}`).catch(() => null);
 }
 
+async function screenAndClaim(
+  store: JobStore, uid: string, key: string, input: { prompt?: string; extra?: string; image_ids?: string[]; [key: string]: unknown },
+) {
+  try {
+    await screenGenerationText(input);
+  } catch (error) {
+    // A retry may already have a reservation or provider job from its first attempt.
+    // Return that job for polling without granting a new submission or changing its credits.
+    const previous = await store.findByOperationKey(uid, key, input);
+    if (previous) return previous;
+    throw error;
+  }
+  return store.claim(uid, key, input);
+}
+
 async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey: string, store: JobStore) {
   const references = TOOL_REFERENCES[mode];
   let imageIds: string[] = [];
@@ -99,7 +115,7 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
     extra: mode === 'interior' ? extra : undefined,
   });
   // The stored input doubles as the history record, so the tool name is kept next to the task.
-  const claim = await store.claim(uid, idempotencyKey, { ...task, tool: mode });
+  const claim = await screenAndClaim(store, uid, idempotencyKey, { ...task, tool: mode });
   if (!claim.submit) return { jobId: claim.id, status: claim.job.status, replayed: true };
   try {
     // The downloader answers under the project key rather than the C-line tools' key: it is its own
@@ -175,13 +191,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const oversize = pixelCheckNote(sourceWidth, sourceHeight, mode);
     if (oversize) return res.status(400).json({ error: oversize });
 
-    const claim = await store.claim(uid, idempotencyKey, { prompt: finalPrompt, image_ids: image_ids as string[], width: targetWidth, height: targetHeight, seed: seed as number, num_inference_steps: num_inference_steps as number, output_format: output_format as string });
+    const task = { prompt: finalPrompt, image_ids: image_ids as string[], width: targetWidth, height: targetHeight, seed: seed as number, num_inference_steps: num_inference_steps as number, output_format: output_format as string };
+    const claim = await screenAndClaim(store, uid, idempotencyKey, task);
     if (!claim.submit) return res.status(202).json({ jobId: claim.id, status: claim.job.status, replayed: true });
     // Enhancement prefers the expansion cluster and falls back to the original project while its key
     // is not provisioned; both answer the same contract.
     const client = mode === 'enhance' && process.env.ALPHANET_SUPERRES_API_KEY ? alphaNetSuperRes : alphaNet;
     try {
-      const accepted = await client.submit({ prompt: finalPrompt, image_ids: image_ids as string[], width: targetWidth, height: targetHeight, seed: seed as number, num_inference_steps: num_inference_steps as number, output_format: output_format as string }, idempotencyKey);
+      const accepted = await client.submit(task, idempotencyKey);
       await store.accepted(claim.id, claim.job.leaseOwner, accepted.task_id);
       return res.status(202).json({ jobId: claim.id, status: 'QUEUED', width: targetWidth, height: targetHeight });
     } catch (error) {

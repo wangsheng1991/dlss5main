@@ -1,3 +1,4 @@
+import { screenGenerationText } from '../_lib/waffo-screening.js';
 import { existsSync, readFileSync } from 'node:fs';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet, alphaNetTools } from '../_lib/alphanet.js';
@@ -89,8 +90,7 @@ async function warm(req: VercelRequest, sampleId: SampleId, store: SampleStore) 
     if (!put.ok) throw new Error(`Example upload failed (${put.status})`);
     return ticket.file_id;
   };
-  const imageIds = [await upload(sample.src, sample.fileName)];
-  if ('src2' in sample && 'fileName2' in sample) imageIds.push(await upload(sample.src2, sample.fileName2));
+  const imageIds: string[] = [];
   const key = `sample-warm:${sampleId}:${Date.now()}`;
   const body = sample.tool
     ? buildToolTask(sample.tool, {
@@ -104,6 +104,9 @@ async function warm(req: VercelRequest, sampleId: SampleId, store: SampleStore) 
       seed: SAMPLE_SEED,
     })
     : { prompt: sample.prompt, image_ids: imageIds, ...sampleOutputSize(sampleId), seed: SAMPLE_SEED, num_inference_steps: 4, output_format: 'webp' };
+  await screenGenerationText(body);
+  imageIds.push(await upload(sample.src, sample.fileName));
+  if ('src2' in sample && 'fileName2' in sample) imageIds.push(await upload(sample.src2, sample.fileName2));
   const accepted = await client.submit(body, key);
   const deadline = Date.now() + POLL_BUDGET_MS;
   while (Date.now() < deadline) {

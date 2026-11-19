@@ -1,7 +1,7 @@
 import React from 'react';
 import SEO from '../components/SEO';
 import LegalPage, { Bullets, Section } from '../components/LegalPage';
-import { LEGAL } from '../config/legal';
+import { LEGAL, PROMPT_SCREENING_DISCLOSURE } from '../config/legal';
 
 export default function Privacy() {
   return (
@@ -43,6 +43,7 @@ export default function Privacy() {
             <><strong className="text-zinc-200">Google Firebase</strong> — authentication and the account database.</>,
             <><strong className="text-zinc-200">PayPal, Stripe and Dodo Payments</strong> — taking payment and managing subscriptions. Each processor handles your payment details under its own privacy policy.</>,
             <><strong className="text-zinc-200">Vercel</strong> — hosting and content delivery for the site and its API.</>,
+            <>{PROMPT_SCREENING_DISCLOSURE}</>,
             <><strong className="text-zinc-200">Model and storage providers</strong> — the AI services that upscale, generate or edit your images, and the object storage that holds them while a job runs.</>,
             <><strong className="text-zinc-200">Google Analytics</strong> — aggregated visitor statistics, only for visits where the page load completes.</>,
             <><strong className="text-zinc-200">Microsoft Clarity (when enabled)</strong> — session recordings, heatmaps and interaction diagnostics. Clarity masks form values by default; this site also masks uploaded previews, generated results, before/after workspaces and file names. We do not send custom identifiers to Clarity.</>,

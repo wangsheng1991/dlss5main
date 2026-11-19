@@ -1,3 +1,4 @@
+import { REAL_PERSON_UPLOAD_NOTICE } from '../config/legal';
 import { DashboardEvidenceLinks } from '../components/SearchEvidence';
 import React, { useEffect, useRef, useState } from 'react';
 import { UploadCloud, Download, RefreshCw, AlertCircle, Gift } from 'lucide-react';
@@ -635,6 +636,7 @@ export default function Dashboard() {
               : <Link to="/login" className="px-5 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10 self-start">Sign in to download</Link>}
           </div>}
           {mode !== 'fetch' && <>
+          <p className="text-xs leading-relaxed text-zinc-400">{REAL_PERSON_UPLOAD_NOTICE[isZh ? 'zh' : 'en']} <Link className="underline" to="/terms">{isZh ? '服务条款' : 'Terms of Service'}</Link></p>
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('dashboard.selectImage')} onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
           {user && (preview ? <img data-clarity-mask="true" src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">{t('dashboard.dropBrowse')}</span><span className="text-sm text-zinc-400">{toolReferences ? `${toolReferences.slots[0]} · ` : ''}{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
           {user && toolReferences && toolReferences.max > 1 && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">

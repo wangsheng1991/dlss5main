@@ -55,7 +55,7 @@ import { EXPANSION_PAGES, type ExpansionPage } from '../src/content/seoExpansion
 import { RELATED_ADDITIONS } from '../src/content/relatedAdditions';
 import { DEFAULT_SITE_URL, DEFAULT_SUPPORT_EMAIL, resolveSiteUrl, resolveSupportEmail } from '../src/config/site-url';
 import { SITE_PROFILE, SITE_SECTIONS, brandCopy, isPublishedPath, profileHas } from '../src/config/profile';
-import { LEGAL } from '../src/config/legal';
+import { LEGAL, PROMPT_SCREENING_DISCLOSURE, REAL_PERSON_UPLOAD_POLICY } from '../src/config/legal';
 import {
   API_BASE_URL, API_CATALOG_JSON, API_FLOW, API_MAX_UPLOAD_MIB, API_PRICE, API_RESULT_TTL_SECONDS,
   ASPECT_SIZES, CATALOG, CATALOG_UPDATED, CATALOG_VERSION, apiCatalogDocument, apiModelJson,
@@ -743,6 +743,8 @@ function renderLegalPage(kind: LegalDocument): string {
           title: '4. Acceptable use',
           paragraphs: [
             'These rules apply to AI prompts, uploaded files, generated or edited outputs, and shared content, including through the API.',
+            REAL_PERSON_UPLOAD_POLICY,
+            'We screen text instructions for content safety before submitting them for AI generation and may stop a request based on the result.',
             'Outputs are AI-generated or AI-edited. Identify them as such when sharing them where viewers could reasonably mistake them for authentic material.',
             `To report prohibited content or an intellectual property violation, email ${LEGAL.contactEmail} with the job ID or URL, the reason for the report, and a way to contact you. For suspected CSAM, provide the identifier and context without attaching the material.`,
             'We review reports and may check the relevant request, output, and account activity. Model providers may block requests under their own safety rules. We may block requests, restrict access, remove hosted content, suspend or terminate accounts, or escalate reports where required by law.',
@@ -776,7 +778,7 @@ function renderLegalPage(kind: LegalDocument): string {
       sections: [
         { title: '1. What we collect', bullets: ['Account data: email, display name, sign-in provider and internal account identifier.', 'Billing data: plan, credit balance, subscription identifiers and processor status. Card numbers stay on the processor page.', 'Content you submit: uploaded images, prompts, generation settings and results.', 'Technical data: IP address, browser and language, pages opened and limited usage events.', `Support messages sent to ${LEGAL.contactEmail}.`] },
         { title: '2. Why we use it', bullets: ['To authenticate you, process images, keep history and balances correct.', 'To bill, grant and deduct credits, and prevent fraud.', 'To keep the service stable and secure through rate limiting, abuse detection and error diagnosis.', 'To improve features with aggregated analytics and send necessary service notices.'], paragraphs: ['We do not sell personal data or use images and prompts to train models.'] },
-        { title: '3. Who processes it for us', bullets: ['Google Firebase for authentication and the account database.', 'PayPal, Stripe and Dodo Payments for payments and subscriptions.', 'Vercel for hosting and content delivery.', 'Model and storage providers for image jobs and temporary files.', 'Google Analytics for aggregated visitor statistics.'], paragraphs: ['These providers may process data outside your country under their own policies and our instructions.'] },
+        { title: '3. Who processes it for us', bullets: ['Google Firebase for authentication and the account database.', 'PayPal, Stripe and Dodo Payments for payments and subscriptions.', 'Vercel for hosting and content delivery.', 'Model and storage providers for image jobs and temporary files.', PROMPT_SCREENING_DISCLOSURE, 'Google Analytics for aggregated visitor statistics.'], paragraphs: ['These providers may process data outside your country under their own policies and our instructions.'] },
         { title: '4. Cookies and local storage', paragraphs: ['Necessary storage keeps you signed in and remembers your language. Analytics storage counts visits and feature use. You can block or clear storage in your browser.'] },
         { title: '5. How long we keep it', bullets: ['Account and billing records while the account exists and as long as tax, accounting or fraud rules require.', 'Uploaded files and results until deletion or account closure.', 'Server and error logs for a short operational window, then rolling deletion.', 'Analytics data according to the analytics tool retention setting.'] },
         { title: '6. Your rights', paragraphs: [`Write to ${LEGAL.contactEmail} from your account address to access, correct, export or delete data, or object to a use. We answer within 30 days. EU and UK residents can also complain to their data protection authority.`] },

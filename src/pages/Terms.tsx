@@ -1,7 +1,7 @@
 import React from 'react';
 import SEO from '../components/SEO';
 import LegalPage, { Bullets, Section } from '../components/LegalPage';
-import { LEGAL } from '../config/legal';
+import { LEGAL, REAL_PERSON_UPLOAD_POLICY } from '../config/legal';
 import { profileHas } from '../config/profile';
 
 export default function Terms() {
@@ -55,6 +55,8 @@ export default function Terms() {
             <>Deepfakes of real people, impersonation, or synthetic media presented as authentic to deceive, harass, or defraud others.</>,
             <>Content that infringes copyright, trademarks, or other intellectual property rights, including material you do not have permission to upload or process.</>,
           ]} />
+          <p>{REAL_PERSON_UPLOAD_POLICY}</p>
+          <p>We screen text instructions for content safety before submitting them for AI generation and may stop a request based on the result.</p>
           <p>Outputs are AI-generated or AI-edited. Identify them as such when sharing them where viewers could reasonably mistake them for authentic material.</p>
           <p>To report prohibited content or an intellectual property violation, email <a className="text-primary underline" href={`mailto:${LEGAL.contactEmail}`}>{LEGAL.contactEmail}</a>. Include the job ID or URL, the reason for the report, and a way to contact you. For suspected CSAM, report the identifier and context without downloading or attaching the material.</p>
           <p>We review reports and may check the relevant request, output, and account activity to assess whether this policy was violated. Model providers may block requests under their own safety rules. If we find a violation, we may block requests, restrict access, remove content we host, or suspend or terminate the account under Section 8. We may escalate reports where required by law.</p>

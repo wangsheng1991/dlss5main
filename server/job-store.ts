@@ -82,6 +82,16 @@ export class JobStore {
       tx.set(ref, { uid, count: n + 1 });
     });
   }
+  async findByOperationKey(uid: string, key: string, input: { [key: string]: unknown }) {
+    const id = hash(uid + ':' + key);
+    const snapshot = await this.db.doc(`image_operations/${id}`).get();
+    if (!snapshot.exists) return null;
+    const job = snapshot.data() as Job;
+    if (job.uid !== uid || job.fingerprint !== hash(JSON.stringify(input))) {
+      throw new ApiError(409, 'idempotency_key_conflict', 'This operation key has different input');
+    }
+    return { id, job, submit: false as const };
+  }
   async claim(uid: string, key: string, input: { image_ids?: string[]; [key: string]: unknown }) {
     const id = hash(uid + ':' + key), ref = this.db.doc(`image_operations/${id}`);
     const inputJson = JSON.stringify(input), fingerprint = hash(inputJson), now = Date.now();

@@ -1,3 +1,4 @@
+import { REAL_PERSON_UPLOAD_NOTICE } from '../config/legal';
 import React, { useEffect, useState } from 'react';
 import type { User } from 'firebase/auth';
 import { Link } from 'react-router-dom';
@@ -69,9 +70,10 @@ function SignedInEnhancer({ user, locale }: { user: User; locale: 'en' | 'zh' })
   return <div className="mt-5 space-y-4" data-own-image-flow>
     <p className="text-sm">{credits === null ? c.account : `${c.balance}: ${credits}`}</p>
     {op && <p className="text-xs break-all" data-clarity-mask="true">{c.saved}: <span data-own-task-id>{op.jobId || op.key}</span></p>}
-    {generation.error && <p role="alert" className="text-red-300">{op?.status === 'FAILED' ? c.failed : c.error}</p>}
+    {generation.error && <p role="alert" className="text-red-300">{op?.status === 'FAILED' ? c.failed : generation.error || c.error}</p>}
     {generation.busy && <div role="status"><p>{c.working}</p>{!generation.submitting && <button className="mt-2 underline" type="button" onClick={generation.pause}>{c.pause}</button>}</div>}
     {!generation.busy && op && !result && <div><p>{op.status === 'FAILED' ? c.failed : c.paused}</p><button type="button" data-own-resume onClick={() => void generation.resume()} className="mt-3 rounded-lg bg-primary px-5 py-3 font-bold text-black">{c.resume}</button></div>}
+    {!op && <p className="text-xs leading-relaxed text-zinc-400">{REAL_PERSON_UPLOAD_NOTICE[locale]} <a className="underline" href="/terms">{locale === 'zh' ? '服务条款' : 'Terms of Service'}</a></p>}
     {(!op || (result && !preview)) && <label className="block">{result ? c.reselect : c.file}<input data-own-file className="mt-2 block w-full min-w-0 text-sm" type="file" accept="image/jpeg,image/png,image/webp" disabled={generation.busy || downloading} onChange={e => { setFile(e.target.files?.[0] || null); setDownloadError(false); }} /></label>}
     {!op && <>
       <label className="block">{c.factor}<select className="ml-3 rounded border border-zinc-600 bg-zinc-950 p-2" value={factor} onChange={e => setFactor(Number(e.target.value) as EnhanceFactor)} disabled={generation.busy}>{ENHANCE_FACTORS.map(f => <option key={f} value={f}>{f}×</option>)}</select></label>

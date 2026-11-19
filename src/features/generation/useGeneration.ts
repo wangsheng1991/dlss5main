@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import type { User } from 'firebase/auth';
-import { request } from './client';
+import { ApiError, request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
 import { failureNote, fetchUrlError, isFetchQuality, isToolId, MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, modelForTool, oversizeNote, parseFetchUrls, toolNeedsPrompt, toolNeedsSecondImage, toolTakesSecondImage, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, FETCH_DEFAULT_QUALITY, type VectorizePreset } from '../../config/tools';
@@ -65,7 +65,13 @@ export function useGeneration(user: User | null) {
       const next = { ...saved, jobId: data.jobId, status: data.status, outputUrl: resultUrlOf(data.result) };
       saveOperation(next);
       if (uid.current === saved.userId) { setOperation(next); setPaused(false); pollingStarted.current = Date.now(); }
-    } catch (cause) { if (uid.current === saved.userId) setError(cause instanceof Error ? cause.message : 'Connection interrupted. Resume your saved operation.'); }
+    } catch (cause) {
+      if (cause instanceof ApiError && cause.status === 422 && cause.code === 'PROMPT_NOT_APPROVED') {
+        clearOperation(saved.userId);
+        if (uid.current === saved.userId) setOperation(null);
+      }
+      if (uid.current === saved.userId) setError(cause instanceof Error ? cause.message : 'Connection interrupted. Resume your saved operation.');
+    }
     finally { active.current = false; setSubmitting(false); }
   }
   async function submit(file: File, prompt: string, settings: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number; preset?: VectorizePreset; maxEdge?: number; second?: File; options?: Record<string, string>; extra?: string } = {}) {
