@@ -76,7 +76,8 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
 
 export const videoPreviewPath = (path: VideoPreviewPath, locale: VideoPreviewLocale) => locale === 'zh' ? `/zh${path}` : path;
 export const videoPreviewLanguage = (locale: VideoPreviewLocale) => locale === 'zh' ? 'zh-CN' : 'en-US';
-export const videoPreviewIndexable = (page: VideoPreviewPath) => page === '/video-studio' || page === '/video-understanding';
+export const videoPreviewIndexable = (page: VideoPreviewPath) =>
+  page === '/video-studio' || page === '/video-understanding' || page === '/video-highlights';
 export const videoBetaHref = (locale: VideoPreviewLocale, feature?: VideoBetaFeature) =>
   videoPreviewPath('/video-studio', locale) + (feature ? '?feature=' + feature : '') + '#video-beta';
 export const videoPreviewAlternates = (path: VideoPreviewPath, baseUrl = SITE_URL) => [
