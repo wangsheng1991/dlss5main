@@ -1,4 +1,5 @@
 import SEO from '../components/SEO';
+import VideoHighlightsBeta from '../components/VideoHighlightsBeta';
 import VideoBetaApplication from '../components/VideoBetaApplication';
 import { VideoPreviewContent } from '../components/VideoPreviewContent';
 import { HIGHLIGHTS_MEDIA } from '../content/videoHighlights';
@@ -20,6 +21,6 @@ export default function VideoStudioPreview({ page, locale }: Props) {
       robots={videoPreviewIndexable(page) ? undefined : 'noindex,nofollow'}
       image={understanding ? UNDERSTANDING_MEDIA.poster : page === '/video-highlights' ? HIGHLIGHTS_MEDIA.poster : undefined}
       structuredData={understanding ? videoUnderstandingSchema(locale, title, copy.lead) : undefined} />
-    <VideoPreviewContent page={page} locale={locale} application={page === '/video-studio' ? <VideoBetaApplication locale={locale} /> : undefined} />
+    <VideoPreviewContent page={page} locale={locale} application={page === '/video-studio' ? <VideoBetaApplication locale={locale} /> : page === '/video-highlights' ? <VideoHighlightsBeta locale={locale} /> : undefined} />
   </>;
 }

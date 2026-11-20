@@ -82,6 +82,7 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
 
       {(hub || page === '/video-upscaler') && <VideoUpscaleLabLink locale={locale} />}
       {page === '/frame-interpolation' && <VideoInterpolationProof locale={locale} />}
+      {page === '/video-highlights' && application}
 
       <section aria-labelledby="video-tools-heading" className="mt-12">
         <h2 id="video-tools-heading" className="font-headline text-2xl font-bold text-white">{zh ? '视频工具预告' : 'Upcoming video tools'}</h2>

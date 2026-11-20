@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { fail, requireUser } from '../_lib/auth.js';
 import { database } from '../../server/admin.js';
+import highlights from '../../server/video-highlights.js';
 import { VIDEO_BETA_FEATURES } from '../../lib/video-beta-features.js';
 
 /**
@@ -85,6 +86,7 @@ async function submitVideoBeta(
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === 'POST' && req.body?.kind === 'video-highlights-job') return highlights(req, res);
   try {
     // A secret-protected maintenance call imports recent Firestore records into a newly deployed
     // MailOps instance. It deliberately reuses this function so the project keeps the same number
