@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ArrowRight, Clapperboard, Expand, Film, Image, ScanLine, Scissors } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { VideoToolDirectory } from './VideoToolContent';
 import VideoUnderstandingDemo from './VideoUnderstandingDemo';
 import VideoHighlightsDemo from './VideoHighlightsDemo';
 import VideoInterpolationProof from './VideoInterpolationProof';
@@ -53,7 +54,7 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
 
       {page === '/video-understanding' ? <VideoUnderstandingDemo locale={locale} /> : page === '/video-highlights' ? <VideoHighlightsDemo locale={locale} /> : <header className="grid gap-8 border-y border-outline-variant/25 py-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
         <div>
-          <p className="text-sm font-semibold text-primary">{zh ? '即将上线' : 'Coming soon'}</p>
+          <p className="text-sm font-semibold text-primary">{hub ? (zh ? '浏览器工具 · 视频内测' : 'Browser tools · Video beta') : (zh ? '即将上线' : 'Coming soon')}</p>
           <h1 className="mt-3 font-headline text-4xl font-bold tracking-tight text-white md:text-6xl">{copy.heading}</h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-200">{copy.lead}</p>
           <p className="mt-4 max-w-xl leading-relaxed text-zinc-400">{copy.details}</p>
@@ -68,7 +69,7 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
         {hub ? (
           <figure className="overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-low">
             <img src="/examples/generated/game-cyber-1-after.jpg" alt={zh ? '现有图像工具中的赛博朋克角色静帧参考' : 'Cyberpunk character still from the existing image tool'} className="aspect-video w-full object-cover" />
-            <figcaption className="px-4 py-3 text-sm leading-relaxed text-zinc-300">{zh ? '现有图像风格转换案例。视频功能仍在准备中。' : 'Still-image example from the current style converter. Video tools are coming soon.'}</figcaption>
+            <figcaption className="px-4 py-3 text-sm leading-relaxed text-zinc-300">{zh ? '现有图像风格转换案例。可先用下方工具从视频中挑选参考帧。' : 'Still-image result from the current style converter. Use the video tools below to choose a reference frame.'}</figcaption>
           </figure>
         ) : (
           <section aria-labelledby="video-review-heading" className="rounded-xl border border-outline-variant/25 bg-surface-low p-6">
@@ -79,6 +80,8 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
           </section>
         )}
       </header>}
+
+      {hub && <VideoToolDirectory locale={locale} />}
 
       {(hub || page === '/video-upscaler') && <VideoUpscaleLabLink locale={locale} />}
       {page === '/frame-interpolation' && <VideoInterpolationProof locale={locale} />}
@@ -117,8 +120,8 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
       {hub && <section id="video-beta" aria-labelledby="video-beta-heading" className="mt-12 scroll-mt-24 rounded-xl border border-primary/30 bg-surface-low p-6 sm:p-8">
         <h2 id="video-beta-heading" className="font-headline text-2xl font-bold text-white">{zh ? '申请视频内测' : 'Apply for the video beta'}</h2>
         <p className="mt-3 max-w-2xl text-zinc-300">{zh
-          ? '视频工具即将上线。现在可以提交申请，告诉我们你最想试哪个工具。如有邀请，我们会通过账号邮箱联系你。'
-          : 'Video tools are coming soon. Apply now and tell us which tool you want to try first. If an invitation becomes available, we’ll contact your account email.'}</p>
+          ? '可以提交申请，告诉我们你最想试哪项模型处理能力。如有邀请，我们会通过账号邮箱联系你。'
+          : 'Apply now and tell us which model-powered video workflow you want to try first. If an invitation becomes available, we’ll contact your account email.'}</p>
         <div className="mt-5">{application ?? <VideoBetaSignIn locale={locale} />}</div>
       </section>}
 

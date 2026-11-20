@@ -147,6 +147,14 @@
       "destination": "/zh/video-studio/index.html"
     },
     {
+      "source": "/video-studio/:tool",
+      "destination": "/video-studio/:tool/index.html"
+    },
+    {
+      "source": "/zh/video-studio/:tool",
+      "destination": "/zh/video-studio/:tool/index.html"
+    },
+    {
       "source": "/video-understanding",
       "destination": "/video-understanding/index.html"
     },

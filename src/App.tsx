@@ -1,3 +1,4 @@
+import { VIDEO_TOOLS, videoToolPath } from './content/videoTools';
 import { GAME_COVERAGE_PAGES } from './content/gameCoverage';
 import { CHECKER_PAGES } from './content/dlssChecker';
 import React, { Suspense, lazy, useEffect, useLayoutEffect, useState } from 'react';
@@ -55,6 +56,7 @@ const GameCharacterTogetherZh = lazy(() => import('./pages/GameCharacterTogether
 const TopazFree = lazy(() => import('./pages/TopazFree'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const VideoUpscaleLab = lazy(() => import('./pages/VideoUpscaleLab'));
+const VideoTool = lazy(() => import('./pages/VideoTool'));
 const VideoStudioPreview = lazy(() => import('./pages/VideoStudioPreview'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
 const Dlss5Dll = lazy(() => import('./pages/Dlss5Dll'));
@@ -175,6 +177,10 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/zh/frame-interpolation" element={orHome('tools', <VideoStudioPreview page="/frame-interpolation" locale="zh" />)} />
                   <Route path="/video-highlights" element={orHome('tools', <VideoStudioPreview page="/video-highlights" locale="en" />)} />
                   <Route path="/zh/video-highlights" element={orHome('tools', <VideoStudioPreview page="/video-highlights" locale="zh" />)} />
+                  {VIDEO_TOOLS.flatMap(tool => (['en', 'zh'] as const).map(locale => {
+                    const path = videoToolPath(tool, locale);
+                    return <React.Fragment key={path}><Route path={path} element={orHome('tools', <VideoTool tool={tool} locale={locale} />)} /></React.Fragment>;
+                  }))}
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />

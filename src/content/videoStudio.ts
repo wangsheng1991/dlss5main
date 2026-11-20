@@ -11,8 +11,8 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
   en: {
     '/video-studio': {
       heading: 'DLSS 5 Video Studio',
-      lead: 'A video workspace is coming to DLSS 5 Studio. Start with a reference image or an existing clip, review the shot, then prepare it for delivery.',
-      details: 'The planned workflow keeps your original and processed clip together so you can review changes before exporting.',
+      lead: 'Review a clip, pick frames for style conversion, compare shots and plan an edit. Use the browser tools now, and apply to try Studio video processing.',
+      details: 'Open the included sample or bring your own video. Review the source before sharing a still or sending the shot on for processing.',
     },
     '/video-understanding': {
       heading: 'AI Video Understanding',
@@ -43,8 +43,8 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
   zh: {
     '/video-studio': {
       heading: 'DLSS 5 视频工作台',
-      lead: 'DLSS 5 Studio 即将扩展视频工具。从参考图或已有视频出发，先预览镜头，再处理和导出成片。',
-      details: '计划在同一个工作台保留原片和处理结果，方便在导出前逐段核对变化。',
+      lead: '检查片段、挑出可用于风格转换的静帧、对比同源样片与记录剪辑点。现在可以用浏览器工具，模型处理可申请内测。',
+      details: '可从站内样片开始，也可在浏览器中打开自己的视频。先回看原片，再分享静帧或继续处理。',
     },
     '/video-understanding': {
       heading: 'AI 视频理解',
@@ -88,6 +88,6 @@ export const videoPreviewAlternates = (path: VideoPreviewPath, baseUrl = SITE_UR
 
 export const videoPreviewTitle = (path: VideoPreviewPath, locale: VideoPreviewLocale) => {
   const heading = VIDEO_PREVIEW_COPY[locale][path].heading;
-  if (path === '/video-studio') return locale === 'zh' ? `${heading}｜即将上线` : `${heading} — Coming Soon`;
+  if (path === '/video-studio') return locale === 'zh' ? `${heading}｜在线抽帧、对比与视频内测` : `${heading} — Browser Video Tools & Beta`;
   return locale === 'zh' ? `${heading}即将上线｜DLSS 5 Studio` : `${heading} Coming Soon | DLSS 5 Studio`;
 };

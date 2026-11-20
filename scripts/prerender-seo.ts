@@ -47,6 +47,8 @@ import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../src/conte
 import { VideoPreviewContent, VideoStudioNotice } from '../src/components/VideoPreviewContent';
 import { VideoUpscaleLabContent, VideoUpscaleLabLink } from '../src/components/VideoUpscaleLab';
 import { VIDEO_UPSCALE_MEDIA, videoUpscaleLabAlternates, videoUpscaleLabCopy, videoUpscaleLabPath, videoUpscaleLabSchema } from '../src/content/videoUpscaleLab';
+import { VIDEO_TOOLS, videoToolAlternates, videoToolPath, videoToolSchema, videoToolTitle } from '../src/content/videoTools';
+import { VideoToolContent } from '../src/components/VideoToolContent';
 import { VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoPreviewAlternates, videoPreviewIndexable, videoPreviewLanguage, videoPreviewPath, videoPreviewTitle } from '../src/content/videoStudio';
 import { HIGHLIGHTS_MEDIA } from '../src/content/videoHighlights';
 import { UNDERSTANDING_MEDIA, videoUnderstandingSchema } from '../src/content/videoUnderstanding';
@@ -1344,6 +1346,17 @@ if (profileHas('tools')) {
       noindex: true, image: VIDEO_UPSCALE_MEDIA + '/hero.jpg',
       alternates: videoUpscaleLabAlternates(BASE_URL), structuredData: videoUpscaleLabSchema(locale, BASE_URL),
     }), root));
+  }
+  for (const tool of VIDEO_TOOLS) {
+    for (const locale of ['en', 'zh'] as const) {
+      const path = videoToolPath(tool, locale);
+      const root = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(VideoToolContent, { tool, locale })));
+      writeRoute(path, withRoot(withHead(TEMPLATE, {
+        title: videoToolTitle(tool, locale), description: tool[locale][1], canonicalPath: path,
+        language: videoPreviewLanguage(locale), image: HIGHLIGHTS_MEDIA.poster,
+        alternates: videoToolAlternates(tool, BASE_URL), structuredData: videoToolSchema(tool, locale, BASE_URL),
+      }), root));
+    }
   }
   for (const page of VIDEO_PREVIEW_PATHS) {
     for (const locale of ['en', 'zh'] as const) {

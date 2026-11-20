@@ -40,6 +40,19 @@ The home page includes original before-and-after image pairs and short video ref
 - Official NVIDIA 3D-Guided Neural Rendering reference: https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/
 - AI video upscaler and super-resolution workflow: https://www.dlss5nvidia.com/video-upscaler
 
+<!-- begin:tools -->
+## Video Studio workbench
+
+Browser-based video review and preparation for Studio style conversion. The tools open a sample or a local clip and export stills or review data. Model-powered video processing has a separate beta application.
+
+- English directory: https://www.dlss5nvidia.com/video-studio
+- 中文视频工作台: https://www.dlss5nvidia.com/zh/video-studio
+- Extract a reference still: https://www.dlss5nvidia.com/video-studio/frame-extractor
+- Build a timestamped contact sheet: https://www.dlss5nvidia.com/video-studio/contact-sheet
+- Compare two clips at shared timestamps: https://www.dlss5nvidia.com/video-studio/before-after-comparison
+- Review saved model output and export event lists: https://www.dlss5nvidia.com/video-studio/event-timeline
+<!-- end:tools -->
+
 ## Evidence-led guides
 
 These pages separate official NVIDIA statements from our independent browser workflows and retain a

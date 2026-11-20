@@ -9,6 +9,7 @@ import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
 import { VIDEO_PREVIEW_PATHS, videoPreviewPath } from '../content/videoStudio';
+import { VIDEO_TOOLS, videoToolPath } from '../content/videoTools';
 import { VIDEO_UPSCALE_LAB, videoUpscaleLabPath } from '../content/videoUpscaleLab';
 
 const LANGUAGES = [
@@ -35,13 +36,14 @@ export default function Navbar() {
   const homePath = location.pathname === '/zh' || location.pathname.startsWith('/zh/') ? '/zh' : '/';
   const videoPath = location.pathname.replace(/^\/zh(?=\/)/, '');
   const videoPage = VIDEO_PREVIEW_PATHS.find(path => path === videoPath);
+  const videoTool = VIDEO_TOOLS.find(tool => videoToolPath(tool, 'en') === videoPath);
   const isUpscaleLab = videoPath === VIDEO_UPSCALE_LAB;
-  const videoLanguage = (videoPage || isUpscaleLab) ? (homePath === '/zh' ? 'zh-CN' : 'en-US') : undefined;
+  const videoLanguage = (videoPage || videoTool || isUpscaleLab) ? (homePath === '/zh' ? 'zh-CN' : 'en-US') : undefined;
   const zh = videoLanguage ? videoLanguage === 'zh-CN' : homePath === '/zh' || i18n.language.startsWith('zh');
   const videoPreviewLink = videoPreviewPath('/video-studio', zh ? 'zh' : 'en');
   const wideMenu = videoLanguage ? '2xl:flex' : 'md:flex';
   const narrowMenu = videoLanguage ? '2xl:hidden' : 'md:hidden';
-  const videoPreviewLabel = zh ? '视频工具 · 即将上线' : 'Video tools · Coming soon';
+  const videoPreviewLabel = zh ? '视频工作台' : 'Video Studio';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -65,9 +67,9 @@ export default function Navbar() {
     // Blog editions have stable SEO URLs. Preserve the article slug while moving between the
     // English x-default route and the Chinese edition; the other UI locales use the English
     // source edition until translated article URLs exist.
-    if (videoPage || isUpscaleLab) {
+    if (videoPage || videoTool || isUpscaleLab) {
       const locale = code === 'zh-CN' ? 'zh' : 'en';
-      const path = videoPage ? videoPreviewPath(videoPage, locale) : videoUpscaleLabPath(locale);
+      const path = videoTool ? videoToolPath(videoTool, locale) : videoPage ? videoPreviewPath(videoPage, locale) : videoUpscaleLabPath(locale);
       void i18n.changeLanguage(code);
       navigate(path + location.search + location.hash);
       setIsLangOpen(false);
