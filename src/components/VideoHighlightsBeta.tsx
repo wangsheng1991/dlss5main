@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { request } from '../features/generation/client';
 import { HIGHLIGHTS_EVENTS, HIGHLIGHTS_MAX_BYTES, type HighlightsEvent, type HighlightsSegment } from '../../lib/video-highlights-beta';
@@ -13,6 +13,7 @@ const labels = { en: ['Vehicle', 'Person', 'Bus'], zh: ['车辆', '人物', '公
 
 export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLocale }) {
   const { user, loading } = useAuth();
+  const { hash } = useLocation();
   const zh = locale === 'zh';
   const [access, setAccess] = useState<'available' | 'offline' | null>(null);
   const [job, setJob] = useState<Job | null>(null);
@@ -72,6 +73,10 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
     return () => { active = false; window.clearInterval(timer); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [job?.id, pending, user, zh]);
+
+  useEffect(() => {
+    if (access && hash === '#highlights-beta') document.getElementById('highlights-beta')?.scrollIntoView();
+  }, [access, hash]);
 
   useEffect(() => {
     if (job?.status === 'ready') setSelection(job.segments.map((_, index) => index));

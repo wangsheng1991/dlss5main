@@ -21,7 +21,7 @@ PROMPTS = {
 
 
 def post(url, payload, timeout, key=None):
-    headers = {'Content-Type': 'application/json'}
+    headers = {'Content-Type': 'application/json', 'User-Agent': 'StudioVideoBeta/1.0'}
     if key:
         headers['Authorization'] = 'Bearer ' + key
     call = Request(url, data=json.dumps(payload).encode(), headers=headers)
