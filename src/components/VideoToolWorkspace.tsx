@@ -144,16 +144,15 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
     const timer = window.setTimeout(() => controller.abort(), 25000);
     setSampleLoading(true);
     setError(false);
-    const first = compare ? '/examples/video-upscale-lab/street-bicubic.mp4'
-      : mode === 'event-timeline' ? '/examples/video-understanding/street-timeline.mp4'
-        : diff ? HIGHLIGHTS_MEDIA.edit : HIGHLIGHTS_MEDIA.source;
-    const examples = compare ? [first, '/examples/video-upscale-lab/street-candidate.mp4'] : [first];
+    const sampleBase = '/examples/video-workbench/';
+    const names = compare ? ['street-bicubic.mp4', 'street-candidate.mp4']
+      : [diff ? 'street-highlights.mp4' : 'street-source.mp4'];
     try {
       // Buffer the short stock examples once. Subsequent scrubs and frame scans use this copy.
-      const files = await Promise.all(examples.map(async url => {
-        const response = await fetch(url, { signal: controller.signal });
+      const files = await Promise.all(names.map(async name => {
+        const response = await fetch(sampleBase + name, { signal: controller.signal });
         if (!response.ok) throw new Error('Video fetch failed');
-        return { bytes: await response.blob(), name: url.slice(url.lastIndexOf('/') + 1) };
+        return { bytes: await response.blob(), name };
       }));
       controller.signal.throwIfAborted();
       files.forEach(({ bytes, name }, side) => load({ url: URL.createObjectURL(bytes), name }, side));

@@ -22,3 +22,5 @@
 前述工具面向浏览器内的素材准备。保留原有图生视频、超分、插帧和视频理解的上线状态以及高光的受邀内测。宣传资产使用实际工具界面和许可样片，模型速度、效果与价格对比继续采用可核验的同源证据。
 
 验收跟踪：新 URL 的可索引静态 HTML、样片运行与真实结果、语言互链、sitemap 覆盖。Google 读到新增 sitemap 后，用页面前缀 `/video-studio/` 与 `/zh/video-studio/` 查看编入索引、展示与点击，用前一等长窗口作比较。历史窗口中这批新 URL 的表现以 GSC 界面为准。
+
+网页播放副本在 `public/examples/video-workbench/`，与高光、超分评测原文件分开。路口原片、剪辑和同步基线/候选预览均来自 [Mixkit #4401](https://mixkit.co/free-stock-video/crowds-of-people-cross-a-street-junction-4401/)。前两个从 `video-highlights` 取样，后两个来自 `video-upscale-lab` 的同源产出。网站副本保留各原片时轴，降低下载体积。视频事件时间轴上的 JSON 沿用同路口原片的保存结果。
