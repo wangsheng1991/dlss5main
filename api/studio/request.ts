@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { fail, requireUser } from '../_lib/auth.js';
 import { database } from '../../server/admin.js';
+import { VIDEO_BETA_FEATURES } from '../../lib/video-beta-features.js';
 
 /**
  * A DLSS5 Studio download request, filed from `/download`.
@@ -57,8 +58,8 @@ async function submitVideoBeta(
   account: Awaited<ReturnType<typeof requireUser>>,
   body: Record<string, unknown>,
 ) {
-  const feature = body.feature;
-  if (feature !== 'image-to-video' && feature !== 'video-upscaler' && feature !== 'frame-interpolation' && feature !== 'video-understanding') {
+  const feature = VIDEO_BETA_FEATURES.find(candidate => candidate === body.feature);
+  if (!feature) {
     return res.status(400).json({ error: 'Choose a video tool to try first', code: 'invalid_feature' });
   }
   if (!account.email) {

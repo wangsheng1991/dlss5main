@@ -1,6 +1,7 @@
 import SEO from '../components/SEO';
 import VideoBetaApplication from '../components/VideoBetaApplication';
 import { VideoPreviewContent } from '../components/VideoPreviewContent';
+import { HIGHLIGHTS_MEDIA } from '../content/videoHighlights';
 import { UNDERSTANDING_MEDIA, videoUnderstandingSchema } from '../content/videoUnderstanding';
 import {
   VIDEO_PREVIEW_COPY, videoPreviewAlternates, videoPreviewIndexable, videoPreviewLanguage, videoPreviewPath,
@@ -17,7 +18,7 @@ export default function VideoStudioPreview({ page, locale }: Props) {
     <SEO title={title} description={copy.lead} canonical={videoPreviewPath(page, locale)}
       language={videoPreviewLanguage(locale)} alternates={page === '/video-upscaler' ? undefined : videoPreviewAlternates(page)}
       robots={videoPreviewIndexable(page) ? undefined : 'noindex,nofollow'}
-      image={understanding ? UNDERSTANDING_MEDIA.poster : undefined}
+      image={understanding ? UNDERSTANDING_MEDIA.poster : page === '/video-highlights' ? HIGHLIGHTS_MEDIA.poster : undefined}
       structuredData={understanding ? videoUnderstandingSchema(locale, title, copy.lead) : undefined} />
     <VideoPreviewContent page={page} locale={locale} application={page === '/video-studio' ? <VideoBetaApplication locale={locale} /> : undefined} />
   </>;

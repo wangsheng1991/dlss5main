@@ -48,6 +48,7 @@ import { VideoPreviewContent, VideoStudioNotice } from '../src/components/VideoP
 import { VideoUpscaleLabContent, VideoUpscaleLabLink } from '../src/components/VideoUpscaleLab';
 import { VIDEO_UPSCALE_MEDIA, videoUpscaleLabAlternates, videoUpscaleLabCopy, videoUpscaleLabPath, videoUpscaleLabSchema } from '../src/content/videoUpscaleLab';
 import { VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoPreviewAlternates, videoPreviewIndexable, videoPreviewLanguage, videoPreviewPath, videoPreviewTitle } from '../src/content/videoStudio';
+import { HIGHLIGHTS_MEDIA } from '../src/content/videoHighlights';
 import { UNDERSTANDING_MEDIA, videoUnderstandingSchema } from '../src/content/videoUnderstanding';
 import { BEFORE_AFTER_CASES, BEFORE_AFTER_COPY, BEFORE_AFTER_FAQ, beforeAfterSchema, recordSummary, workflowLabel } from '../src/content/beforeAfter';
 import { STUDIO_COPY } from '../src/content/studioPage';
@@ -1359,7 +1360,7 @@ if (profileHas('tools')) {
         language: videoPreviewLanguage(locale),
         noindex: !videoPreviewIndexable(page),
         alternates: page === '/video-upscaler' ? undefined : videoPreviewAlternates(page, BASE_URL),
-        image: understanding ? UNDERSTANDING_MEDIA.poster : undefined,
+        image: understanding ? UNDERSTANDING_MEDIA.poster : page === '/video-highlights' ? HIGHLIGHTS_MEDIA.poster : undefined,
         structuredData: understanding ? videoUnderstandingSchema(locale, title, description, BASE_URL) : undefined,
       }), root));
     }

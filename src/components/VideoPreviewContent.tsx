@@ -1,16 +1,18 @@
 import type { ReactNode } from 'react';
-import { ArrowRight, Clapperboard, Expand, Film, Image, ScanLine } from 'lucide-react';
+import { ArrowRight, Clapperboard, Expand, Film, Image, ScanLine, Scissors } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import VideoUnderstandingDemo from './VideoUnderstandingDemo';
+import VideoHighlightsDemo from './VideoHighlightsDemo';
 import VideoInterpolationProof from './VideoInterpolationProof';
 import { VideoUpscaleLabLink } from './VideoUpscaleLab';
+import { HIGHLIGHTS_MEDIA } from '../content/videoHighlights';
 import { UNDERSTANDING_MEDIA } from '../content/videoUnderstanding';
 import {
   VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoBetaHref, videoPreviewPath, type VideoBetaFeature, type VideoPreviewLocale, type VideoPreviewPath,
 } from '../content/videoStudio';
 
 type Props = { page: VideoPreviewPath; locale: VideoPreviewLocale; application?: ReactNode };
-const icons = { '/video-understanding': ScanLine, '/image-to-video': Clapperboard, '/video-upscaler': Expand, '/frame-interpolation': Film };
+const icons = { '/video-understanding': ScanLine, '/image-to-video': Clapperboard, '/video-upscaler': Expand, '/frame-interpolation': Film, '/video-highlights': Scissors };
 
 export function VideoStudioNotice({ locale }: { locale: VideoPreviewLocale }) {
   const zh = locale === 'zh';
@@ -49,7 +51,7 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
         <Link className="ml-auto text-primary hover:underline" hrefLang={zh ? 'en' : 'zh-CN'} to={videoPreviewPath(page, zh ? 'en' : 'zh')}>{zh ? 'English' : '中文'}</Link>
       </nav>
 
-      {page === '/video-understanding' ? <VideoUnderstandingDemo locale={locale} /> : <header className="grid gap-8 border-y border-outline-variant/25 py-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
+      {page === '/video-understanding' ? <VideoUnderstandingDemo locale={locale} /> : page === '/video-highlights' ? <VideoHighlightsDemo locale={locale} /> : <header className="grid gap-8 border-y border-outline-variant/25 py-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
         <div>
           <p className="text-sm font-semibold text-primary">{zh ? '即将上线' : 'Coming soon'}</p>
           <h1 className="mt-3 font-headline text-4xl font-bold tracking-tight text-white md:text-6xl">{copy.heading}</h1>
@@ -83,19 +85,23 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
 
       <section aria-labelledby="video-tools-heading" className="mt-12">
         <h2 id="video-tools-heading" className="font-headline text-2xl font-bold text-white">{zh ? '视频工具预告' : 'Upcoming video tools'}</h2>
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {VIDEO_PREVIEW_PATHS.filter(path => path !== '/video-studio' && path !== page).map(path => {
             const Icon = icons[path];
             const tool = VIDEO_PREVIEW_COPY[locale][path];
-            if (path === '/video-understanding' && hub) return <Link key={path} to={videoPreviewPath(path, locale)}
-              className="group grid overflow-hidden rounded-2xl border border-lime-300/30 bg-[#162013] transition-colors hover:border-lime-300 md:col-span-3 md:grid-cols-2">
+            const highlights = path === '/video-highlights';
+            if (hub && (highlights || path === '/video-understanding')) return <Link key={path} to={videoPreviewPath(path, locale)}
+              className="group grid overflow-hidden rounded-2xl border border-lime-300/30 bg-[#162013] transition-colors hover:border-lime-300 sm:col-span-2 md:grid-cols-2 lg:col-span-3">
               <div className="self-center p-6 sm:p-8">
                 <p className="flex items-center gap-2 text-sm font-semibold text-lime-300"><Icon aria-hidden="true" size={18} />{zh ? '内测预告 · 实测演示' : 'Beta preview · Recorded demo'}</p>
                 <h3 className="mt-3 font-headline text-3xl font-bold text-white">{tool.heading}</h3>
                 <p className="mt-2 max-w-lg leading-relaxed text-zinc-200">{tool.lead}</p>
-                <span className="mt-5 inline-flex items-center gap-2 font-semibold text-lime-300 group-hover:underline">{zh ? '查看路口演示' : 'See the street-scene demo'}<ArrowRight aria-hidden="true" size={17} /></span>
+                <span className="mt-5 inline-flex items-center gap-2 font-semibold text-lime-300 group-hover:underline">
+                  {highlights ? (zh ? '查看高光剪辑' : 'Watch the highlight edit') : (zh ? '查看路口演示' : 'See the street-scene demo')}
+                  <ArrowRight aria-hidden="true" size={17} />
+                </span>
               </div>
-              <img src={UNDERSTANDING_MEDIA.poster} alt="" loading="lazy" decoding="async" className="aspect-video w-full self-center object-cover" />
+              <img src={highlights ? HIGHLIGHTS_MEDIA.poster : UNDERSTANDING_MEDIA.poster} alt="" loading="lazy" decoding="async" className="aspect-video w-full self-center object-cover" />
             </Link>;
             return <Link key={path} to={videoPreviewPath(path, locale)} className="group rounded-xl border border-outline-variant/30 bg-surface-low p-5 hover:border-primary/70">
               <Icon aria-hidden="true" className="text-primary" size={22} />

@@ -4,16 +4,15 @@ import { useAuth } from '../contexts/AuthContext';
 import { VideoBetaSignIn } from './VideoPreviewContent';
 import { request, ApiError } from '../features/generation/client';
 import { VIDEO_PREVIEW_COPY, type VideoPreviewLocale } from '../content/videoStudio';
-
-const FEATURES = ['image-to-video', 'video-upscaler', 'frame-interpolation', 'video-understanding'] as const;
+import { VIDEO_BETA_FEATURES } from '../../lib/video-beta-features';
 
 export default function VideoBetaApplication({ locale }: { locale: VideoPreviewLocale }) {
   const { user, loading } = useAuth();
   const { hash, search } = useLocation();
   const zh = locale === 'zh';
   const requestedFeature = new URLSearchParams(search).get('feature');
-  const requested = FEATURES.find(candidate => candidate === requestedFeature);
-  const [feature, setFeature] = useState<string>(requested ?? FEATURES[0]);
+  const requested = VIDEO_BETA_FEATURES.find(candidate => candidate === requestedFeature);
+  const [feature, setFeature] = useState<string>(requested ?? VIDEO_BETA_FEATURES[0]);
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<'sent' | 'existing' | null>(null);
@@ -56,7 +55,7 @@ export default function VideoBetaApplication({ locale }: { locale: VideoPreviewL
     <label className="grid gap-2 text-sm text-zinc-200">
       {zh ? '最想试哪个工具？' : 'Which tool would you like to try first?'}
       <select value={feature} onChange={event => setFeature(event.target.value)} disabled={busy} className="rounded-lg border border-outline-variant/40 bg-surface-low p-3 text-white">
-        {FEATURES.map(id => <option key={id} value={id}>{VIDEO_PREVIEW_COPY[locale][`/${id}`].heading}</option>)}
+        {VIDEO_BETA_FEATURES.map(id => <option key={id} value={id}>{VIDEO_PREVIEW_COPY[locale][`/${id}`].heading}</option>)}
       </select>
     </label>
     <label className="grid gap-2 text-sm text-zinc-200">

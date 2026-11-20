@@ -1,6 +1,8 @@
 import { SITE_URL } from '../config/site';
+import type { VideoBetaFeature } from '../../lib/video-beta-features';
+export type { VideoBetaFeature } from '../../lib/video-beta-features';
 
-export const VIDEO_PREVIEW_PATHS = ['/video-studio', '/video-understanding', '/image-to-video', '/video-upscaler', '/frame-interpolation'] as const;
+export const VIDEO_PREVIEW_PATHS = ['/video-studio', '/video-understanding', '/image-to-video', '/video-upscaler', '/frame-interpolation', '/video-highlights'] as const;
 export type VideoPreviewPath = typeof VIDEO_PREVIEW_PATHS[number];
 export type VideoPreviewLocale = 'en' | 'zh';
 
@@ -26,6 +28,11 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
       heading: 'AI Video Upscaler',
       lead: 'Video super-resolution is coming soon. The planned tool will take an existing clip or an approved Studio preview and prepare it at a higher output resolution.',
       details: 'Compare the original and the enhanced clip at the same point in time. Check faces, lettering and fine edges across several frames before exporting.',
+    },
+    '/video-highlights': {
+      heading: 'AI Video Highlights',
+      lead: 'Find candidate moments in a longer clip, then return to the source to review the cuts. See how that workflow looks in a street-scene demo.',
+      details: 'Video highlights are coming to DLSS 5 Studio. The example below plays a saved edit from our local prototype.',
     },
     '/frame-interpolation': {
       heading: 'Video Frame Interpolation',
@@ -54,6 +61,11 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
       lead: '视频超分即将上线。计划支持上传已有视频，或把 Studio 里确认过的预览送去处理，提高成片的输出分辨率。',
       details: '对比时看原片和处理结果的同一时间点，并逐帧检查人物、文字和细边缘，再决定是否导出。',
     },
+    '/video-highlights': {
+      heading: 'AI 视频高光剪辑',
+      lead: '从一段视频里找出候选片段，再回到原片核对起止点。先用这段路口实测看工作流。',
+      details: '精彩片段提取即将加入 DLSS 5 Studio。这里可以播放本地原型保存的剪辑结果。',
+    },
     '/frame-interpolation': {
       heading: 'AI 视频插帧',
       lead: '视频插帧即将上线。计划在源视频的帧之间生成中间帧，提高输出帧率。',
@@ -65,7 +77,6 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
 export const videoPreviewPath = (path: VideoPreviewPath, locale: VideoPreviewLocale) => locale === 'zh' ? `/zh${path}` : path;
 export const videoPreviewLanguage = (locale: VideoPreviewLocale) => locale === 'zh' ? 'zh-CN' : 'en-US';
 export const videoPreviewIndexable = (page: VideoPreviewPath) => page === '/video-studio' || page === '/video-understanding';
-export type VideoBetaFeature = Exclude<VideoPreviewPath, '/video-studio'> extends `/${infer Feature}` ? Feature : never;
 export const videoBetaHref = (locale: VideoPreviewLocale, feature?: VideoBetaFeature) =>
   videoPreviewPath('/video-studio', locale) + (feature ? '?feature=' + feature : '') + '#video-beta';
 export const videoPreviewAlternates = (path: VideoPreviewPath, baseUrl = SITE_URL) => [

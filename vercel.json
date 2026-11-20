@@ -181,6 +181,14 @@
     {
       "source": "/zh/frame-interpolation",
       "destination": "/zh/frame-interpolation/index.html"
+    },
+    {
+      "source": "/video-highlights",
+      "destination": "/video-highlights/index.html"
+    },
+    {
+      "source": "/zh/video-highlights",
+      "destination": "/zh/video-highlights/index.html"
     }
   ],
   "headers": [

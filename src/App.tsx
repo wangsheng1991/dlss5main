@@ -173,6 +173,8 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/zh/video-upscaler" element={orHome('tools', <VideoStudioPreview page="/video-upscaler" locale="zh" />)} />
                   <Route path="/frame-interpolation" element={orHome('tools', <VideoStudioPreview page="/frame-interpolation" locale="en" />)} />
                   <Route path="/zh/frame-interpolation" element={orHome('tools', <VideoStudioPreview page="/frame-interpolation" locale="zh" />)} />
+                  <Route path="/video-highlights" element={orHome('tools', <VideoStudioPreview page="/video-highlights" locale="en" />)} />
+                  <Route path="/zh/video-highlights" element={orHome('tools', <VideoStudioPreview page="/video-highlights" locale="zh" />)} />
                   <Route path="/es/mejorar-calidad-imagen" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/use-cases/product-photo-enhancer" element={orHome('useCases', <UseCaseLanding />)} />
                   <Route path="/use-cases/architecture-render-upscaler" element={orHome('useCases', <UseCaseLanding />)} />
