@@ -1,6 +1,6 @@
 import { SITE_URL } from '../config/site';
 
-export const VIDEO_PREVIEW_PATHS = ['/video-studio', '/image-to-video', '/video-upscaler', '/frame-interpolation'] as const;
+export const VIDEO_PREVIEW_PATHS = ['/video-studio', '/video-understanding', '/image-to-video', '/video-upscaler', '/frame-interpolation'] as const;
 export type VideoPreviewPath = typeof VIDEO_PREVIEW_PATHS[number];
 export type VideoPreviewLocale = 'en' | 'zh';
 
@@ -11,6 +11,11 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
       heading: 'DLSS 5 Video Studio',
       lead: 'A video workspace is coming to DLSS 5 Studio. Start with a reference image or an existing clip, review the shot, then prepare it for delivery.',
       details: 'The planned workflow keeps your original and processed clip together so you can review changes before exporting.',
+    },
+    '/video-understanding': {
+      heading: 'AI Video Understanding',
+      lead: 'Turn a short clip into an event timeline you can review. Explore a real street-scene demo, inspect the original JSON, and see how a model locates a basketball hoop.',
+      details: 'This preview uses saved outputs from a local LLaVA-OneVision-2.5-4B prototype. Apply for the Studio beta to tell us what you want to analyze.',
     },
     '/image-to-video': {
       heading: 'Image to Video',
@@ -34,6 +39,11 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
       lead: 'DLSS 5 Studio 即将扩展视频工具。从参考图或已有视频出发，先预览镜头，再处理和导出成片。',
       details: '计划在同一个工作台保留原片和处理结果，方便在导出前逐段核对变化。',
     },
+    '/video-understanding': {
+      heading: 'AI 视频理解',
+      lead: '把一段短片读成可回看的事件时间轴。看路口实测、核对模型输出的原始 JSON，再看模型如何在球场画面中框出篮筐。',
+      details: '这里展示 LLaVA-OneVision-2.5-4B 在本地原型中保存的结果。你可以申请 Studio 内测，告诉我们你想分析什么素材。',
+    },
     '/image-to-video': {
       heading: 'AI 图生视频',
       lead: '图生视频即将上线。计划用一张参考图配合场景描述和镜头运动指令，生成可预览的短片。',
@@ -54,6 +64,10 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
 
 export const videoPreviewPath = (path: VideoPreviewPath, locale: VideoPreviewLocale) => locale === 'zh' ? `/zh${path}` : path;
 export const videoPreviewLanguage = (locale: VideoPreviewLocale) => locale === 'zh' ? 'zh-CN' : 'en-US';
+export const videoPreviewIndexable = (page: VideoPreviewPath) => page === '/video-studio' || page === '/video-understanding';
+export type VideoBetaFeature = Exclude<VideoPreviewPath, '/video-studio'> extends `/${infer Feature}` ? Feature : never;
+export const videoBetaHref = (locale: VideoPreviewLocale, feature?: VideoBetaFeature) =>
+  videoPreviewPath('/video-studio', locale) + (feature ? '?feature=' + feature : '') + '#video-beta';
 export const videoPreviewAlternates = (path: VideoPreviewPath, baseUrl = SITE_URL) => [
   { hrefLang: 'en', href: `${baseUrl}${path}` },
   { hrefLang: 'zh-CN', href: `${baseUrl}/zh${path}` },

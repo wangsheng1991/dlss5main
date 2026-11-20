@@ -9,6 +9,7 @@ import { TOOL_LANDINGS } from '../content/toolLandings';
 import { USE_CASES } from '../content/useCases';
 import { MICRO_TOOLS } from '../content/microTools';
 import { VIDEO_PREVIEW_PATHS, videoPreviewPath } from '../content/videoStudio';
+import { VIDEO_UPSCALE_LAB, videoUpscaleLabPath } from '../content/videoUpscaleLab';
 
 const LANGUAGES = [
   { code: 'en-US', label: 'English' },
@@ -32,12 +33,14 @@ export default function Navbar() {
   // The home page has an English and a Chinese edition; a visitor reading the Chinese one stays
   // there when they click the brand instead of being dropped into the English home.
   const homePath = location.pathname === '/zh' || location.pathname.startsWith('/zh/') ? '/zh' : '/';
-  const videoPage = VIDEO_PREVIEW_PATHS.find(path => path === location.pathname.replace(/^\/zh(?=\/)/, ''));
-  const videoLanguage = videoPage ? (homePath === '/zh' ? 'zh-CN' : 'en-US') : undefined;
+  const videoPath = location.pathname.replace(/^\/zh(?=\/)/, '');
+  const videoPage = VIDEO_PREVIEW_PATHS.find(path => path === videoPath);
+  const isUpscaleLab = videoPath === VIDEO_UPSCALE_LAB;
+  const videoLanguage = (videoPage || isUpscaleLab) ? (homePath === '/zh' ? 'zh-CN' : 'en-US') : undefined;
   const zh = videoLanguage ? videoLanguage === 'zh-CN' : homePath === '/zh' || i18n.language.startsWith('zh');
   const videoPreviewLink = videoPreviewPath('/video-studio', zh ? 'zh' : 'en');
-  const wideMenu = videoPage ? '2xl:flex' : 'md:flex';
-  const narrowMenu = videoPage ? '2xl:hidden' : 'md:hidden';
+  const wideMenu = videoLanguage ? '2xl:flex' : 'md:flex';
+  const narrowMenu = videoLanguage ? '2xl:hidden' : 'md:hidden';
   const videoPreviewLabel = zh ? '视频工具 · 即将上线' : 'Video tools · Coming soon';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -62,9 +65,11 @@ export default function Navbar() {
     // Blog editions have stable SEO URLs. Preserve the article slug while moving between the
     // English x-default route and the Chinese edition; the other UI locales use the English
     // source edition until translated article URLs exist.
-    if (videoPage) {
+    if (videoPage || isUpscaleLab) {
+      const locale = code === 'zh-CN' ? 'zh' : 'en';
+      const path = videoPage ? videoPreviewPath(videoPage, locale) : videoUpscaleLabPath(locale);
       void i18n.changeLanguage(code);
-      navigate(videoPreviewPath(videoPage, code === 'zh-CN' ? 'zh' : 'en'));
+      navigate(path + location.search + location.hash);
       setIsLangOpen(false);
       return;
     }

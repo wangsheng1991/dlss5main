@@ -147,6 +147,14 @@
       "destination": "/zh/video-studio/index.html"
     },
     {
+      "source": "/video-understanding",
+      "destination": "/video-understanding/index.html"
+    },
+    {
+      "source": "/zh/video-understanding",
+      "destination": "/zh/video-understanding/index.html"
+    },
+    {
       "source": "/image-to-video",
       "destination": "/image-to-video/index.html"
     },
@@ -157,6 +165,14 @@
     {
       "source": "/zh/video-upscaler",
       "destination": "/zh/video-upscaler/index.html"
+    },
+    {
+      "source": "/vs/topaz-video-upscaling",
+      "destination": "/vs/topaz-video-upscaling/index.html"
+    },
+    {
+      "source": "/zh/vs/topaz-video-upscaling",
+      "destination": "/zh/vs/topaz-video-upscaling/index.html"
     },
     {
       "source": "/frame-interpolation",

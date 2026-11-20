@@ -52,6 +52,37 @@ async function mirrorToMailops(payload: MailopsPayload): Promise<void> {
   if (!response.ok) throw new Error(`MailOps answered ${response.status}`);
 }
 
+async function submitVideoBeta(
+  res: VercelResponse,
+  account: Awaited<ReturnType<typeof requireUser>>,
+  body: Record<string, unknown>,
+) {
+  const feature = body.feature;
+  if (feature !== 'image-to-video' && feature !== 'video-upscaler' && feature !== 'frame-interpolation' && feature !== 'video-understanding') {
+    return res.status(400).json({ error: 'Choose a video tool to try first', code: 'invalid_feature' });
+  }
+  if (!account.email) {
+    return res.status(400).json({ error: 'Sign in with an account that has an email address', code: 'email_required' });
+  }
+
+  // Keep video applications outside the desktop download workflow, which may send an installer.
+  const db = database();
+  const application = db.collection('videoBetaRequests').doc(account.uid);
+  const created = await db.runTransaction(async transaction => {
+    if ((await transaction.get(application)).exists) return false;
+    transaction.create(application, {
+      uid: account.uid,
+      email: account.email,
+      feature,
+      note: text(body.note, MAX_NOTE),
+      createdAt: new Date(),
+      status: 'new',
+    });
+    return true;
+  });
+  return res.status(created ? 201 : 200).json({ ok: true, alreadyApplied: !created });
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // A secret-protected maintenance call imports recent Firestore records into a newly deployed
@@ -88,9 +119,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: failed === 0, total: payloads.length, synced, failed });
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-    const { uid, email, displayName } = await requireUser(req);
-
+    const account = await requireUser(req);
     const body = (req.body || {}) as Record<string, unknown>;
+    if (body.kind === 'video-beta') return await submitVideoBeta(res, account, body);
+    const { uid, email, displayName } = account;
+
     const note = text(body.note, MAX_NOTE);
     const machine = text(body.machine, MAX_MACHINE);
     if (!note && !machine) return res.status(400).json({ error: 'Say what you want to process, or which machine you are on', code: 'empty_request' });

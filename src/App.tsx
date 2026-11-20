@@ -54,6 +54,7 @@ const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const GameCharacterTogetherZh = lazy(() => import('./pages/GameCharacterTogetherZh'));
 const TopazFree = lazy(() => import('./pages/TopazFree'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
+const VideoUpscaleLab = lazy(() => import('./pages/VideoUpscaleLab'));
 const VideoStudioPreview = lazy(() => import('./pages/VideoStudioPreview'));
 const SeoExpansion = lazy(() => import('./pages/SeoExpansion'));
 const Dlss5Dll = lazy(() => import('./pages/Dlss5Dll'));
@@ -161,8 +162,12 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/zh/topaz-free" element={orHome('tools', <TopazFree locale="zh" />)} />
                   <Route path="/game-character-style" element={orHome('tools', <GameCharacterStyle />)} />
                   <Route path="/video-upscaler" element={orHome('tools', <VideoUpscaler />)} />
+                  <Route path="/vs/topaz-video-upscaling" element={orHome('tools', <VideoUpscaleLab locale="en" />)} />
+                  <Route path="/zh/vs/topaz-video-upscaling" element={orHome('tools', <VideoUpscaleLab locale="zh" />)} />
                   <Route path="/video-studio" element={orHome('tools', <VideoStudioPreview page="/video-studio" locale="en" />)} />
                   <Route path="/zh/video-studio" element={orHome('tools', <VideoStudioPreview page="/video-studio" locale="zh" />)} />
+                  <Route path="/video-understanding" element={orHome('tools', <VideoStudioPreview page="/video-understanding" locale="en" />)} />
+                  <Route path="/zh/video-understanding" element={orHome('tools', <VideoStudioPreview page="/video-understanding" locale="zh" />)} />
                   <Route path="/image-to-video" element={orHome('tools', <VideoStudioPreview page="/image-to-video" locale="en" />)} />
                   <Route path="/zh/image-to-video" element={orHome('tools', <VideoStudioPreview page="/image-to-video" locale="zh" />)} />
                   <Route path="/zh/video-upscaler" element={orHome('tools', <VideoStudioPreview page="/video-upscaler" locale="zh" />)} />

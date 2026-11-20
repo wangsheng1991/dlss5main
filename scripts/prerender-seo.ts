@@ -45,7 +45,10 @@ import { PASSPORT_PHOTO_LONG_FORM, PASSPORT_PHOTO_SPEC_SLUGS, passportPhotoSeoCo
 import { GAME_STYLE_LANDING, GAME_STYLE_LONG_FORM, gameStyleLandingSchema } from '../src/content/gameStyleLanding';
 import { VIDEO_LANDING, VIDEO_LONG_FORM, videoLandingSchema } from '../src/content/videoLanding';
 import { VideoPreviewContent, VideoStudioNotice } from '../src/components/VideoPreviewContent';
-import { VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoPreviewAlternates, videoPreviewLanguage, videoPreviewPath, videoPreviewTitle } from '../src/content/videoStudio';
+import { VideoUpscaleLabContent, VideoUpscaleLabLink } from '../src/components/VideoUpscaleLab';
+import { VIDEO_UPSCALE_MEDIA, videoUpscaleLabAlternates, videoUpscaleLabCopy, videoUpscaleLabPath, videoUpscaleLabSchema } from '../src/content/videoUpscaleLab';
+import { VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoPreviewAlternates, videoPreviewIndexable, videoPreviewLanguage, videoPreviewPath, videoPreviewTitle } from '../src/content/videoStudio';
+import { UNDERSTANDING_MEDIA, videoUnderstandingSchema } from '../src/content/videoUnderstanding';
 import { BEFORE_AFTER_CASES, BEFORE_AFTER_COPY, BEFORE_AFTER_FAQ, beforeAfterSchema, recordSummary, workflowLabel } from '../src/content/beforeAfter';
 import { STUDIO_COPY } from '../src/content/studioPage';
 import { VISUAL_ENHANCER_COPY, visualEnhancerSchema, type VisualEnhancerLocale } from '../src/content/visualEnhancer';
@@ -961,7 +964,7 @@ function renderVideoLanding(): string {
   const steps = [['01', 'Generate a preview', 'Use 480p or 720p to iterate on prompt, camera movement, references and timing before paying for a final finish.'], ['02', 'Inspect key frames', 'Check faces, hands, typography, thin geometry, fast motion and temporal consistency at 100%.'], ['03', 'Finish the approved shot', 'Run the selected video super-resolution pass for 1080p or 4K delivery, then keep the original beside the AI-enhanced result.']].map(([number, title, text]) => `<li class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><span class="text-primary font-mono text-sm">${number}</span><h2 class="mt-4 text-xl font-bold text-white">${title}</h2><p class="mt-3 text-sm leading-relaxed text-zinc-400">${text}</p></li>`).join('');
   const faqs = VIDEO_LANDING.faqs.map((faq) => `<article><h3>${escapeHtml(faq.question)}</h3><details><summary>Read the answer</summary><p>${escapeHtml(faq.answer)}</p></details></article>`).join('');
   const longForm = `<section class="mt-16 max-w-4xl space-y-7"><div><h2 class="text-2xl font-bold text-white">What AI video upscaling changes</h2><p>${escapeHtml(VIDEO_LONG_FORM.definition)}</p></div><div><h2 class="text-2xl font-bold text-white">Why preview resolution comes first</h2><p>${escapeHtml(VIDEO_LONG_FORM.preview)}</p></div><div><h2 class="text-2xl font-bold text-white">Review time, not only one frame</h2><p>${escapeHtml(VIDEO_LONG_FORM.checks)}</p></div><div><h2 class="text-2xl font-bold text-white">Document the final delivery</h2><p>${escapeHtml(VIDEO_LONG_FORM.delivery)}</p></div><div><h2 class="text-2xl font-bold text-white">Test the hardest scene</h2><p>${escapeHtml(VIDEO_LONG_FORM.sceneNotes)}</p></div><div><h2 class="text-2xl font-bold text-white">Compare the whole cost</h2><p>${escapeHtml(VIDEO_LONG_FORM.costNotes)}</p></div><div><h2 class="text-2xl font-bold text-white">Keep the handoff reproducible</h2><p>${escapeHtml(VIDEO_LONG_FORM.handoff)}</p></div><div><h2 class="text-2xl font-bold text-white">Use a final review checklist</h2><p>${escapeHtml(VIDEO_LONG_FORM.checklist)}</p></div></section>`;
-  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(VIDEO_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Video super-resolution workflow</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(VIDEO_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(VIDEO_LANDING.intro)}</p><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try a representative frame →</a> <a class="inline-block ml-3 text-primary" href="/blog/seedance-2-5-video-super-resolution-cost-guide-2026">Read the Seedance 2.5 cost guide →</a></p><p class="mt-4 text-xs leading-relaxed text-zinc-500">The current public workspace processes still image frames. These clips are original silent reference demos for the planned video provider workflow.</p>${renderToStaticMarkup(createElement(MemoryRouter, null, createElement(VideoStudioNotice, { locale: 'en' })))}</header>${longForm}<section class="mt-16" aria-labelledby="video-demos-heading"><p class="text-xs uppercase tracking-widest text-primary">Original reference demos</p><h2 id="video-demos-heading" class="mt-2 text-3xl font-bold text-white">See the transition before you commit to a workflow</h2><div class="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-6">${demos}</div></section><section class="mt-20" aria-labelledby="workflow-heading"><h2 id="workflow-heading" class="text-3xl font-bold text-white">A practical 3-step video enhancement workflow</h2><ol class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-6">${steps}</ol></section><section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">Frequently asked questions</h2><div class="mt-5">${faqs}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">Continue with related workflows</h2><p class="mt-4"><a href="/game-character-style">20 game character cases</a> · <a href="/image-quality-enhancer">Image quality enhancer</a> · <a href="/comparisons">AI tools compared</a></p></section></main>`;
+  const root = `<main class="pt-28 pb-24 px-6 max-w-[1200px] mx-auto"><nav class="mb-8 text-sm text-zinc-500"><a href="/">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(VIDEO_LANDING.heading)}</span></nav><header class="max-w-4xl"><p class="text-primary uppercase tracking-widest text-xs">Video super-resolution workflow</p><h1 class="text-4xl md:text-6xl font-bold text-white mt-4">${escapeHtml(VIDEO_LANDING.heading)}</h1><p class="text-lg leading-relaxed text-zinc-300 mt-6">${escapeHtml(VIDEO_LANDING.intro)}</p><p class="mt-7"><a class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold" href="/dashboard?tool=enhance">Try a representative frame →</a> <a class="inline-block ml-3 text-primary" href="/blog/seedance-2-5-video-super-resolution-cost-guide-2026">Read the Seedance 2.5 cost guide →</a></p><p class="mt-4 text-xs leading-relaxed text-zinc-500">The current public workspace processes still image frames. These clips are original silent reference demos for the planned video provider workflow.</p>${renderToStaticMarkup(createElement(MemoryRouter, null, createElement(VideoStudioNotice, { locale: 'en' })))}${renderToStaticMarkup(createElement(MemoryRouter, null, createElement(VideoUpscaleLabLink, { locale: 'en' })))}</header>${longForm}<section class="mt-16" aria-labelledby="video-demos-heading"><p class="text-xs uppercase tracking-widest text-primary">Original reference demos</p><h2 id="video-demos-heading" class="mt-2 text-3xl font-bold text-white">See the transition before you commit to a workflow</h2><div class="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-6">${demos}</div></section><section class="mt-20" aria-labelledby="workflow-heading"><h2 id="workflow-heading" class="text-3xl font-bold text-white">A practical 3-step video enhancement workflow</h2><ol class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-6">${steps}</ol></section><section class="mt-16 max-w-4xl" id="faq"><h2 class="text-3xl font-bold text-white">Frequently asked questions</h2><div class="mt-5">${faqs}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">Continue with related workflows</h2><p class="mt-4"><a href="/game-character-style">20 game character cases</a> · <a href="/image-quality-enhancer">Image quality enhancer</a> · <a href="/comparisons">AI tools compared</a></p></section></main>`;
   return withRoot(withHead(TEMPLATE, {
     title: VIDEO_LANDING.title,
     description: VIDEO_LANDING.description,
@@ -1331,18 +1334,33 @@ for (const legalPage of ['terms', 'privacy', 'refund'] as const) writeRoute(`/${
 if (profileHas('tools')) {
   writeRoute(GAME_STYLE_LANDING.path, renderGameStyleLanding());
   writeRoute(VIDEO_LANDING.path, renderVideoLanding());
+  for (const locale of ['en', 'zh'] as const) {
+    const { title, lead } = videoUpscaleLabCopy(locale);
+    const path = videoUpscaleLabPath(locale);
+    const root = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(VideoUpscaleLabContent, { locale })));
+    writeRoute(path, withRoot(withHead(TEMPLATE, {
+      title, description: lead, canonicalPath: path, language: videoPreviewLanguage(locale),
+      noindex: true, image: VIDEO_UPSCALE_MEDIA + '/hero.jpg',
+      alternates: videoUpscaleLabAlternates(BASE_URL), structuredData: videoUpscaleLabSchema(locale, BASE_URL),
+    }), root));
+  }
   for (const page of VIDEO_PREVIEW_PATHS) {
     for (const locale of ['en', 'zh'] as const) {
       if (page === '/video-upscaler' && locale === 'en') continue;
       const path = videoPreviewPath(page, locale);
+      const title = videoPreviewTitle(page, locale);
+      const description = VIDEO_PREVIEW_COPY[locale][page].lead;
+      const understanding = page === '/video-understanding';
       const root = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(VideoPreviewContent, { page, locale })));
       writeRoute(path, withRoot(withHead(TEMPLATE, {
-        title: videoPreviewTitle(page, locale),
-        description: VIDEO_PREVIEW_COPY[locale][page].lead,
+        title,
+        description,
         canonicalPath: path,
         language: videoPreviewLanguage(locale),
-        noindex: page !== '/video-studio',
+        noindex: !videoPreviewIndexable(page),
         alternates: page === '/video-upscaler' ? undefined : videoPreviewAlternates(page, BASE_URL),
+        image: understanding ? UNDERSTANDING_MEDIA.poster : undefined,
+        structuredData: understanding ? videoUnderstandingSchema(locale, title, description, BASE_URL) : undefined,
       }), root));
     }
   }

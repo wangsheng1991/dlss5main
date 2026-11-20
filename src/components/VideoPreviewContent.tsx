@@ -1,11 +1,16 @@
-import { ArrowRight, Clapperboard, Expand, Film, Image } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { ArrowRight, Clapperboard, Expand, Film, Image, ScanLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import VideoUnderstandingDemo from './VideoUnderstandingDemo';
+import VideoInterpolationProof from './VideoInterpolationProof';
+import { VideoUpscaleLabLink } from './VideoUpscaleLab';
+import { UNDERSTANDING_MEDIA } from '../content/videoUnderstanding';
 import {
-  VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoPreviewPath, type VideoPreviewLocale, type VideoPreviewPath,
+  VIDEO_PREVIEW_COPY, VIDEO_PREVIEW_PATHS, videoBetaHref, videoPreviewPath, type VideoBetaFeature, type VideoPreviewLocale, type VideoPreviewPath,
 } from '../content/videoStudio';
 
-type Props = { page: VideoPreviewPath; locale: VideoPreviewLocale };
-const icons = { '/image-to-video': Clapperboard, '/video-upscaler': Expand, '/frame-interpolation': Film };
+type Props = { page: VideoPreviewPath; locale: VideoPreviewLocale; application?: ReactNode };
+const icons = { '/video-understanding': ScanLine, '/image-to-video': Clapperboard, '/video-upscaler': Expand, '/frame-interpolation': Film };
 
 export function VideoStudioNotice({ locale }: { locale: VideoPreviewLocale }) {
   const zh = locale === 'zh';
@@ -15,13 +20,24 @@ export function VideoStudioNotice({ locale }: { locale: VideoPreviewLocale }) {
       <Link className="font-semibold text-primary hover:underline" to={videoPreviewPath('/video-studio', locale)}>
         {zh ? '查看视频工作台预告' : 'See the Video Studio preview'}
       </Link>
+      <a className="font-semibold text-primary hover:underline" href={videoBetaHref(locale, 'video-upscaler')}>{zh ? '申请视频内测' : 'Apply for the video beta'}</a>
     </aside>
   );
 }
 
-export function VideoPreviewContent({ page, locale }: Props) {
+export function VideoBetaSignIn({ locale, feature }: { locale: VideoPreviewLocale; feature?: VideoBetaFeature }) {
+  const zh = locale === 'zh';
+  const next = encodeURIComponent(videoBetaHref(locale, feature));
+  return <div className="flex flex-wrap items-center gap-4">
+    <Link to={`/login?next=${next}`} className="rounded-lg bg-primary px-5 py-3 font-bold text-black hover:bg-white">{zh ? '登录后申请' : 'Sign in to apply'}</Link>
+    <Link to={`/register?next=${next}`} className="text-sm font-semibold text-primary hover:underline">{zh ? '创建账号' : 'Create an account'}</Link>
+  </div>;
+}
+
+export function VideoPreviewContent({ page, locale, application }: Props) {
   const zh = locale === 'zh';
   const hub = page === '/video-studio';
+  const betaFeature = page === '/video-upscaler' ? 'video-upscaler' : page === '/frame-interpolation' ? 'frame-interpolation' : undefined;
   const copy = VIDEO_PREVIEW_COPY[locale][page];
   return (
     <main className="mx-auto w-full max-w-[1200px] px-5 pb-24 pt-28 sm:px-8 sm:pt-32">
@@ -33,12 +49,15 @@ export function VideoPreviewContent({ page, locale }: Props) {
         <Link className="ml-auto text-primary hover:underline" hrefLang={zh ? 'en' : 'zh-CN'} to={videoPreviewPath(page, zh ? 'en' : 'zh')}>{zh ? 'English' : '中文'}</Link>
       </nav>
 
-      <header className="grid gap-8 border-y border-outline-variant/25 py-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
+      {page === '/video-understanding' ? <VideoUnderstandingDemo locale={locale} /> : <header className="grid gap-8 border-y border-outline-variant/25 py-10 lg:grid-cols-[1fr_0.72fr] lg:items-center lg:gap-12">
         <div>
           <p className="text-sm font-semibold text-primary">{zh ? '即将上线' : 'Coming soon'}</p>
           <h1 className="mt-3 font-headline text-4xl font-bold tracking-tight text-white md:text-6xl">{copy.heading}</h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-200">{copy.lead}</p>
           <p className="mt-4 max-w-xl leading-relaxed text-zinc-400">{copy.details}</p>
+          <a href={hub ? '#video-beta' : videoBetaHref(locale, betaFeature)} className="mr-3 mt-7 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-black hover:bg-white">
+            {zh ? '申请视频内测' : 'Apply for the video beta'}<ArrowRight aria-hidden="true" size={18} />
+          </a>
           <Link to="/game-character-style" className="mt-7 inline-flex items-center gap-2 rounded-lg border border-outline-variant/40 px-4 py-3 font-semibold text-zinc-100 hover:border-primary hover:text-primary">
             <Image aria-hidden="true" size={18} />
             {zh ? '体验现有图像风格转换' : 'Try image style conversion'}
@@ -57,7 +76,10 @@ export function VideoPreviewContent({ page, locale }: Props) {
             </ol>
           </section>
         )}
-      </header>
+      </header>}
+
+      {(hub || page === '/video-upscaler') && <VideoUpscaleLabLink locale={locale} />}
+      {page === '/frame-interpolation' && <VideoInterpolationProof locale={locale} />}
 
       <section aria-labelledby="video-tools-heading" className="mt-12">
         <h2 id="video-tools-heading" className="font-headline text-2xl font-bold text-white">{zh ? '视频工具预告' : 'Upcoming video tools'}</h2>
@@ -65,6 +87,16 @@ export function VideoPreviewContent({ page, locale }: Props) {
           {VIDEO_PREVIEW_PATHS.filter(path => path !== '/video-studio' && path !== page).map(path => {
             const Icon = icons[path];
             const tool = VIDEO_PREVIEW_COPY[locale][path];
+            if (path === '/video-understanding' && hub) return <Link key={path} to={videoPreviewPath(path, locale)}
+              className="group grid overflow-hidden rounded-2xl border border-lime-300/30 bg-[#162013] transition-colors hover:border-lime-300 md:col-span-3 md:grid-cols-2">
+              <div className="self-center p-6 sm:p-8">
+                <p className="flex items-center gap-2 text-sm font-semibold text-lime-300"><Icon aria-hidden="true" size={18} />{zh ? '内测预告 · 实测演示' : 'Beta preview · Recorded demo'}</p>
+                <h3 className="mt-3 font-headline text-3xl font-bold text-white">{tool.heading}</h3>
+                <p className="mt-2 max-w-lg leading-relaxed text-zinc-200">{tool.lead}</p>
+                <span className="mt-5 inline-flex items-center gap-2 font-semibold text-lime-300 group-hover:underline">{zh ? '查看路口演示' : 'See the street-scene demo'}<ArrowRight aria-hidden="true" size={17} /></span>
+              </div>
+              <img src={UNDERSTANDING_MEDIA.poster} alt="" loading="lazy" decoding="async" className="aspect-video w-full self-center object-cover" />
+            </Link>;
             return <Link key={path} to={videoPreviewPath(path, locale)} className="group rounded-xl border border-outline-variant/30 bg-surface-low p-5 hover:border-primary/70">
               <Icon aria-hidden="true" className="text-primary" size={22} />
               <h3 className="mt-4 font-headline text-xl font-semibold text-white">{tool.heading}</h3>
@@ -74,6 +106,14 @@ export function VideoPreviewContent({ page, locale }: Props) {
           })}
         </div>
       </section>
+
+      {hub && <section id="video-beta" aria-labelledby="video-beta-heading" className="mt-12 scroll-mt-24 rounded-xl border border-primary/30 bg-surface-low p-6 sm:p-8">
+        <h2 id="video-beta-heading" className="font-headline text-2xl font-bold text-white">{zh ? '申请视频内测' : 'Apply for the video beta'}</h2>
+        <p className="mt-3 max-w-2xl text-zinc-300">{zh
+          ? '视频工具即将上线。现在可以提交申请，告诉我们你最想试哪个工具。如有邀请，我们会通过账号邮箱联系你。'
+          : 'Video tools are coming soon. Apply now and tell us which tool you want to try first. If an invitation becomes available, we’ll contact your account email.'}</p>
+        <div className="mt-5">{application ?? <VideoBetaSignIn locale={locale} />}</div>
+      </section>}
 
       {hub && <section id="model-preview" aria-labelledby="video-model-heading" className="mt-12 border-t border-outline-variant/25 pt-7">
         <h2 id="video-model-heading" className="font-headline text-2xl font-bold text-white">{zh ? '自研模型 · 即将上线' : 'Our in-house model · Coming soon'}</h2>
