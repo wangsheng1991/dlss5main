@@ -476,8 +476,8 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
   }), root);
   // Isolate the SERP experiment from H1, visible copy, social metadata and JSON-LD.
   if (article.slug === FEATURE_PICKER_SLUG && locale !== 'en') {
-    const snippetTitle = isChinese ? 'DLSS 4 与 DLSS 5 到底差在哪（2026 对比）｜附 FSR 4.1' : 'DLSS 4 vs DLSS 5: What Actually Changed (2026) — and FSR 4.1';
-    const snippetDescription = isChinese ? 'DLSS 4 与 DLSS 5 在光照与材质、超分、帧生成和显卡要求上的逐项对比，并说明 FSR 4.1 落在哪一档。带来源、不编帧率赢家。' : 'DLSS 4 vs DLSS 5 compared on lighting and materials, upscaling, frame generation and GPU requirements, plus where FSR 4.1 fits. Source-linked; no invented FPS winner.';
+    const snippetTitle = isChinese ? 'DLSS 5、DLSS 4 与 FSR 4 对比：功能区别与显卡要求' : 'DLSS 5 vs DLSS 4 vs FSR 4: Differences & GPU Support';
+    const snippetDescription = isChinese ? 'DLSS 5、DLSS 4 与 FSR 4/4.1 怎么选？逐项对照神经光照与材质、超分、帧生成和显卡要求，查看功能表与来源；不把不同功能当作同一项性能比较。' : 'Compare DLSS 5 neural lighting and materials with DLSS 4 upscaling and frame generation, plus FSR 4/4.1. Check the feature table and source-linked GPU requirements.';
     return { html: html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(snippetTitle)}</title>`)
       .replace(/<meta name="description" content="[^"]*"([^>]*)>/, `<meta name="description" content="${escapeHtml(snippetDescription)}"$1>`), title };
   }
