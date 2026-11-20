@@ -12,7 +12,7 @@ const seconds = (time: number) => time.toFixed(3) + ' s';
 type Point = { x: number; y: number };
 type EventEntry = { start: number; end?: number; label: string | Record<string, unknown> };
 type Source = { name: string; url: string };
-const source = (url: string): Source => ({ url, name: url.slice(url.lastIndexOf('/') + 1) });
+
 
 function download(blob: Blob, fileName: string) {
   const url = URL.createObjectURL(blob);
@@ -51,6 +51,28 @@ function seek(video: HTMLVideoElement, time: number) {
   });
 }
 
+function prepareDecoder(media: HTMLVideoElement, url: string, signal: AbortSignal) {
+  return new Promise<void>((resolve, reject) => {
+    const stop = () => finish(false);
+    const loaded = () => finish(true);
+    function finish(ok: boolean) {
+      window.clearTimeout(timer);
+      media.removeEventListener('loadeddata', loaded);
+      media.removeEventListener('error', stop);
+      signal.removeEventListener('abort', stop);
+      if (ok) resolve();
+      else reject(new Error('Video could not be decoded'));
+    }
+    const timer = window.setTimeout(stop, 15000);
+    media.addEventListener('loadeddata', loaded);
+    media.addEventListener('error', stop);
+    signal.addEventListener('abort', stop);
+    if (signal.aborted) return stop();
+    media.preload = 'auto';
+    media.src = url;
+  });
+}
+
 export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; locale: VideoPreviewLocale }) {
   const zh = locale === 'zh';
   const t = (en: string, cn: string) => zh ? cn : en;
@@ -66,6 +88,8 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   const sheetPreview = useRef<HTMLCanvasElement>(null);
   const objectUrls = useRef(new Map<number, string>());
   const painting = useRef<Point | null>(null);
+  const scanning = useRef<AbortController | null>(null);
+  const sampleLoad = useRef<AbortController | null>(null);
   const [clip, setClip] = useState<Source>();
   const [second, setSecond] = useState<Source>();
   const [metadata, setMetadata] = useState<{ width: number; height: number; duration: number }>();
@@ -82,9 +106,15 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   const [box, setBox] = useState<{ left: number; top: number; width: number; height: number; time: number }>();
   const [hasSheet, setHasSheet] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [sampleLoading, setSampleLoading] = useState(false);
   const [error, setError] = useState(false);
   const urls = objectUrls.current;
-  useEffect(() => () => { urls.forEach(url => URL.revokeObjectURL(url)); }, [urls]);
+  useEffect(() => () => {
+    scanning.current?.abort();
+    sampleLoad.current?.abort();
+    sampleLoad.current = null;
+    urls.forEach(url => URL.revokeObjectURL(url));
+  }, [urls]);
 
   function load(next: Source, side: number) {
     const old = urls.get(side);
@@ -107,13 +137,37 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
     setClip(next);
   }
 
-  function sample() {
+  async function sample() {
+    if (sampleLoad.current) return;
+    const controller = new AbortController();
+    sampleLoad.current = controller;
+    const timer = window.setTimeout(() => controller.abort(), 25000);
+    setSampleLoading(true);
+    setError(false);
     const first = compare ? '/examples/video-upscale-lab/street-bicubic.mp4'
       : mode === 'event-timeline' ? '/examples/video-understanding/street-timeline.mp4'
-        : diff ? '/examples/video-highlights/street-highlights.mp4' : '/examples/video-highlights/street-source.mp4';
-    load(source(first), 0);
-    if (compare) load(source('/examples/video-upscale-lab/street-candidate.mp4'), 1);
-    if (mode === 'event-timeline') setEvents(STREET_WINDOWS.map(window => ({ start: window.start, end: window.end, label: JSON.parse(window.raw) })));
+        : diff ? HIGHLIGHTS_MEDIA.edit : HIGHLIGHTS_MEDIA.source;
+    const examples = compare ? [first, '/examples/video-upscale-lab/street-candidate.mp4'] : [first];
+    try {
+      // Buffer the short stock examples once. Subsequent scrubs and frame scans use this copy.
+      const files = await Promise.all(examples.map(async url => {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) throw new Error('Video fetch failed');
+        return { bytes: await response.blob(), name: url.slice(url.lastIndexOf('/') + 1) };
+      }));
+      controller.signal.throwIfAborted();
+      files.forEach(({ bytes, name }, side) => load({ url: URL.createObjectURL(bytes), name }, side));
+      if (mode === 'event-timeline') setEvents(STREET_WINDOWS.map(window => ({ start: window.start, end: window.end, label: JSON.parse(window.raw) })));
+    } catch {
+      if (sampleLoad.current === controller) setError(true);
+    } finally {
+      window.clearTimeout(timer);
+      controller.abort();
+      if (sampleLoad.current === controller) {
+        sampleLoad.current = null;
+        setSampleLoading(false);
+      }
+    }
   }
 
   function saveJSON(value: unknown) {
@@ -152,13 +206,16 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   }
 
   async function scan() {
-    const media = video.current;
-    if (!media || !metadata || busy) return;
+    if (!clip || !metadata || scanning.current || sampleLoad.current) return;
+    const controller = new AbortController();
+    scanning.current = controller;
     setBusy(true);
     setError(false);
-    const previousTime = media.currentTime;
-    media.pause();
+    video.current?.pause();
+    const media = document.createElement('video');
     try {
+      // A separate decoder leaves the visible player at the paused timestamp.
+      await prepareDecoder(media, clip.url, controller.signal);
       const tiles = sheetPreview.current;
       const frame = getCanvas(48, 27);
       const sampleContext = frame.getContext('2d', { willReadFrequently: true });
@@ -176,6 +233,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
       const found = [];
       for (let i = 0; i < samples; i++) {
         const time = (i + (sheet ? .5 : 0)) / samples * metadata.duration;
+        controller.signal.throwIfAborted();
         await seek(media, time);
         if (sheet && tileContext) {
           const x = i % columns * tileWidth;
@@ -203,10 +261,12 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
       if (sheet) setHasSheet(true);
       if (diff) setChanges(found);
     } catch {
-      setError(true);
+      if (!controller.signal.aborted) setError(true);
     } finally {
-      media.currentTime = previousTime;
-      setBusy(false);
+      media.removeAttribute('src');
+      media.load();
+      scanning.current = null;
+      if (!controller.signal.aborted) setBusy(false);
     }
   }
 
@@ -226,7 +286,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   function fileInput(side: number) {
     return <label className={action + ' inline-flex cursor-pointer items-center gap-2 focus-within:ring-2 focus-within:ring-lime-300'}>
       <Upload size={16} aria-hidden="true" />{side === 1 ? t('Open comparison file', '打开对照视频') : t('Open video file', '打开视频文件')}
-      <input className="sr-only" type="file" accept="video/*,.mp4,.webm,.mov" disabled={busy} onChange={event => {
+      <input className="sr-only" type="file" accept="video/*,.mp4,.webm,.mov" disabled={busy || sampleLoading} onChange={event => {
         const file = event.currentTarget.files?.[0];
         if (file) load({ name: file.name, url: URL.createObjectURL(file) }, side);
         event.currentTarget.value = '';
@@ -239,7 +299,8 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   const duration = metadata ? (compare && secondDuration ? Math.min(metadata.duration, secondDuration) : metadata.duration) : 0;
   return <>
     <div className="mb-4 flex flex-wrap items-center gap-3">
-      <button className={primary} disabled={busy} onClick={sample}><Play size={16} aria-hidden="true" />{t('Open sample', '打开样片')}</button>
+      <button className={primary} disabled={busy || sampleLoading} onClick={() => void sample()}><Play size={16} aria-hidden="true" />
+        {sampleLoading ? t('Loading sample…', '正在加载样片…') : t('Open sample', '打开样片')}</button>
       {fileInput(0)}{compare && fileInput(1)}
       {clip && <span className="min-w-0 break-all text-sm text-zinc-400">{clip.name}</span>}
     </div>
@@ -314,7 +375,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
             <option>4</option><option>9</option><option>12</option>
           </select>
         </label>}
-        {(sheet || diff) && <button className={primary} disabled={busy} onClick={() => void scan()}>{busy ? t('Reading frames…', '正在读取画面…') : sheet ? t('Build contact sheet', '生成缩略图总览') : t('Find cut candidates', '查找切镜候选')}</button>}
+        {(sheet || diff) && <button className={primary} disabled={busy || sampleLoading} onClick={() => void scan()}>{busy ? t('Reading frames…', '正在读取画面…') : sheet ? t('Build contact sheet', '生成缩略图总览') : t('Find cut candidates', '查找切镜候选')}</button>}
         {hasSheet && <button className={action} onClick={() => { if (sheetPreview.current) png(sheetPreview.current, 'video-contact-sheet'); }}>{t('Save sheet PNG', '保存总览 PNG')}</button>}
         {mode === 'clip-range-planner' && <>
           <button className={action} onClick={() => setRange({ ...range, start: position })}>{t('Mark start', '标记起点')}</button>
