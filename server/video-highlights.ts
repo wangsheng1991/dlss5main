@@ -2,7 +2,7 @@ import { randomUUID, timingSafeEqual } from 'node:crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { adminAuth, database, privateStorage } from './admin.js';
 import { ApiError } from './errors.js';
-import { HIGHLIGHTS_EVENTS, HIGHLIGHTS_MAX_BYTES, HIGHLIGHTS_MAX_SECONDS, type HighlightsSegment } from '../lib/video-highlights-beta.js';
+import { HIGHLIGHTS_EVENTS, HIGHLIGHTS_MAX_BYTES, HIGHLIGHTS_MAX_SECONDS, highlightsStallReason, highlightsWorkerAvailable, type HighlightsSegment } from '../lib/video-highlights-beta.js';
 
 const day = 24 * 60 * 60 * 1000;
 const leaseMs = 5 * 60 * 1000;
@@ -53,9 +53,17 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
   const activity = db.collection('videoHighlightOwners').doc(account.uid);
   const action = body.action;
 
+  async function uploadTicket(id: string, input: string, size: number) {
+    const [uploadUrl] = await bucket.file(input).getSignedUrl({
+      version: 'v4', action: 'write', expires: now + 600000, contentType: 'video/mp4',
+      extensionHeaders: { ...uploadHeaders, 'content-length': String(size) },
+    });
+    return { id, uploadUrl, headers: uploadHeaders };
+  }
+
   if (action === 'access') {
     const worker = (await control.get()).data();
-    return res.json({ available: Number(worker?.heartbeat) > now - 120000 || Number(worker?.leaseUntil) > now });
+    return res.json({ available: highlightsWorkerAvailable(worker, now) });
   }
 
   if (action === 'recent') {
@@ -73,33 +81,45 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
     const id = randomUUID();
     const doc = jobs.doc(id);
     const input = `highlights/${id}/input.mp4`;
-    const [uploadUrl] = await bucket.file(input).getSignedUrl({
-      version: 'v4', action: 'write', expires: now + 600000, contentType: 'video/mp4',
-      extensionHeaders: { ...uploadHeaders, 'content-length': String(size) },
-    });
     await db.runTransaction(async tx => {
       const [owner, worker] = await tx.getAll(activity, control);
-      if (!(Number(worker.data()?.heartbeat) > now - 120000 || Number(worker.data()?.leaseUntil) > now)) {
+      if (!highlightsWorkerAvailable(worker.data(), now)) {
         return fail(503, 'worker_offline', 'Worker temporarily unavailable');
       }
       const lastId = owner.data()?.job;
       const previous = typeof lastId === 'string' ? (await tx.get(jobs.doc(lastId))).data() : null;
-      if (previous && previous.expiresAt > now && ['queued', 'running', 'ready'].includes(previous.status)) {
+      if (previous && previous.expiresAt > now && ['upload', 'queued', 'running', 'ready'].includes(previous.status)) {
         return fail(409, 'active_job', 'Resume or discard the previous job first');
       }
       if (Number(owner.data()?.startedAt) + 45000 > now) return fail(429, 'rate_limit', 'Please wait before starting another job');
       tx.create(doc, { uid: account.uid, input, size, event, status: 'upload', phase: 'analyze', attempts: 0, createdAt: now, expiresAt: now + day });
       tx.set(activity, { job: id, startedAt: now });
     });
-    return res.json({ id, uploadUrl, headers: uploadHeaders });
+    return res.json(await uploadTicket(id, input, size));
   }
 
   const id = matchJob(body.id);
   const doc = jobs.doc(id);
-  const job = (await doc.get()).data();
+  let job = (await doc.get()).data();
   if (!job || job.uid !== account.uid || job.expiresAt <= now) return fail(404, 'not_found', 'Job not found');
 
   if (action === 'status') {
+    if (job.status === 'queued' || job.status === 'running') {
+      const slot = (await control.get()).data();
+      if (highlightsStallReason(job, slot, id, now)) {
+        job = await db.runTransaction(async tx => {
+          const [current, worker] = await tx.getAll(doc, control);
+          const state = current.data();
+          if (!state || state.uid !== account.uid) return fail(404, 'not_found', 'Job not found');
+          const error = highlightsStallReason(state, worker.data(), id, now);
+          if (!error) return state;
+          const status = 'failed';
+          tx.update(doc, { status, error });
+          if (worker.data()?.active === id) tx.set(control, {});
+          return { ...state, status, error };
+        });
+      }
+    }
     const [downloadUrl] = job.status === 'done' ? await bucket.file(job.output).getSignedUrl({
       version: 'v4', action: 'read', expires: now + 300000,
       responseDisposition: 'attachment; filename="video-highlights.mp4"',
@@ -108,12 +128,24 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
       version: 'v4', action: 'read', expires: now + 900000,
     }) : [];
     return res.json({ id, status: job.status, phase: job.phase, segments: job.segments ?? [], downloadUrl, previewUrl,
-      error: job.error ?? null });
+      error: job.error ?? null, ...(job.status === 'upload' ? { uploadSize: job.size } : {}) });
+  }
+
+  if (action === 'retry_upload') {
+    if (job.status !== 'upload') return fail(409, 'job_busy', 'Upload is no longer pending');
+    if (body.size !== job.size) return fail(400, 'invalid_upload', 'Choose the original MP4');
+    const owner = (await activity.get()).data();
+    if (owner?.job !== id) return fail(404, 'not_found', 'Job not found');
+    const [exists] = await bucket.file(job.input).exists();
+    return res.json(exists ? { id, alreadyUploaded: true } : await uploadTicket(id, job.input, job.size));
   }
 
   if (action === 'submit' || action === 'export' || action === 'discard') {
     if (action === 'submit' && job.status === 'upload') {
-      const [meta] = await bucket.file(job.input).getMetadata().catch(() => fail(400, 'upload_missing', 'Upload not found'));
+      const [meta] = await bucket.file(job.input).getMetadata().catch(error => {
+        if (Number(error.code) === 404) return fail(400, 'upload_missing', 'Upload not found');
+        throw error;
+      });
       if (Number(meta.size) !== job.size || meta.contentType !== 'video/mp4') return fail(400, 'invalid_upload', 'Invalid uploaded object');
     }
     await db.runTransaction(async tx => {
@@ -127,7 +159,7 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
         return;
       }
       if (action === 'discard') {
-        if (current.status !== 'ready' && current.status !== 'upload') return fail(409, 'job_busy', 'The job cannot be discarded');
+        if (!['ready', 'upload', 'queued'].includes(current.status)) return fail(409, 'job_busy', 'The job cannot be discarded');
         tx.update(doc, { status: 'discarded' });
         return;
       }
@@ -161,12 +193,16 @@ async function workerAction(res: VercelResponse, body: Record<string, unknown>) 
       const expiredRunning = expiredRef && expired?.status === 'running';
       const retry = expiredRunning && expired.expiresAt > now && expired.attempts < 2;
       const queued = retry ? [] : (await tx.get(jobs.where('status', '==', 'queued').limit(20))).docs;
-      const candidate = queued.filter(row => row.data().expiresAt > now)
+      const candidate = queued.filter(row => row.data().expiresAt > now &&
+        !highlightsStallReason(row.data(), slot, row.id, now))
         .sort((a, b) => a.data().queuedAt - b.data().queuedAt)[0];
       const ref = retry ? expiredRef : candidate?.ref;
       const job = retry ? expired : candidate?.data();
       if (expiredRunning && !retry) tx.update(expiredRef, { status: 'failed', error: 'worker_lost' });
-      queued.filter(row => row.data().expiresAt <= now).forEach(row => tx.update(row.ref, { status: 'failed', error: 'expired' }));
+      for (const row of queued) {
+        const error = row.data().expiresAt <= now ? 'expired' : highlightsStallReason(row.data(), slot, row.id, now);
+        if (error) tx.update(row.ref, { status: 'failed', error });
+      }
       if (!ref || !job) {
         tx.set(control, { heartbeat: now });
         return null;

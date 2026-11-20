@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { request } from '../features/generation/client';
+import { ApiError, request } from '../features/generation/client';
 import { HIGHLIGHTS_EVENTS, HIGHLIGHTS_MAX_BYTES, type HighlightsEvent, type HighlightsSegment } from '../../lib/video-highlights-beta';
 import { videoPreviewPath, type VideoPreviewLocale } from '../content/videoStudio';
 
 type Job = {
   id: string; status: 'upload' | 'queued' | 'running' | 'ready' | 'failed' | 'done' | 'discarded';
-  phase: 'analyze' | 'export'; segments: HighlightsSegment[]; downloadUrl?: string; previewUrl?: string; error?: string;
+  phase: 'analyze' | 'export'; segments: HighlightsSegment[]; downloadUrl?: string; previewUrl?: string; error?: string; uploadSize?: number;
 };
 const labels = { en: ['Vehicle', 'Person', 'Bus'], zh: ['车辆', '人物', '公交车'] };
 
@@ -16,6 +16,7 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
   const { hash } = useLocation();
   const zh = locale === 'zh';
   const [access, setAccess] = useState<'available' | 'offline' | null>(null);
+  const [connectionAttempt, setConnectionAttempt] = useState(0);
   const [job, setJob] = useState<Job | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [event, setEvent] = useState<HighlightsEvent>('vehicle');
@@ -44,11 +45,13 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
         setAccess(gate.available ? 'available' : 'offline');
         setJob(state);
       }
-    }).catch(() => undefined);
+    }).catch(cause => {
+      if (active && !(cause instanceof ApiError && cause.status === 403)) setAccess('offline');
+    });
     return () => { active = false; };
     // Each account gets an independent beta session.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, connectionAttempt]);
 
   useEffect(() => {
     const id = job?.id;
@@ -82,6 +85,15 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
     if (job?.status === 'ready') setSelection(job.segments.map((_, index) => index));
   }, [job]);
 
+  async function putVideo(ticket: { uploadUrl: string; headers: Record<string, string> }, source: File) {
+    const response = await fetch(ticket.uploadUrl, {
+      method: 'PUT', headers: { ...ticket.headers, 'Content-Type': 'video/mp4' }, body: source, signal: AbortSignal.timeout(90000),
+    });
+    // An upload may have completed even if the browser lost its response.
+    // In that case the write-once precondition fails and submit verifies the stored object.
+    if (!response.ok && response.status !== 412) throw new Error('upload');
+  }
+
   async function upload(e: FormEvent) {
     e.preventDefault();
     if (!file || busy || !canUpload || access !== 'available') return;
@@ -92,14 +104,50 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
     setBusy(true);
     setError('');
     try {
-      const { id, uploadUrl, headers } = await call('upload', { size: file.size, event });
-      setJob({ id, status: 'upload', phase: 'analyze', segments: [] });
-      const response = await fetch(uploadUrl, { method: 'PUT', headers: { ...headers, 'Content-Type': 'video/mp4' }, body: file, signal: AbortSignal.timeout(90000) });
-      if (!response.ok) throw new Error('upload');
-      await call('submit', { id });
-      setJob({ id, status: 'queued', phase: 'analyze', segments: [] });
-    } catch {
-      setError(zh ? '上传或排队失败。可重试查询，或放弃未提交的任务。' : 'Upload or queueing failed. Refresh the job status or discard an unfinished upload.');
+      const ticket = await call('upload', { size: file.size, event });
+      setJob({ id: ticket.id, status: 'upload', phase: 'analyze', segments: [], uploadSize: file.size });
+      await putVideo(ticket, file);
+      await call('submit', { id: ticket.id });
+      setJob({ id: ticket.id, status: 'queued', phase: 'analyze', segments: [] });
+    } catch (cause) {
+      try {
+        const recent = await call('recent');
+        if (recent.id) setJob(await call('status', { id: recent.id }));
+      } catch {
+        // Keep the known job in place when the network is still unavailable.
+      }
+      if (cause instanceof ApiError && cause.code === 'worker_offline') {
+        setAccess('offline');
+        setError(zh ? '处理节点暂不可用，请稍后重查连接。' : 'The processing worker is unavailable. Check the connection later.');
+      } else if (cause instanceof ApiError && cause.code === 'rate_limit') {
+        setError(zh ? '请稍等再提交新任务。' : 'Wait a moment before starting a new job.');
+      } else {
+        setError(zh ? '上传未能确认，已保存的任务可以继续。' : 'The upload could not be confirmed. You can resume a saved job.');
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function resumeUpload(source?: File) {
+    if (job?.status !== 'upload' || busy) return;
+    setBusy(true);
+    setError('');
+    try {
+      if (source) {
+        if (!source.name.toLowerCase().endsWith('.mp4') || source.size !== job.uploadSize) {
+          setError(zh ? '请选择之前的同一个 MP4 文件。' : 'Choose the same MP4 file as before.');
+          return;
+        }
+        const ticket = await call('retry_upload', { id: job.id, size: source.size });
+        if (!ticket.alreadyUploaded) await putVideo(ticket, source);
+      }
+      await call('submit', { id: job.id });
+      setJob(await call('status', { id: job.id }));
+    } catch (cause) {
+      setError(cause instanceof ApiError && cause.code === 'upload_missing'
+        ? (zh ? '文件还没传完，请重新选择原 MP4。' : 'The upload is incomplete. Choose the original MP4 again.')
+        : (zh ? '暂时无法继续，请稍后重试。' : 'Unable to resume right now. Try again shortly.'));
     } finally {
       setBusy(false);
     }
@@ -113,7 +161,7 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
       if (action !== 'status') await call(action, { id: job.id, indices: selection });
       setJob(await call('status', { id: job.id }));
     } catch {
-      setError(zh ? '这次操作未确认，请刷新任务状态后再试。' : 'Could not confirm the operation. Refresh the status before retrying.');
+      setError(zh ? '任务状态可能已变化，请稍等或更新状态。' : 'The job may have changed. Wait a moment or refresh its status.');
     } finally {
       setBusy(false);
     }
@@ -131,7 +179,12 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
     <p className="mt-2 text-sm leading-relaxed text-zinc-300">{zh
       ? '上传你有权处理的 MP4。最长 30 秒，最高 720p，最多 32 MB。原片和成片仅用于本次任务，下载窗口为 24 小时，内测暂不扣积分。'
       : 'Upload an MP4 you have permission to process. Up to 30 seconds, 720p and 32 MB. Files are used for this job, with a 24-hour download window. The beta does not use credits.'}</p>
-    {access === 'offline' && <p className="mt-3 text-sm text-amber-200">{zh ? '处理节点暂不可用。已完成的任务仍可查看。' : 'The processing worker is temporarily offline. Completed jobs remain accessible.'}</p>}
+    {access === 'offline' && <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-amber-200">
+      <p>{zh ? '处理节点暂不可用。已完成的任务仍可查看。' : 'The processing worker is temporarily offline. Completed jobs remain accessible.'}</p>
+      <button type="button" className="underline" onClick={() => setConnectionAttempt(attempt => attempt + 1)}>
+        {zh ? '重查连接' : 'Check connection again'}
+      </button>
+    </div>}
     {canUpload && access === 'available' && <form className="mt-5 grid max-w-xl gap-4" onSubmit={upload}>
       <label className="grid gap-2 text-sm text-zinc-200">{zh ? '上传短片' : 'Upload a clip'}
         <input type="file" accept="video/mp4,.mp4" onChange={e => setFile(e.target.files?.[0] ?? null)} disabled={busy} className="min-w-0 rounded-lg border border-white/20 p-3" required />
@@ -148,12 +201,31 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
     {pending && <p role="status" className="mt-5 text-lime-200">{job.phase === 'export'
       ? (zh ? '正在准备导出…' : 'Preparing your export…')
       : (zh ? '正在排队或分析…' : 'Queued or analyzing…')}</p>}
+    {job?.status === 'queued' && <button type="button" disabled={busy} onClick={() => void change('discard')}
+      className="mt-2 text-sm text-zinc-300 underline">{zh ? '取消排队' : 'Cancel queued job'}</button>}
     {job?.status === 'failed' && <p role="alert" className="mt-5 text-amber-200">{job.error === 'invalid_media'
       ? (zh ? '无法读取视频。请检查格式、时长和分辨率。' : 'The clip could not be read. Check its format, duration and resolution.')
-      : (zh ? '处理未完成。请重试，内测未扣积分。' : 'Processing did not complete. You can try again. No credits were charged.')}</p>}
-    {job?.status === 'upload' && !busy && <div className="mt-5 flex gap-4 text-sm text-primary">
-      <button type="button" onClick={() => void change('status')}>{zh ? '刷新状态' : 'Refresh status'}</button>
-      <button type="button" onClick={() => void change('discard')}>{zh ? '放弃未提交的上传' : 'Discard unfinished upload'}</button>
+      : job.error === 'queue_timeout' || job.error === 'worker_lost'
+        ? (zh ? '处理等待超时，任务已结束。处理节点恢复后可以重试。' : 'This job timed out. You can start a new job when the worker is available.')
+        : (zh ? '处理未完成。请重试，内测未扣积分。' : 'Processing did not complete. You can try again. No credits were charged.')}</p>}
+    {job?.status === 'upload' && <div className="mt-5 grid max-w-xl gap-3 text-sm">
+      <p className="text-zinc-300">{zh ? '上次上传尚未提交。如果文件已经传完，可直接继续分析。' : 'The previous upload has not been submitted. If it finished uploading, you can resume analysis.'}</p>
+      <div className="flex flex-wrap gap-4 text-primary">
+        <button type="button" className="underline" disabled={busy} onClick={() => void resumeUpload()}>
+          {zh ? '继续分析' : 'Resume analysis'}
+        </button>
+        <button type="button" className="underline" disabled={busy} onClick={() => void change('discard')}>
+          {zh ? '放弃未提交的上传' : 'Discard unfinished upload'}
+        </button>
+      </div>
+      <label className="grid gap-2 text-zinc-300">{zh ? '如果文件未传完，重新选择原 MP4' : 'If the upload did not finish, choose the original MP4 again'}
+        <input type="file" accept="video/mp4,.mp4" disabled={busy} className="min-w-0 rounded-lg border border-white/20 p-3"
+          onChange={event => {
+            const source = event.currentTarget.files?.[0];
+            event.currentTarget.value = '';
+            if (source) void resumeUpload(source);
+          }} />
+      </label>
     </div>}
     {job?.status === 'ready' && <div className="mt-5 max-w-2xl">
       {job.segments.length === 0 ? <p role="status">{zh ? '本次没有找到符合条件的候选片段。' : 'No matching candidate clips were found.'}</p> : <>
@@ -185,6 +257,11 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
       <a href={job.downloadUrl} className="font-semibold text-primary underline">{zh ? '下载导出的 MP4' : 'Download the edited MP4'}</a>
       <button type="button" onClick={() => void change('status')} className="text-zinc-300 underline">{zh ? '更新下载链接' : 'Refresh download link'}</button>
     </div>}
-    {error && <p role="alert" className="mt-4 text-sm text-amber-200">{error}</p>}
+    {error && <div className="mt-4 text-sm text-amber-200">
+      <p role="alert">{error}</p>
+      {job && <button type="button" className="mt-2 underline" disabled={busy} onClick={() => void change('status')}>
+        {zh ? '更新任务状态' : 'Refresh job status'}
+      </button>}
+    </div>}
   </section>;
 }
