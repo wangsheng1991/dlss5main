@@ -150,7 +150,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
     try {
       // Buffer the short stock examples once. Subsequent scrubs and frame scans use this copy.
       const files = await Promise.all(names.map(async name => {
-        const response = await fetch(sampleBase + name, { signal: controller.signal });
+        const response = await fetch(sampleBase + name + '?v=20261120', { signal: controller.signal });
         if (!response.ok) throw new Error('Video fetch failed');
         return { bytes: await response.blob(), name };
       }));
