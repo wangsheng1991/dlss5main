@@ -1,3 +1,4 @@
+import PhoneStyleExample from './PhoneStyleExample';
 import kit from '../content/reviewKit.json';
 
 /** The same additive guide is rendered in React and in crawler-facing HTML. */
@@ -50,6 +51,7 @@ export default function DownloadUsageGuide({ chinese = false }: { chinese?: bool
     </section>
     <section id="mobile-browser-steps" className="scroll-mt-28 rounded-2xl border border-outline-variant/20 bg-surface-low p-5 sm:p-8">
       <h2 className="text-2xl font-bold text-white">{t('How to use the browser workflow on a phone', '手机浏览器怎么使用？')}</h2>
+      <PhoneStyleExample chinese={chinese} surface="download_phone_example" />
       {renderSteps(steps)}
       <p className="mt-6 flex flex-wrap gap-4 text-sm"><a className={linkClass} href="/dashboard?tool=game-character-style&sample=characterStyle">{t('Open the game-character browser example', '打开游戏角色浏览器示例')}</a><a className={linkClass} href={chinese ? '/zh/visual-enhancer' : '/visual-enhancer'}>{t('Try the separate visual enhancer example', '试用单独的视觉增强示例')}</a></p>
     </section>

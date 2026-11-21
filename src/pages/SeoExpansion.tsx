@@ -1,3 +1,4 @@
+import PhoneStyleExample from '../components/PhoneStyleExample';
 import GamesStatusEvidence from '../components/GamesStatusEvidence';
 import { CheckedComparison, isCheckedComparison } from '../components/SearchEvidence';
 import React from 'react';
@@ -77,6 +78,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         <p className="text-lg leading-relaxed text-zinc-300 mt-5">{page.lead}</p>
         <p className="text-sm leading-relaxed text-zinc-400 mt-4">{page.description}</p>
       </header>
+      {kind === 'dlss-5-apk' && <PhoneStyleExample chinese={isZh} surface="apk_phone_example" />}
       <CheckedComparison path={page.path} existingFaq={page.faq} />
       <GamesStatusEvidence kind={kind} locale={locale} />
 
