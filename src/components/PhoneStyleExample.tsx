@@ -1,7 +1,6 @@
 import { useSampleRun } from '../features/generation/useSampleRun';
 import { SAMPLES } from '../config/samples';
 import { trackEvent } from '../lib/analytics';
-import ImageSlider from './ImageSlider';
 
 /** Shared by the phone availability guide and download page, including prerendered HTML. */
 export default function PhoneStyleExample({ chinese = false, surface }: { chinese?: boolean; surface: 'apk_phone_example' | 'download_phone_example' }) {
@@ -17,7 +16,10 @@ export default function PhoneStyleExample({ chinese = false, surface }: { chines
     }}>{state.status === 'running' ? t('Preparing the example…', '正在准备示例…') : t('Run the character example · free', '免费运行角色示例')}</button>}
     {state.status === 'error' && <p role="alert" className="mt-4 text-sm text-red-300">{state.message}</p>}
     {state.status === 'ready' && <div className="mt-5 max-w-3xl">
-      <ImageSlider lowRes={state.run.input} highRes={state.run.result} alt={t('Character lighting and materials before and after our style redraw', '本站角色风格重绘前后的光照与材质对比')} inputLabel={t('Input frame', '输入画面')} outputLabel={t('Style result', '风格结果')} compareLabel={t('Character style comparison', '角色风格对比')} initialAspectRatio={1.5} />
+      <div className="grid grid-cols-2 gap-3" data-phone-result-pair>
+        {[{ src: state.run.input, label: t('Input · uncropped', '输入 · 完整画面') }, { src: state.run.result, label: t('Result · uncropped', '结果 · 完整画面') }].map(image => <figure key={image.label} className="min-w-0"><div className="aspect-square rounded-lg bg-black/40"><img src={image.src} alt={image.label} className="h-full w-full object-contain" /></div><figcaption className="mt-2 text-xs text-zinc-300">{image.label}</figcaption></figure>)}
+      </div>
+      <p className="mt-3 text-xs leading-relaxed text-zinc-400">{t('Both images are shown in full at their original aspect ratios. The model may change the framing; this is not a pixel-aligned comparison or an in-game benchmark.', '两张图均按各自原比例完整显示。模型可能改变构图；这不是逐像素对齐的比较，也不是游戏内基准测试。')}</p>
       <p role="status" className="mt-3 text-sm text-zinc-300">{state.run.cached ? t('Example ready · served from cache', '示例已就绪 · 来自缓存') : t('Example ready', '示例已就绪')}</p>
       <a href={state.run.result} download={`character-style.${state.run.extension}`} className="mt-4 inline-flex min-h-12 items-center text-primary underline underline-offset-4">{t('Download the result image', '下载结果图片')}</a>
     </div>}
