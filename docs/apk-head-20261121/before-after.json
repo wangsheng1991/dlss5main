@@ -1,0 +1,40 @@
+[
+  {
+    "route": "/dlss-5-apk",
+    "body_unchanged": true,
+    "old_title": "DLSS 5 APK and Android Download: What Exists in 2026 | DLSS5NVIDIA",
+    "new_title": "DLSS 5 APK for Android? No NVIDIA APK — Browser Demo",
+    "old_description": "Looking for a DLSS 5 APK or Android download? There is no NVIDIA APK. This evidence-led page explains the supported game path and safer browser alternatives.",
+    "new_description": "There is no NVIDIA DLSS 5 APK for Android. Run a supplied character-style example in your phone browser without signing in. Independent redraw, not in-game DLSS.",
+    "canonical_hreflang_robots_unchanged": true
+  },
+  {
+    "route": "/zh/dlss-5-apk",
+    "body_unchanged": true,
+    "old_title": "DLSS 5 APK 与安卓下载：2026 年真实情况 | DLSS5NVIDIA",
+    "new_title": "DLSS 5 安卓 APK？无 NVIDIA 安装包，可试浏览器示例",
+    "old_description": "搜索 DLSS 5 APK 或安卓下载？目前没有 NVIDIA APK。本页说明已公布的游戏路径，以及更安全的浏览器替代方案。",
+    "new_description": "NVIDIA 没有发布 DLSS 5 安卓 APK。手机浏览器可免登录运行内置角色风格示例，查看光照与材质变化；这是本站独立重绘，不是手机游戏内的 NVIDIA DLSS。",
+    "canonical_hreflang_robots_unchanged": true
+  },
+  {
+    "route": "/download",
+    "body_unchanged": true,
+    "old_title": "DLSS 5 Download — Windows & macOS Apps, Online Trial",
+    "new_title": "DLSS 5 Download — Windows & macOS Apps, Online Trial",
+    "old_description": "Download the DLSS5 Enhance Windows x64 or macOS Intel preview directly, try game-character style conversion in a mobile or desktop browser, or apply for the separate Windows RTX Studio beta.",
+    "new_description": "Download the DLSS5 Enhance Windows x64 or macOS Intel preview directly, try game-character style conversion in a mobile or desktop browser, or apply for the separate Windows RTX Studio beta.",
+    "canonical_hreflang_robots_unchanged": true,
+    "all_meta_and_canonical_hreflang_unchanged": true
+  },
+  {
+    "route": "/zh/download",
+    "body_unchanged": true,
+    "old_title": "DLSS 5 下载 — Windows / macOS 预览版、在线试用与 Windows 内测",
+    "new_title": "DLSS 5 下载 — Windows / macOS 预览版、在线试用与 Windows 内测",
+    "old_description": "直接下载 DLSS5 Enhance Windows x64 或 macOS Intel 预览版，在线试用游戏人物风格转换，或申请另一个 Windows RTX Studio 内测。",
+    "new_description": "直接下载 DLSS5 Enhance Windows x64 或 macOS Intel 预览版，在线试用游戏人物风格转换，或申请另一个 Windows RTX Studio 内测。",
+    "canonical_hreflang_robots_unchanged": true,
+    "all_meta_and_canonical_hreflang_unchanged": true
+  }
+]

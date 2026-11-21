@@ -77,7 +77,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         <p className="text-primary uppercase tracking-[0.2em] text-xs font-label">{isZh ? '来源驱动的独立指南' : 'Source-led independent guide'}</p>
         <h1 className="text-4xl md:text-5xl font-headline font-bold text-white mt-4">{page.heading}</h1>
         <p className="text-lg leading-relaxed text-zinc-300 mt-5">{page.lead}</p>
-        <p className="text-sm leading-relaxed text-zinc-400 mt-4">{page.description}</p>
+        <p className="text-sm leading-relaxed text-zinc-400 mt-4">{page.intro ?? page.description}</p>
       </header>
       {kind === 'dlss-5-apk' && <PhoneStyleExample chinese={isZh} surface="apk_phone_example" />}
       <CheckedComparison path={page.path} existingFaq={page.faq} />

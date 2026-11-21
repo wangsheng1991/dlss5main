@@ -14,6 +14,7 @@ export type ExpansionPage = {
   path: string;
   title: string;
   description: string;
+  intro?: string;
   heading: string;
   lead: string;
   keywords: readonly string[];
@@ -189,8 +190,9 @@ const copy = {
       ],
     },
     'dlss-5-apk': {
-      title: 'DLSS 5 APK and Android Download: What Exists in 2026 | DLSS5NVIDIA',
-      description: 'Looking for a DLSS 5 APK or Android download? There is no NVIDIA APK. This evidence-led page explains the supported game path and safer browser alternatives.',
+      title: 'DLSS 5 APK for Android? No NVIDIA APK — Browser Demo',
+      description: 'There is no NVIDIA DLSS 5 APK for Android. Run a supplied character-style example in your phone browser without signing in. Independent redraw, not in-game DLSS.',
+      intro: 'Looking for a DLSS 5 APK or Android download? There is no NVIDIA APK. This evidence-led page explains the supported game path and safer browser alternatives.',
       heading: 'DLSS 5 APK download: the honest Android answer',
       lead: 'There is no NVIDIA DLSS 5 APK or official Android package. DLSS 5 is documented as an in-game rendering feature for GeForce RTX 50 Series hardware and GeForce NOW, so an APK cannot add that game runtime to a phone.',
       keywords: ['dlss 5 apk', 'dlss 5 mobile download', 'dlss 5 android download', 'dlss 5 download android'],
@@ -337,8 +339,9 @@ const zhOverrides: Partial<Record<ExpansionKind, Record<string, unknown>>> = {
     faq: [['为什么使用“未知”？', '因为合理推断不是官方来源。未知能防止未经支持的兼容性结论进入搜索摘要。'], ['多久更新一次？', '只有重新核对来源时才更新，复审日期和来源链接会跟随结论。'], ['在哪里查具体显卡？', '打开姊妹 GPU 证据检测器，查看型号级显存、架构和来源链接。']],
   },
   'dlss-5-apk': {
-    title: 'DLSS 5 APK 与安卓下载：2026 年真实情况 | DLSS5NVIDIA',
-    description: '搜索 DLSS 5 APK 或安卓下载？目前没有 NVIDIA APK。本页说明已公布的游戏路径，以及更安全的浏览器替代方案。',
+    title: 'DLSS 5 安卓 APK？无 NVIDIA 安装包，可试浏览器示例',
+    description: 'NVIDIA 没有发布 DLSS 5 安卓 APK。手机浏览器可免登录运行内置角色风格示例，查看光照与材质变化；这是本站独立重绘，不是手机游戏内的 NVIDIA DLSS。',
+    intro: '搜索 DLSS 5 APK 或安卓下载？目前没有 NVIDIA APK。本页说明已公布的游戏路径，以及更安全的浏览器替代方案。',
     heading: 'DLSS 5 APK 下载：安卓用户需要知道的事实',
     lead: '目前没有 NVIDIA DLSS 5 APK 或官方安卓包。DLSS 5 被说明为 GeForce RTX 50 系列硬件和 GeForce NOW 上的游戏内渲染功能，APK 不能把该游戏运行时安装到手机。',
     keywords: ['dlss 5 apk', 'dlss 5 安卓下载', 'dlss 5 手机下载', 'dlss 5 download android'],
