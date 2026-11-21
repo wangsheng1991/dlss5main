@@ -1,4 +1,4 @@
-import { RETIRED_MEDIA_MESSAGE } from './mediaRetirement';
+import { RETIRED_MEDIA_MESSAGE } from './mediaRetirement.js';
 /**
  * The studio's tools and the exact provider contract each one accepts.
  *

@@ -40,3 +40,7 @@ No business-review resubmission was performed. Live deployed UI and HTTP accepta
 npm run lint PASS; npm test 135/135 PASS; npm run build PASS. Both repositories' unsourced-claims gate reports 0 matching files. PANCAKE-SSR check: nine model records retained; no external signup/per-call billing in docs/public JSON/llms; retired landing and links absent; local-file handoff present in bilingual static HTML. Live evidence will be stored in /Users/wangsheng/code/shou/artifacts/pancake-remediation-20261121/.
 
 No GSC requests, paid service activation, payment settings changes or business-review submission. No new video or image assets generated for this task.
+
+## Deployment acceptance correction
+
+The first deployment exposed a native-ESM resolution error in the new shared retirement import: the API task function returned 500 even though the frontend build and tsx tests passed. Changed that shared import to an explicit .js suffix, consistent with existing server-consumed config imports. Native Node import of emitted tools/mediaRetirement now passes and rejects fetch with 410. lint, 135 tests and the full build were rerun successfully; production must be checked again after the corrective deployment.
