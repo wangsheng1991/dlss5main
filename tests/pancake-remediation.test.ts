@@ -3,7 +3,7 @@ import { generateKeyPairSync } from 'node:crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import jobs from '../api/image-edit/jobs';
 import health from '../api/health';
-import { screenGenerationText } from '../api/_lib/waffo-screening';
+import { hasExplicitSexualRequest, screenGenerationText } from '../api/_lib/waffo-screening';
 import { apiCatalogDocument, apiModelDocument, CATALOG } from '../src/config/apiCatalog';
 import { test } from './harness';
 
@@ -73,4 +73,24 @@ test('missing Waffo credentials never permits a text-driven generation', async (
   delete process.env.WAFFO_MERCHANT_ID; delete process.env.WAFFO_PRIVATE_KEY;
   try { await assert.rejects(screenGenerationText({ prompt: 'Safe test landscape' }), (e: unknown) => (e as { status: number }).status === 503); }
   finally { if (oldMerchant !== undefined) process.env.WAFFO_MERCHANT_ID = oldMerchant; if (oldKey !== undefined) process.env.WAFFO_PRIVATE_KEY = oldKey; }
+});
+
+test('site sexual-content policy blocks explicit English and Chinese, not adult portraits or nude makeup', () => {
+  for (const prompt of ['Generate explicit adult sexual imagery.', '生成成人色情图片。', 'ＮＳＦＷ imagery', 'p\u200bornographic image']) assert.equal(hasExplicitSexualRequest(prompt), true);
+  for (const prompt of ['An adult portrait with natural light.', 'Nude makeup with a beige lip colour.', '成年人人像，自然裸妆。']) assert.equal(hasExplicitSexualRequest(prompt), false);
+});
+
+test('a Waffo allow does not override the site explicit-sexual-content prohibition', async () => {
+  const oldFetch = globalThis.fetch; const oldMerchant = process.env.WAFFO_MERCHANT_ID; const oldKey = process.env.WAFFO_PRIVATE_KEY;
+  process.env.WAFFO_MERCHANT_ID = 'MER_' + 'a'.repeat(22); process.env.WAFFO_PRIVATE_KEY = fixtureKey;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; return new Response(JSON.stringify({ data: { action: 'allow', reasonCode: 'allowed', requestId: 'offline-adult-allow', semanticStatus: 'scored' } }), { status: 200 }); };
+  try {
+    await assert.rejects(screenGenerationText({ prompt: 'Generate explicit adult sexual imagery.' }), (e: unknown) => (e as { status: number; code: string }).status === 422 && (e as { code: string }).code === 'PROMPT_NOT_APPROVED');
+    assert.equal(calls, 1);
+  } finally {
+    globalThis.fetch = oldFetch;
+    if (oldMerchant === undefined) delete process.env.WAFFO_MERCHANT_ID; else process.env.WAFFO_MERCHANT_ID = oldMerchant;
+    if (oldKey === undefined) delete process.env.WAFFO_PRIVATE_KEY; else process.env.WAFFO_PRIVATE_KEY = oldKey;
+  }
 });
