@@ -1,0 +1,29 @@
+{
+  "captured_at": "2026-11-21T02:39:53.049304+00:00",
+  "items": [
+    {
+      "name": "DLSS5.Enhance-0.1.1-win-x64-Setup.exe",
+      "actual_bytes": 121681117,
+      "release_bytes": 121681117,
+      "actual_sha256": "352541f0cde4e4909c8a9a6a160849d04ff1a35d0f6220416d73402e3ac3c401",
+      "release_digest": "sha256:352541f0cde4e4909c8a9a6a160849d04ff1a35d0f6220416d73402e3ac3c401",
+      "matches": true,
+      "tag": "v0.1.1",
+      "published_at": "2026-11-02T06:41:45Z",
+      "prerelease": true,
+      "url": "https://github.com/wangsheng1991/dlss5-enhancer-cli/releases/download/v0.1.1/DLSS5.Enhance-0.1.1-win-x64-Setup.exe"
+    },
+    {
+      "name": "DLSS5.Enhance-0.1.0.dmg",
+      "actual_bytes": 125711820,
+      "release_bytes": 125711820,
+      "actual_sha256": "0104ea3c060692f4a8c6d71e87fe978ad0b57dd71b126dfb4baa53530facd0da",
+      "release_digest": "sha256:0104ea3c060692f4a8c6d71e87fe978ad0b57dd71b126dfb4baa53530facd0da",
+      "matches": true,
+      "tag": "v0.1.0",
+      "published_at": "2026-10-26T09:45:56Z",
+      "prerelease": true,
+      "url": "https://github.com/wangsheng1991/dlss5-enhancer-cli/releases/download/v0.1.0/DLSS5.Enhance-0.1.0.dmg"
+    }
+  ]
+}

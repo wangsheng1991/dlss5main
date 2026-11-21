@@ -1,0 +1,16 @@
+[
+  {
+    "route": "/download",
+    "original_body_retained_verbatim": true,
+    "title_description_canonical_hreflang_robots_unchanged": true,
+    "release_cards": 2,
+    "exact_bytes_and_hashes_ssr": true
+  },
+  {
+    "route": "/zh/download",
+    "original_body_retained_verbatim": true,
+    "title_description_canonical_hreflang_robots_unchanged": true,
+    "release_cards": 2,
+    "exact_bytes_and_hashes_ssr": true
+  }
+]

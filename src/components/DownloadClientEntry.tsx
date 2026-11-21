@@ -2,6 +2,7 @@
  * Our own desktop window — the only thing on this page a visitor can download today.
  * Same copy on the client and at build time; the numbers are one recorded run, not a benchmark.
  */
+import DownloadReleaseFacts from './DownloadReleaseFacts';
 import { DESKTOP_RELEASE, WINDOWS_RELEASE } from '../content/desktopRelease';
 import { CHARACTER_STYLE_CATALOG_PATH, CHARACTER_STYLE_SPEC_URL } from '../config/characterStyle';
 const RELEASE = DESKTOP_RELEASE.url;
@@ -20,6 +21,7 @@ export default function DownloadClientEntry({chinese=false}: {chinese?:boolean})
    <li><a className="text-primary underline" href={`${chinese?'/zh':''}/visual-enhancer`}>{chinese?'不想装东西：先用浏览器里的免费示例':'No install needed: try the free browser example first'}</a></li>
    <li><a className="text-primary underline" href="https://github.com/wangsheng1991/dlss5-visual-enhancer">{chinese?'先看一组真产物：在本地跑一遍公开示例':'See a real pair first: run the documented example locally'}</a>{chinese?' —— 不登录、不花额度，附两个 SHA-256 和一个对比页。':' — no sign-in, no credits, with both SHA-256 hashes and a compare page.'}</li>
   </ul>
+  <DownloadReleaseFacts chinese={chinese} />
   <p className="mt-4">{chinese?'要登录，按任务计额度（一次任务 1 额度），额度显示在窗口里。我们自己在本机记录过一次：输入 1440×778 → 输出 1536×832 WebP，207,666 字节，用时 14 秒，额度 10 → 9。这是一次实测记录，不是性能基准，也不代表你的机器和你手上的图。':'It needs a signed-in account and spends credits per task (one credit per task); the window shows the balance. On one run on our own machine: 1440×778 in → 1536×832 WebP out, 207,666 bytes, 14 seconds, credits 10 → 9. That is a single recorded run, not a benchmark, and not a prediction for your machine or your images.'}</p>
   <p className="mt-4 text-sm">{chinese?'核对日期：2026-11-02。':'Checked 2026-11-02.'}</p>
  </section>;
