@@ -1,3 +1,4 @@
+import { GAME_RELEASES_REVIEWED } from '../content/gamesStatusEvidence';
 import PhoneStyleExample from '../components/PhoneStyleExample';
 import GamesStatusEvidence from '../components/GamesStatusEvidence';
 import { CheckedComparison, isCheckedComparison } from '../components/SearchEvidence';
@@ -35,7 +36,7 @@ export default function SeoExpansion({ kind, locale = 'en' }: Props) {
         '@id': `https://www.dlss5nvidia.com${page.path}#article`,
         headline: page.heading,
         description: page.description,
-        dateModified: (kind === 'games' || kind === 'status') ? '2026-10-26' : isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11',
+        dateModified: kind === 'games' ? GAME_RELEASES_REVIEWED : kind === 'status' ? '2026-10-26' : isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11',
         inLanguage: isZh ? 'zh-CN' : 'en-US',
         mainEntityOfPage: `https://www.dlss5nvidia.com${page.path}`,
         author: { '@type': 'Organization', name: 'DLSS5NVIDIA' },

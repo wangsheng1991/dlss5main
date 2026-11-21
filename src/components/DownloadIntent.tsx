@@ -1,3 +1,4 @@
+import LatestGameReleaseNote from './LatestGameReleaseNote';
 import { trackEvent } from '../lib/analytics';
 import kit from '../content/reviewKit.json';
 import { SITE_URL } from '../config/site';
@@ -40,6 +41,7 @@ export default function DownloadIntent({ chinese = false }: { chinese?: boolean 
   };
   return <div data-download-intent className="mb-14 space-y-10 text-zinc-300">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
+    <LatestGameReleaseNote chinese={chinese} />
     <section aria-labelledby="download-intent-heading">
       <h2 id="download-intent-heading" className="text-2xl font-bold text-white">{chinese ? 'DLSS 5 下载：先回答三个问题' : 'DLSS 5 download: three direct answers'}</h2>
       {questions.map((question, index) => <div key={question} className="mt-5" data-download-paa>

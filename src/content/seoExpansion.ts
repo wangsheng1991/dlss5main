@@ -1,3 +1,4 @@
+import { GAME_EVIDENCE, GAME_SOURCES } from './gamesStatusEvidence';
 import { LOCAL_SOFTWARE } from './dlssChecker';
 import { w2Page } from './w2Expansion';
 
@@ -222,19 +223,19 @@ const copy = {
       title: 'DLSS 5 Supported Games: Launched and Announced Titles | DLSS5NVIDIA',
       description: 'Track DLSS 5 game support with separate launched and announced states, dated NVIDIA sources and no unsupported frame-rate claims.',
       heading: 'DLSS 5 games: launched versus announced',
-      lead: 'One game is documented as launched, while a March announcement listed a planned group. Keeping those states separate prevents a trailer mention from becoming a current compatibility promise.',
+      lead: 'Dated NVIDIA releases document NBA 2K27, Hogwarts Legacy and War Thunder as available. Where Winds Meet is scheduled for November 23; as of the November 21 review it remains announced. Other titles retain their own source dates and status.',
       keywords: ['dlss 5 supported games', 'dlss 5 games list', 'games with dlss 5', 'nba 2k27 dlss 5'],
       facts: [
-        ['Newest release (2026-10-28)', 'Phantom Blade Zero shipped with DLSS 4.5, ray tracing and path tracing — and without DLSS 5. A community package appeared on Nexus Mods on 2026-10-29; VideoCardz described it on 2026-10-31.'],
-        ['Launched (checked 2026-10-13)', 'NVIDIA’s September FAQ says DLSS 5 debuted in NBA 2K27 on September 3, 2026 for all GeForce RTX 50 Series GPUs and GeForce NOW.'],
+        ['Earlier release check (2026-10-28)', 'Phantom Blade Zero shipped with DLSS 4.5, ray tracing and path tracing — and without DLSS 5. A community package appeared on Nexus Mods on 2026-10-29; VideoCardz described it on 2026-10-31.'],
+        ['Released titles (checked 2026-11-21)', 'NVIDIA’s dated release articles confirm NBA 2K27, Hogwarts Legacy and War Thunder. See the tracker for each game’s hardware scope and source; Where Winds Meet remains scheduled for November 23.'],
         ['Driver named by NVIDIA', 'The September launch material names GeForce Game Ready Driver 616.64 WHQL for the DLSS Neural Rendering option.'],
         ['Announced, not launch proof', 'NVIDIA’s March 16 announcement listed 15 games in a planned support group and added “and more”; that list is not presented as a current launch checklist.'],
         ['Evidence rule', 'A title stays announced until a dated NVIDIA source documents its release or feature availability. Unknown entries are omitted rather than guessed.'],
       ],
       sections: [
-        { heading: 'Newest release: Phantom Blade Zero', body: 'S-GAME’s game launched on 2026-10-28 with a full DLSS 4.5 stack, ray tracing and PC path tracing — and without DLSS 5. NVIDIA’s own launch post never presents it as a DLSS 5 title, and VideoCardz records that it does not include DLSS 5 Neural Rendering. Within a day, a community package that redirects the game’s DLSS calls appeared on Nexus Mods. Its title page keeps the three registers apart — what shipped, what the press reported, what we ran ourselves — and adds the install questions players are hitting today: why there is no DLSS 5 switch, what the package requires, and how to return to a clean install.' },
-        { heading: 'Launched: NBA 2K27', body: 'The September NVIDIA FAQ is the current launch source reviewed for this tracker. It says that on September 3, 2026, NVIDIA DLSS 5 featuring 3D-Guided Neural Rendering debuted in NBA 2K27 for GeForce RTX 50 Series GPUs and GeForce NOW. That sentence supports a launched state for the title and scope described there. It does not automatically prove support on every GPU family, every edition or every future patch.' },
-        { heading: 'Announced group from March 16', body: 'NVIDIA’s March 16 announcement named AION 2, Assassin’s Creed Shadows, Black State, CINDER CITY, Delta Force, Hogwarts Legacy, Justice, NARAKA: BLADEPOINT, NTE, Phantom Blade Zero, Resident Evil Requiem, Sea of Remnants, Starfield, The Elder Scrolls IV: Oblivion Remastered and Where Winds Meet, followed by “and more.” We retain these as announced because the source is a plan announcement, not a dated release confirmation for each title.' },
+        { heading: 'Earlier release check: Phantom Blade Zero', body: 'S-GAME’s game launched on 2026-10-28 with a full DLSS 4.5 stack, ray tracing and PC path tracing — and without DLSS 5. NVIDIA’s own launch post never presents it as a DLSS 5 title, and VideoCardz records that it does not include DLSS 5 Neural Rendering. Within a day, a community package that redirects the game’s DLSS calls appeared on Nexus Mods. Its title page keeps the three registers apart — what shipped, what the press reported, what we ran ourselves — and adds the install questions players are hitting today: why there is no DLSS 5 switch, what the package requires, and how to return to a clean install.' },
+        { heading: 'Launched: NBA 2K27', body: 'The September NVIDIA FAQ records this tracker’s first launch example. It says that on September 3, 2026, NVIDIA DLSS 5 featuring 3D-Guided Neural Rendering debuted in NBA 2K27 for GeForce RTX 50 Series GPUs and GeForce NOW. That sentence supports a launched state for the title and scope described there. It does not automatically prove support on every GPU family, every edition or every future patch.' },
+        { heading: 'Announced group from March 16', body: 'NVIDIA’s March 16 announcement named AION 2, Assassin’s Creed Shadows, Black State, CINDER CITY, Delta Force, Hogwarts Legacy, Justice, NARAKA: BLADEPOINT, NTE, Phantom Blade Zero, Resident Evil Requiem, Sea of Remnants, Starfield, The Elder Scrolls IV: Oblivion Remastered and Where Winds Meet, followed by “and more.” That historical source records a plan; consult the current source-linked tracker above for later release confirmations instead of treating the entire March group as either released or still announced.' },
         { heading: 'How to read the tracker', body: 'Use the launched section when you need a title with a dated source statement. Use the announced section to watch the pipeline, then recheck the source before writing a support claim. This page intentionally contains no frame-rate, multiplier or cross-card performance numbers: those require a published source or a measurement on hardware we actually tested.' },
       ],
       table: { headers: ['State', 'Title', 'Evidence date', 'Meaning'], rows: [
@@ -243,7 +244,7 @@ const copy = {
       ] },
       faq: [
         ['What is the first launched DLSS 5 game listed here?', 'NBA 2K27. NVIDIA’s September FAQ dates the DLSS 5 debut to September 3, 2026.'],
-        ['Are all 15 March titles already supported?', 'Not from that announcement alone. They remain in the announced state until a dated source confirms availability.'],
+        ['Are all 15 March titles already supported?', 'Not from that announcement alone. The March list is historical; the current tracker applies later dated release confirmations to individual games.'],
         ['Which driver does the launch material name?', 'GeForce Game Ready Driver 616.64 WHQL is named for the DLSS Neural Rendering option.'],
         ['Does the list include every DLSS 5 game?', 'No. NVIDIA’s March announcement ends with “and more”; this tracker only publishes titles with a source and state.'],
         ['Does this page provide FPS comparisons?', 'No. It tracks support states and sources, not unmeasured frame rates or multipliers.'],
@@ -350,12 +351,12 @@ const zhOverrides: Partial<Record<ExpansionKind, Record<string, unknown>>> = {
     title: 'DLSS 5 支持游戏：已上线与已宣布名单 | DLSS5NVIDIA',
     description: '按已上线与已宣布分开追踪 DLSS 5 游戏，附 NVIDIA 日期来源，不写未经测量的帧率或倍数。',
     heading: 'DLSS 5 游戏：已上线与已宣布分开看',
-    lead: '目前有一款游戏被资料明确写为已上线，另有一组游戏出现在 3 月公告的计划名单中。分开状态，避免把预告误读成当前兼容性承诺。',
+    lead: 'NVIDIA 带日期的发布资料确认 NBA 2K27、Hogwarts Legacy 与 War Thunder 已可用；Where Winds Meet 计划于 11 月 23 日更新，截至本次 11 月 21 日核对仍标为已宣布。其他游戏保留各自来源日期与状态。',
     keywords: ['dlss 5 支持游戏', 'dlss 5 游戏列表', '哪些游戏有 dlss 5', 'nba 2k27 dlss 5'],
-    facts: [['最新发售（2026-10-28）', '影之刃零首发即带 DLSS 4.5、光追与路径追踪，但不含 DLSS 5；2026-10-29 Nexus Mods 出现社区注入包，VideoCardz 于 10-31 报道其内容与安装反馈。'], ['已上线（2026-10-13 核对）', 'NVIDIA 9 月 FAQ 表示 DLSS 5 于 2026 年 9 月 3 日在 NBA 2K27 首发，面向 GeForce RTX 50 系列显卡与 GeForce NOW。'], ['NVIDIA 点名的驱动', '9 月首发资料点名 GeForce Game Ready Driver 616.64 WHQL，用于 DLSS Neural Rendering 选项。'], ['已宣布，不等于上线', 'NVIDIA 3 月 16 日公告列出 15 款计划支持的游戏并写有“以及更多”；这不是当前上线清单。'], ['证据规则', '只有带日期的 NVIDIA 来源明确说明发布或功能可用，才会从“已宣布”移到“已上线”；没有出处的条目直接不写。']],
-    sections: [{ heading: '最新发售：影之刃零', body: 'S-GAME 这款游戏在 2026-10-28 上线，带完整 DLSS 4.5、光追与 PC 路径追踪，但不含 DLSS 5：NVIDIA 自己的发布文从未把它写成 DLSS 5 游戏，VideoCardz 也记录本作不含 DLSS 5 神经渲染。上线一天内，Nexus Mods 上出现了一个把游戏内 DLSS 调用重定向的社区包。它的详情页把三种身份分开写——官方到底给了什么、媒体报了什么、我们自己跑了什么——并补上了玩家今天真在搜的安装问题：为什么菜单里没有 DLSS 5、这个包要求什么、怎么退回干净安装。' }, { heading: '已上线：NBA 2K27', body: '本追踪器目前复核到的 9 月 NVIDIA FAQ 是首发来源。它写明 2026 年 9 月 3 日，带 3D 引导神经渲染的 NVIDIA DLSS 5 在 NBA 2K27 首发，范围为 GeForce RTX 50 系列显卡与 GeForce NOW。这句话支持该标题与该范围的“已上线”状态，但不会自动证明所有显卡家族、所有版本或未来补丁都支持。' }, { heading: '3 月 16 日公告名单', body: 'NVIDIA 3 月 16 日公告列出 AION 2、Assassin’s Creed Shadows、Black State、CINDER CITY、Delta Force、Hogwarts Legacy、Justice、NARAKA: BLADEPOINT、NTE、Phantom Blade Zero、Resident Evil Requiem、Sea of Remnants、Starfield、The Elder Scrolls IV: Oblivion Remastered 与 Where Winds Meet，末尾还有“以及更多”。由于这是计划公告而不是每个标题的带日期发布确认，本页保留“已宣布”状态。' }, { heading: '如何使用追踪器', body: '需要带日期依据时看“已上线”部分；需要关注后续时看“已宣布”部分，并在写成支持前重新核对来源。本页不包含帧率、倍数或跨显卡性能数字：这些必须有公开来源，或来自我们实际测试过的硬件。' }],
+    facts: [['较早发售核对（2026-10-28）', '影之刃零首发即带 DLSS 4.5、光追与路径追踪，但不含 DLSS 5；2026-10-29 Nexus Mods 出现社区注入包，VideoCardz 于 10-31 报道其内容与安装反馈。'], ['已上线（2026-11-21 核对）', 'NVIDIA 带日期的发布文章确认 NBA 2K27、Hogwarts Legacy 与 War Thunder 已可用。各游戏硬件范围和来源见追踪表；Where Winds Meet 仍计划于 11 月 23 日更新。'], ['NVIDIA 点名的驱动', '9 月首发资料点名 GeForce Game Ready Driver 616.64 WHQL，用于 DLSS Neural Rendering 选项。'], ['已宣布，不等于上线', 'NVIDIA 3 月 16 日公告列出 15 款计划支持的游戏并写有“以及更多”；这不是当前上线清单。'], ['证据规则', '只有带日期的 NVIDIA 来源明确说明发布或功能可用，才会从“已宣布”移到“已上线”；没有出处的条目直接不写。']],
+    sections: [{ heading: '较早发售核对：影之刃零', body: 'S-GAME 这款游戏在 2026-10-28 上线，带完整 DLSS 4.5、光追与 PC 路径追踪，但不含 DLSS 5：NVIDIA 自己的发布文从未把它写成 DLSS 5 游戏，VideoCardz 也记录本作不含 DLSS 5 神经渲染。上线一天内，Nexus Mods 上出现了一个把游戏内 DLSS 调用重定向的社区包。它的详情页把三种身份分开写——官方到底给了什么、媒体报了什么、我们自己跑了什么——并补上了玩家今天真在搜的安装问题：为什么菜单里没有 DLSS 5、这个包要求什么、怎么退回干净安装。' }, { heading: '已上线：NBA 2K27', body: '本追踪器目前复核到的 9 月 NVIDIA FAQ 是首发来源。它写明 2026 年 9 月 3 日，带 3D 引导神经渲染的 NVIDIA DLSS 5 在 NBA 2K27 首发，范围为 GeForce RTX 50 系列显卡与 GeForce NOW。这句话支持该标题与该范围的“已上线”状态，但不会自动证明所有显卡家族、所有版本或未来补丁都支持。' }, { heading: '3 月 16 日公告名单', body: 'NVIDIA 3 月 16 日公告列出 AION 2、Assassin’s Creed Shadows、Black State、CINDER CITY、Delta Force、Hogwarts Legacy、Justice、NARAKA: BLADEPOINT、NTE、Phantom Blade Zero、Resident Evil Requiem、Sea of Remnants、Starfield、The Elder Scrolls IV: Oblivion Remastered 与 Where Winds Meet，末尾还有“以及更多”。这份历史来源记录的是计划；各游戏后续是否上线，以前面的带来源追踪表为准，不能把三月整组名单统一写成已上线或仍待上线。' }, { heading: '如何使用追踪器', body: '需要带日期依据时看“已上线”部分；需要关注后续时看“已宣布”部分，并在写成支持前重新核对来源。本页不包含帧率、倍数或跨显卡性能数字：这些必须有公开来源，或来自我们实际测试过的硬件。' }],
     table: { headers: ['状态', '游戏', '证据日期', '含义'], rows: [['已上线', 'NBA 2K27', '2026-09-03', 'NVIDIA FAQ 记录 DLSS 5 首发'], ['已宣布', 'AION 2；Assassin’s Creed Shadows；Black State；CINDER CITY；Delta Force；Hogwarts Legacy；Justice；NARAKA: BLADEPOINT；NTE；Phantom Blade Zero；Resident Evil Requiem；Sea of Remnants；Starfield；Oblivion Remastered；Where Winds Meet', '2026-03-16', 'NVIDIA 公告名单；写成已上线前需重新核对']], },
-    faq: [['这里列出的第一款已上线游戏是什么？', 'NBA 2K27。NVIDIA 9 月 FAQ 将 DLSS 5 首发日期写为 2026 年 9 月 3 日。'], ['3 月名单里的 15 款都已经支持了吗？', '仅凭那份公告不能这样说。它们保持“已宣布”状态，直到带日期来源确认可用。'], ['首发资料点名哪个驱动？', 'GeForce Game Ready Driver 616.64 WHQL。'], ['这是不是完整游戏列表？', '不是。NVIDIA 3 月公告末尾写有“以及更多”；本页只发布有来源和状态的标题。'], ['这页提供 FPS 对比吗？', '不提供。本页追踪支持状态和来源，不写未经测量的帧率或倍数。'], ['哪里查看显卡证据？', '前往姊妹 GPU 证据检测器，查看型号状态、显存与来源链接。']],
+    faq: [['这里列出的第一款已上线游戏是什么？', 'NBA 2K27。NVIDIA 9 月 FAQ 将 DLSS 5 首发日期写为 2026 年 9 月 3 日。'], ['3 月名单里的 15 款都已经支持了吗？', '仅凭那份公告不能这样说。三月名单是历史公告；当前表格按各游戏后续带日期的发布证据更新状态。'], ['首发资料点名哪个驱动？', 'GeForce Game Ready Driver 616.64 WHQL。'], ['这是不是完整游戏列表？', '不是。NVIDIA 3 月公告末尾写有“以及更多”；本页只发布有来源和状态的标题。'], ['这页提供 FPS 对比吗？', '不提供。本页追踪支持状态和来源，不写未经测量的帧率或倍数。'], ['哪里查看显卡证据？', '前往姊妹 GPU 证据检测器，查看型号状态、显存与来源链接。']],
   },
 };
 
@@ -400,7 +401,7 @@ const sourceLinks = (kind: ExpansionKind): LinkItem[] => {
   if (kind === 'vs-dlss-45') return [...common, { label: 'NVIDIA DLSS 4.5 announcement', href: OFFICIAL_DLSS45 }];
   if (kind === 'vs-fsr-4') return [...common, { label: 'AMD FidelityFX Super Resolution', href: OFFICIAL_FSR }];
   if (kind === 'what-is') return [...common, { label: 'NVIDIA March 2026 announcement', href: OFFICIAL_MARCH }];
-  if (kind === 'games') return [...common, { label: 'NVIDIA March 16, 2026 announcement list', href: OFFICIAL_MARCH }];
+  if (kind === 'games') return [...common, { label: 'NVIDIA Hogwarts Legacy release (2026-11-05)', href: GAME_SOURCES.november5 }, { label: 'NVIDIA War Thunder release (2026-11-12)', href: GAME_SOURCES.november12 }, { label: 'NVIDIA March 16, 2026 announcement list', href: OFFICIAL_MARCH }];
   return common;
 };
 
@@ -428,6 +429,7 @@ export function expansionPage(kind: ExpansionKind, locale: ExpansionLocale): Exp
     ] : [
       ['Is it true that DLSS 5 looks horrible?', 'There is no universal verdict: “looks horrible” is a visual judgment about a particular result. NVIDIA documents developer choices of model, structure, tone and where the effect is applied, plus an on/off toggle for players; those controls do not prove you will like the result. Compare the character and scene with the feature on and off; our independent style-conversion samples are not evidence of official runtime image quality. Source: NVIDIA DLSS 5 launch article below, “DLSS 5’s Artistic Controls For Game Developers”; checked 2026-10-26.'],
     ]) : [])],
+    ...(kind === 'games' ? { itemList: GAME_EVIDENCE.filter(row => row.state !== 'unconfirmed').map(row => ({ name: `${row.game} — ${row.state}`, url: GAME_SOURCES[row.sources[0]] })) } : {}),
     links: expansionLinks(kind, locale),
     sourceLinks: sourceLinks(kind),
   } as ExpansionPage;

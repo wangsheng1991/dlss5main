@@ -1,5 +1,8 @@
 export const GAMES_CHECKED = '2026-10-31';
+export const GAME_RELEASES_REVIEWED = '2026-11-21';
 export const GAME_SOURCES = {
+  november5: 'https://www.nvidia.com/en-us/geforce/news/hogwarts-legacy-war-thunder-dlss-5-3d-guided-neural-rendering/',
+  november12: 'https://www.nvidia.com/en-us/geforce/news/war-thunder-dlss-5-3d-guided-neural-rendering-out-now/',
   october: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-faster-ai-model-hogwarts-legacy-rtx-spark-laptops/',
   march: 'https://www.nvidia.com/en-gb/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/',
   launch: 'https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/',
@@ -9,7 +12,7 @@ export const GAME_SOURCES = {
   driver1020: 'https://www.nvidia.com/en-us/geforce/news/phantom-blade-zero-nvidia-geforce-game-ready-driver/',
 } as const;
 type LocalText = { en: string; zh: string };
-type EvidenceRow = { game: string; state: 'launched' | 'announced' | 'unconfirmed'; evidenceDate: string; detail: LocalText; sources: (keyof typeof GAME_SOURCES)[]; path?: string };
+type EvidenceRow = { game: string; state: 'launched' | 'announced' | 'unconfirmed'; evidenceDate: string; detail: LocalText; sources: (keyof typeof GAME_SOURCES)[]; path?: string; checked?: string };
 const announced: LocalText = {
   en: 'Named in the March announcement. The reviewed October article does not confirm a release for this title; title-specific GPU, driver and release conditions remain unconfirmed here.',
   zh: '出现在三月公告名单中。此次十月正文没有确认该游戏上线；本页不确认它的具体显卡、驱动与上线条件。',
@@ -19,13 +22,17 @@ export const GAME_EVIDENCE: EvidenceRow[] = [
     en: 'The October article confirms the game feature launched in September. The launch source names RTX 50 Series desktops/laptops, GeForce NOW and driver 616.64 WHQL. October 16 is the announced new-model date, naming RTX 50 Series, RTX Spark laptops and GeForce NOW; this article alone does not confirm that later rollout completed. It specifies no new driver version.',
     zh: '十月正文确认游戏功能已于九月上线。首发来源点名 RTX 50 系列桌面显卡及笔记本、GeForce NOW 和驱动 616.64 WHQL。10 月 16 日是该文宣布的新模型日期，范围点名 RTX 50 系列、RTX Spark 笔记本与 GeForce NOW；仅凭这篇文章不能确认后续更新已完成，文中也未给出新驱动版本。',
   } },
-  { game: 'Hogwarts Legacy', state: 'announced', evidenceDate: '2026-10-13', sources: ['october'], detail: {
-    en: 'Announced for November 5, not confirmed live. The source names GeForce RTX 50 Series, GeForce NOW and RTX Spark; Spark is not stated as the only route. No driver version or separate laptop requirement is specified. Existing Multi Frame Generation / Ray Reconstruction support is not DLSS 5 launch evidence.',
-    zh: '官方宣布于 11 月 5 日加入，未确认已上线。原文点名 GeForce RTX 50 系列、GeForce NOW 与 RTX Spark，并非只能使用 Spark；没有指定驱动版本或单独的笔记本要求。原有多帧生成及光线重建支持不能作为 DLSS 5 上线证据。',
+  { game: 'Hogwarts Legacy', state: 'launched', evidenceDate: '2026-11-05', checked: GAME_RELEASES_REVIEWED, path: '/games/hogwarts-legacy', sources: ['november5'], detail: {
+    en: 'NVIDIA’s November 5 article confirms the update is available on GeForce RTX 50 Series GPUs and laptops, RTX Spark PCs and GeForce NOW Ultimate. Update the game, then enable Neural Rendering in its in-game options. These are vendor statements, not our hardware test.',
+    zh: 'NVIDIA 11 月 5 日正文确认更新已可用，点名 GeForce RTX 50 系列显卡及笔记本、RTX Spark PC 和 GeForce NOW Ultimate。更新游戏后在游戏选项中启用 Neural Rendering。这是厂商资料，不是本站硬件实测。',
   } },
-  { game: 'Where Winds Meet', state: 'announced', evidenceDate: '2026-10-13', sources: ['october'], detail: {
-    en: 'The article says the upgrade is coming in late November, not already available. This game section does not name a driver, GPU scope or Spark/laptop requirement; do not borrow the conditions from another game.',
-    zh: '原文说升级将在 11 月下旬到来，并非已经可用。该游戏小节没有点名驱动、显卡范围或 Spark／笔记本要求，不能套用其他游戏的条件。',
+  { game: 'War Thunder', state: 'launched', evidenceDate: '2026-11-12', checked: GAME_RELEASES_REVIEWED, sources: ['november12'], detail: {
+    en: 'NVIDIA’s November 12 article states that the Eagle’s Shadow update has gone live with DLSS 5 for GeForce RTX 50 Series and RTX Spark systems. The game update is required; no universal installer or support on other local GPUs is implied.',
+    zh: 'NVIDIA 11 月 12 日正文确认 Eagle’s Shadow 更新已上线，并为 GeForce RTX 50 系列与 RTX Spark 系统加入 DLSS 5。需要相应游戏更新，不代表存在通用安装器或支持其他本地显卡。',
+  } },
+  { game: 'Where Winds Meet', state: 'announced', evidenceDate: '2026-11-12', checked: GAME_RELEASES_REVIEWED, path: '/games/where-winds-meet', sources: ['november12', 'november5'], detail: {
+    en: 'NVIDIA’s November 12 article schedules DLSS 5 for November 23. As of this November 21 review, this remains a future announced date, not a verified release. The shared article scope names GeForce RTX 50 Series and RTX Spark systems; game-specific settings must be checked after the update.',
+    zh: 'NVIDIA 11 月 12 日正文将 DLSS 5 更新安排在 11 月 23 日。此次 11 月 21 日核对时仍是未来计划，不写成已上线。该文共同范围点名 GeForce RTX 50 系列与 RTX Spark 系统；游戏具体设置需在更新后再核对。',
   } },
   ...['AION 2', 'Assassin’s Creed Shadows', 'Black State', 'CINDER CITY', 'Delta Force', 'Justice', 'NARAKA: BLADEPOINT', 'NTE: Neverness to Everness', 'Phantom Blade Zero', 'Resident Evil Requiem', 'Sea of Remnants', 'Starfield', 'The Elder Scrolls IV: Oblivion Remastered'].map(game => ({game, state: 'announced' as const, evidenceDate: '2026-03-16', detail: announced, sources: ['march', 'october'] as (keyof typeof GAME_SOURCES)[]})),
   ...['Honkai: Star Rail', 'Marvel Rivals'].map(game => ({game, state: 'unconfirmed' as const, evidenceDate: '2026-10-13', sources: ['october'] as (keyof typeof GAME_SOURCES)[], detail: {

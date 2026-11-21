@@ -1,5 +1,5 @@
 import React from 'react';
-import { GAME_EVIDENCE, GAME_SOURCES, GAMES_CHECKED, RELEASE_TIMELINE } from '../content/gamesStatusEvidence';
+import { GAME_EVIDENCE, GAME_SOURCES, GAMES_CHECKED, GAME_RELEASES_REVIEWED, RELEASE_TIMELINE } from '../content/gamesStatusEvidence';
 
 type Props = { kind: string; locale: 'en' | 'zh' };
 export default function GamesStatusEvidence({ kind, locale }: Props) {
@@ -9,14 +9,14 @@ export default function GamesStatusEvidence({ kind, locale }: Props) {
   const sourceLink = (key: keyof typeof GAME_SOURCES) => <a key={key} className="text-primary underline" href={GAME_SOURCES[key]} rel="noreferrer">{zh ? 'NVIDIA 官方来源' : 'NVIDIA source'} ({key})</a>;
   return <section data-games-status-evidence={kind} className="mt-12" aria-labelledby="games-status-evidence-heading">
     <h2 id="games-status-evidence-heading" className="text-2xl font-bold text-white">{kind === 'games' ? (zh ? 'DLSS 5 支持游戏名单与状态追踪' : 'DLSS 5 games list: supported games tracker') : (zh ? '按日期记录的状态变更' : 'DLSS 5 release date timeline: dated status changes')}</h2>
-    <p className="mt-4 text-zinc-300">{zh ? '核对日：' : 'Last checked: '}<time dateTime={GAMES_CHECKED}>{GAMES_CHECKED}</time>{zh ? '。只按官方正文判断；新闻摘要、预览演示或计划日期已过，都不自动变成上线确认。' : '. Status follows the official article body. A news excerpt, preview demonstration or elapsed planned date does not establish a release.'}</p>
+    <p className="mt-4 text-zinc-300">{zh ? '核对日：' : 'Last checked: '}<time dateTime={kind === 'games' ? GAME_RELEASES_REVIEWED : GAMES_CHECKED}>{kind === 'games' ? GAME_RELEASES_REVIEWED : GAMES_CHECKED}</time>{zh ? '。各行保留自己的核对日期，旧行未在本次一并重核。只按官方正文判断；新闻摘要、预览演示或计划日期已过，都不自动变成上线确认。' : '. Each row retains its own review date; older rows have not been rechecked in this update. Status follows the official article body. A news excerpt, preview demonstration or elapsed planned date does not establish a release.'}</p>
     <div className="mt-5 overflow-x-auto">
       {kind === 'games' ? <table className="w-full min-w-[760px] text-left" data-games-tracker>
         <thead><tr>{(zh ? ['游戏', '状态', '来源日期', '条件与证据边界', '来源', '核对日'] : ['Game', 'Status', 'Evidence date', 'Conditions and evidence limits', 'Sources', 'Checked']).map(h => <th key={h} className="p-3 text-primary">{h}</th>)}</tr></thead>
         <tbody>{GAME_EVIDENCE.map(row => <tr key={row.game} className="border-t border-outline-variant/20" data-game-state={row.state}>
           <th scope="row" className="p-3 text-white">{row.path ? <a className="text-primary underline" href={`${zh ? '/zh' : ''}${row.path}`}>{row.game}</a> : row.game}</th>
           <td className="p-3">{labels[row.state]}</td><td className="p-3">{row.evidenceDate}</td><td className="p-3">{row.detail[locale]}</td>
-          <td className="p-3">{row.sources.map(key => <div key={key}>{sourceLink(key)}</div>)}</td><td className="p-3">{GAMES_CHECKED}</td>
+          <td className="p-3">{row.sources.map(key => <div key={key}>{sourceLink(key)}</div>)}</td><td className="p-3">{row.checked || GAMES_CHECKED}</td>
         </tr>)}</tbody>
       </table> : <table className="w-full min-w-[640px] text-left" data-release-timeline>
         <thead><tr>{(zh ? ['日期', '已发生的事件', '来源', '核对日'] : ['Date', 'Event that happened', 'Source', 'Checked']).map(h => <th key={h} className="p-3 text-primary">{h}</th>)}</tr></thead>

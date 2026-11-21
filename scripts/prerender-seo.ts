@@ -1,3 +1,4 @@
+import { GAME_RELEASES_REVIEWED } from '../src/content/gamesStatusEvidence';
 import PhoneStyleExample from '../src/components/PhoneStyleExample';
 import DownloadApkAnswer from '../src/components/DownloadApkAnswer';
 import DownloadClientEntry from '../src/components/DownloadClientEntry';
@@ -657,7 +658,7 @@ function renderExpansionPage(page: ExpansionPage): string {
       // the visible page changes (see additive-20261012/WEEK-PLAN.md §3.4).
       { '@type': 'WebPage', '@id': `${BASE_URL}${page.path}#webpage`, url: `${BASE_URL}${page.path}`, name: page.heading, description: page.description, inLanguage: isZh ? 'zh-CN' : 'en-US' },
       { '@type': 'BreadcrumbList', '@id': `${BASE_URL}${page.path}#breadcrumb`, itemListElement: [{ '@type': 'ListItem', position: 1, name: 'DLSS5NVIDIA', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: page.heading, item: `${BASE_URL}${page.path}` }] },
-      { '@type': 'Article', '@id': `${BASE_URL}${page.path}#article`, headline: page.heading, description: page.description, dateModified: (page.kind === 'games' || page.kind === 'status') ? '2026-10-26' : isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11', inLanguage: isZh ? 'zh-CN' : 'en-US', mainEntityOfPage: `${BASE_URL}${page.path}`, author: { '@type': 'Organization', name: 'DLSS5NVIDIA' } },
+      { '@type': 'Article', '@id': `${BASE_URL}${page.path}#article`, headline: page.heading, description: page.description, dateModified: page.kind === 'games' ? GAME_RELEASES_REVIEWED : page.kind === 'status' ? '2026-10-26' : isCheckedComparison(page.path) ? '2026-10-23' : '2026-10-11', inLanguage: isZh ? 'zh-CN' : 'en-US', mainEntityOfPage: `${BASE_URL}${page.path}`, author: { '@type': 'Organization', name: 'DLSS5NVIDIA' } },
       ...(!isCheckedComparison(page.path) ? [{ '@type': 'FAQPage', '@id': `${BASE_URL}${page.path}#faq`, mainEntity: page.faq.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }] : []),
       ...(page.itemList ? [{ '@type': 'ItemList', '@id': `${BASE_URL}${page.path}#itemlist`, itemListElement: page.itemList.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, url: item.url })) }] : []),
     ],
