@@ -179,14 +179,14 @@ test('every tool page is in the sitemap, so a crawler finds it without a link', 
 });
 
 test('high-intent tool pages show a matching free case and ship every referenced asset', () => {
-  for (const path of ['/image-upscaler', '/image-quality-enhancer', '/unblur-image', '/es/mejorar-calidad-imagen', '/video-downloader']) {
+  for (const path of ['/image-upscaler', '/image-quality-enhancer', '/unblur-image', '/es/mejorar-calidad-imagen']) {
     const tool = TOOL_LANDINGS.find((landing) => landing.path === path);
     assert.ok(tool?.demo, `${path} needs a visible case instead of the generic fallback`);
     for (const asset of [tool.demo.before, tool.demo.after]) {
       assert.doesNotThrow(() => readFileSync(new URL(`../public${asset}`, import.meta.url)), `${path} references missing demo asset ${asset}`);
     }
   }
-  assert.equal(TOOL_LANDINGS.find((landing) => landing.path === '/video-downloader')?.demo?.kind, 'poster');
+  assert.ok(!TOOL_LANDINGS.some(landing => landing.dashboardTool === 'fetch'));
 });
 
 test('the served homepage links every tool page, for the crawler and for the visitor who runs no scripts', () => {
@@ -456,17 +456,12 @@ test('each tool declares how many references it reads and what they are', () => 
   // refuses with a 400. Sending an empty `image_ids` array would fail the same way.
   assert.deepEqual(TOOL_REFERENCES.fetch, { min: 0, max: 0, slots: [] });
   assert.ok(!toolTakesSecondImage('fetch') && !toolNeedsSecondImage('fetch'));
-  const fetch = buildToolTask('fetch', { imageIds: [], urls: ['https://www.youtube.com/watch?v=x'], options: { quality: 'audio' } });
-  assert.deepEqual(fetch, { model: 'media-fetch', urls: ['https://www.youtube.com/watch?v=x'], quality: 'audio' });
-  for (const field of ['image_ids', 'prompt', 'width', 'height', 'output_format', 'num_inference_steps']) {
-    assert.ok(!(field in fetch), `the downloader must not send ${field}`);
-  }
+  assert.throws(() => buildToolTask('fetch', { imageIds: [], urls: ['https://www.youtube.com/watch?v=x'] }), /retired/);
   // A quality the channel does not know is refused by `toolOptionError` before any task is built, and
   // the builder itself falls back to the documented default rather than forwarding it.
   assert.match(toolOptionError('fetch', { quality: '4k' }), /quality must be best, 1080, 720, 480, 360, audio/);
   assert.equal(toolOptionError('fetch', { quality: '720' }), '');
-  assert.equal(buildToolTask('fetch', { imageIds: [], urls: ['  https://youtu.be/x  '] }).quality, '1080');
-  assert.deepEqual(buildToolTask('fetch', { imageIds: [], urls: ['  https://youtu.be/x  '] }).urls, ['https://youtu.be/x']);
+  assert.throws(() => buildToolTask('fetch', { imageIds: [], urls: ['  https://youtu.be/x  '] }), /retired/);
 });
 
 /**

@@ -7,7 +7,7 @@ export const ARTICLE_CHECK_PATHS = [
 const REVIEW_PATHS = new Set([
   '/game-character-style', '/interior-design', '/portrait-retouch', '/virtual-try-on',
   '/virtual-makeup', '/ai-headshot', '/image-to-svg', '/remove-background', '/erase-object',
-  '/old-photo-restoration', '/video-upscaler', '/video-downloader', '/before-after',
+  '/old-photo-restoration', '/video-upscaler', '/before-after',
   '/comparisons', '/pricing', '/models', '/zh', '/blog', '/about', '/docs', '/enterprise', '/zh/download',
 ]);
 type Node = Record<string, unknown>;

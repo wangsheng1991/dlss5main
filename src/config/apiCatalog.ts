@@ -30,11 +30,8 @@
 export const CATALOG_VERSION = '2026-09-26.1';
 export const CATALOG_UPDATED = '2026-09-26';
 
-/** Every call goes through the account gateway; it issues the key, meters the calls and bills. */
-export const API_BASE_URL = 'https://dashboard.alphanetplus.com';
-/** Where a key comes from. Same host: the key and the calls are one account. */
-export const API_KEY_NOTE = 'Sign in to the gateway, open the project, and copy its API key. The same key lists its models at GET /v1/models.';
-export const API_PRICE = '$0.01 per call';
+/** Public catalog is a reference for the website workflow, not an external API signup. */
+export const API_SERVICE_WEBSITE = 'https://www.dlss5nvidia.com';
 export const API_MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 export const API_MAX_UPLOAD_MIB = 10;
 /** Signed result URLs expire; re-read the result endpoint to get a fresh one. */
@@ -394,9 +391,9 @@ export function apiCatalogDocument() {
   return {
     catalog_version: CATALOG_VERSION,
     updated: CATALOG_UPDATED,
-    base_url: API_BASE_URL,
-    auth: { header: 'Authorization: Bearer <project API key>', key_note: API_KEY_NOTE },
-    price: API_PRICE,
+    website: API_SERVICE_WEBSITE,
+    usage: 'website-model-reference',
+    access: 'Use your website account and available credits in /dashboard. This catalog does not offer a standalone public developer API.',
     limits: {
       max_upload_bytes: API_MAX_UPLOAD_BYTES,
       references_per_call: { min: 1, max: 4 },
@@ -404,7 +401,7 @@ export function apiCatalogDocument() {
     },
     /** The output buckets the four productised models accept, so a caller can pick one without the page. */
     aspects: ASPECT_SIZES.map(bucket => ({ value: bucket.value, size: bucket.size })),
-    flow: API_FLOW.map(step => ({ step: step.n, method: step.method, path: step.path, title: step.title, detail: step.detail })),
+    internal_reference_flow: API_FLOW.map(step => ({ step: step.n, method: step.method, path: step.path, title: step.title, detail: step.detail })),
     models: CATALOG.map(model => ({
       id: model.id,
       label: model.label,
@@ -416,8 +413,7 @@ export function apiCatalogDocument() {
       output: model.output,
       latency: model.latency,
       limits: model.limits,
-      submit_body_example: model.body,
-      price: API_PRICE,
+      internal_reference_body: model.body,
       try_it: model.tryIt?.path ?? null,
       cases: model.cases ?? [],
       verified: model.verified,
@@ -431,9 +427,11 @@ export function apiModelDocument(model: CatalogModel) {
   return {
     catalog_version: document.catalog_version,
     updated: document.updated,
-    base_url: document.base_url,
+    website: document.website,
+    usage: document.usage,
+    access: document.access,
     aspects: document.aspects,
-    flow: document.flow,
+    internal_reference_flow: document.internal_reference_flow,
     model: document.models.find(entry => entry.id === model.id),
   };
 }

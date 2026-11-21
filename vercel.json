@@ -4,11 +4,19 @@
   "rewrites": [
     {
       "source": "/api/gpu/:match*",
-      "destination": "https://gpu-api.alphanetplus.com/:match*"
+      "destination": "/api/health?retired_provider_proxy=1"
     },
     {
       "source": "/api/oss/:match*",
-      "destination": "https://oss.alphanetplus.com/:match*"
+      "destination": "/api/health?retired_provider_proxy=1"
+    },
+    {
+      "source": "/video-downloader",
+      "destination": "/api/health?retired_media=1"
+    },
+    {
+      "source": "/zh/video-downloader",
+      "destination": "/api/health?retired_media=1"
     },
     {
       "source": "/api/me/:route",

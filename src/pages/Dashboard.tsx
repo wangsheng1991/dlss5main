@@ -1,3 +1,4 @@
+import MediaRetired from './MediaRetired';
 import { REAL_PERSON_UPLOAD_NOTICE } from '../config/legal';
 import { DashboardEvidenceLinks } from '../components/SearchEvidence';
 import React, { useEffect, useRef, useState } from 'react';
@@ -59,7 +60,7 @@ const CHARACTER_STYLE_DEFAULT_PROMPT = CHARACTER_STYLE_PRESETS[0].prompt;
 const CHARACTER_STYLE_CASE_PREVIEW = GAME_STYLE_CASES.slice(0, 5);
 
 /** The presets offered in the studio, in display order. */
-const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'together', 'fetch'];
+const MODES: GenerationMode[] = ['enhance', 'edit', 'cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'together'];
 
 /** Each secondary mode has a crawlable guide with its own case before it enters the studio. */
 const TOOL_PAGE_BY_MODE: Partial<Record<GenerationMode, string>> = {
@@ -443,6 +444,7 @@ export default function Dashboard() {
   const toolSecondRequired = isToolId(mode) && toolNeedsSecondImage(mode);
   /** The quality the downloader will submit: the reader's pick, or the documented default. */
   const fetchQuality = toolChoices.quality ?? FETCH_QUALITY_OPTION.default;
+  if (mode === 'fetch') return <MediaRetired />;
   return <>
     <SEO
       title={`${t(characterStyleWorkflow ? 'dashboard.styleWorkflowTitle' : 'dashboard.studioTitle')} — DLSS5NVIDIA`}

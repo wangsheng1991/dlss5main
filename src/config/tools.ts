@@ -1,3 +1,4 @@
+import { RETIRED_MEDIA_MESSAGE } from './mediaRetirement';
 /**
  * The studio's tools and the exact provider contract each one accepts.
  *
@@ -148,7 +149,7 @@ export function failureNote(reason: unknown, mode = 'edit'): string {
 export const STEPS_RANGE = { min: 4, max: 20, default: 8 } as const;
 
 export type ToolId = 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'together' | 'fetch';
-export const TOOL_IDS: readonly ToolId[] = ['cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'together', 'fetch'];
+export const TOOL_IDS: readonly ToolId[] = ['cutout', 'vectorize', 'erase', 'tryon', 'interior', 'retouch', 'makeup', 'together'];
 export const isToolId = (value: unknown): value is ToolId =>
   typeof value === 'string' && (TOOL_IDS as readonly string[]).includes(value);
 
@@ -566,13 +567,8 @@ export function buildToolTask(tool: ToolId, input: ToolTaskInput): ToolTask {
   // The downloader is the one tool with no reference image at all: the gateway answers a body that
   // carries `image_ids` with a 400 (measured on the live channel, 2026-09-29), so the body is exactly
   // the model, the links and the quality name — nothing else is built for it, not even an empty list.
-  if (tool === 'fetch') {
-    return {
-      model: FETCH_MODEL,
-      urls: (input.urls || []).map(url => url.trim()).filter(Boolean),
-      quality: isFetchQuality(input.options?.quality) ? input.options!.quality : FETCH_DEFAULT_QUALITY,
-    };
-  }
+  if (tool === 'fetch') throw Object.assign(new Error(RETIRED_MEDIA_MESSAGE), { status: 410 });
+
   const task: ToolTask = {
     model: modelForTool(tool),
     image_ids: input.imageIds,

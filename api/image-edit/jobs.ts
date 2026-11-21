@@ -1,3 +1,4 @@
+import { isRetiredMediaMode, RETIRED_MEDIA_MESSAGE } from '../../src/config/mediaRetirement.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { alphaNet, alphaNetSuperRes, alphaNetTools } from '../_lib/alphanet.js';
 import { fail, requireUser } from '../_lib/auth.js';
@@ -134,6 +135,7 @@ async function submitTool(uid: string, mode: ToolId, body: Body, idempotencyKey:
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+    if (isRetiredMediaMode(req.body?.mode) || isRetiredMediaMode(req.body?.model)) return res.status(410).json({ error: RETIRED_MEDIA_MESSAGE, code: 'MEDIA_FETCH_RETIRED' });
     const { uid } = await requireUser(req);
     const body = (req.body || {}) as Body;
     const mode = text(body.mode) || 'edit';

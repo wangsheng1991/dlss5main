@@ -14,7 +14,7 @@ import { readFileSync } from 'node:fs';
 
 import {
   API_CATALOG_JSON, API_FLOW, API_MAX_UPLOAD_BYTES, API_MAX_UPLOAD_MIB, API_RESULT_TTL_SECONDS,
-  API_BASE_URL, ASPECT_SIZES, ASPECT_VALUES, CATALOG, CATALOG_UPDATED, CATALOG_VERSION,
+  API_SERVICE_WEBSITE, ASPECT_SIZES, ASPECT_VALUES, CATALOG, CATALOG_UPDATED, CATALOG_VERSION,
   apiCatalogDocument, apiModelDocument, apiModelJson, catalogModel,
 } from '../src/config/apiCatalog';
 import {
@@ -181,7 +181,7 @@ test('the published limits and endpoints are the ones every client shares', () =
   assert.equal(API_MAX_UPLOAD_BYTES, MAX_UPLOAD_BYTES, 'the catalog and the studio use different upload ceilings');
   assert.equal(API_MAX_UPLOAD_MIB, MAX_UPLOAD_MIB);
   assert.equal(API_RESULT_TTL_SECONDS, 900);
-  assert.match(API_BASE_URL, /^https:\/\//, 'calls have to go to the gateway over TLS');
+  assert.match(API_SERVICE_WEBSITE, /^https:\/\//, 'calls have to go to the gateway over TLS');
   assert.equal(API_CATALOG_JSON, '/api-catalog.json');
   assert.equal(apiModelJson('flux-klein'), '/api-catalog/flux-klein.json');
   const document = apiCatalogDocument();
@@ -202,8 +202,8 @@ test('the JSON documents survive serialization with nothing lost', () => {
     const document = apiModelDocument(model);
     assert.deepEqual(JSON.parse(JSON.stringify(document)), document, `${model.id}: the model file loses a field`);
     assert.equal(document.model?.id, model.id);
-    assert.equal(document.flow.length, API_FLOW.length, `${model.id}: the per-model file omits the flow`);
-    assert.ok(document.model?.submit_body_example, `${model.id}: the model file carries no example body`);
+    assert.equal(document.internal_reference_flow.length, API_FLOW.length, `${model.id}: the per-model file omits the flow`);
+    assert.ok(document.model?.internal_reference_body, `${model.id}: the model file carries no example body`);
     // A key that is documented but `null` in the file is a lie of omission; be explicit instead.
     for (const [key, value] of Object.entries(document.model || {})) {
       assert.notEqual(value, undefined, `${model.id}.${key} is undefined`);

@@ -44,6 +44,7 @@ export default function Footer() {
             <div>
               <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6 font-label">{t('navbar.tools')}</h4>
               <ul className="space-y-4">
+                <li><Link className="text-zinc-500 hover:text-nvidia-green text-sm" to="/video-studio">{i18n.language.startsWith('zh') ? '本地视频工具' : 'Local video tools'}</Link></li>
                 {TOOL_LANDINGS.map(tool => (
                   <li key={tool.path}><Link className="text-zinc-500 hover:text-nvidia-green text-sm transition-colors" to={tool.path}>{tool.heading}</Link></li>
                 ))}

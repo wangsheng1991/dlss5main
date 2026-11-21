@@ -1,4 +1,4 @@
-import { ScanAction, ScanReasonCode, WaffoPancake, type ScanResult } from '@waffo/pancake-ts';
+import { ScanAction, ScanReasonCode, ScanSemanticMode, WaffoPancake, type ScanResult } from '@waffo/pancake-ts';
 
 function unavailable() {
   return Object.assign(new Error('Safety screening is temporarily unavailable. No generation was started or credits charged. Try again shortly.'), { status: 503 });
@@ -24,7 +24,7 @@ export async function screenGenerationText(input: { prompt?: string; extra?: str
         return response;
       },
     });
-    verdict = await client.contentSafety.scanPrompt({ prompt });
+    verdict = await client.contentSafety.scanPrompt({ prompt, semantic: ScanSemanticMode.Enforce });
   } catch {
     // Do not return vendor errors, which may include request or credential details.
     throw unavailable();

@@ -2,7 +2,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { dodoConfigured } from './_lib/dodo.js';
 import { paypalConfigured, paypalEnvironment } from './_lib/paypal.js';
 
-export default function handler(_req: VercelRequest, res: VercelResponse) {
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.query?.retired_provider_proxy === '1') return res.status(410).json({ code: 'PUBLIC_PROVIDER_PROXY_RETIRED', error: 'This public provider passthrough is no longer available. Use the website tools with your website account.' });
+  if (req.query?.retired_media === '1') {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    return res.status(410).send('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Video fetching retired</title></head><body><h1>Third-party platform video fetching has been retired / 第三方平台视频抓取已下线</h1><p>No new fetching task is available.</p><p><a href="/video-studio">Local-file video tools</a> · <a href="/zh/video-studio">本地视频文件工具</a></p></body></html>');
+  }
   const checks = {
     alphaNet: Boolean(process.env.ALPHANET_API_KEY && process.env.ALPHANET_BASE_URL),
     firebaseAuth: Boolean(process.env.FIREBASE_WEB_API_KEY),

@@ -1,0 +1,1 @@
+{"captured_at":"2026-11-21T03:42:06.877Z","real_site_gate":true,"model_generation_attempted":false,"rows":[{"name":"benign","allowed":true,"elapsed_ms":2395},{"name":"restricted","allowed":false,"status":422,"code":"PROMPT_NOT_APPROVED","elapsed_ms":1463}]}

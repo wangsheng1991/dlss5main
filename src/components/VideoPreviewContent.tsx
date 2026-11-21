@@ -1,3 +1,4 @@
+import LocalVideoEntry from './LocalVideoEntry';
 import type { ReactNode } from 'react';
 import { ArrowRight, Clapperboard, Expand, Film, Image, ScanLine, Scissors } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -81,6 +82,7 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
         )}
       </header>}
 
+      {hub && <LocalVideoEntry chinese={zh} />}
       {hub && <VideoToolDirectory locale={locale} />}
 
       {(hub || page === '/video-upscaler') && <VideoUpscaleLabLink locale={locale} />}

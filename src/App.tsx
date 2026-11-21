@@ -1,3 +1,4 @@
+import MediaRetired from './pages/MediaRetired';
 import { VIDEO_TOOLS, videoToolPath } from './content/videoTools';
 import { GAME_COVERAGE_PAGES } from './content/gameCoverage';
 import { CHECKER_PAGES } from './content/dlssChecker';
@@ -157,7 +158,7 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/interior-design" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/portrait-retouch" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/virtual-makeup" element={orHome('tools', <ToolLanding />)} />
-                  <Route path="/video-downloader" element={orHome('tools', <ToolLanding />)} />
+                  <Route path="/video-downloader" element={<MediaRetired />} />
                   <Route path="/game-character-together" element={orHome('tools', <ToolLanding />)} />
                   <Route path="/zh/game-character-together" element={orHome('tools', <GameCharacterTogetherZh />)} />
                   <Route path="/topaz-free" element={orHome('tools', <TopazFree locale="en" />)} />

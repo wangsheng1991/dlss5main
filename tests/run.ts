@@ -22,5 +22,6 @@ import './dlss-checker.test';
 import './feature-picker.test';
 import './character-style-catalog.test';
 import './video-highlights.test';
+import './pancake-remediation.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;
