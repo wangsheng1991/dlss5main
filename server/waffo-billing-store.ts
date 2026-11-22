@@ -87,11 +87,16 @@ export class WaffoBillingStore {
   }
 
   async apply(event: WebhookEvent, order: VerifiedWaffoOrder): Promise<WaffoApplyResult> {
-    if (!nonempty(event.id)) return fail('waffo_invalid_event', 'Event id is required');
-    const eventRef = this.db.doc(`waffo_events/${hash(event.id)}`);
+    if (!nonempty(event.id) || !nonempty(event.eventId) || !nonempty(event.eventType)) return fail('waffo_invalid_event', 'Event identity, business event id and type are required');
+    // Waffo reuses entity ids across lifecycle types. The provider's business-event
+    // identity is eventType + eventId; payload.id alone can hide later cancellations.
+    const eventRef = this.db.doc(`waffo_events/${hash(`${event.eventType}:${event.eventId}`)}`);
+    const legacyRef = this.db.doc(`waffo_events/${hash(event.id)}`);
     return this.db.runTransaction(async (tx): Promise<WaffoApplyResult> => {
-      const priorEvent = await tx.get(eventRef);
-      if (priorEvent.exists) return { processed: false, status: 'duplicate' };
+      // Both receipts must be read before any write, including ignored-event receipts.
+      const [priorEvent, legacyEvent] = await Promise.all([tx.get(eventRef), tx.get(legacyRef)]);
+      const legacy = legacyEvent.data();
+      if (priorEvent.exists || (legacyEvent.exists && legacy?.type === event.eventType && legacy?.businessEventId === event.eventId)) return { processed: false, status: 'duplicate' };
       const now = Date.now();
       const mark = (status: 'processed' | 'ignored' | 'duplicate') => tx.create(eventRef, {
         eventId: event.id, businessEventId: event.eventId || '', type: event.eventType,
@@ -223,7 +228,7 @@ export class WaffoBillingStore {
         waffoSubscriptionId: order.id, waffoIntentCreatedAt: intent.createdAt, waffoSubscriptionStatus: status, subscriptionStatus: status,
         ...(periodEnd ? { currentPeriodEnd: periodEnd } : {}), ...(expired ? { tier: 'free' } : {}), updatedAt: new Date(now).toISOString(),
       });
-      tx.create(this.db.doc(`billing_orders/waffo_${hash(`lifecycle:${event.id}`)}`), { ...common, kind: status === 'canceled' || status === 'canceling' ? 'cancellation' : 'status', periodKey: `${order.id}:${data.periodNumber ?? 'unknown'}`, credits: 0, amountTotal: 0, currency: 'usd', status, stale, requiresReview: status === 'canceled' && !periodEnd });
+      tx.create(this.db.doc(`billing_orders/waffo_${hash(`lifecycle:${event.eventType}:${event.eventId}`)}`), { ...common, kind: status === 'canceled' || status === 'canceling' ? 'cancellation' : 'status', periodKey: `${order.id}:${data.periodNumber ?? 'unknown'}`, credits: 0, amountTotal: 0, currency: 'usd', status, stale, requiresReview: status === 'canceled' && !periodEnd });
       mark('processed');
       return { processed: true, status: 'processed', granted: false, credits: before };
     });

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { generateKeyPairSync, sign } from 'node:crypto';
+import { createHash, generateKeyPairSync, sign } from 'node:crypto';
 import type { Firestore } from 'firebase-admin/firestore';
 import type { WebhookEvent } from '@waffo/pancake-ts';
 import { WaffoBillingStore, parseUsdCents, type VerifiedWaffoOrder } from '../server/waffo-billing-store';
@@ -170,6 +170,58 @@ test('Waffo subscription activation and renewal lifecycle events never grant cre
     assert.equal(db.read('users/alice').credits, 10);
   }
   assert.equal(db.entries('credit_ledger').length, 0);
+});
+
+test('Waffo shared entity ids do not collide across activation, payment and repeated cancel lifecycles', async () => {
+  const { db, store, order, event } = await fixture();
+  const steps = [
+    ['subscription.activated', 'order-1-activated-100', 'active'],
+    ['subscription.payment_succeeded', 'payment-1', 'active'],
+    ['subscription.canceling', 'order-1-cancel-200', 'canceling'],
+    ['subscription.uncanceled', 'order-1-uncanceled-300', 'active'],
+    ['subscription.canceling', 'order-1-cancel-400', 'canceling'],
+  ] as const;
+  for (const [eventType, eventId, status] of steps) {
+    const notification = event({ id: order.id, eventType, eventId });
+    const result = await store.apply(notification, { ...order, status });
+    assert.equal(result.status, 'processed', eventType); assert.equal(result.processed, true, eventId);
+    assert.equal(db.read('users/alice').waffoSubscriptionStatus, status);
+    const beforeReplay = structuredClone([...db.records]);
+    assert.equal((await store.apply(notification, { ...order, status })).status, 'duplicate');
+    assert.deepEqual([...db.records], beforeReplay);
+  }
+  assert.equal(db.entries('waffo_events').length, steps.length);
+  assert.equal(db.entries('credit_ledger').length, 1);
+  assert.equal(db.read('users/alice').credits, PLANS.pro.monthlyCredits);
+});
+
+test('Waffo legacy entity-id receipts deduplicate only matching event type and business event id', async () => {
+  for (const variant of ['same-event', 'different-type', 'different-business-id'] as const) {
+    const { db, store, order, event } = await fixture();
+    const eventId = 'order-1-cancel-200', eventType = 'subscription.canceling';
+    const legacyPath = `waffo_events/${createHash('sha256').update(order.id).digest('hex')}`;
+    db.seed(legacyPath, {
+      eventId: order.id, type: variant === 'different-type' ? 'subscription.activated' : eventType,
+      businessEventId: variant === 'different-business-id' ? 'order-1-cancel-100' : eventId,
+      orderId: order.id, status: 'processed', processedAt: Date.now(),
+    });
+    const before = structuredClone([...db.records]);
+    const result = await store.apply(event({ id: order.id, eventType, eventId }), { ...order, status: 'canceling' });
+    if (variant === 'same-event') {
+      assert.equal(result.status, 'duplicate'); assert.deepEqual([...db.records], before);
+    } else {
+      assert.equal(result.status, 'processed', variant);
+      assert.equal(db.read('users/alice').waffoSubscriptionStatus, 'canceling');
+      assert.equal(db.entries('waffo_events').length, 2);
+    }
+  }
+});
+
+test('Waffo missing business event identity is rejected without any receipt or account mutation', async () => {
+  const { db, store, order, event } = await fixture();
+  const before = structuredClone([...db.records]);
+  await assert.rejects(store.apply(event({ eventId: '' }), order), (error: unknown) => (error as { code?: string }).code === 'waffo_invalid_event');
+  assert.deepEqual([...db.records], before);
 });
 
 test('Waffo full refund claws back the paid period remainder and preserves bonus credits', async () => {

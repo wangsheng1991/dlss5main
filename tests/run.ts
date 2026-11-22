@@ -24,5 +24,7 @@ import './character-style-catalog.test';
 import './video-highlights.test';
 import './pancake-remediation.test';
 import './waffo-billing.test';
+import './waffo-reconciliation.test';
+import './waffo-reconciliation-collector.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;
