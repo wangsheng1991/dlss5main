@@ -125,13 +125,13 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isOwner(userId);
-      // Allow user to create their own profile. They can only create a 'free' tier profile.
-      allow create: if isOwner(userId) && isValidUser() && request.resource.data.tier == 'free';
-      // Allow user to update their own profile, but cannot change tier or createdAt, and can only decrease credits (or keep them same)
-      allow update: if isOwner(userId) && 
-                    isValidUser() && 
-                    areImmutableFieldsUnchanged(['tier', 'createdAt']) &&
-                    (request.resource.data.credits <= resource.data.credits || !('credits' in resource.data));
+      // Account creation, entitlement, balance and billing writes belong to the Admin SDK only.
+      allow create: if false;
+      allow update: if isOwner(userId) &&
+                    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'image']) &&
+                    (!('name' in request.resource.data) || request.resource.data.name is string) &&
+                    (!('image' in request.resource.data) || request.resource.data.image is string);
+
     }
 
     match /daily_usage/{usageId} {

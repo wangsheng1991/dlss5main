@@ -1,3 +1,4 @@
+import { waffoCheckoutEnabled, waffoEnvironment } from './_lib/waffo.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { dodoConfigured } from './_lib/dodo.js';
 import { paypalConfigured, paypalEnvironment } from './_lib/paypal.js';
@@ -10,6 +11,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(410).send('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Video fetching retired</title></head><body><h1>Third-party platform video fetching has been retired / 第三方平台视频抓取已下线</h1><p>No new fetching task is available.</p><p><a href="/video-studio">Local-file video tools</a> · <a href="/zh/video-studio">本地视频文件工具</a></p></body></html>');
   }
   const checks = {
+    waffo: waffoCheckoutEnabled(),
     alphaNet: Boolean(process.env.ALPHANET_API_KEY && process.env.ALPHANET_BASE_URL),
     firebaseAuth: Boolean(process.env.FIREBASE_WEB_API_KEY),
     quotaBackend: Boolean(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_DATABASE_ID),
@@ -27,6 +29,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     status: ready ? 'ok' : 'degraded',
     checks,
     // PayPal sandbox and live differ only by base URL, so which one is wired up is part of the check.
+    waffoEnvironment: waffoEnvironment(),
     paypalEnvironment: paypalEnvironment(),
     // Deliberately omit values, URLs, provider error details and secret names beyond these flags.
     generatedAt: new Date().toISOString(),

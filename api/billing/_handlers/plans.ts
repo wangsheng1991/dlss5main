@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { planPricing } from '../../_lib/stripe.js';
 import { paypalConfigured, paypalEnvironment } from '../../_lib/paypal.js';
 import { PAID_PLANS, PLANS } from '../../../src/config/plans.js';
+import { waffoCheckoutEnabled, waffoEnvironment } from '../../_lib/waffo.js';
 import { dodoConfigured, dodoEnvironment } from '../../_lib/dodo.js';
 import { resolveSupportEmail } from '../../../src/config/site-url.js';
 
@@ -17,9 +18,10 @@ async function catalog() {
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
   res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
   const configured = Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET);
-  const plans = configured ? await catalog().catch(() => PLANS) : PLANS;
+  const plans = waffoCheckoutEnabled() ? PLANS : configured ? await catalog().catch(() => PLANS) : PLANS;
   return res.status(200).json({
-    version: 3,
+    version: 4,
+    waffo: { enabled: waffoCheckoutEnabled(), environment: waffoEnvironment() },
     currency: 'USD',
     membershipContact: process.env.MEMBERSHIP_CONTACT_EMAIL || resolveSupportEmail(process.env.VITE_SUPPORT_EMAIL),
     // Sandbox and production both report whether checkout is live, so the UI never offers a dead button.

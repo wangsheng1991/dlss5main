@@ -1,3 +1,4 @@
+import { waffoCheckoutEnabled } from '../../_lib/waffo.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
 import { fail, requireUser } from '../../_lib/auth.js';
@@ -19,6 +20,7 @@ const periodOf = (subscription: Stripe.Subscription) => {
 
 async function checkout(req: VercelRequest, res: VercelResponse) {
   const user = await requireUser(req);
+  if (waffoCheckoutEnabled()) return res.status(409).json({ error: 'Use the current Waffo checkout for new subscriptions', code: 'use_waffo_checkout' });
   const plan = (req.body || {}).plan;
   if (!isPurchasablePlan(plan)) return res.status(400).json({ error: 'Choose a paid plan: pro or team' });
   const catalog = PLANS[plan];

@@ -1,3 +1,4 @@
+import { waffoCheckoutEnabled } from '../../_lib/waffo.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { fail, requireUser } from '../../_lib/auth.js';
 import { siteOrigin } from '../../_lib/stripe.js';
@@ -15,6 +16,7 @@ type Subscription = { id?: string; status?: string; links?: Array<{ rel?: string
  */
 async function checkout(req: VercelRequest, res: VercelResponse) {
   const user = await requireUser(req);
+  if (waffoCheckoutEnabled()) return res.status(409).json({ error: 'Use the current checkout on the pricing page', code: 'use_waffo_checkout' });
   const plan = (req.body || {}).plan;
   if (!isPurchasablePlan(plan)) return res.status(400).json({ error: 'Choose a paid plan: pro or team' });
   if (!paypalConfigured()) return res.status(503).json({ error: 'PayPal is not configured yet', code: 'paypal_not_configured' });

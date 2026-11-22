@@ -46,14 +46,15 @@ export class BillingStore {
     const data = (await this.db.doc(`users/${uid}`).get()).data() || {};
     const stripeSubscriptionId = typeof data.stripeSubscriptionId === 'string' ? data.stripeSubscriptionId : '';
     const paypalSubscriptionId = typeof data.paypalSubscriptionId === 'string' ? data.paypalSubscriptionId : '';
+    const waffoSubscriptionId = typeof data.waffoSubscriptionId === 'string' ? data.waffoSubscriptionId : '';
     const dodoSubscriptionId = typeof data.dodoSubscriptionId === 'string' ? data.dodoSubscriptionId : '';
     return {
       tier: planOf(data.tier),
       credits: count(data.credits),
       // `subscriptionId` is the id of whichever provider charges this account, so callers that only
       // need "is this account subscribed" do not have to care which one it is.
-      subscriptionId: stripeSubscriptionId || paypalSubscriptionId || dodoSubscriptionId,
-      provider: (stripeSubscriptionId ? 'stripe' : paypalSubscriptionId ? 'paypal' : dodoSubscriptionId ? 'dodo' : '') as PaymentProvider | '',
+      subscriptionId: waffoSubscriptionId || stripeSubscriptionId || paypalSubscriptionId || dodoSubscriptionId,
+      provider: (waffoSubscriptionId ? 'waffo' : stripeSubscriptionId ? 'stripe' : paypalSubscriptionId ? 'paypal' : dodoSubscriptionId ? 'dodo' : '') as PaymentProvider | 'waffo' | '',
       customerId: typeof data.stripeCustomerId === 'string' ? data.stripeCustomerId : '',
       paypalPayerId: typeof data.paypalPayerId === 'string' ? data.paypalPayerId : '',
       subscriptionStatus: typeof data.subscriptionStatus === 'string' ? data.subscriptionStatus : '',

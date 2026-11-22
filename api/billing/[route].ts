@@ -11,6 +11,8 @@ import paypalConfirm from './_handlers/paypal-confirm.js';
 import paypalWebhook from './_handlers/paypal-webhook.js';
 import dodoCheckout from './_handlers/dodo-checkout.js';
 import dodoWebhook from './_handlers/dodo-webhook.js';
+import waffoCheckout from './_handlers/waffo-checkout.js';
+import waffoWebhook from './_handlers/waffo-webhook.js';
 
 /**
  * One serverless function serves the whole `/api/billing/*` surface, because a deployment may only
@@ -30,6 +32,8 @@ const routes: Record<string, (req: VercelRequest, res: VercelResponse) => unknow
   'paypal-webhook': paypalWebhook,
   'dodo-checkout': dodoCheckout,
   'dodo-webhook': dodoWebhook,
+  'waffo-checkout': waffoCheckout,
+  'waffo-webhook': waffoWebhook,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

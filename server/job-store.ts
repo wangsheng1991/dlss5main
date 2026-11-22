@@ -112,8 +112,12 @@ export class JobStore {
       const [user, ...uploads] = await Promise.all([tx.get(userRef), ...fileIds.map(fileId => tx.get(this.db.doc(`image_uploads/${hash(fileId)}`)))]);
       if (!user.exists) throw new ApiError(403, 'account_missing', 'Account is not initialized');
       if (uploads.some(u => !u.exists || u.data()!.uid !== uid)) throw new ApiError(403, 'file_not_owned', 'Input file does not belong to you');
-      const account = user.data()!, plan = limits(account.tier);
-      const credits = account.quotaMonth && account.quotaMonth !== month() ? plan.monthlyCredits : count(account.credits);
+      const account = user.data()!;
+      // Waffo allowances are granted only by verified payment webhooks, not by calendar rollover.
+      const waffoBound = Boolean(account.waffoSubscriptionId);
+      const paidPeriodExpired = waffoBound && (!Number.isSafeInteger(account.currentPeriodEnd) || account.currentPeriodEnd <= Math.floor(now / 1000));
+      const plan = limits(paidPeriodExpired ? 'free' : account.tier);
+      const credits = waffoBound ? (paidPeriodExpired ? 0 : count(account.credits)) : account.quotaMonth && account.quotaMonth !== month() ? plan.monthlyCredits : count(account.credits);
       const bonus = count(account.bonusCredits);
       const used = account.quotaDay === day() ? count(account.dayUsed) : 0;
       if (credits + bonus < 1) throw new ApiError(402, 'insufficient_credits', 'Insufficient credits');
@@ -121,7 +125,7 @@ export class JobStore {
       if (count(account.activeJobs) >= plan.maxConcurrentJobs) throw new ApiError(429, 'concurrency_limit', 'Another job is still active');
       const paidWithBonus = credits < 1;
       const job: Job = { uid, inputJson, fingerprint, providerKey: id, status: 'SUBMISSION_UNCERTAIN', leaseUntil: now + 60000, leaseOwner: randomUUID(), settled: false, refunded: false, paidWithBonus, createdAt: now, quotaDay: day(), quotaMonth: month() };
-      tx.update(userRef, { credits: credits - (paidWithBonus ? 0 : 1), bonusCredits: bonus - (paidWithBonus ? 1 : 0), activeJobs: count(account.activeJobs) + 1, dayUsed: used + 1, quotaDay: day(), quotaMonth: month() });
+      tx.update(userRef, { credits: paidPeriodExpired && paidWithBonus ? count(account.credits) : credits - (paidWithBonus ? 0 : 1), bonusCredits: bonus - (paidWithBonus ? 1 : 0), activeJobs: count(account.activeJobs) + 1, dayUsed: used + 1, quotaDay: day(), quotaMonth: month() });
       tx.create(ref, job);
       tx.create(this.db.doc(`credit_ledger/${id}_reserve`), { uid, jobId: id, kind: 'reserve', units: -1, bucket: paidWithBonus ? 'bonus' : 'monthly', createdAt: now });
       return { id, job, submit: true };

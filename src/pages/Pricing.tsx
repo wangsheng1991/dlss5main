@@ -14,6 +14,7 @@ export default function Pricing() {
   const [contact, setContact] = useState(SUPPORT_EMAIL);
   const [billingEnabled, setBillingEnabled] = useState(false);
   const [paypal, setPaypal] = useState<{ enabled: boolean; environment: string } | null>(null);
+  const [waffo, setWaffo] = useState<{ enabled: boolean; environment: string } | null>(null);
   const [dodo, setDodo] = useState<{ enabled: boolean; environment: string } | null>(null);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
@@ -21,11 +22,12 @@ export default function Pricing() {
   const cancelled = params.get('checkout') === 'cancelled' || paypalCancelled;
   useEffect(() => {
     fetch('/api/billing/plans').then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
-      setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null);
+      setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null); setWaffo(d.waffo || null);
     }).catch(() => setPlans(null));
   }, []);
   const current = (profile?.tier || 'free') as PlanId;
   const subscribed = current !== 'free';
+  const waffoBound = Boolean(profile?.waffoSubscriptionId) && !(profile?.waffoSubscriptionStatus === 'canceled' && (profile.currentPeriodEnd || 0) <= Date.now() / 1000);
   const post = async (path: string, body?: unknown) => {
     const token = await user!.getIdToken();
     const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: body ? JSON.stringify(body) : undefined });
@@ -65,26 +67,41 @@ export default function Pricing() {
     setBusy(id); setError('');
     try { const checkout = await post('/api/billing/dodo-checkout', { plan: id }); if (!checkout.ok || !checkout.data.url) throw new Error(checkout.data.error || 'Dodo checkout is unavailable right now.'); window.location.assign(checkout.data.url); } catch (cause) { setError((cause as Error).message); setBusy(''); }
   };
+  const manageWaffo = async () => {
+    if (!user) return;
+    setBusy('manage'); setError('');
+    try { const portal = await post('/api/billing/portal'); if (!portal.ok || !portal.data.url) throw new Error(portal.data.error || 'Billing portal is unavailable.'); window.location.assign(portal.data.url); } catch (e) { setError((e as Error).message); setBusy(''); }
+  };
+  const chooseWaffo = async (id: PlanId) => {
+    if (!user) return;
+    setBusy(id); setError('');
+    try {
+      const checkout = await post('/api/billing/waffo-checkout', { plan: id });
+      if (!checkout.ok || !checkout.data.url) throw new Error(checkout.data.error || 'Checkout is unavailable right now.');
+      window.location.assign(checkout.data.url);
+    } catch (cause) { setError((cause as Error).message); setBusy(''); }
+  };
   const mailto = (id: string) => `mailto:${contact}?subject=${encodeURIComponent(`Membership application: ${id}`)}&body=${encodeURIComponent(`Hello,\n\nI would like to apply for the ${id} plan.\n\nAccount email: \nCompany/use case: \n`)}`;
   return <main className="pt-32 pb-24 px-6 max-w-6xl mx-auto min-h-[80vh]"><SEO title="AI Image Upscaling Plans | DLSS 5 Credits" description="Choose a predictable AI image upscaling plan with monthly credits, daily limits, and API access options." keywords={['ai image upscaling pricing', 'image enhancement api pricing', 'dlss 5 credits', 'ai upscaler plans']} canonical="/pricing" />
     <div className="text-center mb-14"><span className="text-nvidia-green text-xs uppercase tracking-[0.2em]">Plans</span><h1 className="text-5xl font-bold text-white mt-4">Choose your plan</h1><p className="text-zinc-400 mt-4">Every plan uses GPT Image 2 with predictable monthly limits.</p></div>
     {cancelled && <p role="status" className="mb-8 text-center text-sm text-zinc-300 bg-surface-low border border-outline-variant/20 rounded-lg py-3 px-4">{paypalCancelled ? 'PayPal checkout cancelled — nothing was charged.' : 'Checkout cancelled — nothing was charged.'}</p>}
-    {error && <p role="alert" className="mb-8 text-center text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg py-3 px-4">{error}</p>}
+    {error && <p role="alert" className="mb-8 text-center text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg py-3 px-4">{error}{waffo?.enabled && user && <button onClick={() => void manageWaffo()} className="ml-3 underline">Manage billing</button>}</p>}
     {!plans ? <p className="text-center text-zinc-400">Unable to load plans. Please try again.</p> : <div className="grid md:grid-cols-3 gap-6">{(Object.entries(plans) as [PlanId, Plan][]).map(([id, p]) => <article key={id} className={`bg-surface-low border rounded-xl p-7 ${current === id ? 'border-primary/60' : 'border-outline-variant/20'}`}>
       <div className="flex items-center justify-between gap-3"><h2 className="text-2xl font-bold text-white">{p.name}</h2>{current === id && <span className="text-xs text-primary border border-primary/40 rounded-full px-3 py-1">Current plan</span>}</div>
       <p className="text-3xl font-bold text-primary mt-5">{p.priceUsd === 0 ? 'Free' : `$${p.priceUsd}`}{p.priceUsd > 0 && <span className="text-sm text-zinc-500"> / month</span>}</p>
       <p className="text-sm text-zinc-500 mt-2">{p.monthlyCredits} credits per month</p>
       <ul className="text-zinc-400 text-sm space-y-3 mt-6"><li>{p.dailyGenerationLimit} generations per day</li><li>{p.maxConcurrentJobs} concurrent job{p.maxConcurrentJobs === 1 ? '' : 's'}</li></ul>
       {id === 'free' ? <Link to="/register" className="block text-center mt-8 py-3 rounded-lg bg-primary-container text-white font-bold hover:bg-primary hover:text-black">Start free</Link>
+        : waffoBound ? <button onClick={() => void manageWaffo()} disabled={busy === 'manage'} className="block w-full text-center mt-8 py-3 rounded-lg border border-primary text-primary">Manage subscription</button>
         : current === id ? <span className="block text-center mt-8 py-3 rounded-lg border border-outline-variant/30 text-zinc-400">Active</span>
         : !user ? <Link to="/login" className="block text-center mt-8 py-3 rounded-lg bg-primary text-black font-bold">Sign in to subscribe</Link>
         : <div className="mt-8 space-y-3">
-          {billingEnabled
+          {waffo?.enabled && !subscribed ? <button onClick={() => void chooseWaffo(id)} disabled={Boolean(busy)} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Subscribe to ${p.name}${waffo.environment === 'test' ? ' (test)' : ''}`}</button> : billingEnabled
             ? <button onClick={() => void choose(id)} disabled={busy === id} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `${subscribed ? 'Switch to' : 'Subscribe to'} ${p.name}`}</button>
             : <a href={mailto(id)} className="block text-center py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-black">Apply by email</a>}
           {/* A second checkout lane: buyers who prefer PayPal never touch the card form. */}
-          {paypal?.enabled && !subscribed && <button onClick={() => void choosePaypal(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with PayPal${paypal.environment === 'sandbox' ? ' (sandbox)' : ''}`}</button>}
-          {dodo?.enabled && !subscribed && <button onClick={() => void chooseDodo(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with Dodo${dodo.environment === 'test_mode' ? ' (test)' : ''}`}</button>}
+          {paypal?.enabled && !waffo?.enabled && !subscribed && <button onClick={() => void choosePaypal(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with PayPal${paypal.environment === 'sandbox' ? ' (sandbox)' : ''}`}</button>}
+          {dodo?.enabled && !waffo?.enabled && !subscribed && <button onClick={() => void chooseDodo(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with Dodo${dodo.environment === 'test_mode' ? ' (test)' : ''}`}</button>}
         </div>}
     </article>)}</div>}
     <p className="text-center text-xs text-zinc-500 mt-10">Subscriptions renew monthly and can be cancelled any time; unused credits do not roll over. Questions? <a href={`mailto:${contact}`} className="text-primary underline">{contact}</a></p>

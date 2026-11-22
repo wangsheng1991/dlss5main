@@ -18,6 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!isPurchasablePlan(plan)) return res.status(400).json({ error: 'Choose a paid plan: pro or team' });
     const store = new BillingStore(database());
     const account = await store.account(user.uid);
+    if (account.provider === 'waffo') return res.status(409).json({ error: 'Manage this subscription through the billing portal', code: 'waffo_subscription' });
     // Plan changes are a Stripe proration; a PayPal subscription is revised on PayPal's side instead.
     if (account.provider === 'paypal') {
       return res.status(409).json({

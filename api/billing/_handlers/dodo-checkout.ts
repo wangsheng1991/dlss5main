@@ -1,3 +1,4 @@
+import { waffoCheckoutEnabled } from '../../_lib/waffo.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { fail, requireUser } from '../../_lib/auth.js';
 import { dodo, dodoConfigured, dodoProductId, dodoEnvironment } from '../../_lib/dodo.js';
@@ -10,6 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     const user = await requireUser(req);
+    if (waffoCheckoutEnabled()) return res.status(409).json({ error: 'Use the current Waffo checkout for new subscriptions', code: 'use_waffo_checkout' });
     const plan = (req.body || {}).plan;
     if (!isPurchasablePlan(plan)) return res.status(400).json({ error: 'Choose a paid plan: pro or team' });
     if (!dodoConfigured()) return res.status(503).json({ error: 'Dodo Payments is not configured yet', code: 'dodo_not_configured' });

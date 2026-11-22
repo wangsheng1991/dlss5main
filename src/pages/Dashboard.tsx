@@ -233,6 +233,12 @@ export default function Dashboard() {
       url.searchParams.delete('plan');
       window.history.replaceState({}, '', url);
     }
+    if (url.searchParams.get('waffo') === 'success') {
+      setBillingNotice('Returned from checkout. Your account updates only after the payment has been verified. If confirmation is delayed, check your billing portal.');
+      url.searchParams.delete('waffo');
+      window.history.replaceState({}, '', url);
+      return;
+    }
     if (url.searchParams.get('dodo') === 'success') {
       setBillingNotice('Dodo checkout completed. Your credits will appear after the verified payment webhook arrives.');
       url.searchParams.delete('dodo');
@@ -464,7 +470,7 @@ export default function Dashboard() {
       <div className="flex flex-wrap items-center gap-3">
         {(user || !characterStyleWorkflow) && <span className="px-4 py-2 bg-surface-low rounded-lg border border-outline-variant/20 text-sm text-zinc-300">{user ? `${profile?.tier ?? 'free'} · ${profile?.credits ?? '—'}${profile?.bonusCredits ? ` + ${profile.bonusCredits} ${t('dashboard.bonusCredits')}` : ''} ${t('dashboard.creditsLabel')}` : t('dashboard.signInToGenerate')}</span>}
         {user && <Link to="/pricing" className="px-4 py-2 rounded-lg border border-primary/40 text-primary text-sm hover:bg-primary/10">{profile?.tier && profile.tier !== 'free' ? t('dashboard.changePlan') : t('dashboard.upgrade')}</Link>}
-        {user && profile?.tier && profile.tier !== 'free' && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">{t('dashboard.manageBilling')}</button>}
+        {user && <button onClick={() => void openPortal()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm hover:border-primary/40">{t('dashboard.manageBilling')}</button>}
       </div>
     </div>
     {billingNotice && <p role="status" className="mb-6 text-sm text-zinc-200 bg-primary/10 border border-primary/25 rounded-lg px-4 py-3">{billingNotice}</p>}
