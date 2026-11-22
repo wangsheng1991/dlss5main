@@ -29,5 +29,6 @@ import './waffo-reconciliation-collector.test';
 import './waffo-monitor.test';
 import './payment-policy.test';
 import './frame-pack.test';
+import './clip-segments.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

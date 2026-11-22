@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { Download, Play, Upload } from 'lucide-react';
+import { MAX_SEGMENTS, normalizeSegments, overlappingSegments, shotList as toShotList, totalLength, type ClipSegment } from '../lib/clipSegments';
 import { frameFileName, framePackManifest, timeCode, zipStore, type FramePackFrame, type ZipEntry } from '../lib/framePack';
 import { HIGHLIGHTS_MEDIA } from '../content/videoHighlights';
 import { STREET_WINDOWS } from '../content/videoUnderstanding';
@@ -105,6 +106,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   const [count, setCount] = useState(9);
   const [speed, setSpeed] = useState(1);
   const [range, setRange] = useState<{ start?: number; end?: number }>({});
+  const [segments, setSegments] = useState<ClipSegment[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const [label, setLabel] = useState('');
   const [changes, setChanges] = useState<number[]>();
@@ -138,6 +140,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
     setMetadata(undefined);
     setPosition(0);
     setRange({});
+    setSegments([]);
     setEvents([]);
     setChanges(undefined);
     setBox(undefined);
@@ -343,6 +346,7 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   }
 
   const ready = Boolean(metadata && clip);
+  const clashing = mode === 'clip-range-planner' ? overlappingSegments(segments) : undefined;
   const validRange = range.start !== undefined && range.end !== undefined && range.start < range.end;
   const duration = metadata ? (compare && secondDuration ? Math.min(metadata.duration, secondDuration) : metadata.duration) : 0;
   return <>
@@ -438,7 +442,15 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
           <button className={action} onClick={() => setRange({ ...range, start: position })}>{t('Mark start', '标记起点')}</button>
           <button className={action} onClick={() => setRange({ ...range, end: position })}>{t('Mark end', '标记终点')}</button>
           <output className="font-mono text-sm text-lime-300">{range.start === undefined ? '—' : seconds(range.start)} → {range.end === undefined ? '—' : seconds(range.end)}</output>
-          <button className={primary} disabled={!validRange} onClick={() => saveJSON({ file: clip.name, ...range })}>{t('Save edit range', '保存选段清单')}</button>
+          <button className={action} disabled={!validRange || segments.length >= MAX_SEGMENTS} onClick={() => {
+            const start = range.start;
+            const end = range.end;
+            if (start === undefined || end === undefined) return;
+            setSegments(normalizeSegments([...segments, { start, end }]));
+            setRange({});
+          }}>{t('Add to shot list', '加入分镜清单')} <span className="font-mono text-xs text-zinc-400">{segments.length}/{MAX_SEGMENTS}</span></button>
+          <button className={action} disabled={!validRange} onClick={() => saveJSON({ file: clip.name, ...range })}>{t('Save this range', '保存这一段')}</button>
+          <button className={primary} disabled={!segments.length} onClick={() => saveJSON(toShotList(clip.name, duration, segments))}>{t('Save shot list (JSON)', '保存分镜清单 (JSON)')}</button>
         </>}
         {mode === 'slow-motion-review' && <>
           <label className="flex items-center gap-2 text-sm text-zinc-300">{t('Playback speed', '播放速度')}
@@ -473,6 +485,22 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
       {packError && <p role="alert" className="mt-4 rounded-lg border border-rose-400/30 p-3 text-sm text-rose-200">
         {t('The frame pack could not be built in this browser. Save single PNGs instead, or try a shorter H.264 MP4.', '浏览器没能生成帧包。可改用单张 PNG 保存，或换更短的 H.264 MP4 试试。')}
       </p>}
+      {mode === 'clip-range-planner' && clashing && segments.length > 0 && <div className="mt-4">
+        <p className="text-sm text-zinc-400">
+          {t(`Shot list · ${segments.length} clips · ${seconds(totalLength(segments))} in total`, `分镜清单 · ${segments.length} 段 · 合计 ${seconds(totalLength(segments))}`)}
+        </p>
+        <ol className="mt-2 divide-y divide-white/10">
+          {segments.map((segment, index) => <li key={`${segment.start}-${segment.end}-${index}`} className="flex flex-wrap items-center gap-2 py-2">
+            <span className="font-mono text-xs text-zinc-500">{String(index + 1).padStart(2, '0')}</span>
+            <button className={action + ' font-mono'} onClick={() => navigate(segment.start)}>{seconds(segment.start)} → {seconds(segment.end)}</button>
+            <span className="font-mono text-sm text-lime-300">{seconds(segment.end - segment.start)}</span>
+            {clashing.has(index) && <span className="text-xs text-amber-300">{t('overlaps another clip', '与另一段重叠')}</span>}
+            <button className="px-2 py-1 text-sm text-zinc-400 hover:text-rose-200"
+              aria-label={t(`Remove shot ${index + 1}`, `移除第 ${index + 1} 段`)}
+              onClick={() => setSegments(segments.filter((_, item) => item !== index))}>×</button>
+          </li>)}
+        </ol>
+      </div>}
       {sheet && <canvas ref={sheetPreview} hidden={!hasSheet} className="mt-4 max-h-[80vh] max-w-full object-contain" />}
       {changes && <div className="mt-4 flex flex-wrap gap-2" aria-live="polite">{changes.length
         ? changes.map(time => <button key={time} className={action} onClick={() => navigate(time)}>{seconds(time)}</button>)
