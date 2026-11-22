@@ -44,3 +44,13 @@ Exit 0: complete/pass; 1: confirmed issue; 2: incomplete/start failure. This CLI
 Offline tests inject missing-payment/renewal/provider/email failures, repeat/concurrent checks, daily reminders and recovery. A production **email-only TEST** drill exercises the real notification path without a card charge, quota grant or subscription change. Its subject explicitly says TEST. Scheduler execution must be observed separately from a manual endpoint invocation; results and delivery evidence are archived in the dated operations artifacts.
 
 Wangsheng performs the real small payment. Afterwards check Waffo **production succeeded payment**, our receipt and allowance, then await actual settlement separately. Waffo production enabled is not proof of revenue; test payments, refunds, fees and bank settlement must not be conflated.
+
+## Acceptance follow-up: Worker runtime compatibility
+
+The first real 10:40 UTC cron invocation on 2026-11-22 correctly emitted an infrastructure-failure email, received in Wangsheng's inbox. The cause was our use of `redirect: "error"`: Cloudflare Workers throws a `TypeError` before sending that request. This was not a payment failure, and the original generic fault message was not enough to diagnose the cause.
+
+The shared cron/probe check now uses `redirect: "manual"` and treats all non-2xx responses, including 3xx, as failure without forwarding the authorization header. A bearer-protected `/billing-monitor-probe` on the existing mail Worker tests the exact same fixed-target code and returns only safe status/error categories, never a raw provider response. Production proof: before = fetch-stage TypeError/category redirect; after = HTTP 200/ok true. Actual next scheduled completion is recorded separately from this manual probe.
+
+Primary source verified: https://developers.cloudflare.com/workers/runtime-apis/request/ (redirect modes section). Offline Node fetch mocks were extended to require Worker-compatible manual redirect mode; an external redirect is tested as failure and never followed.
+
+An email-only production drill was actually received in `wustwangsheng@gmail.com` INBOX, with SPF and DKIM pass. The archived drill and infrastructure-warning mail contain no customer payment data. The production provider read at 2026-11-22T10:33:47Z had no successful or other payment rows; Stripe configuration was Test and PayPal Sandbox. This is a timestamped observation, not a permanent revenue assertion. Later real payments must be checked afresh.

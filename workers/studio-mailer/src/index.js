@@ -62,24 +62,47 @@ async function sendBilling(env, subject, text) {
   });
 }
 
+async function checkBilling(env) {
+  if (!env.BILLING_MONITOR_SECRET || !env.BILLING_MONITOR_URL) return { ok: false, reason: 'missing_monitor_configuration' };
+  let stage = 'fetch';
+  try {
+    const response = await fetch(env.BILLING_MONITOR_URL, {
+      headers: { authorization: `Bearer ${env.BILLING_MONITOR_SECRET}`, 'user-agent': 'Mozilla/5.0 (compatible; DLSS5BillingMonitor/1.0; +https://www.dlss5nvidia.com)' },
+      // Workers does not implement redirect:error; manual also prevents credential forwarding.
+      signal: AbortSignal.timeout(210000), redirect: 'manual',
+    });
+    if (!response.ok) {
+      const body = await response.text();
+      const edgeCode = /error code:\s*(\d{3,5})/i.exec(body)?.[1];
+      return { ok: false, reason: 'endpoint_http_error', status: response.status, ...(edgeCode ? { edgeCode } : {}) };
+    }
+    stage = 'parse';
+    return (await response.json()).ok === true ? { ok: true, status: response.status } : { ok: false, reason: 'invalid_monitor_response' };
+  } catch (error) {
+    const message = String(error?.message || '');
+    const category = /redirect/i.test(message) ? 'redirect' : /AbortSignal|signal/i.test(message) ? 'signal' : /timeout|timed out/i.test(message) ? 'timeout' : 'other';
+    return { ok: false, reason: 'endpoint_network_or_response_error', stage, category, errorType: ['TypeError', 'SyntaxError', 'TimeoutError', 'AbortError'].includes(error?.name) ? error.name : 'Error' };
+  }
+}
+
 export default {
   async scheduled(controller, env, ctx) {
     ctx.waitUntil((async () => {
-      try {
-        if (!env.BILLING_MONITOR_SECRET || !env.BILLING_MONITOR_URL) throw new Error('Monitor configuration missing');
-        const response = await fetch(env.BILLING_MONITOR_URL, {
-          headers: { authorization: `Bearer ${env.BILLING_MONITOR_SECRET}` },
-          signal: AbortSignal.timeout(210000), redirect: 'error',
-        });
-        if (!response.ok || (await response.json()).ok !== true) throw new Error('Monitor endpoint failed');
-      } catch {
-        // Independent of Vercel/Firestore: an outage must not silently disable alerts.
+      const result = await checkBilling(env);
+      if (!result.ok) {
         await sendBilling(env, '[DLSS5 billing] MONITOR UNAVAILABLE',
-          `The scheduled billing check could not complete.\nTime: ${new Date().toISOString()}\nCheck Vercel /api/billing/waffo-monitor and billing_monitor_state/prod.\nNo automatic balance changes were made. This warning repeats every 10 minutes while the outage persists.`);
+          `The scheduled billing check could not complete.\nTime: ${new Date().toISOString()}\nDiagnostic: ${JSON.stringify(result)}\nCheck Vercel /api/billing/waffo-monitor and billing_monitor_state/prod.\nNo automatic balance changes were made. This warning repeats every 10 minutes while the outage persists.`);
       }
     })());
   },
   async fetch(request, env) {
+    // Same check as cron, safely observable without exposing any credential or
+    // allowing the caller to select a target URL. Does not send a test email.
+    if (new URL(request.url).pathname === '/billing-monitor-probe') {
+      if (request.method !== 'GET' || !env.BILLING_MONITOR_SECRET || request.headers.get('authorization') !== `Bearer ${env.BILLING_MONITOR_SECRET}`) return new Response('forbidden', { status: 403 });
+      const result = await checkBilling(env);
+      return Response.json(result, { status: result.ok ? 200 : 502 });
+    }
     if (request.method !== 'POST') {
       return new Response('method not allowed', { status: 405 });
     }

@@ -297,7 +297,8 @@ test('Waffo independent scheduled watchdog emails on endpoint failure and stays 
       globalThis.fetch = async (input, init) => {
         assert.equal(input, fixture.env.BILLING_MONITOR_URL);
         assert.equal((init?.headers as Record<string, string>).authorization, `Bearer ${fixture.env.BILLING_MONITOR_SECRET}`);
-        assert.equal(init?.redirect, 'error');
+        assert.match((init?.headers as Record<string, string>)['user-agent'], /DLSS5BillingMonitor\/1\.0/);
+        assert.equal(init?.redirect, 'manual');
         if (outcome === 'network-failure') throw new Error('SECRET_WATCHDOG_PROVIDER_DETAIL');
         if (outcome === 'invalid-json') return new Response('invalid-json', { status: 200 });
         return Response.json({ ok: outcome === 'healthy' }, { status: outcome === 'http-failure' ? 503 : 200 });
@@ -310,6 +311,115 @@ test('Waffo independent scheduled watchdog emails on endpoint failure and stays 
         assert.match(fixture.sent[0].subject, /MONITOR UNAVAILABLE/);
         assert.ok(!fixture.sent[0].text.includes('SECRET_WATCHDOG_PROVIDER_DETAIL'));
       }
+    }
+  } finally { globalThis.fetch = oldFetch; }
+});
+
+test('Waffo monitor probe rejects unauthenticated and non-GET requests without calling any backend', async () => {
+  const oldFetch = globalThis.fetch, fixture = workerFixture(); let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error('Unauthorized probe must never fetch'); };
+  try {
+    for (const [method, authorization] of [['GET', ''], ['GET', 'Bearer wrong'], ['POST', `Bearer ${fixture.env.BILLING_MONITOR_SECRET}`], ['DELETE', `Bearer ${fixture.env.BILLING_MONITOR_SECRET}`]]) {
+      const response = await mailWorker.fetch(new Request('https://worker.example.invalid/billing-monitor-probe', { method, headers: { authorization } }), fixture.env);
+      assert.equal(response.status, 403);
+    }
+    const unconfigured = await mailWorker.fetch(new Request('https://worker.example.invalid/billing-monitor-probe', { headers: { authorization: 'Bearer ' } }), { ...fixture.env, BILLING_MONITOR_SECRET: '' });
+    assert.equal(unconfigured.status, 403); assert.equal(calls, 0); assert.equal(fixture.sent.length, 0);
+  } finally { globalThis.fetch = oldFetch; }
+});
+
+test('Waffo authenticated probe uses the fixed monitor target and explicit bot user agent without sending email', async () => {
+  const oldFetch = globalThis.fetch, fixture = workerFixture(); let calls = 0;
+  globalThis.fetch = async (input, init) => {
+    calls++; assert.equal(input, fixture.env.BILLING_MONITOR_URL);
+    const headers = new Headers(init?.headers);
+    assert.equal(headers.get('authorization'), `Bearer ${fixture.env.BILLING_MONITOR_SECRET}`);
+    assert.match(headers.get('user-agent') || '', /DLSS5BillingMonitor\/1\.0/);
+    assert.equal(init?.redirect, 'manual');
+    return Response.json({ ok: true, status: 'pass', privateDetail: 'MUST_NOT_FORWARD_BACKEND_JSON' });
+  };
+  try {
+    const response = await mailWorker.fetch(new Request('https://worker.example.invalid/billing-monitor-probe?url=https%3A%2F%2Fattacker.example.invalid', { headers: { authorization: `Bearer ${fixture.env.BILLING_MONITOR_SECRET}` } }), fixture.env);
+    assert.equal(response.status, 200); assert.deepEqual(await response.json(), { ok: true, status: 200 });
+    assert.equal(calls, 1); assert.equal(fixture.sent.length, 0);
+  } finally { globalThis.fetch = oldFetch; }
+});
+
+test('Waffo probe returns safe HTTP and edge diagnostics without forwarding blocked response bodies', async () => {
+  const oldFetch = globalThis.fetch, fixture = workerFixture();
+  const marker = 'SYNTHETIC_PRIVATE_EDGE_BODY';
+  globalThis.fetch = async () => new Response(`<html>error code: 1010 ${marker}</html>`, { status: 403 });
+  try {
+    const response = await mailWorker.fetch(new Request('https://worker.example.invalid/billing-monitor-probe', { headers: { authorization: `Bearer ${fixture.env.BILLING_MONITOR_SECRET}` } }), fixture.env);
+    assert.equal(response.status, 502);
+    const result = await response.json();
+    assert.deepEqual(result, { ok: false, reason: 'endpoint_http_error', status: 403, edgeCode: '1010' });
+    assert.ok(!JSON.stringify(result).includes(marker)); assert.ok(!JSON.stringify(result).includes(fixture.env.BILLING_MONITOR_SECRET));
+    assert.equal(fixture.sent.length, 0);
+  } finally { globalThis.fetch = oldFetch; }
+});
+
+test('Waffo scheduled watchdog includes the same safe edge diagnostics while withholding raw response bodies', async () => {
+  const oldFetch = globalThis.fetch, fixture = workerFixture(), tasks: Promise<unknown>[] = [];
+  globalThis.fetch = async (_input, init) => {
+    assert.match(new Headers(init?.headers).get('user-agent') || '', /DLSS5BillingMonitor\/1\.0/);
+    return new Response('Error code: 1010 SYNTHETIC_SECRET_EDGE_RESPONSE', { status: 403 });
+  };
+  try {
+    await mailWorker.scheduled({}, fixture.env, { waitUntil(task: Promise<unknown>) { tasks.push(task); } });
+    await Promise.all(tasks);
+    assert.equal(fixture.sent.length, 1); assert.equal(fixture.sent[0].to, fixture.env.STUDIO_NOTIFY_TO);
+    assert.match(fixture.sent[0].text, /"status":403/); assert.match(fixture.sent[0].text, /"edgeCode":"1010"/);
+    assert.ok(!fixture.sent[0].text.includes('SYNTHETIC_SECRET_EDGE_RESPONSE'));
+    assert.ok(!fixture.sent[0].text.includes(fixture.env.BILLING_MONITOR_SECRET));
+  } finally { globalThis.fetch = oldFetch; }
+});
+
+test('Waffo Worker manually rejects monitor redirects without forwarding its authorization or following Location', async () => {
+  const oldFetch = globalThis.fetch;
+  try {
+    for (const mode of ['probe', 'cron']) {
+      const fixture = workerFixture(), tasks: Promise<unknown>[] = []; let calls = 0;
+      globalThis.fetch = async (input, init) => {
+        calls++; assert.equal(input, fixture.env.BILLING_MONITOR_URL);
+        assert.equal(init?.redirect, 'manual', 'Cloudflare Workers cannot use redirect:error');
+        return new Response('SYNTHETIC_PRIVATE_REDIRECT_BODY', { status: 302, headers: { Location: 'https://foreign.example.invalid/SYNTHETIC_PRIVATE_REDIRECT_LOCATION' } });
+      };
+      if (mode === 'probe') {
+        const response = await mailWorker.fetch(new Request('https://worker.example.invalid/billing-monitor-probe', { headers: { authorization: `Bearer ${fixture.env.BILLING_MONITOR_SECRET}` } }), fixture.env);
+        assert.equal(response.status, 502);
+        const diagnostic = await response.json() as {ok: boolean; status: number};
+        assert.equal(diagnostic.ok, false); assert.equal(diagnostic.status, 302);
+        assert.ok(!JSON.stringify(diagnostic).includes('SYNTHETIC_PRIVATE_REDIRECT'));
+        assert.equal(fixture.sent.length, 0);
+      } else {
+        await mailWorker.scheduled({}, fixture.env, { waitUntil(task: Promise<unknown>) { tasks.push(task); } });
+        await Promise.all(tasks);
+        assert.equal(fixture.sent.length, 1); assert.match(fixture.sent[0].text, /"status":302/);
+        assert.ok(!fixture.sent[0].text.includes('SYNTHETIC_PRIVATE_REDIRECT'));
+      }
+      assert.equal(calls, 1, 'never follow an authenticated backend redirect');
+    }
+  } finally { globalThis.fetch = oldFetch; }
+});
+
+test('Waffo Worker reports safe failure stage and category without exposing exception details', async () => {
+  const oldFetch = globalThis.fetch;
+  try {
+    for (const category of ['redirect', 'signal', 'timeout', 'parse']) {
+      const fixture = workerFixture();
+      globalThis.fetch = async (_input, init) => {
+        assert.equal(init?.redirect, 'manual');
+        if (category === 'parse') return new Response('SYNTHETIC_PRIVATE_INVALID_JSON', { status: 200 });
+        throw new TypeError(`${category} SYNTHETIC_PRIVATE_FETCH_ERROR`);
+      };
+      const response = await mailWorker.fetch(new Request('https://worker.example.invalid/billing-monitor-probe', { headers: { authorization: `Bearer ${fixture.env.BILLING_MONITOR_SECRET}` } }), fixture.env);
+      assert.equal(response.status, 502);
+      const diagnostic = await response.json() as {ok: boolean; stage: string; category: string; errorType: string};
+      assert.equal(diagnostic.ok, false); assert.equal(diagnostic.stage, category === 'parse' ? 'parse' : 'fetch');
+      assert.equal(diagnostic.category, category === 'parse' ? 'other' : category);
+      assert.equal(diagnostic.errorType, category === 'parse' ? 'SyntaxError' : 'TypeError');
+      assert.ok(!JSON.stringify(diagnostic).includes('SYNTHETIC_PRIVATE'));
     }
   } finally { globalThis.fetch = oldFetch; }
 });
