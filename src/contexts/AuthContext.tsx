@@ -12,6 +12,9 @@ interface UserProfile {
   credits: number;
   /** Promotional credits, spent after the monthly allowance and never cleared by the month rollover. */
   bonusCredits?: number;
+  stripeSubscriptionId?: string;
+  paypalSubscriptionId?: string;
+  dodoSubscriptionId?: string;
   waffoSubscriptionId?: string;
   waffoSubscriptionStatus?: string;
   currentPeriodEnd?: number;

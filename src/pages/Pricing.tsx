@@ -25,7 +25,9 @@ export default function Pricing() {
       setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null); setWaffo(d.waffo || null);
     }).catch(() => setPlans(null));
   }, []);
-  const current = (profile?.tier || 'free') as PlanId;
+  const paidWaffoExpired = Boolean(profile?.waffoSubscriptionId) && (profile?.currentPeriodEnd || 0) <= Date.now() / 1000;
+  const current = (paidWaffoExpired ? 'free' : profile?.tier || 'free') as PlanId;
+  const legacyBound = Boolean(profile?.stripeSubscriptionId || profile?.paypalSubscriptionId || profile?.dodoSubscriptionId);
   const subscribed = current !== 'free';
   const waffoBound = Boolean(profile?.waffoSubscriptionId) && !(profile?.waffoSubscriptionStatus === 'canceled' && (profile.currentPeriodEnd || 0) <= Date.now() / 1000);
   const post = async (path: string, body?: unknown) => {
@@ -83,7 +85,7 @@ export default function Pricing() {
   };
   const mailto = (id: string) => `mailto:${contact}?subject=${encodeURIComponent(`Membership application: ${id}`)}&body=${encodeURIComponent(`Hello,\n\nI would like to apply for the ${id} plan.\n\nAccount email: \nCompany/use case: \n`)}`;
   return <main className="pt-32 pb-24 px-6 max-w-6xl mx-auto min-h-[80vh]"><SEO title="AI Image Upscaling Plans | DLSS 5 Credits" description="Choose a predictable AI image upscaling plan with monthly credits, daily limits, and API access options." keywords={['ai image upscaling pricing', 'image enhancement api pricing', 'dlss 5 credits', 'ai upscaler plans']} canonical="/pricing" />
-    <div className="text-center mb-14"><span className="text-nvidia-green text-xs uppercase tracking-[0.2em]">Plans</span><h1 className="text-5xl font-bold text-white mt-4">Choose your plan</h1><p className="text-zinc-400 mt-4">Every plan uses GPT Image 2 with predictable monthly limits.</p></div>
+    <div className="text-center mb-14"><span className="text-nvidia-green text-xs uppercase tracking-[0.2em]">Plans</span><h1 className="text-5xl font-bold text-white mt-4">Choose your plan</h1><p className="text-zinc-400 mt-4">Use the site’s style-conversion and image-editing workflows with clear monthly limits.</p></div>
     {cancelled && <p role="status" className="mb-8 text-center text-sm text-zinc-300 bg-surface-low border border-outline-variant/20 rounded-lg py-3 px-4">{paypalCancelled ? 'PayPal checkout cancelled — nothing was charged.' : 'Checkout cancelled — nothing was charged.'}</p>}
     {error && <p role="alert" className="mb-8 text-center text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg py-3 px-4">{error}{waffo?.enabled && user && <button onClick={() => void manageWaffo()} className="ml-3 underline">Manage billing</button>}</p>}
     {!plans ? <p className="text-center text-zinc-400">Unable to load plans. Please try again.</p> : <div className="grid md:grid-cols-3 gap-6">{(Object.entries(plans) as [PlanId, Plan][]).map(([id, p]) => <article key={id} className={`bg-surface-low border rounded-xl p-7 ${current === id ? 'border-primary/60' : 'border-outline-variant/20'}`}>
@@ -96,7 +98,7 @@ export default function Pricing() {
         : current === id ? <span className="block text-center mt-8 py-3 rounded-lg border border-outline-variant/30 text-zinc-400">Active</span>
         : !user ? <Link to="/login" className="block text-center mt-8 py-3 rounded-lg bg-primary text-black font-bold">Sign in to subscribe</Link>
         : <div className="mt-8 space-y-3">
-          {waffo?.enabled && !subscribed ? <button onClick={() => void chooseWaffo(id)} disabled={Boolean(busy)} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Subscribe to ${p.name}${waffo.environment === 'test' ? ' (test)' : ''}`}</button> : billingEnabled
+          {waffo?.enabled && !legacyBound ? <button onClick={() => void chooseWaffo(id)} disabled={Boolean(busy)} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Subscribe to ${p.name}${waffo.environment === 'test' ? ' (test)' : ''}`}</button> : billingEnabled
             ? <button onClick={() => void choose(id)} disabled={busy === id} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `${subscribed ? 'Switch to' : 'Subscribe to'} ${p.name}`}</button>
             : <a href={mailto(id)} className="block text-center py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-black">Apply by email</a>}
           {/* A second checkout lane: buyers who prefer PayPal never touch the card form. */}

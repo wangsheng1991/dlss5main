@@ -37,3 +37,34 @@ Production HTTP webhook: `https://www.dlss5nvidia.com/api/billing/waffo-webhook`
 - SDK `@waffo/pancake-ts` 0.28.0, inspected types and request implementation.
 
 Redacted receipts and rule backups: `/Users/wangsheng/code/shou/artifacts/waffo-payments-20261122/`. No credentials or bearer checkout links belong in this document.
+
+## Production acceptance — 2026-11-22
+
+Implementation commit: `73184cf85b0795d02bc43cf1da2d7728b300b859`; Vercel production deployment `dpl_4KRP1gsppgdUS1THn79p9u4qnTLN` reached READY.
+
+- Live catalog: `version:4`, `waffo.enabled:true`, `environment:prod`, USD 19/79 unchanged.
+- Dedicated synthetic acceptance user (no owner/browser account reused) passed authenticated bootstrap and checkout. Checkout returned HTTP 200 after the runtime response-header environment guard.
+- The actual Waffo production page displayed `DLSS5NVIDIA Pro`, `US$19.00/月`, `今日应付 US$19.00`, the merchant store name and Waffo reseller disclosure. Stopped at buyer information: no email/card entered and no final payment action. Desktop screenshot inspected visually; amount and layout are legible.
+- Before and after unpaid checkout: `tier:free`, `credits:10`, no subscription binding. Redirect/session creation never grants paid credits.
+- Unauthenticated checkout: 401; unsigned webhook: 401. Authenticated legacy new-purchase endpoints: 409 `use_waffo_checkout`. Own-customer portal: HTTP 200 on the correct Waffo origin.
+- Repeating the unpaid session creation reused the same provider session id. Full bearer checkout/portal URLs were not persisted.
+- Products currently have no self-service plan-change group. The initial integration supports subscription purchase, renewal, portal management/cancellation and refunds; cross-product plan changes must not be advertised as accepted by this implementation.
+- Follow-up UI review covers canceled/expired Waffo accounts re-entering checkout and manually granted paid tiers without a legacy billing subscription. Backend checks remain authoritative.
+
+**Still requires a real buyer payment:** verify actual charged payment → production-signed webhook delivery → one monthly allowance and ledger entry, then a real generation. Neither this document nor automated mocked tests claim that this cash-flow acceptance has occurred.
+
+Redacted receipts: `live-smoke-first.json`, `live-smoke.json`, `ui-checkout.json`; screenshots in the artifact directory named above. Temporary synthetic account records are cleaned up after UI verification.
+
+### Billing-copy correction
+
+Pricing’s old paragraph, “Every plan uses GPT Image 2 with predictable monthly limits.”, promised a model the current tools do not universally use. Replaced only that paragraph with: “Use the site’s style-conversion and image-editing workflows with clear monthly limits.” Plan prices/limits and SEO metadata remain unchanged. Existing screenshots from the first smoke show the previous paragraph and are retained as historical evidence, not the final copy.
+
+### Page-button acceptance
+
+A fresh browser context, authenticated only as the dedicated synthetic acceptance account, displayed `Subscribe to Pro` and `Subscribe to Team`. At 390×844 the pricing page had no horizontal overflow; both buttons/cards were inspected in the screenshot. Clicking the real Pro button issued `/api/billing/waffo-checkout` (HTTP 200), then navigated to Waffo and displayed the USD 19/month buyer-information page. No card or buyer email was entered; no payment was submitted. See `ui-checkout.json` and `production-checkout-from-button.png`.
+
+### Production permission check and cleanup
+
+Using only the dedicated synthetic user's valid Firebase ID token, real Firestore REST writes to `bonusCredits`, `waffoSubscriptionId`, and `currentPeriodEnd` each returned HTTP 403 `PERMISSION_DENIED`. Its balance remained free/10/bonus0 with no subscription. This verifies deployed rules rather than only a local rule mock. `security-smoke.json` also records all three legacy new-checkout routes returning 409.
+
+After verification, removed only this synthetic Auth user, unused profile, unspent synthetic signup grant and one unpaid intent. No real customer or real payment/ledger records were modified. See `cleanup.json`.
