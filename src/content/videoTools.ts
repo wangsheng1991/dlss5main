@@ -6,8 +6,8 @@ type Tool = { slug: string; group: 'inspect' | 'compare' | 'plan'; related: '/vi
 
 export const VIDEO_TOOLS = [
   { slug: 'frame-extractor', group: 'inspect', related: '/video-upscaler',
-    en: ['Video Frame Extractor', 'Pause a video at the moment you need and save the decoded frame as a PNG in your browser.', 'Use a clean frame as a Studio style-conversion reference. Seek through neighboring moments to avoid motion blur or a partially closed eye.', 'Load the street clip, pause on a passing vehicle, and save the chosen still. The PNG keeps the decoded frame dimensions.'],
-    zh: ['视频抽帧工具', '把视频停在需要的时间点，在浏览器里把当前画面保存成 PNG。', '挑一帧清晰的画面作为 Studio 风格转换参考。前后多看几个时刻，避开运动拖影或闭眼的瞬间。', '打开路口样片，停在车辆经过的时刻并保存。PNG 使用浏览器解码出的画面尺寸。'] },
+    en: ['Video Frame Extractor', 'Pause a video at the moments you need and save the decoded frame as a PNG in your browser — one at a time, or queued into a single .zip with a timestamp manifest.', 'Use a clean frame as a Studio style-conversion reference. Seek through neighboring moments to avoid motion blur or a partially closed eye.', 'Load the street clip, add a few passing moments to the frame pack, and check that manifest.json lists the same files and timestamps as the archive.'],
+    zh: ['视频抽帧工具', '把视频停在需要的时间点，在浏览器里把当前画面保存成 PNG；也可以把多个时刻收进同一个 .zip，并附上时间戳清单。', '挑一帧清晰的画面作为 Studio 风格转换参考。前后多看几个时刻，避开运动拖影或闭眼的瞬间。', '打开路口样片，把车辆经过的几个时刻加入帧包，导出后核对 manifest.json 里的文件名和时间点是否与压缩包一致。'] },
   { slug: 'contact-sheet', group: 'inspect', related: '/video-understanding',
     en: ['Video Contact Sheet Maker', 'Sample a video at evenly spaced times and export a labeled grid of stills as a PNG.', 'Use the grid to shortlist frames before you start a Studio redraw. Even sampling can miss brief moments between thumbnails.', 'Build a sheet from the street clip and compare the direction of pedestrian traffic across the grid.'],
     zh: ['视频缩略图总览生成器', '按时间均匀抽取视频画面，生成带时间标记的缩略图网格并导出 PNG。', '先从总览里挑几帧，再送去 Studio 做风格重绘。均匀采样可能漏掉短暂出现的动作。', '用路口样片生成一张总览，对照行人在各格中的移动方向。'] },

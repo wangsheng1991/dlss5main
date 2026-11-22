@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { Download, Play, Upload } from 'lucide-react';
+import { frameFileName, framePackManifest, timeCode, zipStore, type FramePackFrame, type ZipEntry } from '../lib/framePack';
 import { HIGHLIGHTS_MEDIA } from '../content/videoHighlights';
 import { STREET_WINDOWS } from '../content/videoUnderstanding';
 import type { VideoPreviewLocale } from '../content/videoStudio';
@@ -12,6 +13,10 @@ const seconds = (time: number) => time.toFixed(3) + ' s';
 type Point = { x: number; y: number };
 type EventEntry = { start: number; end?: number; label: string | Record<string, unknown> };
 type Source = { name: string; url: string };
+type PickedFrame = { time: number; blob: Blob; width: number; height: number };
+
+/** A pack is downloaded as one archive, so it stays a handful of frames rather than a dump of the clip. */
+const MAX_PACK_FRAMES = 24;
 
 
 function download(blob: Blob, fileName: string) {
@@ -105,6 +110,9 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   const [changes, setChanges] = useState<number[]>();
   const [box, setBox] = useState<{ left: number; top: number; width: number; height: number; time: number }>();
   const [hasSheet, setHasSheet] = useState(false);
+  const [pack, setPack] = useState<PickedFrame[]>([]);
+  const [packing, setPacking] = useState(false);
+  const [packError, setPackError] = useState(false);
   const [busy, setBusy] = useState(false);
   const [sampleLoading, setSampleLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -134,6 +142,8 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
     setChanges(undefined);
     setBox(undefined);
     setHasSheet(false);
+    setPack([]);
+    setPackError(false);
     setClip(next);
   }
 
@@ -189,6 +199,45 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
   useEffect(() => {
     if (cropPreview.current) currentFrame(cropPreview.current, true);
   }, [metadata, position, ratio, offset]);
+
+  /** Picking a frame is free and repeatable; the bytes stay in memory until the pack is exported. */
+  function addToPack() {
+    const frame = getCanvas(1, 1);
+    currentFrame(frame, false);
+    if (frame.width <= 1) return;
+    const time = Number(position.toFixed(3));
+    const { width, height } = frame;
+    setPackError(false);
+    frame.toBlob(blob => {
+      if (!blob) { setPackError(true); return; }
+      setPack(list => [...list.filter(item => item.time !== time), { time, blob, width, height }]
+        .sort((a, b) => a.time - b.time)
+        .slice(0, MAX_PACK_FRAMES));
+    }, 'image/png');
+  }
+
+  async function exportPack() {
+    if (!clip || !pack.length || packing) return;
+    setPacking(true);
+    setPackError(false);
+    try {
+      const frames = [...pack].sort((a, b) => a.time - b.time);
+      const entries: ZipEntry[] = [];
+      const manifestFrames: FramePackFrame[] = [];
+      for (let index = 0; index < frames.length; index += 1) {
+        const name = frameFileName(index + 1);
+        entries.push({ name, data: new Uint8Array(await frames[index].blob.arrayBuffer()) });
+        manifestFrames.push({ time: frames[index].time, file: name, width: frames[index].width, height: frames[index].height });
+      }
+      const manifest = framePackManifest(clip.name, mode, manifestFrames, new Date().toISOString());
+      entries.push({ name: 'manifest.json', data: new TextEncoder().encode(JSON.stringify(manifest, null, 2) + '\n') });
+      download(new Blob([zipStore(entries) as BlobPart], { type: 'application/zip' }), 'frame-pack.zip');
+    } catch {
+      setPackError(true);
+    } finally {
+      setPacking(false);
+    }
+  }
 
   function navigate(time: number) {
     if (!video.current || !metadata) return;
@@ -351,6 +400,15 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
           currentFrame(frame, cropMode);
           if (frame.width > 1) png(frame, cropMode ? 'crop-preview' : 'video-frame');
         }}><Download size={16} aria-hidden="true" />{t('Save PNG', '保存 PNG')}</button>}
+        {mode === 'frame-extractor' && <>
+          <button className={action} disabled={pack.length >= MAX_PACK_FRAMES} onClick={addToPack}>
+            {t('Add frame to pack', '加入帧包')} <span className="font-mono text-xs text-zinc-400">{pack.length}/{MAX_PACK_FRAMES}</span>
+          </button>
+          <button className={primary} disabled={!pack.length || packing} onClick={() => void exportPack()}>
+            <Download size={16} aria-hidden="true" />
+            {packing ? t('Packing…', '正在打包…') : t('Export frame pack (.zip)', '导出帧包（.zip）')}
+          </button>
+        </>}
         {cropMode && <>
           <label className="flex items-center gap-2 text-sm text-zinc-300">{t('Aspect ratio', '画幅')}
             <select className={input} value={ratio} onChange={event => setRatio(Number(event.currentTarget.value))}>
@@ -403,6 +461,18 @@ export default function VideoToolWorkspace({ tool, locale }: { tool: VideoTool; 
           <button className={primary} disabled={!events.length} onClick={() => saveJSON({ file: clip.name, events })}>{t('Save event list', '保存事件列表')}</button>
         </>}
       </div>
+      {mode === 'frame-extractor' && pack.length > 0 && <div className="mt-4 flex flex-wrap items-center gap-2" aria-live="polite">
+        <span className="text-sm text-zinc-400">{t('Frame pack', '帧包')}</span>
+        {pack.map(frame => <span key={frame.time} className="inline-flex items-center gap-1 rounded-lg border border-white/20 pl-2">
+          <button className="font-mono text-sm text-lime-300" onClick={() => navigate(frame.time)}>{timeCode(frame.time)}</button>
+          <button className="px-2 py-1 text-sm text-zinc-400 hover:text-rose-200"
+            aria-label={t(`Remove the frame at ${timeCode(frame.time)}`, `移除 ${timeCode(frame.time)} 的画面`)}
+            onClick={() => setPack(list => list.filter(item => item.time !== frame.time))}>×</button>
+        </span>)}
+      </div>}
+      {packError && <p role="alert" className="mt-4 rounded-lg border border-rose-400/30 p-3 text-sm text-rose-200">
+        {t('The frame pack could not be built in this browser. Save single PNGs instead, or try a shorter H.264 MP4.', '浏览器没能生成帧包。可改用单张 PNG 保存，或换更短的 H.264 MP4 试试。')}
+      </p>}
       {sheet && <canvas ref={sheetPreview} hidden={!hasSheet} className="mt-4 max-h-[80vh] max-w-full object-contain" />}
       {changes && <div className="mt-4 flex flex-wrap gap-2" aria-live="polite">{changes.length
         ? changes.map(time => <button key={time} className={action} onClick={() => navigate(time)}>{seconds(time)}</button>)
