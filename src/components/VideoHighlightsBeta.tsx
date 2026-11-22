@@ -15,7 +15,7 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
   const { user, loading } = useAuth();
   const { hash } = useLocation();
   const zh = locale === 'zh';
-  const [access, setAccess] = useState<'available' | 'offline' | null>(null);
+  const [access, setAccess] = useState<'available' | 'offline' | 'verify-email' | 'invite' | null>(null);
   const [connectionAttempt, setConnectionAttempt] = useState(0);
   const [job, setJob] = useState<Job | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -46,7 +46,8 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
         setJob(state);
       }
     }).catch(cause => {
-      if (active && !(cause instanceof ApiError && cause.status === 403)) setAccess('offline');
+      if (active) setAccess(cause instanceof ApiError && cause.status === 403
+        ? (cause.code === 'email_unverified' ? 'verify-email' : 'invite') : 'offline');
     });
     return () => { active = false; };
     // Each account gets an independent beta session.
@@ -119,6 +120,8 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
       if (cause instanceof ApiError && cause.code === 'worker_offline') {
         setAccess('offline');
         setError(zh ? '处理节点暂不可用，请稍后重查连接。' : 'The processing worker is unavailable. Check the connection later.');
+      } else if (cause instanceof ApiError && cause.code === 'daily_limit') {
+        setError(zh ? '今天的试用次数已用完。' : 'You have reached today’s trial limit.');
       } else if (cause instanceof ApiError && cause.code === 'rate_limit') {
         setError(zh ? '请稍等再提交新任务。' : 'Wait a moment before starting a new job.');
       } else {
@@ -170,15 +173,20 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
   if (loading) return null;
   if (!user) return <p className="mt-4 text-sm text-zinc-300">
     <Link to={'/login?next=' + encodeURIComponent(videoPreviewPath('/video-highlights', locale) + '#highlights-beta')}
-      className="text-primary underline underline-offset-4">{zh ? '已收到内测邀请？登录试用' : 'Already invited? Sign in to try it'}</Link>
+      className="text-primary underline underline-offset-4">{zh ? '登录后试用高光剪辑' : 'Sign in to try video highlights'}</Link>
   </p>;
   if (!access) return null;
+  if (access === 'verify-email' || access === 'invite') return <p className="mt-4 text-sm text-amber-200">
+    {access === 'verify-email'
+      ? (zh ? '请先验证邮箱，再重新登录试用。' : 'Verify your email, then sign in again to try the tool.')
+      : (zh ? '目前仅向受邀账号开放。' : 'Access is currently limited to invited accounts.')}
+  </p>;
 
-  return <section id="highlights-beta" className="mt-10 scroll-mt-24 rounded-2xl border border-primary/35 bg-[#151914] p-5 sm:p-7">
-    <h2 className="font-headline text-2xl font-bold text-white">{zh ? '视频高光 · 邀请内测' : 'Video highlights · Invite-only beta'}</h2>
+  return <section className="mt-10 scroll-mt-24 rounded-2xl border border-primary/35 bg-[#151914] p-5 sm:p-7">
+    <h2 className="font-headline text-2xl font-bold text-white">{zh ? '视频高光 · 在线试用' : 'Video highlights · Online trial'}</h2>
     <p className="mt-2 text-sm leading-relaxed text-zinc-300">{zh
-      ? '上传你有权处理的 MP4。最长 30 秒，最高 720p，最多 32 MB。原片和成片仅用于本次任务，下载窗口为 24 小时，内测暂不扣积分。'
-      : 'Upload an MP4 you have permission to process. Up to 30 seconds, 720p and 32 MB. Files are used for this job, with a 24-hour download window. The beta does not use credits.'}</p>
+      ? '上传你有权处理的 MP4。最长 30 秒，最高 720p，最多 32 MB。原片和成片仅用于本次任务，下载窗口为 24 小时，试用不扣积分，每个账号每天可提交 5 次。'
+      : 'Upload an MP4 you have permission to process. Up to 30 seconds, 720p and 32 MB. Files are used for this job, with a 24-hour download window. The trial costs no credits and allows 5 jobs per account per day.'}</p>
     {access === 'offline' && <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-amber-200">
       <p>{zh ? '处理节点暂不可用。已完成的任务仍可查看。' : 'The processing worker is temporarily offline. Completed jobs remain accessible.'}</p>
       <button type="button" className="underline" onClick={() => setConnectionAttempt(attempt => attempt + 1)}>
@@ -207,7 +215,7 @@ export default function VideoHighlightsBeta({ locale }: { locale: VideoPreviewLo
       ? (zh ? '无法读取视频。请检查格式、时长和分辨率。' : 'The clip could not be read. Check its format, duration and resolution.')
       : job.error === 'queue_timeout' || job.error === 'worker_lost'
         ? (zh ? '处理等待超时，任务已结束。处理节点恢复后可以重试。' : 'This job timed out. You can start a new job when the worker is available.')
-        : (zh ? '处理未完成。请重试，内测未扣积分。' : 'Processing did not complete. You can try again. No credits were charged.')}</p>}
+        : (zh ? '处理未完成。请重试，本次未扣积分。' : 'Processing did not complete. You can try again. No credits were charged.')}</p>}
     {job?.status === 'upload' && <div className="mt-5 grid max-w-xl gap-3 text-sm">
       <p className="text-zinc-300">{zh ? '上次上传尚未提交。如果文件已经传完，可直接继续分析。' : 'The previous upload has not been submitted. If it finished uploading, you can resume analysis.'}</p>
       <div className="flex flex-wrap gap-4 text-primary">

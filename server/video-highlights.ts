@@ -2,10 +2,25 @@ import { randomUUID, timingSafeEqual } from 'node:crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { adminAuth, database, privateStorage } from './admin.js';
 import { ApiError } from './errors.js';
+import { readVideoGateway, readVideoGatewayResult, submitVideoGateway, type HighlightsPhase } from './video-highlights-alphanet.js';
 import { HIGHLIGHTS_EVENTS, HIGHLIGHTS_MAX_BYTES, HIGHLIGHTS_MAX_SECONDS, highlightsStallReason, highlightsWorkerAvailable, type HighlightsSegment } from '../lib/video-highlights-beta.js';
 
 const day = 24 * 60 * 60 * 1000;
 const leaseMs = 5 * 60 * 1000;
+const isInvited = (uid: string) => process.env.VIDEO_HIGHLIGHTS_INVITE_UIDS?.split(',').some(id => id.trim() === uid);
+const phaseValue = (phase: unknown): HighlightsPhase => {
+  if (phase === 'analyze' || phase === 'export') return phase;
+  throw new ApiError(400, 'invalid_phase', 'Invalid phase');
+};
+export function useHighlightsGateway(uid: string, enabled?: string, canaryUid?: string, open = false) {
+  return enabled === '1' && Boolean(uid) && (open || canaryUid?.trim() === uid);
+}
+const phaseField = (phase: HighlightsPhase) => phase === 'analyze' ? 'alphaAnalyze' : 'alphaExport';
+const matchingChannelKey = (req: VercelRequest) => {
+  const key = Buffer.from(process.env.VIDEO_HIGHLIGHTS_ALPHANET_CHANNEL_KEY ?? '');
+  const presented = Buffer.from(bearer(req));
+  return key.length > 0 && key.length === presented.length && timingSafeEqual(key, presented);
+};
 const uploadHeaders = { 'x-goog-if-generation-match': '0' };
 const fail = (status: number, code: string, message: string): never => { throw new ApiError(status, code, message); };
 
@@ -45,7 +60,9 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
   const token = bearer(req);
   if (!token) return fail(401, 'sign_in', 'Sign in to continue');
   const account = await adminAuth().verifyIdToken(token).catch(() => fail(401, 'sign_in', 'Sign in to continue'));
-  if (!account.email_verified || !process.env.VIDEO_HIGHLIGHTS_INVITE_UIDS?.split(',').map(id => id.trim()).includes(account.uid)) {
+  if (!account.email_verified) return fail(403, 'email_unverified', 'Verify your email to continue');
+  const open = process.env.VIDEO_HIGHLIGHTS_ACCESS_MODE !== 'invite';
+  if (!open && !isInvited(account.uid)) {
     return fail(403, 'invite_required', 'An invitation is required');
   }
   const { db, jobs, control, bucket } = services();
@@ -78,6 +95,10 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
     if (!event || !Number.isSafeInteger(size) || size < 1 || size > HIGHLIGHTS_MAX_BYTES) {
       return fail(400, 'invalid_upload', 'Choose a supported event and MP4 under 32 MiB');
     }
+    const viaAlphaNet = useHighlightsGateway(account.uid, process.env.VIDEO_HIGHLIGHTS_ALPHANET_ENABLED, process.env.VIDEO_HIGHLIGHTS_ALPHANET_CANARY_UID, open);
+    if ((open && !viaAlphaNet) || (viaAlphaNet && (!process.env.VIDEO_HIGHLIGHTS_ALPHANET_API_KEY || !process.env.VIDEO_HIGHLIGHTS_ALPHANET_CHANNEL_KEY))) {
+      return fail(503, 'video_gateway_unavailable', 'Video gateway temporarily unavailable');
+    }
     const id = randomUUID();
     const doc = jobs.doc(id);
     const input = `highlights/${id}/input.mp4`;
@@ -92,8 +113,13 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
         return fail(409, 'active_job', 'Resume or discard the previous job first');
       }
       if (Number(owner.data()?.startedAt) + 45000 > now) return fail(429, 'rate_limit', 'Please wait before starting another job');
-      tx.create(doc, { uid: account.uid, input, size, event, status: 'upload', phase: 'analyze', attempts: 0, createdAt: now, expiresAt: now + day });
-      tx.set(activity, { job: id, startedAt: now });
+      const quotaDay = new Date(now).toISOString().slice(0, 10);
+      const ownerData = owner.data();
+      const dailyJobs = ownerData?.quotaDay === quotaDay ? Number(ownerData.dailyJobs ?? 0) : 0;
+      if (dailyJobs >= 5) return fail(429, 'daily_limit', 'Daily highlights limit reached');
+      tx.create(doc, { uid: account.uid, input, size, event, status: 'upload', phase: 'analyze', attempts: 0, createdAt: now, expiresAt: now + day,
+        ...(viaAlphaNet ? { transport: 'alphanet' } : {}) });
+      tx.set(activity, { job: id, startedAt: now, quotaDay, dailyJobs: dailyJobs + 1 });
     });
     return res.json(await uploadTicket(id, input, size));
   }
@@ -104,31 +130,28 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
   if (!job || job.uid !== account.uid || job.expiresAt <= now) return fail(404, 'not_found', 'Job not found');
 
   if (action === 'status') {
-    if (job.status === 'queued' || job.status === 'running') {
-      const slot = (await control.get()).data();
-      if (highlightsStallReason(job, slot, id, now)) {
-        job = await db.runTransaction(async tx => {
-          const [current, worker] = await tx.getAll(doc, control);
-          const state = current.data();
-          if (!state || state.uid !== account.uid) return fail(404, 'not_found', 'Job not found');
-          const error = highlightsStallReason(state, worker.data(), id, now);
-          if (!error) return state;
-          const status = 'failed';
-          tx.update(doc, { status, error });
-          if (worker.data()?.active === id) tx.set(control, {});
-          return { ...state, status, error };
-        });
+    job = await expireStalledJob(id, job, doc, db, control, now);
+    if (job.transport === 'alphanet' && ['queued', 'running', 'ready', 'done', 'failed'].includes(job.status)) {
+      const phase = phaseValue(job.phase);
+      const entry = job[phaseField(phase)];
+      if (entry?.accepted) {
+        const taskId = entry.taskId ?? await dispatchToAlphaNet(id, phase);
+        const task = await readVideoGateway(taskId);
+        if (task.status === 'SUCCESS' && (job.status === 'ready' || job.status === 'done')) {
+          const result = await readVideoGatewayResult(taskId);
+          if (result.id !== id || result.phase !== phase || !['ready', 'done'].includes(String(result.status))) {
+            return fail(503, 'video_gateway_unavailable', 'Video gateway temporarily unavailable');
+          }
+          return res.json(result);
+        }
+        if (task.status === 'FAILURE') {
+          return res.json(await jobResponse(id, { ...job, status: 'failed', error: job.error ?? 'gateway_failed' }, bucket, now));
+        }
+        // The gateway's poll may lag an already completed worker update.
+        return res.json({ id, status: task.status === 'IN_PROGRESS' ? 'running' : 'queued', phase, segments: [], error: null });
       }
     }
-    const [downloadUrl] = job.status === 'done' ? await bucket.file(job.output).getSignedUrl({
-      version: 'v4', action: 'read', expires: now + 300000,
-      responseDisposition: 'attachment; filename="video-highlights.mp4"',
-    }) : [];
-    const [previewUrl] = job.status === 'ready' ? await bucket.file(job.input).getSignedUrl({
-      version: 'v4', action: 'read', expires: now + 900000,
-    }) : [];
-    return res.json({ id, status: job.status, phase: job.phase, segments: job.segments ?? [], downloadUrl, previewUrl,
-      error: job.error ?? null, ...(job.status === 'upload' ? { uploadSize: job.size } : {}) });
+    return res.json(await jobResponse(id, job, bucket, now));
   }
 
   if (action === 'retry_upload') {
@@ -140,6 +163,21 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
     return res.json(exists ? { id, alreadyUploaded: true } : await uploadTicket(id, job.input, job.size));
   }
 
+  async function dispatchToAlphaNet(id: string, phase: HighlightsPhase) {
+    const taskId = await submitVideoGateway(id, phase);
+    const field = phaseField(phase);
+    await db.runTransaction(async tx => {
+      const fresh = (await tx.get(doc)).data();
+      if (!fresh || fresh.uid !== account.uid || fresh.expiresAt <= Date.now()) return fail(404, 'not_found', 'Job not found');
+      const entry = fresh[field];
+      if (!entry?.accepted || (entry.taskId && entry.taskId !== taskId)) {
+        return fail(503, 'video_gateway_unavailable', 'Video gateway temporarily unavailable');
+      }
+      if (!entry.taskId) tx.update(doc, { [field]: { ...entry, taskId } });
+    });
+    return taskId;
+  }
+
   if (action === 'submit' || action === 'export' || action === 'discard') {
     if (action === 'submit' && job.status === 'upload') {
       const [meta] = await bucket.file(job.input).getMetadata().catch(error => {
@@ -148,22 +186,28 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
       });
       if (Number(meta.size) !== job.size || meta.contentType !== 'video/mp4') return fail(400, 'invalid_upload', 'Invalid uploaded object');
     }
-    await db.runTransaction(async tx => {
+    const dispatch = await db.runTransaction(async tx => {
       const [fresh, owner] = await tx.getAll(doc, activity);
       const current = fresh.data();
       if (!current || current.uid !== account.uid || current.expiresAt <= now || owner.data()?.job !== id) {
         return fail(404, 'not_found', 'Job not found');
       }
       if (action === 'submit') {
+        if (current.transport === 'alphanet') {
+          if (current.status === 'upload' && !current.alphaAnalyze) {
+            tx.update(doc, { alphaAnalyze: { authorized: true } });
+          }
+          return current.status === 'upload' || (current.alphaAnalyze?.accepted && !current.alphaAnalyze.taskId) ? 'analyze' : null;
+        }
         if (current.status === 'upload') tx.update(doc, { status: 'queued', queuedAt: now });
-        return;
+        return null;
       }
       if (action === 'discard') {
         if (!['ready', 'upload', 'queued'].includes(current.status)) return fail(409, 'job_busy', 'The job cannot be discarded');
         tx.update(doc, { status: 'discarded' });
-        return;
+        return null;
       }
-      if (current.phase === 'export') return;
+      if (current.phase === 'export') return current.transport === 'alphanet' && !current.alphaExport?.taskId ? 'export' : null;
       if (current.status !== 'ready') return fail(409, 'not_ready', 'Wait for analysis to finish');
       const indices = body.indices;
       const segments = getSegments(current.segments);
@@ -172,9 +216,109 @@ async function userAction(req: VercelRequest, res: VercelResponse, body: Record<
         return fail(400, 'invalid_segments', 'Select at least one valid segment');
       }
       const selected = [...new Set(indices as number[])].sort((a, b) => a - b).map(index => segments[index]);
+      if (current.transport === 'alphanet') {
+        if (current.alphaExport) {
+          if (JSON.stringify(current.alphaExport.selected) !== JSON.stringify(selected)) {
+            return fail(409, 'export_pending', 'The original export selection is still pending');
+          }
+        } else {
+          tx.update(doc, { alphaExport: { authorized: true, selected } });
+        }
+        return 'export';
+      }
       tx.update(doc, { status: 'queued', queuedAt: now, phase: 'export', selected, attempts: 0 });
+      return null;
     });
+    if (dispatch) await dispatchToAlphaNet(id, dispatch);
     return res.json({ id });
+  }
+  return fail(400, 'unknown_action', 'Unknown action');
+}
+
+async function expireStalledJob(id: string, job: FirebaseFirestore.DocumentData,
+  doc: FirebaseFirestore.DocumentReference, db: FirebaseFirestore.Firestore,
+  control: FirebaseFirestore.DocumentReference, now: number) {
+  if (job.status !== 'queued' && job.status !== 'running') return job;
+  const slot = (await control.get()).data();
+  if (!highlightsStallReason(job, slot, id, now)) return job;
+  return db.runTransaction(async tx => {
+    const [current, worker] = await tx.getAll(doc, control);
+    const state = current.data();
+    if (!state || state.uid !== job.uid || state.expiresAt <= now) return fail(404, 'not_found', 'Job not found');
+    const error = highlightsStallReason(state, worker.data(), id, now);
+    if (!error) return state;
+    const status = 'failed';
+    tx.update(doc, { status, error });
+    if (worker.data()?.active === id) tx.set(control, {});
+    return { ...state, status, error };
+  });
+}
+
+async function jobResponse(id: string, job: FirebaseFirestore.DocumentData, bucket: ReturnType<typeof services>['bucket'], now: number) {
+  const [downloadUrl] = job.status === 'done' ? await bucket.file(job.output).getSignedUrl({
+    version: 'v4', action: 'read', expires: now + 300000,
+    responseDisposition: 'attachment; filename="video-highlights.mp4"',
+  }) : [];
+  const [previewUrl] = job.status === 'ready' ? await bucket.file(job.input).getSignedUrl({
+    version: 'v4', action: 'read', expires: now + 900000,
+  }) : [];
+  return { id, status: job.status, phase: job.phase, segments: job.segments ?? [], downloadUrl, previewUrl,
+    error: job.error ?? null, ...(job.status === 'upload' ? { uploadSize: job.size } : {}) };
+}
+
+export function gatewayPhaseStatus(job: FirebaseFirestore.DocumentData, phase: HighlightsPhase) {
+  if (job.status === 'discarded') return 'FAILURE';
+  if (phase === 'analyze' && ['ready', 'done'].includes(job.status)) return 'SUCCESS';
+  if (phase === 'analyze' && job.phase === 'export') return 'SUCCESS';
+  if (job.status === 'failed') return 'FAILURE';
+  if (job.status === 'done') return 'SUCCESS';
+  return job.status === 'running' ? 'IN_PROGRESS' : 'QUEUED';
+}
+
+async function gatewayAction(req: VercelRequest, res: VercelResponse, body: Record<string, unknown>) {
+  if (!matchingChannelKey(req)) return fail(401, 'gateway_auth', 'Authentication required');
+  const phase = phaseValue(body.phase);
+  if (typeof body.id !== 'string' || !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(body.id)) {
+    return fail(404, 'not_found', 'Job not found');
+  }
+  const id = body.id;
+  const { db, jobs, control, bucket } = services();
+  const doc = jobs.doc(id);
+  const field = phaseField(phase);
+  const now = Date.now();
+  const validate = (state: FirebaseFirestore.DocumentData | undefined) => {
+    // Authorization is recorded only after the authenticated owner requests this phase.
+    // Keep accepted jobs runnable even if access is narrowed again.
+    if (state?.transport !== 'alphanet' || state.expiresAt <= now || !state[field]?.authorized) {
+      return fail(404, 'not_found', 'Job not found');
+    }
+    return state;
+  };
+  if (body.action === 'alpha_submit') {
+    await db.runTransaction(async tx => {
+      const job = validate((await tx.get(doc)).data());
+      if (job[field].accepted) return;
+      if (phase === 'analyze' ? job.status !== 'upload' : job.status !== 'ready') {
+        return fail(409, 'not_ready', 'Job is not ready for submission');
+      }
+      tx.update(doc, { [field]: { ...job[field], accepted: true }, phase, status: 'queued', queuedAt: now, attempts: 0,
+        ...(phase === 'export' ? { selected: getSegments(job[field].selected) } : {}) });
+    });
+    return res.status(202).json({ request_id: id + '.' + phase });
+  }
+
+  const current = validate((await doc.get()).data());
+  const job = validate(await expireStalledJob(id, current, doc, db, control, now));
+  if (!job[field].accepted) return fail(404, 'not_found', 'Job not found');
+  const status = gatewayPhaseStatus(job, phase);
+  if (body.action === 'alpha_status') {
+    return res.json({ request_id: id + '.' + phase, status,
+      ...(status === 'FAILURE' ? { error: job.error ?? 'discarded' } : {}) });
+  }
+  if (body.action === 'alpha_result') {
+    if (status !== 'SUCCESS') return fail(409, 'not_ready', 'Result unavailable');
+    const result = phase === 'analyze' ? { ...job, status: 'ready', phase } : job;
+    return res.json(await jobResponse(id, result, bucket, now));
   }
   return fail(400, 'unknown_action', 'Unknown action');
 }
@@ -254,9 +398,12 @@ async function workerAction(res: VercelResponse, body: Record<string, unknown>) 
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Cache-Control', 'private, no-store');
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  const artifact = (req.method === 'GET' || req.method === 'HEAD') && req.query.kind === 'video-highlights-result';
+  if (req.method !== 'POST' && !artifact) return res.status(405).json({ error: 'Method not allowed' });
   const body = (req.body ?? {}) as Record<string, unknown>;
   try {
+    if (artifact) return await gatewayAction(req, res, { action: 'alpha_result', id: req.query.id, phase: req.query.phase });
+    if (body.action === 'alpha_submit' || body.action === 'alpha_status') return await gatewayAction(req, res, body);
     if (body.action === 'claim' || body.action === 'finish') {
       const key = Buffer.from(process.env.VIDEO_HIGHLIGHTS_WORKER_KEY ?? '');
       const presented = Buffer.from(bearer(req));

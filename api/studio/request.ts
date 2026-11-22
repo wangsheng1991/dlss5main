@@ -86,7 +86,8 @@ async function submitVideoBeta(
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method === 'POST' && req.body?.kind === 'video-highlights-job') return highlights(req, res);
+  if ((req.method === 'POST' && req.body?.kind === 'video-highlights-job') ||
+      ((req.method === 'GET' || req.method === 'HEAD') && req.query.kind === 'video-highlights-result')) return highlights(req, res);
   try {
     // A secret-protected maintenance call imports recent Firestore records into a newly deployed
     // MailOps instance. It deliberately reuses this function so the project keeps the same number

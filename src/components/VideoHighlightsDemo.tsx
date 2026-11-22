@@ -3,7 +3,7 @@ import { ArrowRight, Clapperboard, Scissors } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { HIGHLIGHTS_MEDIA, HIGHLIGHT_WINDOWS } from '../content/videoHighlights';
 import { STREET_SOURCE } from '../content/videoUnderstanding';
-import { VIDEO_PREVIEW_COPY, videoBetaHref, videoPreviewPath, type VideoPreviewLocale } from '../content/videoStudio';
+import { VIDEO_PREVIEW_COPY, videoPreviewPath, type VideoPreviewLocale } from '../content/videoStudio';
 
 type ClipMode = 'edit' | 'source';
 const EDIT_COUNT = HIGHLIGHT_WINDOWS.filter(clip => clip.editStart !== null).length;
@@ -51,12 +51,12 @@ export default function VideoHighlightsDemo({ locale }: { locale: VideoPreviewLo
   return <>
     <header className="grid gap-8 border-y border-outline-variant/25 py-9 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-11">
       <div>
-        <p className="flex items-center gap-2 text-sm font-semibold text-primary"><Scissors aria-hidden="true" size={17} />{zh ? '视频工作台 · 即将上线' : 'Video Studio · Coming soon'}</p>
+        <p className="flex items-center gap-2 text-sm font-semibold text-primary"><Scissors aria-hidden="true" size={17} />{zh ? '视频工作台 · 登录即可试用' : 'Video Studio · Sign in to try'}</p>
         <h1 className="mt-3 font-headline text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl">{copy.heading}</h1>
         <p className="mt-4 text-lg leading-relaxed text-zinc-200">{copy.lead}</p>
         <p className="mt-3 leading-relaxed text-zinc-400">{copy.details}</p>
-        <a href={videoBetaHref(locale, 'video-highlights')} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-black hover:bg-white">
-          {zh ? '申请高光内测' : 'Apply for the highlights beta'}<ArrowRight size={18} aria-hidden="true" />
+        <a href="#highlights-beta" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-black hover:bg-white">
+          {zh ? '开始高光剪辑' : 'Start finding highlights'}<ArrowRight size={18} aria-hidden="true" />
         </a>
       </div>
       <figure ref={previewFrame} className="min-w-0 scroll-mt-24 overflow-hidden rounded-2xl border border-lime-300/25 bg-[#131a13]">

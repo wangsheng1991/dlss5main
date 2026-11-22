@@ -31,8 +31,8 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
     },
     '/video-highlights': {
       heading: 'AI Video Highlights',
-      lead: 'Find candidate moments in a longer clip, then return to the source to review the cuts. See how that workflow looks in a street-scene demo.',
-      details: 'Video highlights are coming to DLSS 5 Studio. The example below plays a saved edit from our local prototype.',
+      lead: 'Sign in to find moments with people, vehicles or buses in a short video, review the suggested clips and export your selection.',
+      details: 'The demo shows a saved edit from our local prototype. Use your own clip to try the live tool.',
     },
     '/frame-interpolation': {
       heading: 'Video Frame Interpolation',
@@ -63,8 +63,8 @@ export const VIDEO_PREVIEW_COPY: Record<VideoPreviewLocale, Record<VideoPreviewP
     },
     '/video-highlights': {
       heading: 'AI 视频高光剪辑',
-      lead: '从一段视频里找出候选片段，再回到原片核对起止点。先用这段路口实测看工作流。',
-      details: '精彩片段提取即将加入 DLSS 5 Studio。这里可以播放本地原型保存的剪辑结果。',
+      lead: '登录后上传短片，找出车辆、人物或公交车出现的片段，回看确认后导出。',
+      details: '下方路口视频是本地原型保存的示例。你也可以用自己的短片试用线上工具。',
     },
     '/frame-interpolation': {
       heading: 'AI 视频插帧',
@@ -89,5 +89,6 @@ export const videoPreviewAlternates = (path: VideoPreviewPath, baseUrl = SITE_UR
 export const videoPreviewTitle = (path: VideoPreviewPath, locale: VideoPreviewLocale) => {
   const heading = VIDEO_PREVIEW_COPY[locale][path].heading;
   if (path === '/video-studio') return locale === 'zh' ? `${heading}｜在线抽帧、对比与视频内测` : `${heading} — Browser Video Tools & Beta`;
+  if (path === '/video-highlights') return locale === 'zh' ? 'AI 视频高光剪辑在线试用｜DLSS 5 Studio' : 'AI Video Highlights Online | DLSS 5 Studio';
   return locale === 'zh' ? `${heading}即将上线｜DLSS 5 Studio` : `${heading} Coming Soon | DLSS 5 Studio`;
 };

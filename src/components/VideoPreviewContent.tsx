@@ -87,7 +87,10 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
 
       {(hub || page === '/video-upscaler') && <VideoUpscaleLabLink locale={locale} />}
       {page === '/frame-interpolation' && <VideoInterpolationProof locale={locale} />}
-      {page === '/video-highlights' && application}
+      {page === '/video-highlights' && <div id="highlights-beta" className="scroll-mt-24">
+        {application ?? <Link to={'/login?next=' + encodeURIComponent(videoPreviewPath(page, locale) + '#highlights-beta')}
+          className="mt-4 inline-block text-primary underline">{zh ? '登录后试用高光剪辑' : 'Sign in to try video highlights'}</Link>}
+      </div>}
 
       <section aria-labelledby="video-tools-heading" className="mt-12">
         <h2 id="video-tools-heading" className="font-headline text-2xl font-bold text-white">{zh ? '视频工具预告' : 'Upcoming video tools'}</h2>
@@ -99,11 +102,11 @@ export function VideoPreviewContent({ page, locale, application }: Props) {
             if (hub && (highlights || path === '/video-understanding')) return <Link key={path} to={videoPreviewPath(path, locale)}
               className="group grid overflow-hidden rounded-2xl border border-lime-300/30 bg-[#162013] transition-colors hover:border-lime-300 sm:col-span-2 md:grid-cols-2 lg:col-span-3">
               <div className="self-center p-6 sm:p-8">
-                <p className="flex items-center gap-2 text-sm font-semibold text-lime-300"><Icon aria-hidden="true" size={18} />{zh ? '内测预告 · 实测演示' : 'Beta preview · Recorded demo'}</p>
+                <p className="flex items-center gap-2 text-sm font-semibold text-lime-300"><Icon aria-hidden="true" size={18} />{highlights ? (zh ? '登录即可试用' : 'Sign in to try') : (zh ? '内测预告 · 实测演示' : 'Beta preview · Recorded demo')}</p>
                 <h3 className="mt-3 font-headline text-3xl font-bold text-white">{tool.heading}</h3>
                 <p className="mt-2 max-w-lg leading-relaxed text-zinc-200">{tool.lead}</p>
                 <span className="mt-5 inline-flex items-center gap-2 font-semibold text-lime-300 group-hover:underline">
-                  {highlights ? (zh ? '查看高光剪辑' : 'Watch the highlight edit') : (zh ? '查看路口演示' : 'See the street-scene demo')}
+                  {highlights ? (zh ? '试用高光剪辑' : 'Try video highlights') : (zh ? '查看路口演示' : 'See the street-scene demo')}
                   <ArrowRight aria-hidden="true" size={17} />
                 </span>
               </div>
