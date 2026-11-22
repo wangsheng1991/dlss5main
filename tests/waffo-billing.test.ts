@@ -90,6 +90,42 @@ test('Waffo checkout intent persists the server-owned buyer, product and environ
   assert.equal(stored?.environment, 'prod'); assert.equal(stored?.plan, 'pro');
 });
 
+test('Production Waffo purchase tolerates an unapproved PayPal sandbox binding while preserving its history', async () => {
+  const previous = { VERCEL_ENV: process.env.VERCEL_ENV, PAYPAL_ENV: process.env.PAYPAL_ENV };
+  process.env.VERCEL_ENV = 'production'; process.env.PAYPAL_ENV = 'sandbox';
+  try {
+    const template = await fixture(), db = new MemoryFirestore();
+    const legacy = { paypalSubscriptionId: 'sandbox-never-approved', paypalSubscriptionStatus: 'APPROVAL_PENDING', paypalPayerId: 'retained-payer' };
+    db.seed('users/alice', { tier: 'free', credits: 10, bonusCredits: 17, ...legacy });
+    const store = new WaffoBillingStore(db as unknown as Firestore);
+    const intent = await store.createIntent({ uid: 'alice', plan: 'pro', productId: 'product-pro', environment: 'prod' });
+    const order = { ...template.order, orderMerchantExternalId: intent.id };
+    const event = { ...template.event(), data: { ...template.event().data, orderMerchantExternalId: intent.id } };
+    assert.equal((await store.apply(event, order)).granted, true);
+    assert.equal(db.read('users/alice').credits, 500);
+    for (const [key, value] of Object.entries(legacy)) assert.equal(db.read('users/alice')[key], value);
+    db.seed('users/alice', { ...db.read('users/alice'), credits: 499 });
+    assert.equal((await store.apply(event, order)).status, 'duplicate');
+    assert.equal(db.read('users/alice').credits, 499); assert.equal(db.entries('credit_ledger').length, 1);
+  } finally { for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } }
+});
+
+test('Production Waffo refuses active, approved and unverified PayPal bindings without transaction writes', async () => {
+  const previous = { VERCEL_ENV: process.env.VERCEL_ENV, PAYPAL_ENV: process.env.PAYPAL_ENV };
+  process.env.VERCEL_ENV = 'production'; process.env.PAYPAL_ENV = 'sandbox';
+  try {
+    for (const ownStatus of ['ACTIVE', 'APPROVED', 'unknown', undefined]) {
+      const { db, store, order, event } = await fixture();
+      db.seed('users/alice', { ...db.read('users/alice'), paypalSubscriptionId: 'unverified-legacy', subscriptionStatus: 'APPROVAL_PENDING', ...(ownStatus === undefined ? {} : { paypalSubscriptionStatus: ownStatus }) });
+      const before = structuredClone([...db.records]);
+      await assert.rejects(store.createIntent({ uid: 'alice', plan: 'pro', productId: 'product-pro', environment: 'prod' }), (error: unknown) => (error as {code?: string}).code === 'waffo_provider_conflict');
+      assert.deepEqual([...db.records], before);
+      await assert.rejects(store.apply(event(), order), (error: unknown) => (error as {code?: string}).code === 'waffo_provider_conflict');
+      assert.deepEqual([...db.records], before);
+    }
+  } finally { for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } }
+});
+
 test('Waffo concurrent checkout retries reuse one pending intent per account', async () => {
   const { db, store, intent } = await fixture();
   const attempts = await Promise.all(Array.from({ length: 8 }, () => store.createIntent({ uid: 'alice', plan: 'pro', productId: 'product-pro', environment: 'prod' })));

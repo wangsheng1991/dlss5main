@@ -1,3 +1,4 @@
+import { legacyBindingBlocksWaffo } from './payment-policy.js';
 import { createHash, randomUUID } from 'node:crypto';
 import type { Firestore } from 'firebase-admin/firestore';
 import type { WebhookEvent } from '@waffo/pancake-ts';
@@ -67,12 +68,7 @@ export class WaffoBillingStore {
       const user = await tx.get(userRef);
       if (!user.exists) throw new ApiError(404, 'account_missing', 'Account is not initialized');
       const account = user.data()!;
-      for (const provider of ['stripe', 'paypal', 'dodo']) {
-        const status = account[`${provider}SubscriptionStatus`] ?? account.subscriptionStatus;
-        if (account[`${provider}SubscriptionId`] && !['canceled', 'cancelled', 'expired', 'incomplete_expired'].includes(status)) {
-          return fail('waffo_provider_conflict', 'An existing subscription must be resolved before checkout');
-        }
-      }
+      if (legacyBindingBlocksWaffo(account, input.environment)) return fail('waffo_provider_conflict', 'An existing subscription must be resolved before checkout');
       if (account.waffoSubscriptionId && !(account.waffoSubscriptionStatus === 'canceled'
         && seconds(account.currentPeriodEnd) > 0 && seconds(account.currentPeriodEnd) <= Math.floor(now / 1000))) {
         return fail('waffo_subscription_conflict', 'An existing Waffo subscription must expire before another checkout');
@@ -134,12 +130,7 @@ export class WaffoBillingStore {
       if (!user.exists) throw new ApiError(404, 'account_missing', 'Account is not initialized');
       const account = user.data()!;
       // Missing status on an existing external binding is treated as active, requiring review.
-      for (const provider of ['stripe', 'paypal', 'dodo']) {
-        const status = account[`${provider}SubscriptionStatus`] ?? account.subscriptionStatus;
-        if (account[`${provider}SubscriptionId`] && !['canceled', 'cancelled', 'expired', 'incomplete_expired'].includes(status)) {
-          return fail('waffo_provider_conflict', 'An existing subscription must be resolved before Waffo can update the account');
-        }
-      }
+      if (legacyBindingBlocksWaffo(account, intent.environment)) return fail('waffo_provider_conflict', 'An existing subscription must be resolved before Waffo can update the account');
       const differentSubscription = nonempty(account.waffoSubscriptionId) && account.waffoSubscriptionId !== order.id;
       const retired = await tx.get(this.db.doc(`waffo_retired_subscriptions/${hash(order.id)}`));
       const isRetired = retired.exists;

@@ -14,6 +14,7 @@ import dodoWebhook from './_handlers/dodo-webhook.js';
 import waffoCheckout from './_handlers/waffo-checkout.js';
 import waffoWebhook from './_handlers/waffo-webhook.js';
 import waffoMonitor from './_handlers/waffo-monitor.js';
+import { disabledProductionBillingRoute } from '../../server/payment-policy.js';
 
 /**
  * One serverless function serves the whole `/api/billing/*` surface, because a deployment may only
@@ -43,5 +44,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const route = (Array.isArray(value) ? value[0] : String(value || '')).replace(/\/+$/, '');
   const selected = routes[route];
   if (!selected) return res.status(404).json({ error: 'Unknown billing route' });
+  if (disabledProductionBillingRoute(route)) {
+    res.setHeader('Cache-Control', 'no-store');
+    // Do not let a legacy/test notification mutate production entitlements or
+    // provoke endless provider retries after retiring the old payment lane.
+    if (route === 'webhook' || route.endsWith('-webhook')) return res.status(200).json({ received: true, handled: false, reason: 'provider_disabled_in_production' });
+    return res.status(410).json({ error: 'This payment provider is no longer offered. Use Waffo on the pricing page.', code: 'provider_disabled_in_production' });
+  }
   return selected(req, res);
 }

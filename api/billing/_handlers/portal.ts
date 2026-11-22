@@ -2,7 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { fail, requireUser } from '../../_lib/auth.js';
 import { siteOrigin, stripe } from '../../_lib/stripe.js';
 import { database } from '../../../server/admin.js';
-import { waffo, waffoStoreId, waffoCheckoutEnabled } from '../../_lib/waffo.js';
+import { waffo, waffoStoreId, waffoCheckoutEnabled, waffoEnvironment } from '../../_lib/waffo.js';
+import { legacyPaymentsAllowed } from '../../../server/payment-policy.js';
 import { BillingStore } from '../../../server/billing-store.js';
 
 /** Opens the authenticated buyer’s own billing provider portal. */
@@ -13,10 +14,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const store = new BillingStore(database());
     const bound = await store.account(user.uid);
     if (bound.provider === 'waffo' || (!bound.provider && waffoCheckoutEnabled())) {
+      if (!legacyPaymentsAllowed() && waffoEnvironment() !== 'prod') return res.status(503).json({ error: 'Production billing is not configured', code: 'waffo_not_configured' });
       const { portalUrl } = await waffo().auth.createCustomerPortalLink({ storeId: waffoStoreId(), buyerIdentity: user.uid });
       res.setHeader('Cache-Control', 'no-store');
       return res.status(200).json({ url: portalUrl });
     }
+    if (!legacyPaymentsAllowed()) return res.status(410).json({ error: 'Legacy payment management is disabled. Contact billing support if an old account needs review.', code: 'provider_disabled_in_production' });
     const customer = await store.customer(user.uid);
     if (!customer) {
       // A PayPal buyer has no Stripe customer: send them to PayPal instead of a dead end.

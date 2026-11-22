@@ -7,7 +7,7 @@ export const waffoEnvironment = (): 'prod' | 'test' => process.env.WAFFO_ENVIRON
 export const waffoStoreId = () => String(process.env.WAFFO_STORE_ID || '').trim();
 export const waffoProductId = (plan: PurchasablePlanId) => String(process.env[`WAFFO_PRODUCT_${plan.toUpperCase()}`] || '').trim();
 export const waffoConfigured = () => Boolean(process.env.WAFFO_MERCHANT_ID && process.env.WAFFO_PRIVATE_KEY && waffoStoreId());
-export const waffoCheckoutEnabled = () => waffoConfigured() && process.env.WAFFO_CHECKOUT_ENABLED === 'true' && Boolean(waffoProductId('pro') && waffoProductId('team'));
+export const waffoCheckoutEnabled = () => (process.env.VERCEL_ENV !== 'production' || waffoEnvironment() === 'prod') && waffoConfigured() && process.env.WAFFO_CHECKOUT_ENABLED === 'true' && Boolean(waffoProductId('pro') && waffoProductId('team'));
 export function waffo() {
   if (!waffoConfigured()) throw new ApiError(503, 'waffo_not_configured', 'Checkout is not configured yet');
   return new WaffoPancake({ merchantId: process.env.WAFFO_MERCHANT_ID!.trim(), privateKey: process.env.WAFFO_PRIVATE_KEY!.trim(), fetch: async (url, init) => {

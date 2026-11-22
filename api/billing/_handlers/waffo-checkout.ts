@@ -16,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!isPurchasablePlan(plan)) return res.status(400).json({ error: 'Choose pro or team' });
     if (!waffoCheckoutEnabled()) return res.status(503).json({ error: 'Checkout is not available yet', code: 'waffo_not_configured' });
     const account = await new BillingStore(database()).account(user.uid);
-    if (account.subscriptionId && ['active', 'trialing', 'past_due', 'canceling'].includes(account.subscriptionStatus)) return res.status(409).json({ error: 'Manage your existing subscription before purchasing again', code: 'subscription_exists' });
+    if (account.provider === 'waffo' && account.subscriptionId && ['active', 'trialing', 'past_due', 'canceling'].includes(account.subscriptionStatus)) return res.status(409).json({ error: 'Manage your existing subscription before purchasing again', code: 'subscription_exists' });
     if ((await outstandingWaffoOrders(user.uid)).length) return res.status(409).json({ error: 'An earlier order still needs attention. Open Manage billing to finish or cancel it.', code: 'existing_provider_order' });
     const product = await verifiedWaffoProduct(plan);
     const intent = await new WaffoBillingStore(database()).createIntent({ uid: user.uid, plan, productId: product.id, environment: waffoEnvironment() });

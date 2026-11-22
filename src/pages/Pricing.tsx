@@ -13,6 +13,7 @@ export default function Pricing() {
   const [plans, setPlans] = useState<Record<string, Plan> | null>(null);
   const [contact, setContact] = useState(SUPPORT_EMAIL);
   const [billingEnabled, setBillingEnabled] = useState(false);
+  const [legacyPaymentsEnabled, setLegacyPaymentsEnabled] = useState(false);
   const [paypal, setPaypal] = useState<{ enabled: boolean; environment: string } | null>(null);
   const [waffo, setWaffo] = useState<{ enabled: boolean; environment: string } | null>(null);
   const [dodo, setDodo] = useState<{ enabled: boolean; environment: string } | null>(null);
@@ -21,8 +22,8 @@ export default function Pricing() {
   const paypalCancelled = params.get('paypal') === 'cancelled';
   const cancelled = params.get('checkout') === 'cancelled' || paypalCancelled;
   useEffect(() => {
-    fetch('/api/billing/plans').then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
-      setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setBillingEnabled(Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null); setWaffo(d.waffo || null);
+    fetch('/api/billing/plans?catalog=waffo-only-v5', { cache: 'no-store' }).then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
+      setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setLegacyPaymentsEnabled(d.legacyPaymentsEnabled === true); setBillingEnabled(d.legacyPaymentsEnabled === true && Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null); setWaffo(d.waffo || null);
     }).catch(() => setPlans(null));
   }, []);
   const paidWaffoExpired = Boolean(profile?.waffoSubscriptionId) && (profile?.currentPeriodEnd || 0) <= Date.now() / 1000;
@@ -98,12 +99,12 @@ export default function Pricing() {
         : current === id ? <span className="block text-center mt-8 py-3 rounded-lg border border-outline-variant/30 text-zinc-400">Active</span>
         : !user ? <Link to="/login" className="block text-center mt-8 py-3 rounded-lg bg-primary text-black font-bold">Sign in to subscribe</Link>
         : <div className="mt-8 space-y-3">
-          {waffo?.enabled && !legacyBound ? <button onClick={() => void chooseWaffo(id)} disabled={Boolean(busy)} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Subscribe to ${p.name}${waffo.environment === 'test' ? ' (test)' : ''}`}</button> : billingEnabled
+          {waffo?.enabled && (!legacyPaymentsEnabled || !legacyBound) ? <button onClick={() => void chooseWaffo(id)} disabled={Boolean(busy)} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Subscribe to ${p.name}${waffo.environment === 'test' ? ' (test)' : ''}`}</button> : billingEnabled
             ? <button onClick={() => void choose(id)} disabled={busy === id} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `${subscribed ? 'Switch to' : 'Subscribe to'} ${p.name}`}</button>
             : <a href={mailto(id)} className="block text-center py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-black">Apply by email</a>}
           {/* A second checkout lane: buyers who prefer PayPal never touch the card form. */}
-          {paypal?.enabled && !waffo?.enabled && !subscribed && <button onClick={() => void choosePaypal(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with PayPal${paypal.environment === 'sandbox' ? ' (sandbox)' : ''}`}</button>}
-          {dodo?.enabled && !waffo?.enabled && !subscribed && <button onClick={() => void chooseDodo(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with Dodo${dodo.environment === 'test_mode' ? ' (test)' : ''}`}</button>}
+          {legacyPaymentsEnabled && paypal?.enabled && !waffo?.enabled && !subscribed && <button onClick={() => void choosePaypal(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with PayPal${paypal.environment === 'sandbox' ? ' (sandbox)' : ''}`}</button>}
+          {legacyPaymentsEnabled && dodo?.enabled && !waffo?.enabled && !subscribed && <button onClick={() => void chooseDodo(id)} disabled={busy === id} className="w-full py-3 rounded-lg border border-outline-variant/30 text-zinc-200 font-bold hover:border-primary/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Pay with Dodo${dodo.environment === 'test_mode' ? ' (test)' : ''}`}</button>}
         </div>}
     </article>)}</div>}
     <p className="text-center text-xs text-zinc-500 mt-10">Subscriptions renew monthly and can be cancelled any time; unused credits do not roll over. Questions? <a href={`mailto:${contact}`} className="text-primary underline">{contact}</a></p>
