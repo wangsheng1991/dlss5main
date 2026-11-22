@@ -26,5 +26,6 @@ import './pancake-remediation.test';
 import './waffo-billing.test';
 import './waffo-reconciliation.test';
 import './waffo-reconciliation-collector.test';
+import './waffo-monitor.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

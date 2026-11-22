@@ -257,6 +257,9 @@
   "functions": {
     "api/image-edit/samples.ts": {
       "maxDuration": 60
+    },
+    "api/billing/[route].ts": {
+      "maxDuration": 300
     }
   },
   "redirects": [

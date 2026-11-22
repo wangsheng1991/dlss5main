@@ -13,3 +13,8 @@ destination_address = "wustwangsheng@gmail.com"
 [vars]
 STUDIO_NOTIFY_TO = "wustwangsheng@gmail.com"
 STUDIO_FROM = "studio@dlss5nvidia.com"
+
+BILLING_MONITOR_URL = "https://www.dlss5nvidia.com/api/billing/waffo-monitor"
+
+[triggers]
+crons = ["*/10 * * * *"]

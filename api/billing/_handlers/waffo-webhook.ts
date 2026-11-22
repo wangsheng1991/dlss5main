@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { createHash } from 'node:crypto';
 import { rawBody } from '../../_lib/stripe.js';
 import { verifyWaffoEvent, readWaffoOrder } from '../../_lib/waffo.js';
 import { WaffoBillingStore } from '../../../server/waffo-billing-store.js';
@@ -12,8 +13,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const order = await readWaffoOrder(event);
     const result = await new WaffoBillingStore(database()).apply(event, order);
+    // Operational failure state is separate from immutable financial receipts.
+    try {
+      const ref = database().doc(`waffo_webhook_failures/${createHash('sha256').update(`${event.eventType}:${event.id}`).digest('hex')}`);
+      if ((await ref.get()).exists) await ref.set({ resolved: true, resolvedAt: Date.now() }, { merge: true });
+    } catch { console.error('Unable to resolve webhook monitor record'); }
     return res.status(200).json({ received: true, ...result });
   } catch (e) {
+    try {
+      await database().doc(`waffo_webhook_failures/${createHash('sha256').update(`${event.eventType}:${event.id}`).digest('hex')}`).set({
+        orderId: event.data.orderId, eventId: event.id, eventType: event.eventType,
+        environment: event.mode, storeId: event.storeId, resolved: false, lastFailedAt: Date.now(),
+      }, { merge: true });
+    } catch { console.error('Unable to persist webhook monitor failure'); }
     console.error('Waffo webhook processing failed', { eventId: event.id, type: (e as Error).name });
     return res.status(500).json({ error: 'Webhook processing failed; delivery must be retried' });
   }

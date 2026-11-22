@@ -53,7 +53,32 @@ function buildRuntimeBody(fields, receivedAt) {
   ].join('\n');
 }
 
+async function sendBilling(env, subject, text) {
+  await env.STUDIO_EMAIL.send({
+    to: env.STUDIO_NOTIFY_TO,
+    from: { email: env.STUDIO_FROM, name: 'DLSS5 billing alerts' },
+    replyTo: env.STUDIO_NOTIFY_TO,
+    subject: clean(subject, 180), text: text.slice(0, 16000),
+  });
+}
+
 export default {
+  async scheduled(controller, env, ctx) {
+    ctx.waitUntil((async () => {
+      try {
+        if (!env.BILLING_MONITOR_SECRET || !env.BILLING_MONITOR_URL) throw new Error('Monitor configuration missing');
+        const response = await fetch(env.BILLING_MONITOR_URL, {
+          headers: { authorization: `Bearer ${env.BILLING_MONITOR_SECRET}` },
+          signal: AbortSignal.timeout(210000), redirect: 'error',
+        });
+        if (!response.ok || (await response.json()).ok !== true) throw new Error('Monitor endpoint failed');
+      } catch {
+        // Independent of Vercel/Firestore: an outage must not silently disable alerts.
+        await sendBilling(env, '[DLSS5 billing] MONITOR UNAVAILABLE',
+          `The scheduled billing check could not complete.\nTime: ${new Date().toISOString()}\nCheck Vercel /api/billing/waffo-monitor and billing_monitor_state/prod.\nNo automatic balance changes were made. This warning repeats every 10 minutes while the outage persists.`);
+      }
+    })());
+  },
   async fetch(request, env) {
     if (request.method !== 'POST') {
       return new Response('method not allowed', { status: 405 });
@@ -74,6 +99,14 @@ export default {
       return new Response('bad json', { status: 400 });
     }
 
+    if (payload?.kind === 'billing-alert') {
+      const subject = clean(payload.subject, 180);
+      const text = typeof payload.text === 'string' ? payload.text : '';
+      if (!subject.startsWith('[DLSS5 billing]') || !text || !clean(payload.incidentId, 200)) return Response.json({ ok: false }, { status: 400 });
+      try { await sendBilling(env, subject, text); }
+      catch { return Response.json({ ok: false, error: 'Billing email not accepted' }, { status: 502 }); }
+      return Response.json({ ok: true, at: new Date().toISOString() });
+    }
     const runtime = payload?.kind === 'runtime';
     const fields = {
       email: clean(payload?.email, MAX.email),

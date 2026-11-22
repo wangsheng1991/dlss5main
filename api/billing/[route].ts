@@ -13,6 +13,7 @@ import dodoCheckout from './_handlers/dodo-checkout.js';
 import dodoWebhook from './_handlers/dodo-webhook.js';
 import waffoCheckout from './_handlers/waffo-checkout.js';
 import waffoWebhook from './_handlers/waffo-webhook.js';
+import waffoMonitor from './_handlers/waffo-monitor.js';
 
 /**
  * One serverless function serves the whole `/api/billing/*` surface, because a deployment may only
@@ -34,6 +35,7 @@ const routes: Record<string, (req: VercelRequest, res: VercelResponse) => unknow
   'dodo-webhook': dodoWebhook,
   'waffo-checkout': waffoCheckout,
   'waffo-webhook': waffoWebhook,
+  'waffo-monitor': waffoMonitor,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
