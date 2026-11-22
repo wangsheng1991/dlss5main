@@ -1,5 +1,6 @@
 import { WaffoPancake, verifyWebhook, type WebhookEvent, type WebhookEventData } from '@waffo/pancake-ts';
 import { ApiError } from '../../server/errors.js';
+import type { VerifiedWaffoOrder } from '../../server/waffo-billing-store.js';
 import { PLANS, type PurchasablePlanId } from '../../src/config/plans.js';
 
 export const waffoEnvironment = (): 'prod' | 'test' => process.env.WAFFO_ENVIRONMENT === 'prod' ? 'prod' : 'test';
@@ -32,7 +33,7 @@ export async function verifiedWaffoProduct(plan: PurchasablePlanId) {
   return product;
 }
 export async function readWaffoOrder(event: WebhookEvent<WebhookEventData>) {
-  const result = await waffo().graphql.query<{ subscriptionOrder: { id: string; storeId: string; testMode: boolean; status: string; merchantProvidedBuyerIdentity: string; orderMerchantExternalId: string; subscriptionProduct: { id: string }; billingPeriod: string; currentPeriodEnd?: string; currentPeriodNumber?: number } }>({ query: 'query($id:String!) { subscriptionOrder(id:$id) { id storeId testMode status merchantProvidedBuyerIdentity orderMerchantExternalId subscriptionProduct { id } billingPeriod currentPeriodEnd currentPeriodNumber } }', variables: { id: event.data.orderId } });
+  const result = await waffo().graphql.query<{ subscriptionOrder: VerifiedWaffoOrder | null }>({ query: 'query($id:String!) { subscriptionOrder(id:$id) { id storeId testMode status merchantProvidedBuyerIdentity orderMerchantExternalId subscriptionProduct { id } billingPeriod currentPeriodEnd currentPeriodNumber cancelEffectiveAt cancelEffectiveMode } }', variables: { id: event.data.orderId } });
   const order = result.data?.subscriptionOrder;
   if (!order || order.id !== event.data.orderId || order.storeId !== waffoStoreId() || order.testMode !== (waffoEnvironment() === 'test')) throw new ApiError(409, 'waffo_order_scope', 'Payment order could not be verified');
   return order;

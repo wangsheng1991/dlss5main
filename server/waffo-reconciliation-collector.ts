@@ -15,7 +15,7 @@ type ProviderMoney = { amount?: string; currency?: string; display?: string };
 type ProviderPayment = { id?: string; orderId?: string; status?: string; testMode?: boolean; periodNumber?: number | null; amount?: ProviderMoney | null; pspAmountDetails?: ProviderMoney | null };
 type ProviderRefund = { id?: string; paymentId?: string; status?: string; testMode?: boolean; amount?: ProviderMoney | null; pspAmountDetails?: ProviderMoney | null };
 
-const ORDER_QUERY = 'query($id:String!) { subscriptionOrder(id:$id) { id storeId testMode status merchantProvidedBuyerIdentity orderMerchantExternalId subscriptionProduct { id } billingPeriod currentPeriodEnd currentPeriodNumber } }';
+const ORDER_QUERY = 'query($id:String!) { subscriptionOrder(id:$id) { id storeId testMode status merchantProvidedBuyerIdentity orderMerchantExternalId subscriptionProduct { id } billingPeriod currentPeriodEnd currentPeriodNumber cancelEffectiveAt cancelEffectiveMode } }';
 const PAYMENT_QUERY = 'query($storeId:String!,$id:String!,$limit:Int,$offset:Int) { payments(storeId:$storeId,filter:{orderId:{eq:$id}},limit:$limit,offset:$offset) { id orderId status testMode periodNumber amount { amount currency display } pspAmountDetails { amount currency } } }';
 const REFUND_QUERY = 'query($paymentId:String!,$limit:Int,$offset:Int) { refunds(filter:{paymentId:{eq:$paymentId}},limit:$limit,offset:$offset) { id paymentId status testMode amount { amount currency display } pspAmountDetails { amount currency } } }';
 const userFields = [

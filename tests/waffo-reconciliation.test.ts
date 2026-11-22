@@ -48,6 +48,23 @@ function refundedSnapshot(): WaffoReconciliationSnapshot {
   return input;
 }
 
+function appendPeriod(input: WaffoReconciliationSnapshot, orderId: string, number: number, paymentId: string, granted: boolean) {
+  const key = `${orderId}:${number}`;
+  input.successfulPayments.records.push({ ...input.successfulPayments.records[0], orderId, paymentId, periodNumber: number });
+  input.firestore.waffo_payments!.records.push({ id: hash(paymentId), data: { ...input.firestore.waffo_payments!.records[0].data, subscriptionId: orderId, paymentId, periodKey: key, granted, refundedAmount: 0 } });
+  input.firestore.waffo_periods!.records.push({ id: hash(key), data: { ...input.firestore.waffo_periods!.records[0].data, subscriptionId: orderId, paymentId, periodKey: key, periodNumber: number, granted } });
+  input.firestore.billing_orders!.records.push({ id: `waffo_${hash(key)}`, data: { ...input.firestore.billing_orders!.records[0].data, subscriptionId: orderId, paymentId, periodKey: key, credits: granted ? 490 : 0, stale: !granted } });
+  input.firestore.credit_ledger!.records.push({ id: `waffo_${hash(key)}`, data: { ...input.firestore.credit_ledger!.records[0].data, subscriptionId: orderId, periodKey: key, units: granted ? 490 : 0, delta: granted ? 490 : 0, balanceBefore: granted ? 10 : 0, balanceAfter: granted ? 500 : 0 } });
+}
+
+function currentUngrantSnapshot(): WaffoReconciliationSnapshot {
+  const input = snapshot();
+  appendPeriod(input, 'order-1', 2, 'payment-2', false);
+  input.orders.records[0].currentPeriodNumber = 2;
+  Object.assign(input.firestore.users!.records[0].data, { credits: 0, currentPeriodEnd: Math.floor(input.capturedAt / 1000) - 1 });
+  return input;
+}
+
 test('Waffo reconciliation passes a complete provider-payment and local-receipt chain', () => {
   const input = snapshot(), before = structuredClone(input);
   const report = reconcileWaffoSnapshot(input);
@@ -55,6 +72,44 @@ test('Waffo reconciliation passes a complete provider-payment and local-receipt 
   assert.deepEqual(report.issues, []); assert.deepEqual(report.scope, input.scope);
   assert.deepEqual(report.counts, { orders: 1, payments: 1, refunds: 0, users: 1 });
   assert.deepEqual(input, before, 'read-only reconciliation must not mutate the evidence snapshot');
+});
+
+test('Waffo reconciliation flags an ungranted current paid period even when its stale zero-delta chain is complete', () => {
+  expectIssues(currentUngrantSnapshot(), 'current_paid_period_ungranted');
+});
+
+test('Waffo reconciliation permits legitimate stale history and an old subscription superseded by a paid replacement', () => {
+  const historical = currentUngrantSnapshot();
+  appendPeriod(historical, 'order-1', 3, 'payment-3', true);
+  historical.orders.records[0].currentPeriodNumber = 3;
+  Object.assign(historical.firestore.users!.records[0].data, { credits: 500, waffoAllowanceKey: 'order-1:3', waffoLastPeriod: 3, currentPeriodEnd: Math.floor(historical.capturedAt / 1000) + 86_400 });
+  const retired = currentUngrantSnapshot(), newIntentId = `wpi_${'b'.repeat(32)}`;
+  retired.scope.orderIds.push('order-2');
+  retired.orders.records.push({ ...retired.orders.records[0], id: 'order-2', orderMerchantExternalId: newIntentId, currentPeriodNumber: 1 });
+  retired.firestore.waffo_checkout_intents!.records.push({ id: newIntentId, data: { ...retired.firestore.waffo_checkout_intents!.records[0].data, id: newIntentId } });
+  appendPeriod(retired, 'order-2', 1, 'replacement-payment', true);
+  Object.assign(retired.firestore.users!.records[0].data, { credits: 500, waffoSubscriptionId: 'order-2', waffoAllowanceKey: 'order-2:1', waffoLastPeriod: 1, currentPeriodEnd: Math.floor(retired.capturedAt / 1000) + 86_400 });
+  for (const input of [historical, retired]) {
+    const report = reconcileWaffoSnapshot(input);
+    assert.equal(report.status, 'pass', JSON.stringify(report.issues));
+    assert.ok(!report.issues.some(issue => issue.code === 'current_paid_period_ungranted'));
+  }
+});
+
+test('Waffo reconciliation excludes settled full refunds from missing grants and requires complete refund coverage', () => {
+  const input = currentUngrantSnapshot(), refundId = 'ungranted-payment-fully-refunded', key = 'order-1:2';
+  const common = { uid: 'alice', provider: 'waffo', plan: 'pro', subscriptionId: 'order-1', createdAt: input.capturedAt };
+  input.successfulRefunds.records.push({ refundId, paymentId: 'payment-2', orderId: 'order-1', amountCents: 1900, currency: 'USD', environment: 'test', storeId: 'store-fixture' });
+  input.firestore.waffo_payments!.records.find(row => row.data.paymentId === 'payment-2')!.data.refundedAmount = 1900;
+  input.firestore.waffo_refunds!.records.push({ id: hash(refundId), data: { ...common, paymentId: 'payment-2', amountTotal: 1900, periodKey: key, full: true } });
+  input.firestore.billing_orders!.records.push({ id: `waffo_${hash(`refund:${refundId}`)}`, data: { ...common, kind: 'refund', paymentId: 'payment-2', amountTotal: 1900, currency: 'usd', periodKey: key, credits: 0, full: true } });
+  input.firestore.credit_ledger!.records.push({ id: `waffo_${hash(`refund:${refundId}`)}`, data: { ...common, kind: 'refund', units: 0, delta: 0, bucket: 'monthly', periodKey: key, balanceBefore: 0, balanceAfter: 0 } });
+  const settled = reconcileWaffoSnapshot(input);
+  assert.equal(settled.status, 'pass', JSON.stringify(settled.issues));
+  input.successfulRefunds = { complete: false, records: [] };
+  const incomplete = reconcileWaffoSnapshot(input);
+  assert.equal(incomplete.status, 'incomplete', JSON.stringify(incomplete.issues)); assert.equal(incomplete.complete, false);
+  assert.ok(!incomplete.issues.some(issue => issue.code === 'current_paid_period_ungranted' && issue.severity === 'error'));
 });
 
 test('Waffo reconciliation detects a successful payment missing a local receipt, period or ledger', () => {

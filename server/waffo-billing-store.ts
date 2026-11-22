@@ -12,6 +12,7 @@ export type VerifiedWaffoOrder = {
   merchantProvidedBuyerIdentity: string; orderMerchantExternalId: string;
   subscriptionProduct: { id: string }; billingPeriod: string;
   currentPeriodEnd?: string | number | null; currentPeriodNumber?: number | null;
+  cancelEffectiveAt?: string | null; cancelEffectiveMode?: 'period_end' | 'now' | null;
 };
 export type WaffoApplyResult = { processed: boolean; status: 'processed' | 'ignored' | 'duplicate'; granted?: boolean; credits?: number };
 
@@ -34,6 +35,17 @@ const seconds = (value: unknown): number => {
   if (typeof value !== 'string') return 0;
   const ms = Date.parse(value);
   return Number.isFinite(ms) && ms > 0 ? Math.floor(ms / 1000) : 0;
+};
+// Explicit cancellation timestamps must be unambiguous instants, never local dates.
+const cancellationSeconds = (value: unknown): number => {
+  if (typeof value !== 'string') return 0;
+  const parts = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.exec(value);
+  if (!parts) return 0;
+  const [year, month, day, hour, minute, second] = parts.slice(1, 7).map(Number);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month < 1 || month > 12 || day < 1 || day > days[month - 1] || hour > 23 || minute > 59 || second > 59) return 0;
+  return seconds(value);
 };
 const managedEvents = new Set([
   'subscription.payment_succeeded', 'subscription.activated', 'subscription.renewed',
@@ -159,11 +171,18 @@ export class WaffoBillingStore {
           mark('duplicate');
           return { processed: false, status: 'duplicate', granted: false, credits: before };
         }
-        const lastPeriod = count(account.waffoLastPeriod);
+        const lastPeriod = differentSubscription ? 0 : count(account.waffoLastPeriod);
+        const canonicalPeriod = count(order.currentPeriodNumber);
+        const explicitlyOld = data.periodNumber < lastPeriod
+          || (positivePeriod(canonicalPeriod) && data.periodNumber < canonicalPeriod);
+        // A paid webhook can arrive before the canonical order has rolled forward.
+        // Retry without any receipt/period writes, so synchronization can grant it later.
+        if (!isRetired && !explicitlyOld && (!positivePeriod(canonicalPeriod) || data.periodNumber > canonicalPeriod)) {
+          return fail('waffo_order_period_behind', 'Canonical order has not confirmed this paid period; retry after order synchronization');
+        }
         const periodEnd = seconds(order.currentPeriodEnd);
-        if (!periodEnd) return fail('waffo_period_end_missing', 'Canonical billing period end is required; retry after order synchronization');
-        const stale = isRetired || periodEnd <= Math.floor(now / 1000)
-          || data.periodNumber < Math.max(canReplace ? 0 : lastPeriod, count(order.currentPeriodNumber));
+        if (!periodEnd && !isRetired && !explicitlyOld) return fail('waffo_period_end_missing', 'Canonical billing period end is required; retry after order synchronization');
+        const stale = isRetired || explicitlyOld || periodEnd <= Math.floor(now / 1000);
         const after = stale ? before : PLANS[intent.plan].monthlyCredits;
         const delta = after - before;
         tx.create(periodRef, { ...common, periodKey: key, periodNumber: data.periodNumber, paymentId: data.paymentId, granted: !stale });
@@ -210,7 +229,17 @@ export class WaffoBillingStore {
         mark('processed');
         return { processed: true, status: 'processed', credits: before - deduction };
       }
-      // Lifecycle notifications never grant an allowance, including activated/renewed.
+      // Lifecycle notifications never grant an allowance or advance its paid-through
+      // boundary. A successful period payment is the only proof of a renewed allowance.
+      const lastPaidPeriod = account.waffoSubscriptionId === order.id ? count(account.waffoLastPeriod) : 0;
+      const hasPaidAllowance = positivePeriod(lastPaidPeriod) && account.waffoAllowanceKey === `${order.id}:${lastPaidPeriod}`;
+      if (hasPaidAllowance && positivePeriod(data.periodNumber) && data.periodNumber < lastPaidPeriod) {
+        mark('ignored');
+        return { processed: true, status: 'ignored', granted: false, credits: before };
+      }
+      if (hasPaidAllowance && (!positivePeriod(order.currentPeriodNumber) || order.currentPeriodNumber < lastPaidPeriod)) {
+        return fail('waffo_order_period_behind', 'Canonical order is older than the verified paid allowance; retry after order synchronization');
+      }
       const state = event.eventType.slice('subscription.'.length);
       const expectedStatus: Record<string, string> = {
         activated: 'active', renewed: 'active', recovered: 'active', uncanceled: 'active',
@@ -221,14 +250,24 @@ export class WaffoBillingStore {
         return { processed: true, status: 'ignored', granted: false, credits: before };
       }
       const status = order.status;
-      const periodEnd = seconds(order.currentPeriodEnd);
-      const expired = status === 'canceled' && periodEnd > 0 && periodEnd <= Math.floor(now / 1000);
-      const stale = positivePeriod(data.periodNumber) && data.periodNumber < count(account.waffoLastPeriod);
-      if (!stale) tx.update(userRef, {
+      const canonicalEnd = seconds(order.currentPeriodEnd);
+      // Period-end scheduling can be sent an hour early. Only an explicitly
+      // confirmed immediate cancellation may truncate previously paid access.
+      const originalPaidThrough = hasPaidAllowance ? seconds(account.currentPeriodEnd) : canonicalEnd;
+      const immediateCancellation = status === 'canceled' && order.cancelEffectiveMode === 'now';
+      const cancelEffectiveAt = cancellationSeconds(order.cancelEffectiveAt);
+      if (immediateCancellation && (!nonempty(order.cancelEffectiveAt) || !cancelEffectiveAt)) {
+        return fail('waffo_cancel_effective_at_missing', 'Confirmed immediate cancellation requires a valid canonical effective timestamp; retry after order synchronization');
+      }
+      const paidThrough = immediateCancellation
+        ? originalPaidThrough > 0 ? Math.min(originalPaidThrough, cancelEffectiveAt) : cancelEffectiveAt
+        : originalPaidThrough;
+      const expired = status === 'canceled' && paidThrough > 0 && paidThrough <= Math.floor(now / 1000);
+      tx.update(userRef, {
         waffoSubscriptionId: order.id, waffoIntentCreatedAt: intent.createdAt, waffoSubscriptionStatus: status, subscriptionStatus: status,
-        ...(periodEnd ? { currentPeriodEnd: periodEnd } : {}), ...(expired ? { tier: 'free' } : {}), updatedAt: new Date(now).toISOString(),
+        ...((immediateCancellation || !hasPaidAllowance) && paidThrough ? { currentPeriodEnd: paidThrough } : {}), ...(expired ? { tier: 'free' } : {}), updatedAt: new Date(now).toISOString(),
       });
-      tx.create(this.db.doc(`billing_orders/waffo_${hash(`lifecycle:${event.eventType}:${event.eventId}`)}`), { ...common, kind: status === 'canceled' || status === 'canceling' ? 'cancellation' : 'status', periodKey: `${order.id}:${data.periodNumber ?? 'unknown'}`, credits: 0, amountTotal: 0, currency: 'usd', status, stale, requiresReview: status === 'canceled' && !periodEnd });
+      tx.create(this.db.doc(`billing_orders/waffo_${hash(`lifecycle:${event.eventType}:${event.eventId}`)}`), { ...common, kind: status === 'canceled' || status === 'canceling' ? 'cancellation' : 'status', periodKey: `${order.id}:${data.periodNumber ?? 'unknown'}`, credits: 0, amountTotal: 0, currency: 'usd', status, stale: false, canonicalPeriodEnd: canonicalEnd, paidThrough, originalPaidThrough, cancelEffectiveMode: order.cancelEffectiveMode ?? null, cancelEffectiveAt: order.cancelEffectiveAt ?? null, requiresReview: status === 'canceled' && !paidThrough });
       mark('processed');
       return { processed: true, status: 'processed', granted: false, credits: before };
     });

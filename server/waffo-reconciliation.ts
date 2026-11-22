@@ -231,6 +231,26 @@ export function reconcileWaffoSnapshot(input: WaffoReconciliationSnapshot): Waff
     if (fullRefunds.length > 1) add('duplicate_full_refund', 'More than one refund is marked as completing the original payment refund', [payment.paymentId]);
     if (total === payment.amountCents && !fullRefunds.length) add('missing_full_refund', 'A fully refunded payment lacks its full-refund marker', [payment.paymentId], input.firestore?.waffo_refunds?.complete === true ? 'error' : 'incomplete');
     if (input.successfulRefunds?.complete === true && total < payment.amountCents && fullRefunds.length) add('incorrect_full_refund', 'Partial cumulative refund was marked full', [payment.paymentId]);
+    const order = orderMap.get(payment.orderId);
+    const account = order ? rows('users').find(doc => doc.id === order.merchantProvidedBuyerIdentity)?.data : undefined;
+    const canonicalEnd = typeof order?.currentPeriodEnd === 'number'
+      ? positive(order.currentPeriodEnd) ? order.currentPeriodEnd * 1000 : NaN
+      : typeof order?.currentPeriodEnd === 'string' ? Date.parse(order.currentPeriodEnd) : NaN;
+    const currentUncreditedPeriod = stored?.granted === false && payment.currency === 'USD' && positive(payment.amountCents)
+      && positive(payment.periodNumber) && order?.currentPeriodNumber === payment.periodNumber
+      && Number.isFinite(canonicalEnd) && canonicalEnd > input.capturedAt
+      && ['active', 'canceling', 'past_due'].includes(order?.status ?? '')
+      && stored.uid === order?.merchantProvidedBuyerIdentity && stored.subscriptionId === order?.id
+      && stored.periodKey === `${payment.orderId}:${payment.periodNumber}`
+      && account && (!text(account.waffoSubscriptionId) || account.waffoSubscriptionId === payment.orderId);
+    if (currentUncreditedPeriod) {
+      const refs = [`waffo_payments/${hash(payment.paymentId)}`, `orders/${payment.orderId}`];
+      if (input.successfulRefunds?.complete !== true || input.firestore?.waffo_refunds?.complete !== true) {
+        add('current_paid_period_refund_coverage_incomplete', 'Current ungranted payment needs complete refund evidence before entitlement review', refs, 'incomplete');
+      } else if (nonnegative(total) && total < payment.amountCents) {
+        add('current_paid_period_ungranted', 'Current paid period was recorded without granting its allowance; manual review required, never automatic credit repair', refs);
+      }
+    }
   }
   for (const doc of rows('waffo_refunds')) if (orderIds.has(String(doc.data.subscriptionId)) && !externalRefunds.some((refund) => hash(refund.refundId) === doc.id && refund.paymentId === doc.data.paymentId)) {
     add('unverified_refund', 'Stored refund has no matching authoritative successful refund', [`waffo_refunds/${doc.id}`], input.successfulRefunds?.complete === true ? 'error' : 'incomplete');
