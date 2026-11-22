@@ -1,3 +1,4 @@
+import { VIDEO_FRAME_PNG_ARTICLE } from './videoFramePng';
 import { GAME_ANCHOR_ARTICLES } from './gameAnchor20261023';
 import { ENTRY_ARTICLES } from './entry20261023';
 import { CORE_ARTICLES } from './core20261023';
@@ -694,4 +695,5 @@ DLSS 5 不是从定义上威胁艺术灵魂。它是在默认配置、当前实�
   ...NEWS_20261103,
   MINIMAX_20261111,
   TOPAZ_LINEUP_20261112,
+  VIDEO_FRAME_PNG_ARTICLE,
 ];

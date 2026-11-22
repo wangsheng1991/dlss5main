@@ -1,3 +1,4 @@
+import { VIDEO_FRAME_PNG_SLUG } from './videoFramePng';
 import { GAME_ANCHOR_COVERS } from './gameAnchor20261023';
 import { ENTRY_COVERS } from './entry20261023';
 import { CORE_COVERS } from './core20261023';
@@ -13,6 +14,7 @@ export const ARTICLE_COVERS: Record<string, ArticleCover> = {
   ...CORE_COVERS,
   ...GAME_ANCHOR_COVERS,
   ...ENTRY_COVERS,
+  [VIDEO_FRAME_PNG_SLUG]: { src: `/blog/${VIDEO_FRAME_PNG_SLUG}/assets/exported-frame-en.png`, width: 1280, height: 720, alt: 'A kitchen still saved from the walkthrough clip' },
   'minimax-h3-image-16-megapixels-vs-the-photo-you-have-2026': {
     // Our own production run on the input the article starts from — not the model's showreel, which
     // the community licence does not let us display where this site is read.

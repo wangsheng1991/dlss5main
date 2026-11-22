@@ -1,3 +1,4 @@
+import { videoFramePngGuidePath } from '../content/articles/videoFramePng';
 import type { ReactNode } from 'react';
 import { ArrowRight, Clapperboard, Film, LayoutGrid, ScanLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -54,6 +55,10 @@ export function VideoToolContent({ tool, locale, workspace }: { tool: VideoTool;
       <div className="rounded-2xl border border-white/10 bg-surface-low p-6">
         <h2 className="font-headline text-xl font-semibold text-white">{zh ? '用样片做一次' : 'Try it on the sample'}</h2>
         <p className="mt-3 leading-relaxed text-zinc-300">{sample}</p>
+        {tool.slug === 'frame-extractor' && <Link to={videoFramePngGuidePath(locale)}
+          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-lime-300 hover:underline">
+          {zh ? '图文教程：从视频选一帧并保存 PNG' : 'Tutorial: save a video frame as PNG'}<ArrowRight aria-hidden="true" size={16} />
+        </Link>}
       </div>
       <div className="rounded-2xl border border-white/10 bg-surface-low p-6">
         <h2 className="font-headline text-xl font-semibold text-white">{zh ? '交付前检查什么' : 'What to check before delivery'}</h2>

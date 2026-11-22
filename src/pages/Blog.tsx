@@ -1,3 +1,4 @@
+import { VIDEO_FRAME_PNG_SLUG } from '../content/articles/videoFramePng';
 import CoreArticleVideo from '../components/CoreArticleVideo';
 import CoreArticleContent from '../components/CoreArticleContent';
 import { withArticleEvidence } from '../content/articles/coreSchema';
@@ -563,7 +564,7 @@ export default function Blog() {
         </aside>
 
         {/* CTA */}
-        <div className="mt-12 p-6 bg-surface-low rounded-xl border border-outline-variant/20 text-center">
+        {article.slug !== VIDEO_FRAME_PNG_SLUG && <div className="mt-12 p-6 bg-surface-low rounded-xl border border-outline-variant/20 text-center">
           <p className="text-zinc-300 mb-4">{copy.cta}</p>
           <Link
             to="/dashboard"
@@ -577,7 +578,7 @@ export default function Blog() {
           >
             Check the source-linked GPU evidence →
           </a>
-        </div>
+        </div>}
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-outline-variant/20 text-center text-zinc-500 text-sm">

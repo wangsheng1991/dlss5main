@@ -1,3 +1,4 @@
+import { VIDEO_FRAME_PNG_SLUG } from '../src/content/articles/videoFramePng';
 import { DocsContent, DOCS_TITLE, DOCS_DESCRIPTION } from '../src/components/DocsContent';
 import { GAME_RELEASES_REVIEWED } from '../src/content/gamesStatusEvidence';
 import PhoneStyleExample from '../src/components/PhoneStyleExample';
@@ -241,6 +242,7 @@ function absoluteUrl(path: string): string {
 // canonical URL and redirect the redundant /en/blog copy instead of asking
 // Google to choose between identical pages.
 const DEFAULT_ENGLISH_ARTICLE_SLUGS = new Set([
+  VIDEO_FRAME_PNG_SLUG,
   'core-game-frame-style-reference',
   'core-two-reference-room-workflow',
   'core-redraw-review-checklist',
@@ -464,7 +466,7 @@ function renderArticle(article: Article, locale?: 'en' | 'zh'): { html: string; 
       <div class="prose prose-invert prose-zinc max-w-none">${CORE_VIDEOS[article.slug] ? renderToStaticMarkup(createElement(CoreArticleVideo, { slug: article.slug, chinese: isChinese })) : ''}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonIntro)) : ''}${article.slug === FEATURE_PICKER_SLUG ? content.split(FEATURE_PICKER_MARKER).map(part => renderMarkdown(part)).join(renderToStaticMarkup(createElement(FeaturePicker, { locale: isChinese ? 'zh' : 'en', interactive: false, canonicalPath }))) : article.assetBase ? renderToStaticMarkup(createElement(CoreArticleContent, { content, assetBase: article.assetBase })) : renderMarkdown(content)}${article.slug === FEATURE_PICKER_SLUG && !locale ? renderToStaticMarkup(createElement(ComparisonAnswers)) : ''}</div>
       ${article.sources?.length ? `<aside class="mt-10 rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h2>${isChinese ? '资料与来源' : 'Sources and methodology'}</h2><ul>${article.sources.map(source => `<li><a href="${escapeHtml(source.url)}" rel="noreferrer">${escapeHtml(source.label)}</a></li>`).join('')}</ul></aside>` : ''}
       <aside class="mt-12" aria-labelledby="related-articles-heading"><h2 id="related-articles-heading">${isChinese ? '继续阅读' : 'Related reading'}</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">${relatedArticles.map(related => { const relatedCover = coverFor(related); return `<a href="${articlePath(related.slug, locale)}"><img src="${escapeHtml(relatedCover.src)}" alt="${escapeHtml(relatedCover.alt)}" width="1600" height="700" loading="lazy" /><span>${escapeHtml(isChinese ? related.title_cn : related.title_en)}</span></a>`; }).join('')}</div></aside>
-      <p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a> · <a href="https://www.dlss5.app/en/supported-cards" class="text-primary">${isChinese ? '查看来源驱动的显卡证据' : 'Check the source-linked GPU evidence'}</a></p>
+      ${article.slug === VIDEO_FRAME_PNG_SLUG ? '' : `<p class="mt-12 text-center"><a href="/dashboard" class="text-primary">${isChinese ? '立即试用免费工具' : 'Try the free AI image tool'}</a> · <a href="https://www.dlss5.app/en/supported-cards" class="text-primary">${isChinese ? '查看来源驱动的显卡证据' : 'Check the source-linked GPU evidence'}</a></p>`}
     </article>${(article.checkedDate || ARTICLE_CHECK_PATHS.includes(canonicalPath)) ? `<p data-schema-check-date class="mt-8 text-sm text-zinc-500">Last checked: <time datetime="${SCHEMA_REVIEW_DATE}">${SCHEMA_REVIEW_DATE}</time></p>` : ''}
   </main>`;
   const html = withRoot(withHead(TEMPLATE, {
