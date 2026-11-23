@@ -25,20 +25,24 @@ export const SAMPLES = {
    */
   together: {
     id: 'together', name: 'You and a game character', nameZh: '我和游戏角色合影',
-    src: '/examples/together/you.jpg', fileName: 'you.jpg',
+    // Changed 2026-11-23: the previous reference (a blue-lit portrait) kept its own person in 3 of 13
+    // measured runs; this flat-lit one kept it 13 of 13. The pose moved to back to back because a still
+    // whose face is turned away supplies gear and silhouette but no face, and crossed arms are the one
+    // stance that stays recognisable without one (docs/third-reference-20261123/RESULT.md).
+    src: '/examples/together/you-neutral.jpg', fileName: 'you-neutral.jpg',
     src2: '/examples/together/character.jpg', fileName2: 'character.jpg',
     contentType: 'image/jpeg',
     tool: 'together' as ToolId,
-    options: { pose: 'handshake', frame: 'square' },
+    options: { pose: 'back_to_back', frame: 'square' },
     outputSize: { width: 1024, height: 1024 },
     // The version names which draw of this example is stored. The channel answered the same inputs
     // with a different picture on the re-warm, so "the" stored result is not stable — the case card
     // publishes these exact bytes as its own case, and says so.
-    cacheVersion: 'duo-seed42-v1',
+    cacheVersion: 'duo-neutral-v1',
     // This line is never sent as the model brief: the server writes the duo prompt from the pose
     // (`buildToolTask` → `togetherPrompt`). It is only what the studio calls the run, and a usable
     // fallback if the reader switches this workflow back to plain editing.
-    prompt: 'Put me and the game character in one photo, shaking hands.',
+    prompt: 'Put me and the game character in one photo, standing back to back.',
   },
   sample1: { id: 'sample1', name: 'Kitchen render', nameZh: '厨房效果图', src: '/examples/sample1-kitchen-aligned-v3.jpg', fileName: 'sample1-kitchen-aligned-v3.jpg', contentType: 'image/jpeg', tool: null, outputSize: { width: 1200, height: 768 }, cacheVersion: 'kitchen-aligned-v3', prompt: "Convert this kitchen render into a photorealistic material and lighting reference. Keep the exact camera, perspective, framing and every object position unchanged. Preserve all cabinet boundaries, countertop edges, oven, window, faucet and appliances at the same pixel positions. Only improve realistic wood, stone, metal, glass, light and shadow. Do not zoom, crop, rearrange or add objects; do not add text or interface elements." },
   sample2: { id: 'sample2', name: 'Bedroom render', nameZh: '卧室效果图', src: '/examples/sample2.jpg', fileName: 'sample2.jpg', contentType: 'image/jpeg', tool: null, prompt: 'Turn this render into a photorealistic photo with soft morning light.' },
