@@ -194,6 +194,31 @@ export const SHOWCASE: ShowcaseCase[] = [
     measured: '2026-11-02',
   },
   {
+    // Added 2026-11-23 after measuring identity across 16 runs: the old reference held its person in
+    // 3 of 13 draws, this flat-lit one in 13 of 13. Published as its own run rather than a re-warmed
+    // free example, because a warm is an uncontrolled draw and a demo we would have to re-roll until
+    // it looked right is not a demo.
+    id: 'together-neutral-back-to-back',
+    mode: 'together',
+    title: 'A flat-lit reference and the pose that needs no face',
+    choices: ['Pose: back to back', 'Frame: square (1024 × 1024)', 'References: you, then the character'],
+    options: { pose: 'back_to_back', frame: 'square' },
+    inputs: [
+      { src: '/examples/together/you-neutral.jpg', label: 'You — the real person, flat light, facing the camera' },
+      { src: '/examples/together/character.jpg', label: 'The game character, face turned away' },
+    ],
+    output: { src: '/examples/together/duo-neutral-back-to-back.webp', label: 'The two of them, back to back', width: 1024, height: 1024 },
+    seconds: '13 s',
+    look: [
+      'The person on the left is the person in the first reference — this reference kept its own face in nine of nine measured runs, where the previous one kept it three times out of thirteen.',
+      'The character came back as the same kind of figure as the still — a woman in worn tactical armour — but not the same person: the still has her face turned away, so the face, and the red hair of that still, are the model\'s.',
+      'Back to back is the pose that survives a faceless reference best: crossed arms and a shoulder line do not need a face to stay recognisable.',
+    ],
+    limit:
+      'One run, kept because both people held and the stance reads. Another draw of the same two files commonly swaps the right-hand figure for a man — which is why the studio now shows every duo result next to its references and offers another draw instead of promising a face.',
+    measured: '2026-11-23',
+  },
+  {
     id: 'together-handshake-redraw',
     mode: 'together',
     title: 'The same two references, another draw',

@@ -18,20 +18,20 @@ export const GTA6_DUO = {
   path: '/gta6-character-photo',
   zhPath: '/zh/gta6-character-photo',
   checkedDate: '2026-11-23',
-  image: '/marketing/gta6-20261123/compare-en-1600x900.png',
+  image: '/marketing/duo-neutral-20261123/compare-en-1600x900.png',
   /** Social cards and page figures are rendered from the site's own references and stored runs. */
   ogImage: {
-    en: '/marketing/gta6-20261123/og-en-1200x630.png',
-    zh: '/marketing/gta6-20261123/og-zh-1200x630.png',
+    en: '/marketing/duo-neutral-20261123/og-en-1200x630.png',
+    zh: '/marketing/duo-neutral-20261123/og-zh-1200x630.png',
   },
   compareImage: {
-    en: '/marketing/gta6-20261123/compare-en-1600x900.png',
-    zh: '/marketing/gta6-20261123/compare-zh-1600x900.png',
+    en: '/marketing/duo-neutral-20261123/compare-en-1600x900.png',
+    zh: '/marketing/duo-neutral-20261123/compare-zh-1600x900.png',
   },
   compareCaption_en: 'The page figure: the two references that were uploaded on the left, the single stored result of a real run on the right. Labels were added around the files; the pictures themselves are untouched.',
   compareCaption_cn: '页面主图：左边是实际上传的两张参考图，右边是一次真实运行存下来的那张结果。文字是后来加在图外的，图本身没有修过。',
-  imageAlt_en: 'A real duo-portrait run of this workflow: a person and a game character standing side by side in one frame',
-  imageAlt_cn: '这条流程的一次真实输出：一个人和一个游戏角色并肩站在同一个画面里',
+  imageAlt_en: 'A real duo-portrait run of this workflow: a person and a game character standing back to back in one frame',
+  imageAlt_cn: '这条流程的一次真实输出：一个人和一个游戏角色背靠背站在同一个画面里',
   imageCaption_en: 'One real run of this workflow on our own two references — not a GTA VI screenshot, and not a still from any game.',
   imageCaption_cn: '这条流程用我们自己的两张参考图实际跑出来的一次结果：不是 GTA6 的游戏截图，也不是任何一款游戏的画面。',
   sources: [

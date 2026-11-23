@@ -18,9 +18,9 @@ export const ARTICLE_COVERS: Record<string, ArticleCover> = {
   // The campaign cover is rendered from our own two references and a stored run: the article's whole
   // argument is that a console screenshot is a usable input, so the cover shows the input.
   [GTA6_DUO_SLUG]: {
-    src: '/marketing/gta6-20261123/compare-plain-1600x900.png',
+    src: '/marketing/duo-neutral-20261123/compare-plain-1600x900.png',
     width: 1600, height: 900,
-    ogSrc: '/marketing/gta6-20261123/og-en-1200x630.png',
+    ogSrc: '/marketing/duo-neutral-20261123/og-en-1200x630.png',
     alt: 'The two uploaded references on the left and the single result of one real duo-portrait run on the right',
   },
   [VIDEO_FRAME_PNG_SLUG]: { src: `/blog/${VIDEO_FRAME_PNG_SLUG}/assets/exported-frame-en.png`, width: 1280, height: 720, alt: 'A kitchen still saved from the walkthrough clip' },
