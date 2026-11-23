@@ -660,6 +660,32 @@ export default function Dashboard() {
               <p className="text-xs leading-relaxed text-zinc-500">Download it now — the link is signed and expires, and the file stays in the source site&rsquo;s own format. We do not keep a copy of a downloaded video.</p>
             </div>
           : <div className="flex-1 flex flex-col gap-5"><div className="flex-1 min-h-64">{preview ? <ImageSlider highRes={result} lowRes={preview} alt="Your AI image edit" privacyMask outputBackdrop={generation.operation?.body.mode === 'cutout' ? '#ffffff' : undefined}/> : <img data-clarity-mask="true" src={result} alt="Completed AI image edit" className="max-h-[600px] w-full object-contain rounded-lg"/>}</div><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-nvidia-green text-sm">{t('dashboard.imageReady')}</p><div className="flex flex-wrap gap-3"><button onClick={() => void generation.resume()} className="text-sm text-zinc-300 px-3 py-2">{t('dashboard.refreshResult')}</button><a href={result} target="_blank" rel="noreferrer" onClick={() => { const tool = generation.operation?.body.mode || 'edit'; trackEvent('download_click', { tool, result: 'generation' }); trackEvent('result_download', { mode: tool }); }} className="px-4 py-2 bg-primary text-black font-bold rounded-lg inline-flex items-center gap-2"><Download className="w-4 h-4"/>{t(generation.operation?.body.mode === 'vectorize' ? 'dashboard.openSvg' : 'dashboard.openFullImage')}</a><button onClick={() => { generation.reset(); setFile(null); }} className="px-4 py-2 border border-outline-variant/30 rounded-lg text-white">{t('dashboard.newImage')}</button></div></div></div>)}
+        {/* The duo portrait is the one tool whose failure is a face: a run keeps one reference's person
+            more reliably than the other, and which one is swapped moves with the image, not the run
+            order (16 measured runs, docs/third-reference-20261123/RESULT.md). So the result is shown
+            next to what went in, with the one action that actually helps: another draw. */}
+        {!generation.busy && result && mode === 'together' && file2 && <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-4 flex flex-col gap-3">
+          <div>
+            <p className="text-sm font-semibold text-white">{isZh ? '先对一下脸，再发' : 'Compare the faces before you post'}</p>
+            <p className="text-xs text-zinc-400 mt-1 leading-relaxed">{isZh
+              ? '这一张不一定把两张脸都保住了：被换掉通常是随机的，换一张参考图重新跑，常常留住的是另一张。看左图的脸、再看右边的成品——哪个人变了？'
+              : 'One run does not always keep both faces, and which one it drops is close to chance. Look at the reference on the left, then at the result: which person changed?'}</p>
+          </div>
+          <div className={`grid gap-2 ${file3 ? 'grid-cols-4' : 'grid-cols-3'}`}>
+            {[{ src: preview, label: isZh ? '① 你' : '1 · you' }, { src: preview2, label: isZh ? '② 角色' : '2 · character' },
+              ...(file3 ? [{ src: preview3, label: isZh ? '③ 场景（不看脸）' : '3 · setting (no face)' }] : []),
+              { src: result, label: isZh ? '成品' : 'result' }].map(({ src, label }) => (
+              <figure key={label} className="m-0">
+                <img data-clarity-mask="true" src={src} alt={label} className="w-full aspect-square object-cover rounded-lg border border-outline-variant/20"/>
+                <figcaption className="text-[11px] text-zinc-400 mt-1">{label}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button onClick={() => { trackEvent('generation_submit', { mode, intent: 'identity_rerun' }); generation.reset(); void generation.submit(file!, activePrompt, { mode, second: file2 || undefined, third: file3 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-4 py-2 rounded-lg bg-primary text-black font-bold">{(isZh ? '换一张（再跑一次）· 1 额度' : 'Try another draw · 1 credit')}</button>
+            <span className="text-xs text-zinc-500">{isZh ? '手和两个人相接的位置，也顺手看一眼。' : 'While you are there: hands, and where the two bodies meet.'}</span>
+          </div>
+        </div>}
         {!generation.busy && !generation.pending && !result && sampleRun.state.status !== 'running' && sampleRun.state.status !== 'ready' && <div className="flex-1 flex flex-col gap-5 justify-center">
           {/* The downloader takes a link, not a file, so its intake replaces the drop zone entirely:
               there is nothing to upload and no second slot to offer. */}
