@@ -1,0 +1,467 @@
+{
+  "title": "素材对照板 · 10 个创意",
+  "generated": "2026-11-23",
+  "rule": "每条创意连线要回答「画面里看见什么，用户才会读懂这条关系」。板上三格：人物 / 场景 / 构图，每格只写两件事：它能提供什么，缺了它会怎么崩。",
+  "states": {
+    "have": "自有素材（own），可直接用",
+    "capability": "产品能力，不需要素材",
+    "selfshot": "可自拍，现场拍一张即可",
+    "missing": "缺，需要外部来源或用户自备",
+    "red": "不能用（权利不在我们）",
+    "half": "有素材但不合格（有图，缺的正是这一格要的东西）"
+  },
+  "cases": [
+    {
+      "id": "a1-neon-handshake",
+      "group": "A",
+      "runState": "已跑过，有成品",
+      "intent": "雨夜霓虹街，我和他隔着一步握手",
+      "claim": "见过这个角色的人一眼认出来：两个世界在这条街上碰面了",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己（正脸自拍）",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "正脸、侧脸、发型、肤色：这张脸必须来自这里",
+          "breaks": "不指定参考时，出来的是两个陌生帅哥——第一次握手跑就是这样"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "服装、体型、发型轮廓（1280×720，背对镜头）",
+          "breaks": "这张没有正脸，角色的脸是模型补的——所以第一版成品其实没有身份锚定"
+        },
+        {
+          "kind": "场景",
+          "label": "能认出城市的一条街",
+          "state": "missing",
+          "file": null,
+          "provides": "车、招牌、雨、地面反光：告诉看图的人「在哪」",
+          "breaks": "背景全由模型默认给：换个模型版本，地点就变了，你的「在哪」没人保证"
+        },
+        {
+          "kind": "构图",
+          "label": "两人间距与机位",
+          "state": "capability",
+          "file": null,
+          "provides": "腰以上取景、右手的接触点、两人的间距——服务端写死的 hello 姿势",
+          "breaks": "想换机位（全身、隔着车）就超出 4 个姿势，任何素材都补不上"
+        }
+      ],
+      "result": {
+        "file": "examples/together/handshake-neon.webp",
+        "note": "一次真实运行的结果，未修未放大"
+      },
+      "conclusion": "能开做。但四格里只有人物两格是素材决定的，场景那格是空的。",
+      "blocking": "none"
+    },
+    {
+      "id": "a2-side-by-side",
+      "group": "A",
+      "runState": "已跑过，有成品",
+      "intent": "并肩站着，像一张双人壁纸",
+      "claim": "这两张脸属于谁，一眼看清（关系本身最弱的一种）",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己（正脸自拍）",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "正脸、发型、肤色",
+          "breaks": "脸漂成陌生人"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "服装、体型；脸靠模型补",
+          "breaks": "背对镜头的截图会让模型编一张脸给你"
+        },
+        {
+          "kind": "场景",
+          "label": "街道或纯色",
+          "state": "missing",
+          "file": null,
+          "provides": "无——这一格本来就没填",
+          "breaks": "成品看上去像「两个人贴在一个背景上」，这正是「双人壁纸」的来源"
+        },
+        {
+          "kind": "构图",
+          "label": "并肩、搭肩",
+          "state": "capability",
+          "file": null,
+          "provides": "肩线齐平、两人都朝镜头——服务端姿势",
+          "breaks": "姿势之外什么都没有"
+        }
+      ],
+      "result": {
+        "file": "examples/together/promo-side.webp",
+        "note": "一次真实运行的结果"
+      },
+      "conclusion": "能开做，但这是四格里最弱的一组：它只证明「脸对了」。",
+      "blocking": "none"
+    },
+    {
+      "id": "a3-hug",
+      "group": "A",
+      "runState": "已跑过，有成品",
+      "intent": "拥抱，给一句「好久不见」配图",
+      "claim": "两个人是有交情的，不是第一次见面",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己（正脸自拍）",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "脸在侧后方，头发与肩线承担身份",
+          "breaks": "背对镜头的一张脸，认不出是谁"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "服装与体型",
+          "breaks": "拥抱时两人的身体会重叠，服装错了就很难看出来"
+        },
+        {
+          "kind": "场景",
+          "label": "可以省",
+          "state": "missing",
+          "file": null,
+          "provides": "无",
+          "breaks": "背景由模型给，暖光/冷光随机"
+        },
+        {
+          "kind": "构图",
+          "label": "手臂搭在肩上",
+          "state": "capability",
+          "file": null,
+          "provides": "腰以上、一条手臂过肩——服务端姿势",
+          "breaks": "手搭在肩上的位置，是合成图最先糊的地方"
+        }
+      ],
+      "result": {
+        "file": "examples/together/promo-hug.webp",
+        "note": "同一对人的另一次运行"
+      },
+      "conclusion": "能开做。姿势已经替你把「关系」说明了一半，这是产品能力，不是素材。",
+      "blocking": "none"
+    },
+    {
+      "id": "a4-back-to-back",
+      "group": "A",
+      "runState": "已跑过，有成品",
+      "intent": "背靠背，游戏海报的姿势",
+      "claim": "两个人是同一战线的搭档，随时要开打",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己（正脸自拍）",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "正脸朝镜头，脸是唯一识别点",
+          "breaks": "海报姿势里脸占画面小，脸一旦漂就废"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "服装、体型、轮廓",
+          "breaks": "背影截图在这里刚好能用——这是唯一一个背对镜头不吃亏的姿势"
+        },
+        {
+          "kind": "场景",
+          "label": "可以省",
+          "state": "missing",
+          "file": null,
+          "provides": "无",
+          "breaks": "海报感的背景没人给"
+        },
+        {
+          "kind": "构图",
+          "label": "交叉手臂、背靠背",
+          "state": "capability",
+          "file": null,
+          "provides": "游戏海报站姿——服务端姿势",
+          "breaks": "两人的背之间有没有真的接触，是这张最容易露馅的地方"
+        }
+      ],
+      "result": {
+        "file": "examples/together/promo-back.webp",
+        "note": "同一对人的另一次运行"
+      },
+      "conclusion": "能开做。唯一一个「背对镜头的截图不吃亏」的姿势。",
+      "blocking": "none"
+    },
+    {
+      "id": "b1-cross-era-handover",
+      "group": "B",
+      "runState": "未跑过",
+      "intent": "同一辆车前，老 Vice City 的老角色把钥匙递给 GTA6 的新角色",
+      "claim": "同一座城，两个时代：老主角把城市交给了新主角",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "老主角（官方海报）",
+          "state": "red",
+          "file": null,
+          "provides": "海报能给脸，但权利不在我们",
+          "breaks": "官方原画/海报不能当参考、不能进成品；二创的图脸已经被改过，认得出但不像"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "新角色（玩家自己的主机截图）",
+          "state": "half",
+          "file": null,
+          "provides": "只能由用户自备——我们的库里没有、也不该有",
+          "breaks": "缺了就没有新主角；有的话能保脸"
+        },
+        {
+          "kind": "场景",
+          "label": "能认出 Vice City 的街 + 一辆车",
+          "state": "missing",
+          "file": null,
+          "provides": "「在哪」全靠这一格：街灯、招牌、车",
+          "breaks": "流程不接收场景参考——这格无论找什么图都填不进去"
+        },
+        {
+          "kind": "构图",
+          "label": "隔着车头递钥匙",
+          "state": "missing",
+          "file": null,
+          "provides": "动作与站位：把「交接」这个意思演出来",
+          "breaks": "不在 4 个姿势里，且没有构图参考入口——结构性的"
+        }
+      ],
+      "result": null,
+      "conclusion": "四格全空：一格是权利、一格只能用户自备、两格是流程结构性的。这版做不了，和 Agent 聪不聪明无关。",
+      "blocking": "structural"
+    },
+    {
+      "id": "b2-one-line-reaction",
+      "group": "B",
+      "runState": "未跑过",
+      "intent": "角色说一句台词，你做出反应：一句台词 + 一张反应图",
+      "claim": "台词是趣味，反应图是你的；不需要构图，只需要一个表情",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己（带表情的自拍）",
+          "state": "selfshot",
+          "file": null,
+          "provides": "一个具体的表情：无奈、挑衅、笑场",
+          "breaks": "中性脸会让整张图没有笑点"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（库里的那张：背对镜头）",
+          "state": "half",
+          "file": null,
+          "provides": "服装、体型；正脸要另找一张",
+          "breaks": "库里这张是背影：模型会给你编一张脸，认不出是谁"
+        },
+        {
+          "kind": "场景",
+          "label": "不需要",
+          "state": "capability",
+          "file": null,
+          "provides": "纯色或虚化即可，省掉场景这一格",
+          "breaks": "有背景反而会抢台词条的注意力"
+        },
+        {
+          "kind": "构图",
+          "label": "半身、正对镜头",
+          "state": "selfshot",
+          "file": null,
+          "provides": "机位固定、人占画面 2/3——自拍即可",
+          "breaks": "侧脸、手机俯拍会让脸的朝向和台词条对不上"
+        }
+      ],
+      "result": null,
+      "conclusion": "差两张自拍/截图（一张表情、一张角色正脸），都不用买：今天拍就能开工。",
+      "blocking": "sourcing"
+    },
+    {
+      "id": "b3-same-jacket",
+      "group": "B",
+      "runState": "未跑过",
+      "intent": "你和角色穿同一件外套，像交接",
+      "claim": "这件外套从一个人身上到了另一个人身上",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "脸与身形",
+          "breaks": "脸漂"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "脸靠补、体型与轮廓可用",
+          "breaks": "背影截图会编脸"
+        },
+        {
+          "kind": "场景+道具",
+          "label": "那件外套",
+          "state": "have",
+          "file": "examples/tryon-garment.jpg",
+          "provides": "这是库里唯一一件能直接当「服装参考」的素材",
+          "breaks": "外套不对，整条创意就变成了普通的双人合影"
+        },
+        {
+          "kind": "构图",
+          "label": "并肩、都能看见外套",
+          "state": "capability",
+          "file": null,
+          "provides": "并肩姿势 + 半身取景够用",
+          "breaks": "全身照才能看清外套版型，但姿势写死了半身"
+        }
+      ],
+      "result": null,
+      "conclusion": "能开做：外套那格是库里唯一可复用的非人像素材；角色脸仍是模型补的。",
+      "blocking": "none"
+    },
+    {
+      "id": "b4-mechanic-scene",
+      "group": "B",
+      "runState": "未跑过",
+      "intent": "你在修车，角色把扳手递给你",
+      "claim": "两个人在一起干活，而不是并排站着",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "脸",
+          "breaks": "脸漂"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "服装、体型",
+          "breaks": "递扳手时手是主角，手糊了就废"
+        },
+        {
+          "kind": "场景",
+          "label": "车库、举升机、工具墙",
+          "state": "missing",
+          "file": null,
+          "provides": "「在干活」这件事全靠这一格",
+          "breaks": "库里没有，自拍也拍不到——结构性的缺"
+        },
+        {
+          "kind": "构图",
+          "label": "蹲姿、递工具",
+          "state": "missing",
+          "file": null,
+          "provides": "动作与站位",
+          "breaks": "不在 4 个姿势里——结构性的缺"
+        }
+      ],
+      "result": null,
+      "conclusion": "缺两格结构性的（场景、构图），做不了。但这最像「能卖」的创意——先要开的就是这两格。",
+      "blocking": "structural"
+    },
+    {
+      "id": "b5-game-photo-frame",
+      "group": "B",
+      "runState": "未跑过",
+      "intent": "成品外面套一层游戏拍照模式的 UI 边框",
+      "claim": "让它像游戏截图，不像 AI 图——信任感来自边框，不来自像素",
+      "slots": [
+        {
+          "kind": "人物 ① / ②",
+          "label": "复用已有成品",
+          "state": "have",
+          "file": "examples/together/handshake-neon.webp",
+          "provides": "一张已经跑通的结果",
+          "breaks": "没有成品就无从套框"
+        },
+        {
+          "kind": "场景",
+          "label": "复用成品背景",
+          "state": "capability",
+          "file": null,
+          "provides": "不新增素材",
+          "breaks": "无"
+        },
+        {
+          "kind": "构图",
+          "label": "复用",
+          "state": "capability",
+          "file": null,
+          "provides": "不改画面",
+          "breaks": "无"
+        },
+        {
+          "kind": "边框 + 字体",
+          "label": "自己画、自己排",
+          "state": "capability",
+          "file": null,
+          "provides": "100% 自有，零额度、零生成",
+          "breaks": "套错游戏风格的 UI 会显得山寨"
+        }
+      ],
+      "result": null,
+      "conclusion": "零额度、零新素材、今天就能做——证明「最后一步常常只是排版」。",
+      "blocking": "none"
+    },
+    {
+      "id": "b6-photo-in-photo",
+      "group": "B",
+      "runState": "未跑过",
+      "intent": "两个人一起举起一张老照片，照片里是同一个地方十年前的样子",
+      "claim": "时间差被拿在手里：同一块地方，隔着十年",
+      "slots": [
+        {
+          "kind": "人物 ①",
+          "label": "你自己",
+          "state": "have",
+          "file": "examples/together/you.jpg",
+          "provides": "脸",
+          "breaks": "脸漂"
+        },
+        {
+          "kind": "人物 ②",
+          "label": "角色（主机截图）",
+          "state": "half",
+          "file": "examples/together/character.jpg",
+          "provides": "服装、体型；“十年前”不靠这张",
+          "breaks": "背影截图会编脸"
+        },
+        {
+          "kind": "第三张",
+          "label": "同地点、十年前的真实照片",
+          "state": "missing",
+          "file": null,
+          "provides": "整条创意的「十年前」全在这一格",
+          "breaks": "这张找不到就只能自己回那个地方补拍——自拍拍不到"
+        },
+        {
+          "kind": "构图",
+          "label": "两人共举一张照片",
+          "state": "selfshot",
+          "file": null,
+          "provides": "手臂动作与两人的间距——自拍可以解决",
+          "breaks": "照片姿态不对，看起来像举着一张白纸"
+        }
+      ],
+      "result": null,
+      "conclusion": "差一张，而且那张只能找或补拍。构图这一格反而是自拍能解决的。",
+      "blocking": "sourcing"
+    }
+  ]
+}
