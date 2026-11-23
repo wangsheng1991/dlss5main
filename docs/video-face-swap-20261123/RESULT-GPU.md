@@ -62,8 +62,38 @@
 5. **磁盘与带宽**：空闲 45–87 GB；外网可达 GitHub/PyPI，带宽未测。
 6. **10 秒 1080p 换脸要多久**：**未实测**，要先装 FaceFusion 并等卡空出来。
 
+## 环境已就绪（2026-11-23，Codex 装、我验收）
+
+| 项目 | 实测 |
+| --- | --- |
+| 位置 | `G:\ai-exchange\face-swap\`（约 5.6 GB，G 盘剩 81.1 GB） |
+| Python | conda 环境 `faceswap`（3.12），独立于系统 Python |
+| PyTorch | **2.6.0+cu124，`cuda.is_available() == True`** |
+| ONNX Runtime | 1.24.4，providers：`TensorRTExecutionProvider` / `CUDAExecutionProvider` / `CPUExecutionProvider` |
+| FaceFusion | **3.9.2**，`python facefusion.py --version` 通过 |
+| 系统 Python | 未改动 |
+
+安装踩过的两个坑：
+1. Codex 第一次验证 `python.exe` 时环境还在下载，误判为失败——实际已建成。
+2. `install.py` 用裸 `pip`（`shutil.which('pip')`），环境不在 PATH 最前就会装进系统 Python。解法：会话内先把 `...\faceswap;...\faceswap\Scripts;...\faceswap\Library\bin` 插到 `$env:PATH` 前面，再跑 `python install.py cuda@12 --skip-conda`。
+
+## 卡被谁占着
+
+那台机器同时在跑六个常驻服务，它本来就在干活：
+
+| 进程 | 服务 |
+| --- | --- |
+| `G:\llava-ov25\app\server.py` | llava-ov25 视觉理解服务（占 3.9 GB 内存，很可能也占着显存） |
+| `G:\liying\LiYing\app.py` | LiYing |
+| `G:\studio-highlights-beta\worker.py` | 视频高光 worker |
+| `G:\ai-exchange\server.py` | 交接目录服务 |
+| `media-dl\run.py` | 下载服务 |
+| `ShadowBot` | 自动化 |
+
+`nvidia-smi` 在 WDDM 下不给计算进程归属，性能计数器也读不到，所以没能精确指认 20.6 GB 是哪几个进程的。**不排除是 llava-ov25 常驻模型。**
+
 ## 下一步（按优先级）
 
 1. 等卡空出来（或确认占用它的任务能不能让路）。
-2. 在这台上建独立 Python 环境，装 CUDA 版 torch + FaceFusion（`scripts/face-swap/` 的 `setup.sh` 是 Linux 写法，Windows 上 `.venv/bin/python` 要改成 `.venv\Scripts\python.exe`，得先适配）。
+2. ~~建环境~~ 已完成：`G:\ai-exchange\face-swap\faceswap`，torch 2.6.0+cu124、FaceFusion 3.9.2。
 3. 拿一段 10 秒 1080p 素材实测耗时，再定报价。
