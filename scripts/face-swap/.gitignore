@@ -1,0 +1,4 @@
+# FaceFusion checkout (cloned by setup.sh) — never commit
+facefusion/
+*.mp4
+__pycache__/
