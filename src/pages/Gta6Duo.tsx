@@ -22,7 +22,7 @@ export default function Gta6Duo({ locale }: { locale: Gta6DuoLocale }) {
       keywords={[...copy.keywords]}
       canonical={gta6DuoPath(locale)}
       language={copy.language}
-      image={GTA6_DUO.image}
+      image={GTA6_DUO.ogImage[locale]}
       alternates={[
         { hrefLang: 'en', href: `${SITE_URL}${GTA6_DUO.path}` },
         { hrefLang: 'zh-CN', href: `${SITE_URL}${GTA6_DUO.zhPath}` },
@@ -52,8 +52,8 @@ export default function Gta6Duo({ locale }: { locale: Gta6DuoLocale }) {
       </div>
 
       <figure className="mt-10 overflow-hidden rounded-2xl border border-outline-variant/20 bg-surface-low">
-        <img src={GTA6_DUO.image} alt={zh ? GTA6_DUO.imageAlt_cn : GTA6_DUO.imageAlt_en} width={1024} height={1024} fetchpriority="high" className="w-full object-cover" />
-        <figcaption className="px-5 py-3 text-xs text-zinc-400">{zh ? GTA6_DUO.imageCaption_cn : GTA6_DUO.imageCaption_en}</figcaption>
+        <img src={GTA6_DUO.compareImage[locale]} alt={zh ? GTA6_DUO.imageAlt_cn : GTA6_DUO.imageAlt_en} width={1600} height={900} fetchpriority="high" className="w-full object-cover" />
+        <figcaption className="px-5 py-3 text-xs text-zinc-400">{zh ? GTA6_DUO.compareCaption_cn : GTA6_DUO.compareCaption_en}</figcaption>
       </figure>
 
       <section className="mt-14 max-w-3xl">

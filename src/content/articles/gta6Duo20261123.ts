@@ -48,6 +48,10 @@ That is also the exact input a two-reference image workflow takes. So the pictur
 - **The output is fan material.** It is a generated composite, not a game feature, and the character stays the property of its owner.
 - **Check both faces, the hands and the join** before you share it. Everything between the two bodies is where a composite shows.
 
+![The two uploaded references beside the single result of one real run](assets/compare-en.jpg)
+
+*Figure 1. Left: the two references that were uploaded. Right: the stored result of one real run, not retouched and not upscaled.*
+
 ## 1. Export the screenshot properly
 
 Both consoles let you save a screenshot to a phone or a USB drive. Do it from the console's media gallery rather than photographing the TV with your phone — a phone photo of a screen adds a colour cast and a photo of a bezel, and that is what the model will copy.
@@ -66,7 +70,7 @@ For a game-poster feel, **side by side** or **back to back** reads best. The squ
 
 ![The duo-portrait tool with our own two references and the free sample result](assets/tool-page-en.jpg)
 
-*Figure 1. The tool on this site: the two references on the left, the single returned picture on the right. This is the free sample, run on our own photos — not a GTA VI screenshot.*
+*Figure 2. The tool on this site, with the same two references and the free sample result. This is our own pair, not a GTA VI screenshot.*
 
 ## 3. Check the picture before you post it
 
@@ -107,6 +111,10 @@ It does not reproduce an exact character design on demand, and it does not keep 
 - **输出按同人素材看待**。它是生成的合成图，不是游戏功能，角色的著作权属于原权利人。
 - **发之前核两张脸、手和两人相接的位置**。合成图露馅，一般都在这几处。
 
+![左边是实际上传的两张参考图，右边是一次真实运行的结果](assets/compare-zh.jpg)
+
+*图 1：左边是实际上传的两张参考图，右边是一次真实运行存下来的结果——没有修图，也没有放大。*
+
 ## 1. 截图要导对
 
 两台主机都能把截图存到手机或 U 盘。请在主机的媒体库里导出，不要拿手机对着电视拍——手机拍屏幕会带上一层色偏、边框和反光，而模型会把这些一起学过去。
@@ -125,7 +133,7 @@ It does not reproduce an exact character design on demand, and it does not keep 
 
 ![本站合影工具：左边是两张参考图，右边是跑出来的那一张](assets/tool-page-zh.jpg)
 
-*图 1：本条流程的工具界面。右侧是免费示例的输出，用我们自己的两张照片跑的——不是 GTA6 的游戏截图。*
+*图 2：本条流程的工具界面，同一对参考图和免费示例的输出。这是我们自己的两张图，不是 GTA6 的游戏截图。*
 
 ## 3. 发之前，按这个顺序核一遍
 

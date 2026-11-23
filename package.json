@@ -11,6 +11,7 @@
     "lint": "tsc --noEmit",
     "test": "tsx tests/run.ts",
     "test:online": "SPEC_ONLINE=1 tsx tests/run.ts",
+    "assets:check": "node scripts/check-promo-assets.mjs",
     "indexnow:submit": "node scripts/indexnow.mjs",
     "billing:reconcile": "tsx scripts/reconcile-waffo.ts"
   },

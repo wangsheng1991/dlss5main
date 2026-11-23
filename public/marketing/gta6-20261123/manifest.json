@@ -1,0 +1,188 @@
+{
+  "campaign": "gta6-duo-20261123",
+  "generated": "2026-11-23",
+  "renderer": "docs/gta6-duo-campaign-20261123/render-promo-assets.mjs",
+  "licences_allowed": [
+    "own",
+    "CC0",
+    "PD",
+    "CC-BY"
+  ],
+  "assets": [
+    {
+      "file": "card-zh-1080x1440.png",
+      "width": 1080,
+      "height": 1440,
+      "locale": "zh",
+      "kind": "card",
+      "text": "两张参考图 → 一张同框（竖版投放卡）",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp",
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "card-en-1080x1440.png",
+      "width": 1080,
+      "height": 1440,
+      "locale": "en",
+      "kind": "card",
+      "text": "Two references in, one picture out (vertical card)",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp",
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "compare-zh-1600x900.png",
+      "width": 1600,
+      "height": 900,
+      "locale": "zh",
+      "kind": "compare",
+      "text": "页面与文章用的参考→结果横版对照",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp",
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "compare-en-1600x900.png",
+      "width": 1600,
+      "height": 900,
+      "locale": "en",
+      "kind": "compare",
+      "text": "Reference-to-result comparison for the page and article",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp",
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "og-zh-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "locale": "zh",
+      "kind": "og",
+      "text": "中文页 OG / 社交卡片",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp",
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "og-en-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "locale": "en",
+      "kind": "og",
+      "text": "English OG / social card",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp",
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "poses-zh-1600x600.png",
+      "width": 1600,
+      "height": 600,
+      "locale": "zh",
+      "kind": "poses",
+      "text": "同一对人三个姿势",
+      "sources": [
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "poses-en-1600x600.png",
+      "width": 1600,
+      "height": 600,
+      "locale": "en",
+      "kind": "poses",
+      "text": "The same pair, three poses",
+      "sources": [
+        "examples/together/promo-hug.webp",
+        "examples/together/promo-back.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "detail-zh-1080x1080.png",
+      "width": 1080,
+      "height": 1080,
+      "locale": "zh",
+      "kind": "detail",
+      "text": "脸 / 相接处 / 手的原尺寸裁切",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "detail-en-1080x1080.png",
+      "width": 1080,
+      "height": 1080,
+      "locale": "en",
+      "kind": "detail",
+      "text": "Face / join / hands at output size",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and stored results of real duo-portrait runs. No re-generation, upscale or retouch; the renderer only adds labels (docs/gta6-duo-campaign-20261123/render-promo-assets.mjs)."
+    },
+    {
+      "file": "compare-plain-1600x900.png",
+      "width": 1600,
+      "height": 900,
+      "locale": "both",
+      "kind": "compare",
+      "text": "无文字的参考→结果对照（文章封面与社交预览通用）",
+      "sources": [
+        "examples/together/you.jpg",
+        "examples/together/character.jpg",
+        "examples/together/promo-side.webp"
+      ],
+      "license": "own",
+      "provenance": "Composited only from the site's own files in public/examples/together/: the two uploaded references and the stored result of a real run. No re-generation, upscale or retouch, and no text at all so the same file reads in both languages."
+    }
+  ]
+}
