@@ -14,7 +14,7 @@ import {
   VECTORIZE_MAX_EDGE, TOOL_IDS, TOOL_OPTIONS, TOOL_REFERENCES, TOOL_EXTRA_MAX, isToolId, modelForTool,
   TOOL_BADGES, toolBadge,
   toolNeedsSecondImage, toolOptionError, toolTakesSecondImage, FETCH_MAX_URLS,
-  TOGETHER_POSES, togetherPrompt,
+  TOGETHER_POSES, TOGETHER_CAMERAS, togetherPrompt, toolTakesImage, toolNeedsImage,
 } from '../src/config/tools';
 import { SHOWCASE, SHOWCASE_TOOLS, casesForTool } from '../src/config/showcase';
 import { ENHANCE_FACTORS, ENHANCE_MAX_EDGE, enhanceOutput, enhancePrompt, isEnhanceFactor, preserveOutput, roundTo16 } from '../src/config/enhance';
@@ -28,6 +28,10 @@ import { BEFORE_AFTER_CASES, BEFORE_AFTER_FAQ } from '../src/content/beforeAfter
 import { RELATED_PROJECTS } from '../src/content/relatedProjects';
 
 import { test } from './harness';
+import { runInNewContext } from 'node:vm';
+import ts from 'typescript';
+import * as tools from '../src/config/tools';
+import * as operations from '../src/features/generation/operation';
 
 /** A 48 MP phone photo: 8000 × 6000, and at quality 90 only about 15 MiB, so the byte check lets it through. */
 const PHONE_48MP = { width: 8000, height: 6000 };
@@ -393,7 +397,7 @@ test('every tool names the model it runs on, and the mode maps back to the same 
 
 test('the duo portrait reads two references, and its brief is written on the server', () => {
   // The person first, the character second: swapping them asks the model for the opposite picture.
-  assert.deepEqual(TOOL_REFERENCES.together, { min: 2, max: 2, slots: ['you', 'game character'] });
+  assert.deepEqual(TOOL_REFERENCES.together, { min: 2, max: 3, slots: ['you', 'game character', 'setting / framing reference (optional)'] });
   assert.ok(TOOL_REFERENCES.together.min === 2, 'one reference cannot make a duo');
   // Four poses, and each one is a different sentence — the pose is the only thing the browser chooses.
   assert.deepEqual([...TOOL_POSES_COPY()].sort(), [...TOGETHER_POSES].sort(), 'the panel and the recipe list the same poses');
@@ -625,4 +629,129 @@ test('the HOT flag marks one tool, and it is the one that just shipped', () => {
   assert.equal(toolBadge('cutout'), undefined, 'every other tool stays unmarked');
   assert.equal(toolBadge('upscale'), undefined, 'a landing-page name is not a tool id');
   assert.equal(TOOL_BADGES.together, 'hot', 'the badge is read from config, never hard-coded in a component');
+});
+
+// Frozen verbatim from 99130b9 before introducing camera or scene references.
+const LEGACY_TOGETHER_PROMPTS = {
+  "side_by_side": "A single photorealistic photograph of two people together. The first reference image is the real person; the second reference image is the game character. Keep each face exactly as it appears in its own reference — same facial features, same hair, same skin tone, same clothing — and do not invent a new face for either of them. The person stands on the left and the character on the right. They stand side by side with their shoulders level and an arm around each other, both facing the camera. One natural light source, consistent shadows and scale between the two people, sharp focus, no text, no logos, no watermark.",
+  "handshake": "A single photorealistic photograph of two people together. The first reference image is the real person; the second reference image is the game character. Keep each face exactly as it appears in its own reference — same facial features, same hair, same skin tone, same clothing — and do not invent a new face for either of them. The person stands on the left and the character on the right. They face each other and shake hands, right hands meeting at chest height, framed from the waist up. One natural light source, consistent shadows and scale between the two people, sharp focus, no text, no logos, no watermark.",
+  "hug": "A single photorealistic photograph of two people together. The first reference image is the real person; the second reference image is the game character. Keep each face exactly as it appears in its own reference — same facial features, same hair, same skin tone, same clothing — and do not invent a new face for either of them. The person stands on the left and the character on the right. They share a friendly hug, both visible from the waist up, one arm resting over the other shoulders. One natural light source, consistent shadows and scale between the two people, sharp focus, no text, no logos, no watermark.",
+  "back_to_back": "A single photorealistic photograph of two people together. The first reference image is the real person; the second reference image is the game character. Keep each face exactly as it appears in its own reference — same facial features, same hair, same skin tone, same clothing — and do not invent a new face for either of them. The person stands on the left and the character on the right. They stand back to back with their arms crossed and look toward the camera, in a game-poster stance. One natural light source, consistent shadows and scale between the two people, sharp focus, no text, no logos, no watermark."
+};
+
+test('two references with unset camera preserve every legacy prompt and provider body byte', () => {
+  assert.equal(TOOL_OPTIONS.together?.find(option => option.key === 'camera')?.default, '');
+  for (const pose of TOGETHER_POSES) {
+    for (const [frame, size] of Object.entries(tools.TOGETHER_FRAMES)) {
+      for (const camera of [undefined, '']) {
+        const prompt = LEGACY_TOGETHER_PROMPTS[pose];
+        assert.equal(togetherPrompt(pose, '', false), prompt);
+        const task = buildToolTask('together', { imageIds: ['you', 'character'], options: { pose, frame, ...(camera === undefined ? {} : { camera }) } });
+        assert.equal(JSON.stringify(task), JSON.stringify({
+          model: 'flux-klein', image_ids: ['you', 'character'], prompt,
+          width: size.width, height: size.height, num_inference_steps: 4, output_format: 'webp',
+        }));
+        assert.doesNotMatch(task.prompt!, /third reference/);
+      }
+    }
+  }
+});
+
+test('every camera and pose names the scene reference and forbids a third face only when present', () => {
+  for (const pose of TOGETHER_POSES) {
+    for (const camera of ['', ...TOGETHER_CAMERAS] as const) {
+      assert.equal(toolOptionError('together', { camera }), '');
+      const two = buildToolTask('together', { imageIds: ['you', 'character'], options: { pose, camera } });
+      const three = buildToolTask('together', { imageIds: ['you', 'character', 'setting'], options: { pose, camera } });
+      assert.doesNotMatch(two.prompt!, /third reference/);
+      assert.match(three.prompt!, /third reference image is the setting and framing reference, not a person/);
+      assert.match(three.prompt!, /do not put a third face in the picture/);
+      assert.deepEqual(three.image_ids, ['you', 'character', 'setting']);
+      assert.equal(three.prompt, togetherPrompt(pose, camera, true));
+      if (camera) {
+        assert.notEqual(two.prompt, LEGACY_TOGETHER_PROMPTS[pose]);
+        assert.match(two.prompt!, /For framing, override any framing in the pose description/);
+      }
+    }
+  }
+  for (const camera of ['birdseye', 1, null, {}]) {
+    assert.match(toolOptionError('together', { camera }), /camera must be/);
+  }
+  assert.ok(toolTakesImage('together', 3));
+  assert.ok(!toolNeedsImage('together', 3));
+  assert.ok(toolNeedsImage('together', 2));
+  for (const tool of TOOL_IDS.filter(tool => tool !== 'together')) assert.ok(!toolTakesImage(tool, 3));
+  assert.ok(!toolTakesImage('together', 4));
+});
+
+/** Execute the real upload/submit hook with inert React hooks and local network/storage doubles. */
+async function submitTogetherForTest(options: Record<string, string>, third?: { name: string; type: string; size: number }, sourceText = readFileSync('src/features/generation/useGeneration.ts', 'utf8')) {
+  const requests: Array<{ path: string; body: string }> = [];
+  const uploads: string[] = [];
+  const states: unknown[] = [];
+  let saved: operations.SavedOperation | null = null;
+  const exports: any = {};
+  const storage = new Map<string, string>();
+  const localStorage = { getItem: (key: string) => storage.get(key) ?? null, setItem: (key: string, value: string) => storage.set(key, value), removeItem: (key: string) => storage.delete(key) };
+  const operationExports: any = {};
+  runInNewContext(ts.transpileModule(readFileSync('src/features/generation/operation.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, { exports: operationExports, localStorage });
+  const dependencies = {
+    react: { useEffect: () => {}, useRef: (current: unknown) => ({ current }), useState: (value: unknown) => [value, (next: unknown) => { states.push(next); }] },
+    '@tanstack/react-query': { QueryClient: class {}, useQuery: () => ({}) },
+    './client': { ApiError: class extends Error {}, request: async (path: string, _token: string, init: { body: string }) => {
+      requests.push({ path, body: init.body });
+      if (path.endsWith('/upload')) return { upload_url: 'local-upload', headers: {}, file_id: JSON.parse(init.body).fileName };
+      return { jobId: 'job', status: 'QUEUED' };
+    } },
+    './operation': { ...operationExports, saveOperation: (value: operations.SavedOperation) => { operationExports.saveOperation(value); saved = operationExports.readOperation('user'); } },
+    '../../config/tools': tools,
+    '../../config/enhance': {},
+  };
+  runInNewContext(ts.transpileModule(sourceText, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, {
+    exports, require: (name: string) => { assert.ok(name in dependencies, name); return dependencies[name]; },
+    localStorage, crypto: { randomUUID: () => 'key' }, AbortSignal,
+    URL: { createObjectURL: () => 'local-image', revokeObjectURL: () => {} },
+    Image: class { naturalWidth = 512; naturalHeight = 512; onload = () => {}; set src(_value: string) { this.onload(); } },
+    fetch: async (_url: string, init: { body: { name: string } }) => { uploads.push(init.body.name); return { ok: true }; },
+  });
+  const hook = exports.useGeneration({ uid: 'user', getIdToken: async () => 'token' });
+  await hook.submit({ name: 'you', type: 'image/png', size: 10 }, '', {
+    mode: 'together', source: { width: 512, height: 512 },
+    second: { name: 'character', type: 'image/png', size: 10 }, options, third,
+  });
+  return { requests, uploads, saved, states };
+}
+
+test('the form submission omits unset camera and retains the exact legacy JSON body', async () => {
+  for (const pose of TOGETHER_POSES) {
+    for (const camera of [undefined, '']) {
+      const run = await submitTogetherForTest({ pose, frame: 'portrait', ...(camera === undefined ? {} : { camera }) });
+      assert.deepEqual(run.uploads, ['you', 'character']);
+      assert.equal(run.requests.at(-1)?.body, `{"image_ids":["you","character"],"mode":"together","pose":"${pose}","frame":"portrait"}`);
+      assert.equal(JSON.stringify(run.saved!.body), run.requests.at(-1)!.body);
+    }
+  }
+});
+
+test('the third upload keeps slot order and survives saved-operation recovery with either camera state', async () => {
+  for (const camera of ['', ...TOGETHER_CAMERAS]) {
+    const run = await submitTogetherForTest({ pose: 'handshake', frame: 'square', camera }, { name: 'setting', type: 'image/png', size: 10 });
+    assert.deepEqual(run.uploads, ['you', 'character', 'setting']);
+    const body = JSON.parse(run.requests.at(-1)!.body);
+    assert.deepEqual(body.image_ids, ['you', 'character', 'setting']);
+    assert.equal(body.camera, camera || undefined);
+    assert.equal(JSON.stringify(run.saved!.body), run.requests.at(-1)!.body);
+  }
+});
+
+test('an invalid third file is rejected before any upload or generation', async () => {
+  for (const third of [
+    { name: 'setting', type: 'text/plain', size: 10 },
+    { name: 'setting', type: 'image/png', size: 0 },
+    { name: 'setting', type: 'image/png', size: MAX_UPLOAD_BYTES + 1 },
+  ]) {
+    const run = await submitTogetherForTest({}, third);
+    assert.equal(run.requests.length, 0);
+    assert.ok(run.states.some(value => typeof value === 'string' && value.includes('The third image must')));
+  }
 });

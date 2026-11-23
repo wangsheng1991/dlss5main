@@ -2,7 +2,7 @@ export type JobStatus = 'QUEUED' | 'RUNNING' | 'SUBMISSION_UNCERTAIN' | 'SUCCEED
 /** The studio's modes: two editing presets, the tool lines, and the one tool that takes a link. */
 export type GenerationMode = 'edit' | 'enhance' | 'cutout' | 'vectorize' | 'erase' | 'tryon' | 'interior' | 'retouch' | 'makeup' | 'together' | 'fetch';
 export interface GenerationBody {
-  /** One or two uploaded file ids: the order is the contract of the tool they belong to. Absent for
+  /** One to three uploaded file ids: the order is the contract of the tool they belong to. Absent for
    *  the media downloader, which has no upload at all and sends `urls` instead. */
   image_ids?: string[];
   /** Editing modes send a prompt and explicit geometry; the tools send neither size nor format. */
@@ -17,6 +17,8 @@ export interface GenerationBody {
   garment_type?: string; style?: string; room_type?: string; level?: string; look?: string; intensity?: string;
   /** Interior only: the short free-text brief folded into the server-side prompt. */
   extra?: string;
+  /** Duo portrait: camera is absent when the pose keeps its original framing. */
+  pose?: string; frame?: string; camera?: string;
   /** Media downloader only: the links to fetch, and the quality to fetch them at. No image is sent. */
   urls?: string[]; quality?: string;
 }

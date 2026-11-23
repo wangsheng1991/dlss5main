@@ -4,7 +4,7 @@ import type { User } from 'firebase/auth';
 import { ApiError, request } from './client';
 import { clearOperation, readOperation, saveOperation, terminal, type GenerationBody, type GenerationMode, type SavedOperation } from './operation';
 import { enhanceOutput, preserveOutput, type EnhanceFactor } from '../../config/enhance';
-import { failureNote, fetchUrlError, isFetchQuality, isToolId, MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, modelForTool, oversizeNote, parseFetchUrls, toolNeedsPrompt, toolNeedsSecondImage, toolTakesSecondImage, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, FETCH_DEFAULT_QUALITY, type VectorizePreset } from '../../config/tools';
+import { failureNote, fetchUrlError, isFetchQuality, isToolId, MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, modelForTool, oversizeNote, parseFetchUrls, toolNeedsPrompt, toolNeedsImage, toolTakesImage, TOOL_EXTRA_MAX, TOOL_OPTIONS, TOOL_REFERENCES, FETCH_DEFAULT_QUALITY, type VectorizePreset } from '../../config/tools';
 const queryClient = new QueryClient();
 /** A queued task can wait minutes on the provider's spare machines, so keep polling well past that. */
 const POLL_BUDGET_MS = 600000;
@@ -74,7 +74,7 @@ export function useGeneration(user: User | null) {
     }
     finally { active.current = false; setSubmitting(false); }
   }
-  async function submit(file: File, prompt: string, settings: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number; preset?: VectorizePreset; maxEdge?: number; second?: File; options?: Record<string, string>; extra?: string } = {}) {
+  async function submit(file: File, prompt: string, settings: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number; preset?: VectorizePreset; maxEdge?: number; second?: File; third?: File; options?: Record<string, string>; extra?: string } = {}) {
     if (!user) { setError('Sign in before generating an image.'); return; }
     if (active.current || (operation && !terminal(operation.status))) return;
     active.current = true; setSubmitting(true); setError('');
@@ -84,9 +84,11 @@ export function useGeneration(user: User | null) {
       const tool = isToolId(mode) ? mode : null;
       if (!enhancing && !tool && !prompt.trim()) throw new Error('Describe the edit you want to make.');
       if (tool && toolNeedsPrompt(tool) && !prompt.trim()) throw new Error(tool === 'erase' ? 'Describe what should be removed.' : 'Describe what you want to change.');
-      if (tool && toolNeedsSecondImage(tool) && !settings.second) throw new Error(`This tool needs two images: ${TOOL_REFERENCES[tool].slots.join(', then ')}.`);
+      if (tool && toolNeedsImage(tool, 2) && !settings.second) throw new Error(`This tool needs two images: ${TOOL_REFERENCES[tool].slots.slice(0, TOOL_REFERENCES[tool].min).join(', then ')}.`);
       if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > MAX_UPLOAD_BYTES || !file.size) throw new Error(`Use a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`);
       if (settings.second && (!['image/jpeg', 'image/png', 'image/webp'].includes(settings.second.type) || settings.second.size > MAX_UPLOAD_BYTES || !settings.second.size)) throw new Error(`The second image must also be a JPEG, PNG or WebP up to ${MAX_UPLOAD_MIB} MiB.`);
+      if (settings.third && (!tool || !toolTakesImage(tool, 3))) throw new Error('This tool does not accept a third image.');
+      if (settings.third && (!['image/jpeg', 'image/png', 'image/webp'].includes(settings.third.type) || settings.third.size > MAX_UPLOAD_BYTES || !settings.third.size)) throw new Error(`The third image must also be a JPEG, PNG or WebP up to ${MAX_UPLOAD_MIB} MiB.`);
       const existing = readOperation(user.uid);
       if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
       localStorage.setItem(`dlss:storage-check:${user.uid}`, '1'); localStorage.removeItem(`dlss:storage-check:${user.uid}`);
@@ -107,11 +109,19 @@ export function useGeneration(user: User | null) {
       setPhase('Uploading image…');
       const imageIds = [await upload(file, source)];
       // A two-image tool reads its references in order, so the second upload is appended, never swapped.
-      if (tool && toolTakesSecondImage(tool) && settings.second) {
+      if (tool && toolTakesImage(tool, 2) && settings.second) {
         setPhase('Uploading the second image…');
         const secondSource = await measureImage(settings.second);
         if (uid.current !== user.uid) throw new Error('Account changed. Sign in again before submitting.');
         imageIds.push(await upload(settings.second, secondSource));
+      }
+      if (tool && toolTakesImage(tool, 3) && settings.third) {
+        setPhase('Uploading the third image…');
+        const thirdSource = await measureImage(settings.third);
+        const tooBig = oversizeNote(thirdSource.width, thirdSource.height, mode);
+        if (tooBig) throw new Error(tooBig);
+        if (uid.current !== user.uid) throw new Error('Account changed. Sign in again before submitting.');
+        imageIds.push(await upload(settings.third, thirdSource));
       }
       if (uid.current !== user.uid) throw new Error('Account changed. Sign in again before submitting.');
       let body: GenerationBody;
@@ -129,6 +139,8 @@ export function useGeneration(user: User | null) {
         // and the default travels explicitly so the page and the task agree on what was chosen.
         for (const spec of TOOL_OPTIONS[tool] || []) {
           const value = settings.options?.[spec.key];
+          // An unset camera must not add even an empty field to a legacy request.
+          if (spec.key === 'camera' && !value) continue;
           body[spec.key] = typeof value === 'string' && spec.choices.some(choice => choice.value === value) ? value : spec.default;
         }
         if (tool === 'interior') {

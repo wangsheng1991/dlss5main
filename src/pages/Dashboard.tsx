@@ -16,7 +16,7 @@ import {
   STEPS_RANGE, TOOL_SUMMARY, isToolId, ERASE_OUTPUT_EDGE, TOOL_IDS,
   VECTORIZE_MAX_EDGE, VECTORIZE_PRESETS, VECTORIZE_PRESET_LABEL, VECTORIZE_PRESET_NOTE,
   TOOL_OPTIONS, TOOL_EXTRA_FIELD, TOOL_EXTRA_MAX, TOOL_REFERENCES,
-  toolNeedsSecondImage, FETCH_MAX_URLS, FETCH_SITES_LABEL, FETCH_QUALITY_OPTION,
+  toolNeedsImage, toolTakesImage, FETCH_MAX_URLS, FETCH_SITES_LABEL, FETCH_QUALITY_OPTION,
   MAX_UPLOAD_BYTES, MAX_UPLOAD_MIB, failureNote, inputLimitNote, oversizeNote,
   type VectorizePreset, type ToolId,
 } from '../config/tools';
@@ -130,6 +130,10 @@ export default function Dashboard() {
   const [fileError, setFileError] = useState('');
   // The A-line tools read up to two references in a fixed order, so the second one gets its own slot
   // rather than being folded into the first: swapping them would change what the tool is asked to do.
+  const [file3, setFile3] = useState<File | null>(null);
+  const [preview3, setPreview3] = useState('');
+  const [file3Error, setFile3Error] = useState('');
+  const thirdSelection = useRef(0);
   const [file2, setFile2] = useState<File | null>(null);
   /** The tool the second image was picked for — see the effect below. */
   const [file2Mode, setFile2Mode] = useState<GenerationMode | ''>('');
@@ -163,6 +167,7 @@ export default function Dashboard() {
   const trackedOperation = useRef('');
   const input = useRef<HTMLInputElement>(null);
   const secondInput = useRef<HTMLInputElement>(null);
+  const thirdInput = useRef<HTMLInputElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
   const isZh = i18n.language.startsWith('zh');
   // The router's location, not `window.location`: reading the latter during render only reflects a
@@ -205,6 +210,7 @@ export default function Dashboard() {
     // workflow default because it is the conversion this reader was promised.
     if (isSampleId(sample)) {
       setSelectedSample(sample);
+    thirdSelection.current++; setFile3(null); setFile3Error('');
       // A landing page can choose a mode and a cached example together. Productised samples such
       // as cutout/vectorize carry their own tool; the generic image examples inherit the URL mode.
       setMode(SAMPLES[sample].tool ?? preset ?? 'edit');
@@ -279,6 +285,8 @@ export default function Dashboard() {
   }, [user]);
   useEffect(() => { if (!file) { setPreview(''); return; } const url = URL.createObjectURL(file); setPreview(url); return () => URL.revokeObjectURL(url); }, [file]);
   useEffect(() => { if (!file2) { setPreview2(''); return; } const url = URL.createObjectURL(file2); setPreview2(url); return () => URL.revokeObjectURL(url); }, [file2]);
+  useEffect(() => { if (!file3) { setPreview3(''); return; } const url = URL.createObjectURL(file3); setPreview3(url); return () => URL.revokeObjectURL(url); }, [file3]);
+  useEffect(() => { thirdSelection.current++; setFile3(null); setFile3Error(''); }, [user?.uid, mode]);
   // A different account must not inherit the previous one's image, so drop the file and its measured size together.
   useEffect(() => { setFile(null); setSourceSize(null); setFile2(null); setFile2Error(''); }, [user?.uid]);
   // The second slot does not mean the same thing in any two tools — it is the garment for the try-on,
@@ -354,6 +362,27 @@ export default function Dashboard() {
     image.onerror = () => URL.revokeObjectURL(url);
     image.src = url;
   };
+  const chooseThird = (candidate?: File) => {
+    if (!candidate) return;
+    const selection = ++thirdSelection.current;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(candidate.type) || !candidate.size || candidate.size > MAX_UPLOAD_BYTES) { setFile3Error(`Choose a JPEG, PNG or WebP image up to ${MAX_UPLOAD_MIB} MiB.`); return; }
+    setFile3Error(''); setFile3(candidate);
+    trackEvent('image_selected', { mode, file_type: candidate.type.replace('image/', ''), file_size: fileSizeBucket(candidate.size), slot: 3 });
+    const url = URL.createObjectURL(candidate);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      if (thirdSelection.current !== selection) return;
+      const tooBig = oversizeNote(image.naturalWidth, image.naturalHeight, mode);
+      if (tooBig) { setFile3Error(tooBig); setFile3(null); }
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      if (thirdSelection.current !== selection) return;
+      setFile3Error('That image could not be read. Try another file.'); setFile3(null);
+    };
+    image.src = url;
+  };
   /**
    * Signed in: an example becomes the input File and runs like an upload.
    * Signed out: the example is previewed and the server generates it for free from its own catalog.
@@ -362,6 +391,7 @@ export default function Dashboard() {
     setFileError('');
     sampleRun.reset();
     setSelectedSample(sample);
+    thirdSelection.current++; setFile3(null); setFile3Error('');
     setActivePrompt(SAMPLES[sample].prompt);
     // An example may belong to a tool: picking it also selects the tool it belongs to, and the
     // vectorizer example also selects the preset it was traced with.
@@ -402,6 +432,7 @@ export default function Dashboard() {
   const loadCase = async (entry: ShowcaseCase) => {
     if (!user) return;
     setFileError(''); setFile2Error('');
+    thirdSelection.current++; setFile3(null); setFile3Error('');
     sampleRun.reset();
     setSelectedSample(null);
     setMode(entry.mode);
@@ -447,7 +478,7 @@ export default function Dashboard() {
   const toolReferences = isToolId(mode) ? TOOL_REFERENCES[mode] : null;
   const toolOptions = isToolId(mode) ? (TOOL_OPTIONS[mode] || []) : [];
   const toolExtraField = isToolId(mode) ? TOOL_EXTRA_FIELD[mode] : undefined;
-  const toolSecondRequired = isToolId(mode) && toolNeedsSecondImage(mode);
+  const toolSecondRequired = isToolId(mode) && toolNeedsImage(mode, 2);
   /** The quality the downloader will submit: the reader's pick, or the documented default. */
   const fetchQuality = toolChoices.quality ?? FETCH_QUALITY_OPTION.default;
   if (mode === 'fetch') return <MediaRetired />;
@@ -647,7 +678,7 @@ export default function Dashboard() {
           <p className="text-xs leading-relaxed text-zinc-400">{REAL_PERSON_UPLOAD_NOTICE[isZh ? 'zh' : 'en']} <Link className="underline" to="/terms">{isZh ? '服务条款' : 'Terms of Service'}</Link></p>
           <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" aria-label={t('dashboard.selectImage')} onChange={e => { choose(e.target.files?.[0]); e.target.value = ''; }} disabled={!user} className="sr-only"/>
           {user && (preview ? <img data-clarity-mask="true" src={preview} alt="Selected image preview" className="w-full max-h-[480px] object-contain rounded-lg"/> : <button type="button" onClick={() => input.current?.click()} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); choose(e.dataTransfer.files[0]); }} className="w-full min-h-[300px] border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center gap-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary p-5"><UploadCloud className="w-12 h-12 text-zinc-400"/><span className="text-xl text-white">{t('dashboard.dropBrowse')}</span><span className="text-sm text-zinc-400">{toolReferences ? `${toolReferences.slots[0]} · ` : ''}{`JPEG, PNG or WebP · up to ${MAX_UPLOAD_MIB} MiB`}</span></button>)}
-          {user && toolReferences && toolReferences.max > 1 && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">
+          {user && toolReferences && isToolId(mode) && toolTakesImage(mode, 2) && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">
             <p className="text-sm text-white mb-1">{t('dashboard.secondImage')} · {toolReferences.slots[1]}</p>
             <p className="text-xs text-zinc-400 mb-3">{t(toolSecondRequired ? 'dashboard.requiredSecondImage' : 'dashboard.optionalSecondImage')}</p>
             <input ref={secondInput} type="file" accept="image/jpeg,image/png,image/webp" aria-label={`Select the ${toolReferences.slots[1]}`} onChange={e => { chooseSecond(e.target.files?.[0]); e.target.value = ''; }} className="sr-only"/>
@@ -658,6 +689,18 @@ export default function Dashboard() {
             </div>
             {preview2 && <img data-clarity-mask="true" src={preview2} alt="Second image preview" className="mt-3 max-h-52 object-contain rounded-lg"/>}
             {file2Error && <p role="alert" className="text-xs text-red-300 mt-2">{file2Error}</p>}
+          </div>}
+          {user && toolReferences && isToolId(mode) && toolTakesImage(mode, 3) && <div className="rounded-xl border border-outline-variant/20 bg-surface-highest/40 p-4">
+            <p className="text-sm text-white mb-1">{isZh ? '第三张参考图' : 'Third reference image'} · {toolReferences.slots[2]}</p>
+            <p className="text-xs text-zinc-400 mb-3">{isZh ? '可选：只参考场景和构图，不添加第三个人。' : 'Optional: use the setting and framing, without adding a third person.'}</p>
+            <input ref={thirdInput} type="file" accept="image/jpeg,image/png,image/webp" aria-label={`Select the ${toolReferences.slots[2]}`} onChange={e => { chooseThird(e.target.files?.[0]); e.target.value = ''; }} className="sr-only"/>
+            <div className="flex flex-wrap items-center gap-3">
+              <button type="button" onClick={() => thirdInput.current?.click()} className="px-4 py-2 rounded-lg border border-outline-variant/30 text-white">{t(file3 ? 'dashboard.replaceImage' : 'dashboard.chooseImage')}</button>
+              {file3 && <span className="text-xs text-zinc-400 break-all flex-1">{file3.name}</span>}
+              {file3 && <button type="button" onClick={() => { thirdSelection.current++; setFile3(null); setFile3Error(''); }} className="px-3 py-2 rounded-lg border border-outline-variant/30 text-zinc-300 text-sm">{t('dashboard.remove')}</button>}
+            </div>
+            {preview3 && <img data-clarity-mask="true" src={preview3} alt="Setting and framing reference preview" className="mt-3 max-h-52 object-contain rounded-lg"/>}
+            {file3Error && <p role="alert" className="text-xs text-red-300 mt-2">{file3Error}</p>}
           </div>}
           {!user && selectedSample && <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-zinc-400 flex-1">{sampleName(selectedSample, isZh)}</span><button onClick={() => { trackEvent('experience_click', { tool: SAMPLES[selectedSample].tool || 'edit', sample: selectedSample, intent: 'free_sample', auth_required: false }); void sampleRun.run(selectedSample); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold">{t('dashboard.runExample')}</button></div>}
           {!user && selectedSample && (() => {
@@ -691,7 +734,7 @@ export default function Dashboard() {
           {/* The line that needs an account comes after the things that do not: a signed-out reader
               should meet something they can run before the door. */}
           {!user && !selectedSample && <Link to="/login" className="w-full rounded-lg border border-outline-variant/30 px-4 py-3 text-center text-sm text-zinc-300 hover:border-primary">{t('dashboard.guestUnlock', { count: MODES.length })}</Link>}
-          {user && file && <div className="flex flex-wrap items-center gap-3"><span data-clarity-mask="true" className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !activePrompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_start', { tool: mode, intent: 'upload', factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, activePrompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
+          {user && file && <div className="flex flex-wrap items-center gap-3"><span data-clarity-mask="true" className="text-xs text-zinc-400 break-all flex-1">{file.name}{mode === 'enhance' && enhance ? ` · ${enhance.width} × ${enhance.height}` : ''}{toolSecondRequired && !file2 ? ' · second image still required' : ''}</span><button onClick={() => { setFile(null); setSourceSize(null); setFileError(''); }} className="px-4 py-3 rounded-lg border border-outline-variant/30 text-white">{t('dashboard.clearImage')}</button><button disabled={!profile || ((mode === 'edit' || mode === 'erase') && !activePrompt.trim()) || (mode === 'enhance' && !sourceSize) || (toolSecondRequired && !file2)} onClick={() => { trackEvent('generation_start', { tool: mode, intent: 'upload', factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); trackEvent('generation_submit', { mode, factor: mode === 'enhance' ? factor : undefined, pixels: sourceSize ? pixelBucket(sourceSize.width, sourceSize.height) : undefined }); if (generation.operation?.status === 'FAILED') generation.reset(); void generation.submit(file, activePrompt, { mode, factor, source: sourceSize || undefined, steps, preset, maxEdge: vectorEdge, second: file2 || undefined, third: mode === 'together' ? file3 || undefined : undefined, options: toolChoices, extra: toolExtra }); }} className="px-5 py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{generation.operation?.status === 'FAILED' ? t(characterStyleWorkflow ? 'dashboard.retryConversion' : 'dashboard.retry') : characterStyleWorkflow ? t('dashboard.convertStyle') : isToolId(mode) ? `${TOOL_SUMMARY[mode].short} · 1 credit` : t(mode === 'enhance' ? 'dashboard.enhanceCredit' : 'dashboard.generateCredit')}</button></div>}
           {!user && selectedSample && <Link to="/login" className="text-sm text-zinc-400 underline hover:text-primary">{t('dashboard.signInEditPrompt')}</Link>}
           </>}
         </div>}

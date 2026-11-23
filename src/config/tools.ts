@@ -174,15 +174,20 @@ export const TOOL_REFERENCES: Record<ToolId, { min: number; max: number; slots: 
   // Two required, and the order is the product: you first, then the character you want beside you.
   // Bare nouns, like every other slot: the studio prints "Select the ${slot}", so a slot that carried
   // its own article would read "Select the the game character".
-  together: { min: 2, max: 2, slots: ['you', 'game character'] },
+  together: { min: 2, max: 3, slots: ['you', 'game character', 'setting / framing reference (optional)'] },
   // The downloader reads no image at all: its input is a list of links, checked by `fetchUrlError`.
   // Zero on both sides is what makes the shared reference check pass a body that carries no ids.
   fetch: { min: 0, max: 0, slots: [] },
 };
+/** One-based reference slots, shared by the form and upload flow. */
+export const toolTakesImage = (tool: ToolId, slot: number): boolean =>
+  Number.isInteger(slot) && slot > 0 && slot <= TOOL_REFERENCES[tool].max;
+export const toolNeedsImage = (tool: ToolId, slot: number): boolean =>
+  Number.isInteger(slot) && slot > 0 && slot <= TOOL_REFERENCES[tool].min;
 /** The first reference is the subject; a tool whose maximum is 2 accepts a second, optional one. */
-export const toolTakesSecondImage = (tool: ToolId): boolean => TOOL_REFERENCES[tool].max > 1;
+export const toolTakesSecondImage = (tool: ToolId): boolean => toolTakesImage(tool, 2);
 /** Required second reference: the garment shot a virtual try-on cannot work without. */
-export const toolNeedsSecondImage = (tool: ToolId): boolean => TOOL_REFERENCES[tool].min > 1;
+export const toolNeedsSecondImage = (tool: ToolId): boolean => toolNeedsImage(tool, 2);
 
 /** Which provider model a tool runs on. */
 export const modelForTool = (tool: ToolId): ProviderModel => {
@@ -261,7 +266,7 @@ export const VECTORIZE_PRESET_NOTE: Record<VectorizePreset, string> = {
  * breaking change for every caller, so the list is frozen with the model names.
  */
 export type ToolOptionChoice = { value: string; label: string; note?: string };
-export type ToolOption = { key: 'garment_type' | 'style' | 'room_type' | 'level' | 'look' | 'intensity' | 'quality' | 'pose' | 'frame'; label: string; help: string; default: string; choices: ToolOptionChoice[] };
+export type ToolOption = { key: 'garment_type' | 'style' | 'room_type' | 'level' | 'look' | 'intensity' | 'quality' | 'pose' | 'frame' | 'camera'; label: string; help: string; default: string; choices: ToolOptionChoice[] };
 
 export const GARMENT_TYPE_OPTION: ToolOption = {
   key: 'garment_type', label: 'What the garment covers', default: 'outfit',
@@ -426,6 +431,13 @@ export const parseFetchUrls = (value: string): string[] =>
  * different one. Four poses, each written as the sentence that replaces the pose slot.
  */
 export const TOGETHER_POSES = ['side_by_side', 'handshake', 'hug', 'back_to_back'] as const;
+export const TOGETHER_CAMERAS = ['waist_up', 'full_body', 'wide_two_shot'] as const;
+export type TogetherCamera = '' | (typeof TOGETHER_CAMERAS)[number];
+const TOGETHER_CAMERA_LINES: Record<Exclude<TogetherCamera, ''>, string> = {
+  waist_up: 'For framing, override any framing in the pose description and show both people from the waist up.',
+  full_body: 'For framing, override any framing in the pose description and show both people from head to toe.',
+  wide_two_shot: 'For framing, override any framing in the pose description and use a wide two-shot showing both people and the surrounding setting.',
+};
 export type TogetherPose = (typeof TOGETHER_POSES)[number];
 const TOGETHER_POSE_LINES: Record<TogetherPose, string> = {
   side_by_side: 'They stand side by side with their shoulders level and an arm around each other, both facing the camera.',
@@ -438,8 +450,10 @@ const TOGETHER_POSE_LINES: Record<TogetherPose, string> = {
  * two handsome strangers. Naming the references as people ("exactly the woman in the first image")
  * is what made the real face survive the trip, which is the whole product.
  */
-export function togetherPrompt(pose: TogetherPose): string {
-  const line = TOGETHER_POSE_LINES[pose] || TOGETHER_POSE_LINES.side_by_side;
+export function togetherPrompt(pose: TogetherPose, camera: TogetherCamera = '', hasSceneRef = false): string {
+  let line = TOGETHER_POSE_LINES[pose] || TOGETHER_POSE_LINES.side_by_side;
+  if (camera) line += ` ${TOGETHER_CAMERA_LINES[camera]}`;
+  if (hasSceneRef) line += ' The third reference image is the setting and framing reference, not a person — do not put a third face in the picture. Use its environment, objects and composition, but only the first two references supply identities; do not copy any people from the third image. An explicitly chosen camera takes precedence over its framing.';
   return `A single photorealistic photograph of two people together. The first reference image is the real person; the second reference image is the game character. Keep each face exactly as it appears in its own reference — same facial features, same hair, same skin tone, same clothing — and do not invent a new face for either of them. The person stands on the left and the character on the right. ${line} One natural light source, consistent shadows and scale between the two people, sharp focus, no text, no logos, no watermark.`;
 }
 /** Output frames the duo portrait offers; the editor takes an explicit size instead of a model default. */
@@ -458,6 +472,16 @@ export const TOGETHER_POSE_OPTION: ToolOption = {
     { value: 'back_to_back', label: 'Back to back', note: 'Game-poster stance, arms crossed.' },
   ],
 };
+export const TOGETHER_CAMERA_OPTION: ToolOption = {
+  key: 'camera', label: 'Camera', default: '',
+  help: 'Keep the pose’s framing, or choose a camera view.',
+  choices: [
+    { value: '', label: 'Keep the pose framing' },
+    { value: 'waist_up', label: 'Waist up' },
+    { value: 'full_body', label: 'Full body' },
+    { value: 'wide_two_shot', label: 'Wide two-shot' },
+  ],
+};
 export const TOGETHER_FRAME_OPTION: ToolOption = {
   key: 'frame', label: 'Output frame', default: 'square',
   help: 'The long edge stays at 1024 px either way; pick the shape you will actually post or print.',
@@ -470,7 +494,7 @@ export const TOOL_OPTIONS: Partial<Record<ToolId, ToolOption[]>> = {
   interior: [INTERIOR_STYLE_OPTION, ROOM_TYPE_OPTION],
   retouch: [RETOUCH_LEVEL_OPTION],
   makeup: [MAKEUP_LOOK_OPTION, MAKEUP_INTENSITY_OPTION],
-  together: [TOGETHER_POSE_OPTION, TOGETHER_FRAME_OPTION],
+  together: [TOGETHER_POSE_OPTION, TOGETHER_FRAME_OPTION, TOGETHER_CAMERA_OPTION],
   fetch: [FETCH_QUALITY_OPTION],
 };
 
@@ -598,7 +622,7 @@ export function buildToolTask(tool: ToolId, input: ToolTaskInput): ToolTask {
     // The browser sends a pose and a frame name; the words and the pixel size are written here.
     const pose = optionValue(tool, 'pose', input) as TogetherPose;
     const frame = TOGETHER_FRAMES[optionValue(tool, 'frame', input)] || TOGETHER_FRAMES.square;
-    task.prompt = togetherPrompt(TOGETHER_POSES.includes(pose) ? pose : 'handshake');
+    task.prompt = togetherPrompt(TOGETHER_POSES.includes(pose) ? pose : 'handshake', optionValue(tool, 'camera', input) as TogetherCamera, input.imageIds.length === 3);
     task.width = frame.width;
     task.height = frame.height;
     task.num_inference_steps = 4;
