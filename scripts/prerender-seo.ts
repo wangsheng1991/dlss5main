@@ -61,6 +61,7 @@ import { STUDIO_COPY } from '../src/content/studioPage';
 import { VISUAL_ENHANCER_COPY, visualEnhancerSchema, type VisualEnhancerLocale } from '../src/content/visualEnhancer';
 import { TOGETHER_ZH, togetherZhSchema } from '../src/content/togetherZh';
 import { TOPAZ_FREE, topazFreeMailto, topazFreeSchema } from '../src/content/topazFree';
+import { GTA6_DUO, gta6DuoPath, gta6DuoSchema } from '../src/content/gta6Duo';
 import { AI_OVERVIEW_DEFINITION } from '../src/content/seoDefinitions';
 import { PODCAST_EPISODES, PODCAST_INDEX_DESCRIPTION, type PodcastEpisode } from '../src/content/podcast';
 import { EXPANSION_PAGES, type ExpansionPage } from '../src/content/seoExpansion';
@@ -1316,6 +1317,8 @@ if (profileHas('tools')) {
   writeRoute(TOGETHER_ZH.path, renderTogetherZh());
   writeRoute(TOPAZ_FREE.path, renderTopazFree('en'));
   writeRoute(TOPAZ_FREE.zhPath, renderTopazFree('zh'));
+  writeRoute(GTA6_DUO.path, renderGta6Duo('en'));
+  writeRoute(GTA6_DUO.zhPath, renderGta6Duo('zh'));
 }
 if (profileHas('useCases')) for (const item of USE_CASES) writeRoute(item.path, renderUseCaseLanding(item));
 if (profileHas('microTools')) {
@@ -1531,6 +1534,37 @@ function renderTogetherZh(): string {
       { hrefLang: 'en', href: `${BASE_URL}/game-character-together` },
       { hrefLang: 'zh-CN', href: `${BASE_URL}${copy.path}` },
       { hrefLang: 'x-default', href: `${BASE_URL}/game-character-together` },
+    ],
+  }), root);
+}
+
+/**
+ * The GTA VI duo-portrait page (`/gta6-character-photo`, `/zh/gta6-character-photo`).
+ *
+ * Written as a document rather than hydrated: the page's job is to be read, quoted and linked from a
+ * post, and the one thing a crawler must not get wrong is that this is fan-made and not a game
+ * feature — so the disclaimer sits in the header and again at the foot of the document.
+ */
+function renderGta6Duo(locale: 'en' | 'zh'): string {
+  const copy = GTA6_DUO[locale];
+  const zh = locale === 'zh';
+  const list = (items: readonly string[]) => items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const steps = copy.steps.map((step, index) => `<article class="rounded-xl border border-outline-variant/20 bg-surface-low p-5"><p class="font-mono text-xs text-primary">${String(index + 1).padStart(2, '0')}</p><h3 class="mt-2 text-lg font-semibold text-white">${escapeHtml(step.name)}</h3><p class="mt-3 text-sm leading-relaxed text-zinc-400">${escapeHtml(step.text)}</p></article>`).join('');
+  const faq = GTA6_DUO.faqs[locale].map(([question, answer]) => `<article class="rounded-xl border border-outline-variant/20 bg-surface-low p-5"><h3 class="font-semibold text-white">${escapeHtml(question)}</h3><p class="mt-3 text-sm leading-relaxed text-zinc-300">${escapeHtml(answer)}</p></article>`).join('');
+  const related = copy.related.map(item => `<a href="${escapeHtml(item.path)}" class="text-primary">${escapeHtml(item.label)} →</a>`).join(' · ');
+  const root = `<main class="pt-28 sm:pt-32 pb-20 px-5 max-w-[1100px] mx-auto w-full"><nav class="mb-8 text-sm text-zinc-500"><a href="${zh ? '/zh' : '/'}">DLSS5NVIDIA</a> <span aria-hidden="true">/</span> <span>${escapeHtml(copy.heading)}</span></nav><header class="max-w-3xl"><p class="text-primary uppercase tracking-[0.2em] text-xs">${escapeHtml(copy.eyebrow)}</p><h1 class="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">${escapeHtml(copy.heading)}</h1><p class="mt-5 text-lg leading-relaxed text-zinc-300">${escapeHtml(copy.lead)}</p><p class="mt-4 text-xs leading-relaxed text-zinc-400">${escapeHtml(copy.trademarkNote)}</p></header><p class="mt-8"><a href="/dashboard?tool=together&amp;sample=together" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(copy.sampleRun)} →</a></p><p class="mt-3 text-xs text-zinc-500">${escapeHtml(copy.ctaNote)}</p><figure class="mt-10 rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-low"><img src="${GTA6_DUO.image}" alt="${escapeHtml(zh ? GTA6_DUO.imageAlt_cn : GTA6_DUO.imageAlt_en)}" width="1024" height="1024" fetchpriority="high" class="w-full object-cover" /><figcaption class="px-5 py-3 text-xs text-zinc-400">${escapeHtml(zh ? GTA6_DUO.imageCaption_cn : GTA6_DUO.imageCaption_en)}</figcaption></figure><section class="mt-14 max-w-3xl"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.statusHeading)}</h2><ul class="mt-5 space-y-3 text-sm leading-relaxed text-zinc-300">${list(copy.status)}</ul></section><section class="mt-14"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.stepsHeading)}</h2><div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">${steps}</div></section><section class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6"><article class="rounded-xl border border-outline-variant/20 bg-surface-low p-6"><h2 class="text-xl font-bold text-white">${escapeHtml(copy.checksHeading)}</h2><ol class="mt-5 space-y-3 text-sm leading-relaxed text-zinc-300">${list(copy.checks)}</ol></article><article class="rounded-xl border border-amber-500/25 bg-amber-500/[0.05] p-6"><h2 class="text-xl font-bold text-white">${escapeHtml(copy.limitsHeading)}</h2><ul class="mt-5 space-y-3 text-sm leading-relaxed text-zinc-300">${list(copy.limits)}</ul></article></section><section class="mt-14 rounded-xl border border-primary/25 bg-primary/[0.05] p-6"><h2 class="text-xl font-bold text-white">${escapeHtml(copy.fanHeading)}</h2><ul class="mt-5 space-y-3 text-sm leading-relaxed text-zinc-300">${list(copy.fan)}</ul></section><section class="mt-14 rounded-2xl border border-primary/30 bg-primary/[0.06] p-6 sm:p-8"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.sampleHeading)}</h2><p class="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-300">${escapeHtml(copy.sampleLead)}</p><p class="mt-6"><a href="/dashboard?tool=together" class="inline-block bg-primary text-black px-6 py-3 rounded-lg font-bold">${escapeHtml(copy.cta)} →</a></p></section><section class="mt-16" id="faq"><h2 class="text-2xl font-bold text-white">${escapeHtml(copy.faqHeading)}</h2><div class="mt-5 grid gap-4">${faq}</div></section><section class="mt-16 border-t border-outline-variant/20 pt-8"><h2 class="text-xl font-bold text-white">${escapeHtml(copy.relatedHeading)}</h2><p class="mt-4">${related}</p><p class="mt-6 text-xs leading-relaxed text-zinc-500">${escapeHtml(copy.trademarkNote)}</p></section></main>`;
+  return withRoot(withHead(TEMPLATE, {
+    title: copy.title,
+    description: copy.description,
+    canonicalPath: gta6DuoPath(locale),
+    language: copy.language,
+    image: GTA6_DUO.image,
+    keywords: [...copy.keywords],
+    structuredData: gta6DuoSchema(locale, BASE_URL),
+    alternates: [
+      { hrefLang: 'en', href: `${BASE_URL}${GTA6_DUO.path}` },
+      { hrefLang: 'zh-CN', href: `${BASE_URL}${GTA6_DUO.zhPath}` },
+      { hrefLang: 'x-default', href: `${BASE_URL}${GTA6_DUO.path}` },
     ],
   }), root);
 }

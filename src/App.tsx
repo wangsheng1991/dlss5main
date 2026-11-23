@@ -55,6 +55,7 @@ const GameCharacterStyle = lazy(() => import('./pages/GameCharacterStyle'));
 const VisualEnhancer = lazy(() => import('./pages/VisualEnhancer'));
 const GameCharacterTogetherZh = lazy(() => import('./pages/GameCharacterTogetherZh'));
 const TopazFree = lazy(() => import('./pages/TopazFree'));
+const Gta6Duo = lazy(() => import('./pages/Gta6Duo'));
 const VideoUpscaler = lazy(() => import('./pages/VideoUpscaler'));
 const VideoUpscaleLab = lazy(() => import('./pages/VideoUpscaleLab'));
 const VideoTool = lazy(() => import('./pages/VideoTool'));
@@ -163,6 +164,8 @@ export default function App({ prerenderedPage }: { prerenderedPage?: string } = 
                   <Route path="/zh/game-character-together" element={orHome('tools', <GameCharacterTogetherZh />)} />
                   <Route path="/topaz-free" element={orHome('tools', <TopazFree locale="en" />)} />
                   <Route path="/zh/topaz-free" element={orHome('tools', <TopazFree locale="zh" />)} />
+                  <Route path="/gta6-character-photo" element={orHome('tools', <Gta6Duo locale="en" />)} />
+                  <Route path="/zh/gta6-character-photo" element={orHome('tools', <Gta6Duo locale="zh" />)} />
                   <Route path="/game-character-style" element={orHome('tools', <GameCharacterStyle />)} />
                   <Route path="/video-upscaler" element={orHome('tools', <VideoUpscaler />)} />
                   <Route path="/vs/topaz-video-upscaling" element={orHome('tools', <VideoUpscaleLab locale="en" />)} />

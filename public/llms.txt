@@ -36,6 +36,9 @@ The home page includes original before-and-after image pairs and short video ref
 - Game character style conversion gallery: https://www.dlss5nvidia.com/
 - 20 game character before-and-after cases: https://www.dlss5nvidia.com/game-character-style
 - Game visual enhancer and image comparison workflow: https://www.dlss5nvidia.com/image-quality-enhancer
+- Duo portrait from two photos (you and a game character): https://www.dlss5nvidia.com/game-character-together
+- GTA VI console-screenshot duo photo, fan-made and unaffiliated (2026-11-23): https://www.dlss5nvidia.com/gta6-character-photo
+- 和 GTA6 角色合影（同人图，用主机截图）: https://www.dlss5nvidia.com/zh/gta6-character-photo
 - DLSS 5 effect converter and game character generation: https://www.dlss5nvidia.com/game-character-style
 - Official NVIDIA 3D-Guided Neural Rendering reference: https://www.nvidia.com/en-us/geforce/news/dlss-5-3d-guided-neural-rendering/
 - AI video upscaler and super-resolution workflow: https://www.dlss5nvidia.com/video-upscaler
