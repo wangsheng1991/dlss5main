@@ -75,9 +75,27 @@ GTA6 上线第三天，PC 版还没影。所以我手里关于露西亚和杰森
 
 ### 4) 配图建议
 
-- 用 `public/blog/gta-6-character-photo-fan-made-guide-2026/assets/tool-page-zh.jpg`（工具页真实截图，带前后对照）；
-- 或自己再跑一版示例截图（免费、不扣额度）；
-- **不要**用官方预告片截图、封面、角色原画，也不要把游戏的 logo 放进图里。
+**素材库现成可用（2026-11-23 重做，全部基于参考素材）：**
+
+| 文件 | 尺寸 | 用在哪 |
+| --- | --- | --- |
+| https://www.dlss5nvidia.com/marketing/gta6-20261123/card-zh-1080x1440.png | 1080×1440 | 小红书主图（中文，竖版） |
+| https://www.dlss5nvidia.com/marketing/gta6-20261123/detail-zh-1080x1080.png | 1080×1080 | 小红书第 2、3 张：脸 / 相接处 / 手的 1:1 裁切 |
+| https://www.dlss5nvidia.com/marketing/gta6-20261123/poses-zh-1600x600.png | 1600×600 | 三个姿势横图（可裁成三张发） |
+| https://www.dlss5nvidia.com/marketing/gta6-20261123/card-en-1080x1440.png | 1080×1440 | Bluesky / IG 竖版（英文） |
+| https://www.dlss5nvidia.com/marketing/gta6-20261123/compare-en-1600x900.png | 1600×900 | Bluesky / X 横版（英文） |
+| https://www.dlss5nvidia.com/marketing/gta6-20261123/og-zh-1200x630.png | 1200×630 | 链接预览卡 |
+
+**每一张都是这样来的**：左边是实际上传的两张参考图（`public/examples/together/you.jpg` + `character.jpg`），右边是合影流程一次真实运行存下来的结果（`promo-side.webp`）。排版脚本 `render-promo-assets.mjs` 只加文字和外框，不放大、不重绘、不磨皮；裁切图是同一条结果里的 1:1 像素区域。出处与许可写在 `public/marketing/gta6-20261123/source.md` 与 `manifest.json`，`npm run assets:check` 逐条核对（文件、真实像素、来源存在、许可白名单）。
+
+**不要**用官方预告片截图、封面、角色原画，也不要把游戏 logo 放进图里——素材库里一张都没有，请别补。
+
+## 已经接进站点的位置
+
+- 页面主图 = `compare-{locale}`，`og:image` = `og-{locale}`；
+- 教程封面 = `compare-plain`（无文字，中英通用），正文第一张 = `compare-{locale}`，第二张 = 工具页真实截图；
+- 线上复验：四个页面 `og:image` 指向新素材，文章三张图 `naturalWidth` 1600/1600/1100，零 console 错误。
+
 
 ## 接下来看什么（别只看浏览量）
 
