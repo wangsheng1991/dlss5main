@@ -11,6 +11,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { chromium } from '/Users/wangsheng/code/ark/roomredeginv2/node_modules/playwright/index.mjs';
 
@@ -226,7 +227,7 @@ const shots = [
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 for (const [name, width, height, html] of shots) {
   const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 2 });
-  const file = `${out}/${name.replace(/\.png$/, '')}.html`;
+  const file = `${tmpdir()}/duo-neutral-${name.replace(/\.png$/, '')}.html`;
   writeFileSync(file, html());
   await page.goto(pathToFileURL(file).href, { waitUntil: 'load' });
   await page.evaluate(() => Promise.all([...document.images].map(image => image.decode().catch(() => {}))));
