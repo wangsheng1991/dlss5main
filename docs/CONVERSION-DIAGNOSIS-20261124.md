@@ -43,3 +43,17 @@
 ## 验证记录
 
 本地：TypeScript、270/270 测试、构建通过；包含隐私字段过滤、跨账号隔离、重复事件幂等与限额测试。上线回执另行追加。仅本次明确文件提交，历史未跟踪资料不混入提交。
+
+### 生产验收（2026-11-24）
+
+代码提交 `66adb29`、`ef47fbd` 已推送并由 Vercel Production 显示 Ready。`https://www.dlss5nvidia.com` 上用专用测试账号完成以下验证：
+
+- 匿名写入 401；虚构 purchase 事件 400。
+- 真实鉴权事件落库 200；客户端伪造 uid 被忽略，私密字段被过滤；相同 UUID 重发两次，只有一条事件记录。
+- 真实 checkout 接口传非法 plan 得到 400，拒绝结果落库；该账号没有创建 checkout intent，没有调用付款。
+- Chrome 实际点击订阅链接进入 `/login?next=%2Fpricing`；真实 Firebase 登录后进入价格页，第一方 pricing_view 返回 200。
+- 浏览器实际点击 Pro，拦截付款方调用并返回受控失败；plan_select/checkout_failure 正常送达。**这是故障记录测试，不是银行卡付款成功测试。**
+
+完整回执与截图在仓库外 `artifacts/conversion-audit-20261124/live-acceptance-direct.json`、`pricing-login-return.png`；测试账号与本次事件/试用账本随后清理。已知保护页检查 changed=0/down=0，旗舰页 fails=0、无来源声明0；没有改动价格或扩大免费额度。
+
+现阶段结论是缩小故障范围并建立可核验记录；不能将一次测试或历史缺日志推断为报价无问题、支付全流程无问题、已经找到全部不付费原因。
