@@ -30,5 +30,6 @@ import './waffo-monitor.test';
 import './payment-policy.test';
 import './frame-pack.test';
 import './clip-segments.test';
+import './conversion-events.test';
 
 process.exitCode = (await runAll()) === 0 ? 0 : 1;

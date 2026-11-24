@@ -27,7 +27,7 @@ import { useHistory } from '../features/generation/useHistory';
 import { claimShareReward } from '../features/rewards/shareClaim';
 import { SHARE_REWARD } from '../config/promos';
 import SEO from '../components/SEO';
-import { fileSizeBucket, pixelBucket, trackEvent } from '../lib/analytics';
+import { fileSizeBucket, pixelBucket, trackEvent, trackEventOnce } from '../lib/analytics';
 import { GAME_STYLE_CASES } from '../content/gameStyleCases';
 import { CHARACTER_STYLE_PRESETS, type CharacterStylePreset } from '../config/characterStyle';
 
@@ -240,6 +240,7 @@ export default function Dashboard() {
       window.history.replaceState({}, '', url);
     }
     if (url.searchParams.get('waffo') === 'success') {
+      trackEventOnce('waffo-checkout-return', 'checkout_return', { provider: 'waffo' });
       setBillingNotice('Returned from checkout. Your account updates only after the payment has been verified. If confirmation is delayed, check your billing portal.');
       url.searchParams.delete('waffo');
       window.history.replaceState({}, '', url);

@@ -1,3 +1,4 @@
+import { trackEvent, trackEventOnce } from '../lib/analytics';
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import SEO from '../components/SEO';
@@ -26,6 +27,12 @@ export default function Pricing() {
       setPlans(d.plans); setContact(d.membershipContact || SUPPORT_EMAIL); setLegacyPaymentsEnabled(d.legacyPaymentsEnabled === true); setBillingEnabled(d.legacyPaymentsEnabled === true && Boolean(d.billingEnabled)); setPaypal(d.paypal || null); setDodo(d.dodo || null); setWaffo(d.waffo || null);
     }).catch(() => setPlans(null));
   }, []);
+  useEffect(() => {
+    trackEventOnce('pricing:' + (user?.uid || 'anonymous'), 'pricing_view');
+  }, [user?.uid]);
+  useEffect(() => {
+    if (cancelled) trackEventOnce('checkout-cancel', 'checkout_cancel', { provider: 'waffo' });
+  }, [cancelled]);
   const paidWaffoExpired = Boolean(profile?.waffoSubscriptionId) && (profile?.currentPeriodEnd || 0) <= Date.now() / 1000;
   const current = (paidWaffoExpired ? 'free' : profile?.tier || 'free') as PlanId;
   const legacyBound = Boolean(profile?.stripeSubscriptionId || profile?.paypalSubscriptionId || profile?.dodoSubscriptionId);
@@ -76,13 +83,18 @@ export default function Pricing() {
     try { const portal = await post('/api/billing/portal'); if (!portal.ok || !portal.data.url) throw new Error(portal.data.error || 'Billing portal is unavailable.'); window.location.assign(portal.data.url); } catch (e) { setError((e as Error).message); setBusy(''); }
   };
   const chooseWaffo = async (id: PlanId) => {
+    trackEvent('plan_select', { plan: id, provider: 'waffo' });
     if (!user) return;
     setBusy(id); setError('');
     try {
       const checkout = await post('/api/billing/waffo-checkout', { plan: id });
       if (!checkout.ok || !checkout.data.url) throw new Error(checkout.data.error || 'Checkout is unavailable right now.');
+      trackEvent('checkout_redirect', { plan: id, provider: 'waffo' });
       window.location.assign(checkout.data.url);
-    } catch (cause) { setError((cause as Error).message); setBusy(''); }
+    } catch (cause) {
+      trackEvent('checkout_failure', { plan: id, provider: 'waffo' });
+      setError((cause as Error).message); setBusy('');
+    }
   };
   const mailto = (id: string) => `mailto:${contact}?subject=${encodeURIComponent(`Membership application: ${id}`)}&body=${encodeURIComponent(`Hello,\n\nI would like to apply for the ${id} plan.\n\nAccount email: \nCompany/use case: \n`)}`;
   return <main className="pt-32 pb-24 px-6 max-w-6xl mx-auto min-h-[80vh]"><SEO title="AI Image Upscaling Plans | DLSS 5 Credits" description="Choose a predictable AI image upscaling plan with monthly credits, daily limits, and API access options." keywords={['ai image upscaling pricing', 'image enhancement api pricing', 'dlss 5 credits', 'ai upscaler plans']} canonical="/pricing" />
@@ -97,7 +109,7 @@ export default function Pricing() {
       {id === 'free' ? <Link to="/register" className="block text-center mt-8 py-3 rounded-lg bg-primary-container text-white font-bold hover:bg-primary hover:text-black">Start free</Link>
         : waffoBound ? <button onClick={() => void manageWaffo()} disabled={busy === 'manage'} className="block w-full text-center mt-8 py-3 rounded-lg border border-primary text-primary">Manage subscription</button>
         : current === id ? <span className="block text-center mt-8 py-3 rounded-lg border border-outline-variant/30 text-zinc-400">Active</span>
-        : !user ? <Link to="/login" className="block text-center mt-8 py-3 rounded-lg bg-primary text-black font-bold">Sign in to subscribe</Link>
+        : !user ? <Link to="/login?next=%2Fpricing" onClick={() => trackEvent('checkout_login_required', { plan: id })} className="block text-center mt-8 py-3 rounded-lg bg-primary text-black font-bold">Sign in to subscribe</Link>
         : <div className="mt-8 space-y-3">
           {waffo?.enabled && (!legacyPaymentsEnabled || !legacyBound) ? <button onClick={() => void chooseWaffo(id)} disabled={Boolean(busy)} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `Subscribe to ${p.name}${waffo.environment === 'test' ? ' (test)' : ''}`}</button> : billingEnabled
             ? <button onClick={() => void choose(id)} disabled={busy === id} className="w-full py-3 rounded-lg bg-primary text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed">{busy === id ? 'Opening…' : `${subscribed ? 'Switch to' : 'Subscribe to'} ${p.name}`}</button>

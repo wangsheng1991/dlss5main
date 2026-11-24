@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import funnel from './_handlers/funnel.js';
 import bootstrap from './_handlers/bootstrap.js';
 import checkin from './_handlers/checkin.js';
 import share from './_handlers/share.js';
@@ -12,6 +13,7 @@ import share from './_handlers/share.js';
  */
 const routes: Record<string, (req: VercelRequest, res: VercelResponse) => unknown> = {
   bootstrap,
+  funnel,
   checkin,
   share,
 };

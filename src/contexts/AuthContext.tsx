@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         authUnsubscribe = onAuthStateChanged(auth, (currentUser) => {
           const event = ++authEvent;
           setUser(currentUser);
-          setAnalyticsAuthState(currentUser ? 'authenticated' : 'anonymous');
+          setAnalyticsAuthState(currentUser ? 'authenticated' : 'anonymous', currentUser);
           // `loading` describes Firebase auth, not Firestore/profile bootstrap. The old code kept
           // this true while getDoc, getIdToken or /api/me/bootstrap ran, so one slow dependency
           // left `/download`'s request card as a skeleton forever even though Firebase had restored

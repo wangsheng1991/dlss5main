@@ -1,3 +1,4 @@
+import { trackEvent } from '../../lib/analytics';
 import { useEffect, useRef, useState } from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import type { User } from 'firebase/auth';
@@ -101,10 +102,17 @@ export function useGeneration(user: User | null) {
       // The measured size travels with the upload request so the server can apply the same ceiling
       // the browser just did, instead of letting an oversized file reach the provider and fail there.
       const upload = async (candidate: File, dims: { width: number; height: number }) => {
-        const ticket = await request('/api/image-edit/upload', await user!.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: candidate.name, contentType: candidate.type, size: candidate.size, width: dims.width, height: dims.height, model: tool ? modelForTool(tool) : 'flux-klein' }) });
-        const put = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: candidate, signal: AbortSignal.timeout(120000) });
-        if (!put.ok) throw new Error('Image upload failed. No generation was submitted.');
-        return ticket.file_id as string;
+        trackEvent('upload_start', { tool: mode });
+        try {
+          const ticket = await request('/api/image-edit/upload', await user!.getIdToken(), { method: 'POST', body: JSON.stringify({ fileName: candidate.name, contentType: candidate.type, size: candidate.size, width: dims.width, height: dims.height, model: tool ? modelForTool(tool) : 'flux-klein' }) });
+          const put = await fetch(ticket.upload_url, { method: 'PUT', headers: ticket.headers, body: candidate, signal: AbortSignal.timeout(120000) });
+          if (!put.ok) throw new Error('Image upload failed. No generation was submitted.');
+          trackEvent('upload_success', { tool: mode });
+          return ticket.file_id as string;
+        } catch (cause) {
+          trackEvent('upload_failure', { tool: mode, error_category: cause instanceof ApiError && cause.status === 401 ? 'authentication' : 'network' });
+          throw cause;
+        }
       };
       setPhase('Uploading image…');
       const imageIds = [await upload(file, source)];

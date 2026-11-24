@@ -1,3 +1,5 @@
+import { FUNNEL_EVENTS, funnelFields, type FunnelEvent } from '../../lib/conversion-events';
+import { apiUrl } from './api';
 /**
  * Privacy-conscious event bridge for the existing Google Analytics loader.
  * Events contain product dimensions only: never prompts, filenames, UIDs or image URLs.
@@ -19,14 +21,16 @@ const ATTRIBUTION_KEY = 'dlss:analytics:attribution:v1';
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as const;
 const recentOnce = new Map<string, number>();
 const ROUTE_EVENT_NAMES = new Set(['page_view', 'studio_open', 'use_case_view', 'micro_tool_view']);
+let funnelUser: { getIdToken(): Promise<string> } | null = null;
 let visitorState: VisitorState = 'anonymous';
 
 /**
  * Keep the account state as a coarse dimension only.  No uid, email or Firebase token is ever
  * sent to analytics; AuthContext calls this when Firebase settles.
  */
-export function setAnalyticsAuthState(state: VisitorState) {
+export function setAnalyticsAuthState(state: VisitorState, user: { getIdToken(): Promise<string> } | null = null) {
   visitorState = state;
+  funnelUser = user;
 }
 
 const safeAttribution = (value: string) => value.trim().replace(/[^a-zA-Z0-9._~-]/g, '_').slice(0, 80);
@@ -138,6 +142,15 @@ export function trackEvent(name: string, params: Record<string, AnalyticsValue |
     recentOnce.set(key, now);
   }
   sendEvent(name, { ...context, ...clean });
+  // Authenticated first-party events survive blocked Google scripts. No anonymous fingerprinting.
+  if (funnelUser && FUNNEL_EVENTS.includes(name as FunnelEvent)) {
+    const id = crypto.randomUUID(), actor = funnelUser;
+    void actor.getIdToken().then(token => fetch(apiUrl('/api/me/funnel'), {
+      method: 'POST', keepalive: true, signal: AbortSignal.timeout(8000),
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ id, event: name, dimensions: funnelFields({ ...clean, tool: clean.tool ?? clean.mode, result: clean.result === 'free_sample' ? 'sample' : clean.result }) }),
+    })).catch(() => { /* Measurement never blocks the product. */ });
+  }
 }
 
 /** StrictMode can mount a route effect twice; suppress only same-tick duplicates. */

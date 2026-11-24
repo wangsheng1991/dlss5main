@@ -706,6 +706,7 @@ async function submitTogetherForTest(options: Record<string, string>, third?: { 
     './operation': { ...operationExports, saveOperation: (value: operations.SavedOperation) => { operationExports.saveOperation(value); saved = operationExports.readOperation('user'); } },
     '../../config/tools': tools,
     '../../config/enhance': {},
+    '../../lib/analytics': { trackEvent: () => {} },
   };
   runInNewContext(ts.transpileModule(sourceText, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, {
     exports, require: (name: string) => { assert.ok(name in dependencies, name); return dependencies[name]; },
