@@ -1,3 +1,4 @@
+import { funnelErrorCategory } from '../../../lib/conversion-events';
 import { trackEvent } from '../../lib/analytics';
 import { useEffect, useRef, useState } from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
@@ -67,6 +68,7 @@ export function useGeneration(user: User | null) {
       saveOperation(next);
       if (uid.current === saved.userId) { setOperation(next); setPaused(false); pollingStarted.current = Date.now(); }
     } catch (cause) {
+      trackEvent('generation_request_error', { tool: saved.body.mode || 'edit', error_category: funnelErrorCategory(cause instanceof ApiError ? cause.status : undefined) });
       if (cause instanceof ApiError && cause.status === 422 && cause.code === 'PROMPT_NOT_APPROVED') {
         clearOperation(saved.userId);
         if (uid.current === saved.userId) setOperation(null);
@@ -110,7 +112,7 @@ export function useGeneration(user: User | null) {
           trackEvent('upload_success', { tool: mode });
           return ticket.file_id as string;
         } catch (cause) {
-          trackEvent('upload_failure', { tool: mode, error_category: cause instanceof ApiError && cause.status === 401 ? 'authentication' : 'network' });
+          trackEvent('upload_failure', { tool: mode, error_category: funnelErrorCategory(cause instanceof ApiError ? cause.status : undefined) });
           throw cause;
         }
       };

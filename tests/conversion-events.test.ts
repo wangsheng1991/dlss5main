@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from './harness';
-import { parseFunnelEvent, funnelFields } from '../lib/conversion-events';
+import { parseFunnelEvent, funnelFields, funnelErrorCategory } from '../lib/conversion-events';
 
 test('conversion endpoint strips personal content and rejects invented events or invalid idempotency keys', () => {
   const id = '7ab91912-0996-41d5-b1c3-a9d6d77aac01';
@@ -36,4 +36,10 @@ test('conversion records are owner scoped, idempotent and bounded, without finan
   assert.equal(await recordConversion('owner-one',{...event,id:'7ab91912-0996-41d5-b1c3-a9d6d77aac02'},'browser',db),'limited');
   assert.equal(records.size,4);
   assert.equal(await recordConversion('owner-one',{event:'purchase'},'browser',db),'invalid');
+});
+
+test('generation request errors distinguish credit exhaustion from provider outages without logging text', () => {
+  assert.equal(funnelErrorCategory(402), 'credits'); assert.equal(funnelErrorCategory(429), 'rate_limit');
+  assert.equal(funnelErrorCategory(422), 'validation'); assert.equal(funnelErrorCategory(503), 'provider');
+  assert.equal(funnelErrorCategory(401), 'authentication'); assert.equal(funnelErrorCategory(), 'network');
 });

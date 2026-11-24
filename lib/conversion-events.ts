@@ -1,7 +1,7 @@
 /** Only bounded product dimensions; never file names, prompts, URLs or customer identifiers. */
 export const FUNNEL_EVENTS = ['pricing_view', 'plan_select', 'checkout_login_required', 'checkout_return',
   'checkout_cancel', 'checkout_redirect', 'checkout_failure', 'image_selected', 'upload_start', 'upload_success', 'upload_failure',
-  'generation_start', 'generation_success', 'generation_failure', 'download_click'] as const;
+  'generation_request_error', 'generation_start', 'generation_success', 'generation_failure', 'download_click'] as const;
 export type FunnelEvent = typeof FUNNEL_EVENTS[number];
 const choices: Record<string, readonly string[]> = {
   plan: ['free', 'pro', 'team'], provider: ['waffo'],
@@ -20,4 +20,10 @@ export function parseFunnelEvent(body: unknown) {
   if (!FUNNEL_EVENTS.includes(b.event as FunnelEvent) || typeof b.id !== 'string' ||
     !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(b.id)) return null;
   return { event: b.event as FunnelEvent, id: b.id, dimensions: funnelFields(b.dimensions) };
+}
+
+/** Classify only the transport status, never the provider message or prompt. */
+export function funnelErrorCategory(status?: number) {
+  return status === 402 ? 'credits' : status === 429 ? 'rate_limit' : status === 401 ? 'authentication'
+    : status === 400 || status === 413 || status === 422 ? 'validation' : status && status >= 500 ? 'provider' : 'network';
 }
