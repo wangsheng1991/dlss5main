@@ -1,4 +1,4 @@
-import { funnelErrorCategory } from '../../../lib/conversion-events';
+import { funnelErrorCategory, quotaPlanReason } from '../../../lib/conversion-events';
 import { trackEvent } from '../../lib/analytics';
 import { useEffect, useRef, useState } from 'react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
@@ -29,6 +29,7 @@ export function useGeneration(user: User | null) {
   const [operation, setOperation] = useState<SavedOperation | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [quotaError, setQuotaError] = useState<ReturnType<typeof quotaPlanReason>>(null);
   const [phase, setPhase] = useState('');
   const [paused, setPaused] = useState(false);
   const active = useRef(false);
@@ -53,14 +54,14 @@ export function useGeneration(user: User | null) {
     refetchOnWindowFocus: false,
   }, queryClient);
   useEffect(() => {
-    setOperation(null); setError(''); setPaused(false); pollingStarted.current = Date.now();
+    setOperation(null); setError(''); setQuotaError(null); setPaused(false); pollingStarted.current = Date.now();
     if (!user) return;
     try { setOperation(readOperation(user.uid)); }
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Cannot restore saved operation.'); }
   }, [user?.uid]);
   async function replay(saved: SavedOperation) {
     if (!user || active.current) return;
-    active.current = true; setSubmitting(true); setError(''); setPhase('Confirming saved submission…');
+    active.current = true; setSubmitting(true); setError(''); setQuotaError(null); setPhase('Confirming saved submission…');
     try {
       const data = await request('/api/image-edit/jobs', await user.getIdToken(), { method: 'POST', headers: { 'Idempotency-Key': saved.key }, body: JSON.stringify(saved.body) });
       if (!data.jobId) throw new Error('Submission response incomplete. Resume the same operation.');
@@ -68,7 +69,8 @@ export function useGeneration(user: User | null) {
       saveOperation(next);
       if (uid.current === saved.userId) { setOperation(next); setPaused(false); pollingStarted.current = Date.now(); }
     } catch (cause) {
-      trackEvent('generation_request_error', { tool: saved.body.mode || 'edit', error_category: funnelErrorCategory(cause instanceof ApiError ? cause.status : undefined) });
+      if (uid.current === saved.userId) setQuotaError(quotaPlanReason(cause));
+      trackEvent('generation_request_error', { tool: saved.body.mode || 'edit', error_category: funnelErrorCategory(cause instanceof ApiError ? cause.status : undefined), error_reason: cause instanceof ApiError ? cause.code || 'unknown' : 'unknown' });
       if (cause instanceof ApiError && cause.status === 422 && cause.code === 'PROMPT_NOT_APPROVED') {
         clearOperation(saved.userId);
         if (uid.current === saved.userId) setOperation(null);
@@ -80,7 +82,7 @@ export function useGeneration(user: User | null) {
   async function submit(file: File, prompt: string, settings: { mode?: GenerationMode; factor?: EnhanceFactor; source?: { width: number; height: number }; steps?: number; preset?: VectorizePreset; maxEdge?: number; second?: File; third?: File; options?: Record<string, string>; extra?: string } = {}) {
     if (!user) { setError('Sign in before generating an image.'); return; }
     if (active.current || (operation && !terminal(operation.status))) return;
-    active.current = true; setSubmitting(true); setError('');
+    active.current = true; setSubmitting(true); setError(''); setQuotaError(null);
     try {
       const mode = settings.mode || 'edit';
       const enhancing = mode === 'enhance';
@@ -112,7 +114,7 @@ export function useGeneration(user: User | null) {
           trackEvent('upload_success', { tool: mode });
           return ticket.file_id as string;
         } catch (cause) {
-          trackEvent('upload_failure', { tool: mode, error_category: funnelErrorCategory(cause instanceof ApiError ? cause.status : undefined) });
+          trackEvent('upload_failure', { tool: mode, error_category: funnelErrorCategory(cause instanceof ApiError ? cause.status : undefined), error_reason: cause instanceof ApiError ? cause.code || 'unknown' : 'unknown' });
           throw cause;
         }
       };
@@ -165,7 +167,7 @@ export function useGeneration(user: User | null) {
       }
       const saved: SavedOperation = { version: 1, userId: user.uid, key: crypto.randomUUID(), body, createdAt: new Date().toISOString() };
       saveOperation(saved); setOperation(saved); active.current = false; await replay(saved);
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not upload your image.'); }
+    } catch (cause) { setQuotaError(quotaPlanReason(cause)); setError(cause instanceof Error ? cause.message : 'Could not upload your image.'); }
     finally { active.current = false; setSubmitting(false); }
   }
   /**
@@ -182,7 +184,7 @@ export function useGeneration(user: User | null) {
     const urls = parseFetchUrls(links);
     const problem = fetchUrlError(urls);
     if (problem) { setError(problem); return; }
-    active.current = true; setSubmitting(true); setError(''); setPhase('Sending the link…');
+    active.current = true; setSubmitting(true); setError(''); setQuotaError(null); setPhase('Sending the link…');
     try {
       const existing = readOperation(user.uid);
       if (existing && !terminal(existing.status)) { setOperation(existing); throw new Error('An operation is already saved. Resume it first.'); }
@@ -195,7 +197,7 @@ export function useGeneration(user: User | null) {
   }
   const resume = async () => {
     if (!operation) return;
-    setError(''); pollingStarted.current = Date.now(); setPaused(false);
+    setError(''); setQuotaError(null); pollingStarted.current = Date.now(); setPaused(false);
     if (!operation.jobId || operation.status === 'SUBMISSION_UNCERTAIN') await replay(operation);
     else await query.refetch();
   };
@@ -206,8 +208,8 @@ export function useGeneration(user: User | null) {
   // so a refund comes with the sentence that tells the customer what to change.
   const reason = failureNote(query.data?.error, operation?.body?.mode || 'edit');
   const failure = operation?.status === 'FAILED' ? `${query.data?.refunded ? (operation.body.mode === 'fetch' ? 'The download failed. Your credit has been refunded.' : 'Generation failed. Your credit has been refunded.') : 'Generation failed. Check your balance; refund reconciliation may still be pending.'}${reason ? ` ${reason}` : ''}` : '';
-  return { operation, busy: submitting || waiting, submitting, pending, error: error || query.error?.message || failure, phase: submitting ? phase : statusText, submit, submitFetch, resume,
+  return { operation, busy: submitting || waiting, submitting, pending, quotaError, error: error || query.error?.message || failure, phase: submitting ? phase : statusText, submit, submitFetch, resume,
     pause: () => setPaused(true),
-    reset: () => { if (user && terminal(operation?.status)) { clearOperation(user.uid); setOperation(null); setError(''); queryClient.removeQueries({ queryKey: ['generation', user.uid] }); } },
+    reset: () => { if (user && terminal(operation?.status)) { clearOperation(user.uid); setOperation(null); setError(''); setQuotaError(null); queryClient.removeQueries({ queryKey: ['generation', user.uid] }); } },
   };
 }

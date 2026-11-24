@@ -707,7 +707,7 @@ async function submitTogetherForTest(options: Record<string, string>, third?: { 
     '../../config/tools': tools,
     '../../config/enhance': {},
     '../../lib/analytics': { trackEvent: () => {} },
-    '../../../lib/conversion-events': { funnelErrorCategory: () => 'unknown' },
+    '../../../lib/conversion-events': { funnelErrorCategory: () => 'unknown', quotaPlanReason: () => null },
   };
   runInNewContext(ts.transpileModule(sourceText, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, {
     exports, require: (name: string) => { assert.ok(name in dependencies, name); return dependencies[name]; },

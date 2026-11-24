@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from './harness';
-import { parseFunnelEvent, funnelFields, funnelErrorCategory } from '../lib/conversion-events';
+import { parseFunnelEvent, funnelFields, funnelErrorCategory, quotaPlanReason } from '../lib/conversion-events';
 
 test('conversion endpoint strips personal content and rejects invented events or invalid idempotency keys', () => {
   const id = '7ab91912-0996-41d5-b1c3-a9d6d77aac01';
@@ -42,4 +42,11 @@ test('generation request errors distinguish credit exhaustion from provider outa
   assert.equal(funnelErrorCategory(402), 'credits'); assert.equal(funnelErrorCategory(429), 'rate_limit');
   assert.equal(funnelErrorCategory(422), 'validation'); assert.equal(funnelErrorCategory(503), 'provider');
   assert.equal(funnelErrorCategory(401), 'authentication'); assert.equal(funnelErrorCategory(), 'network');
+});
+
+test('a plan link only follows an explicit credit or daily application limit, never concurrency or provider throttling', () => {
+  assert.equal(quotaPlanReason({status:402,code:'insufficient_credits'}),'insufficient_credits');
+  assert.equal(quotaPlanReason({status:429,code:'daily_limit'}),'daily_limit');
+  for (const e of [null,{status:429,code:'concurrency_limit'},{status:429,code:'upload_limit'},{status:429},{status:503},{status:402,code:'provider_error'},{status:401,code:'insufficient_credits'}]) assert.equal(quotaPlanReason(e),null);
+  assert.deepEqual(funnelFields({error_reason:'daily_limit',prompt:'private'}),{error_reason:'daily_limit'});
 });

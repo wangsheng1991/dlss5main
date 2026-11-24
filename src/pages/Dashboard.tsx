@@ -1,3 +1,4 @@
+import QuotaPlanLink from '../components/QuotaPlanLink';
 import MediaRetired from './MediaRetired';
 import { REAL_PERSON_UPLOAD_NOTICE } from '../config/legal';
 import { DashboardEvidenceLinks } from '../components/SearchEvidence';
@@ -621,7 +622,7 @@ export default function Dashboard() {
         <div className="text-sm text-zinc-400 space-y-2"><p>{mode === 'fetch' ? TOOL_SUMMARY.fetch.output : isToolId(mode) ? `${TOOL_SUMMARY[mode].output} · ${inputLimitNote(mode)}` : mode === 'enhance' ? `${t('dashboard.outputLabel')}: ${enhance ? `${enhance.width} × ${enhance.height}` : t('dashboard.followsImage')} · up to ${ENHANCE_MAX_EDGE} px per edge · ${inputLimitNote('enhance')}` : `${t('dashboard.outputLabel')}: preserves your image aspect ratio · WebP · ${inputLimitNote('edit')}`}</p>{user ? <p>{t('dashboard.costLabel')}</p> : <p>{t('dashboard.guestCostLabel')}</p>}<Link to="/pricing" className="text-primary underline inline-block">{t('dashboard.viewPlans')}</Link></div>
       </section>
       <section aria-label="Image workspace" className={`bg-surface-low rounded-xl border border-outline-variant/20 p-4 sm:p-6 flex flex-col min-h-[500px] ${characterStyleWorkflow ? 'order-1 lg:order-2' : ''}`}>
-        {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}</span></div>}
+        {(fileError || generation.error) && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{fileError || generation.error}{!fileError && generation.quotaError && <QuotaPlanLink reason={generation.quotaError} tool={mode}/>}</span></div>}
         {!user && !characterStyleWorkflow && <div className="mb-4 p-4 rounded-lg bg-primary/10 text-zinc-200 text-sm">{t('dashboard.guestNotice')} <Link to="/login" className="ml-1 text-primary underline hover:text-white">{t('dashboard.signInToUpload')}</Link></div>}
         {sampleRun.state.status === 'error' && <div role="alert" className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 text-red-300 text-sm"><AlertCircle className="w-5 h-5 shrink-0"/><span>{sampleRun.state.message}</span></div>}
         {file2Notice && <p role="status" aria-live="polite" className="mb-4 text-xs text-zinc-400">{file2Notice}</p>}
