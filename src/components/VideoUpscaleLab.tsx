@@ -8,6 +8,7 @@ import {
 import { videoBetaHref, videoPreviewPath, type VideoPreviewLocale } from '../content/videoStudio';
 import { trackEvent } from '../lib/analytics';
 import VideoUpscalePlayer from './VideoUpscalePlayer';
+import VideoSplitCompare from './VideoSplitCompare';
 
 export function VideoUpscaleLabLink({ locale }: { locale: VideoPreviewLocale }) {
   const zh = locale === 'zh';
@@ -22,6 +23,7 @@ export function VideoUpscaleLabContent({ locale }: { locale: VideoPreviewLocale 
   const tool = videoPreviewPath('/video-upscaler', locale);
   const [frame, setFrame] = useState(1);
   const [detail, setDetail] = useState(true);
+  const [scene, setScene] = useState<'neon' | 'street'>('neon');
   const kinds = zh ? ['低清输入 · 360p', '标准缩放 · 720p', '高清参照 · 720p'] : ['Low-res input · 360p', 'Standard resize · 720p', 'High-res reference · 720p'];
   const checks = zh ? [
     ['清晰度', '对齐同一帧，查看篮网、篮板边缘和运动主体，再连续播放检查闪烁。'],
@@ -53,6 +55,42 @@ export function VideoUpscaleLabContent({ locale }: { locale: VideoPreviewLocale 
       </div>
       <VideoUpscalePlayer locale={locale} />
     </header>
+
+    <section id="split-compare" aria-labelledby="split-compare-title" className="mt-9 scroll-mt-28 rounded-3xl border border-lime-300/25 bg-[#121b13] p-5 sm:p-7">
+      <h2 id="split-compare-title" className="font-headline text-2xl font-bold text-white">{zh ? '拖动分隔线：同一时刻，左右各一种处理' : 'Drag the divider: one instant, two treatments'}</h2>
+      <p className="mt-2 max-w-3xl text-zinc-300">{zh
+        ? '两边是同一段素材、同一帧、同一取景。左边把高清参照降到 360p、再用常规双三次放大回 720p；右边是模型的候选结果。重点看霓虹字边缘、路面纹理，以及连续播放时的稳定性——不是某一张截图好看。'
+        : 'Both sides are the same clip, frame and framing. Left is the reference downsampled to 360p and enlarged back to 720p with plain bicubic; right is the model candidate. Watch the neon edges, road texture, and stability during playback — not one flattering still.'}</p>
+      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label={zh ? '切换场景' : 'Switch scene'}>
+        {(['neon', 'street'] as const).map(value => <button key={value} type="button" aria-pressed={scene === value}
+          onClick={() => setScene(value)}
+          className="rounded-md border border-white/20 px-3 py-2 text-sm font-semibold text-white aria-pressed:border-lime-300 aria-pressed:bg-lime-300 aria-pressed:text-black">
+          {value === 'neon' ? (zh ? '霓虹文字' : 'Neon lettering') : (zh ? '街景' : 'Street')}
+        </button>)}
+      </div>
+      <div className="mt-4" key={scene}>
+        <VideoSplitCompare
+          left={{
+            src: VIDEO_UPSCALE_MEDIA + '/' + scene + '-bicubic-aligned.mp4',
+            poster: VIDEO_UPSCALE_MEDIA + '/' + scene + '-bicubic-aligned-poster.jpg',
+            label: zh ? '常规缩放' : 'Bicubic resize',
+            note: zh ? 'CPU，无模型' : 'CPU, no model',
+          }}
+          right={{
+            src: VIDEO_UPSCALE_MEDIA + '/' + scene + '-candidate.mp4',
+            poster: VIDEO_UPSCALE_MEDIA + '/' + scene + '-candidate-full-poster.jpg',
+            label: zh ? 'Real-ESRGAN 候选' : 'Real-ESRGAN candidate',
+            note: zh ? 'Windows GPU' : 'Windows GPU',
+          }}
+          caption={zh ? '拖动分隔线或按左右方向键，两边始终停在同一帧。' : 'Drag the divider or use the arrow keys; both sides stay on the same frame.'}
+          playLabel={zh ? '同步播放' : 'Play together'}
+          pauseLabel={zh ? '暂停' : 'Pause'}
+        />
+      </div>
+      <p className="mt-4 text-sm text-zinc-400">{zh
+        ? '右侧是实验候选，仍在评估中，不代表最终交付效果；正式能力上线前会换成成片对照。'
+        : 'The right pane is an evaluation candidate, not the final delivery quality. It will be replaced with finished outputs before the feature ships.'}</p>
+    </section>
 
     <section id="upscale-sample" aria-labelledby="upscale-sample-title" className="mt-9 scroll-mt-28 rounded-3xl border border-white/10 bg-[#141715] p-5 sm:p-7">
       <h2 id="upscale-sample-title" className="font-headline text-2xl font-bold text-white">{zh ? '画质检查台' : 'Frame inspection'}</h2>
